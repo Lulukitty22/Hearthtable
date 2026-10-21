@@ -2,6 +2,8 @@
 
 This document owns the Firebase estimate and its numerical assumptions. Status: planning only, checked 2026-10-19; no service setup or runtime changes. [Campaigns and Shared Data](../Systems/Campaigns%20and%20Shared%20Data.md#planning-scale-and-cost-model) owns the selected budget direction, user-supplied traffic and immediate Firestore updates with native live listeners. The estimates below calculate that selected update model. Actual edits per day, document sizes and permissions queries remain unmeasured.
 
+Note, 2026-10-21 at 4:00 am PDT (America/Los_Angeles): these estimates predate the one-document-per-definition storage layout selected in [Modules, Systems and Rulesets](../Systems/Modules%2C%20Systems%20and%20Rulesets.md#records-storage-and-caching). The user expects real usage to be well below them. Do not re-estimate by hand; measure actual reads, writes and storage once the app runs, then update this model from the measurements.
+
 ## What viewing and navigation cost
 
 Firestore's [realtime listeners](https://firebase.google.com/docs/firestore/query-data/listen) deliver initial data and subsequent changes without a page refresh, once implemented in the app. Commit saved edits and gameplay changes immediately to Firestore; subscribers receive the resulting updates through those listeners. A committed change means a submitted save or state transition, not every keystroke while composing input. The existing program does not already have this integration. Leaving a listener open does not itself incur a per-minute Firestore charge; loading records, receiving changes and reconnecting can incur reads. Each additional browser tab may have its own subscription.
