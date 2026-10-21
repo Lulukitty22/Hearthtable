@@ -128,4 +128,4 @@ These areas are referenced by selected rules but not yet designed:
 
 ## Feature roadmap
 
-The full feature inventory, grouped by core area with Milestone 2 scope marked, is section 4 of the [Hearthtable Plan](../../Hearthtable%20Plan.md#4-feature-inventory) until the Milestones document becomes its home.
+The full feature inventory, grouped by core area with Milestone 2 scope marked, is owned by [Milestones](../Implementation/Milestones.md#feature-inventory).
