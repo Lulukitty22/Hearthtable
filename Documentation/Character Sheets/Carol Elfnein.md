@@ -12,7 +12,7 @@ Human (2024), Sage; Evoker Wizard 12 / Alchemist Artificer 3, total level 15. Wi
 |---|---|---|---|---|---|
 | 8 / −1 | 16 / +3 | 14 / +2 | 22 / +6 | 10 / +0 | 10 / +0 |
 
-INT 22 includes DM-earned Indomitable (+2 INT); do not apply it again. Above-20 scores are permitted. The Sage 27-point reconstruction is 8/15/13/15/10/10, then background +2 INT/+1 CON, class choices and Indomitable. This reconstructs the accepted values rather than asserting a complete historical ledger.
+INT 22 is base INT 20 plus the DM-earned Indomitable item (+2 INT), listed under Equipment. Decided 2026-10-21 at 3:46 am PDT (America/Los_Angeles): DM grants are inventory items under [Character Creation and Advancement](../Systems/Character%20Creation%20and%20Advancement.md#selected-decisions), so Indomitable is not part of the score ledger and applies once, through the item. Above-20 scores are permitted. The Sage 27-point reconstruction is 8/15/13/15/10/10, then background +2 INT/+1 CON and class choices, giving base INT 20. This reconstructs the accepted values rather than asserting a complete historical ledger.
 
 | Statistic | Value |
 |---|---|
@@ -43,7 +43,7 @@ Native tools: Calligrapher's Supplies from Sage; Tinker's Tools from the revised
 
 ## Spell resources and books
 
-Shared caster level is 14: Wizard 12 +ceil(Artificer 3/2). Slots by level 1–7 are **4/3/3/3/2/1/1**. A Long Rest restores expended slots. Actual access is Wizard through level 6 and Artificer through level 1; the seventh-level slot supports upcasts, not seventh-level spell acquisition.
+Slots add up per class under [Character Creation and Advancement](../Systems/Character%20Creation%20and%20Advancement.md#selected-decisions) (changed 2026-10-21 from the published merged multiclass table): Wizard 12 gives 4/3/3/3/2/1 and Artificer 3 gives three first-level slots (user-verified 2026-10-21 at 3:46 am PDT, America/Los_Angeles). Slots by level 1–6 are **7/3/3/3/2/1**; she has no seventh-level slot. A Long Rest restores expended slots. Actual access is Wizard through level 6 and Artificer through level 1.
 
 Arcane Recovery restores up to six combined slot levels after a Short Rest, once per Long Rest, excluding level 6+ slots.
 
@@ -87,6 +87,7 @@ The spell grants 40 ft flight, +2 AC, magical weapon attacks using casting abili
 | Category | Selected equipment |
 |---|---|
 | Attuned, 3/3 | Gifted Aetherlock; permanent Wand of the War Mage +1; permanent Manifold Tool |
+| DM grants | Indomitable: +2 INT, earned in play; weight, attunement and whether it can be lost are not yet set by the DM |
 | Usual replicas | Goggles of Night; Alchemy Jug |
 | Books | Three permanent Enduring Spellbooks, 16/10/6 entries |
 | Physical tools | Alchemist, Herbalism, Tinker and Calligrapher kits |

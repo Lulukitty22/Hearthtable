@@ -52,11 +52,9 @@ Base AC formulas, conditional bonuses and Reaction bonuses need distinct represe
 
 The old library had no Artificer class record and no subclass collection, and its hit-die reader looked in a different place from where records stored it. Hearthtable's class and subclass catalogue needs deliberate design, not a fallback that conceals missing data.
 
-### Ability scores — campaign policy confirmed 2026-10-16
+### Ability scores
 
-Scores above ordinary published limits are permitted. Show a nonblocking informational marker above 20; never clamp or block an upper score. Modifiers stay `floor((score - 10) / 2)`. Explicit DM grants are valid sources, but avoid applying a grant twice. Carol's Indomitable grant belongs to her build, not a generic bonus.
-
-Standard point buy stops at 15. An optional extended point buy is a campaign estimate, not an official rule or a mandatory budget. Marginal cost is 2 each for 14 and 15, 3 for 16 and 17, 4 for 18 and 19, 5 for 20 and 21, 6 for 22 and 23, continuing the pattern. Starting from 8 at 0 points, totals are 15→9, 16→12, 17→15, 18→19, 19→23, 20→28, 21→33 and 22→39. Label the extrapolation, allow overrides, and keep starting purchases separate from later gifts and level increases.
+The ability-score policy and the extended point buy confirmed 2026-10-16 now live in [Character Creation and Advancement](../Systems/Character%20Creation%20and%20Advancement.md#point-buy).
 
 ### Later LLM assistance (proposed)
 

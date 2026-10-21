@@ -11,7 +11,7 @@ Recorded with the user on 2026-10-21, between 12:10 am and 2:06 am PDT (America/
 - **Each major ruleset version is a separate ruleset**, with its own file and title, such as "Hearthtable Vanilla+" and later "Hearthtable Vanilla+ 2". A DM moves a campaign by selecting the new ruleset; nothing upgrades in place or switches automatically. Bug fixes may patch a ruleset in place; large revamps become a new ruleset, and the older file is not edited.
 - **No backward-compatibility promise.** If a system change breaks an old ruleset (a variable renamed, a method removed), the campaign stays on its selected ruleset and the broken part shows a visible warning or error when it runs. It never quietly falls back to a default. Keeping a campaign working is the DM's job.
 - **The first ruleset** is "Hearthtable Vanilla+ Rules", called "Hearthtable Vanilla+", package `hearthtable-vanilla-plus`.
-- **`maxLevel` is a ruleset variable**, 20 by default. Vanilla+'s value and scaling past 20 belong to the planned Character Creation and Advancement document (Step A2, not yet written).
+- **`maxLevel` is a ruleset variable**, 20 by default. Vanilla+ sets no cap; its scaling past 20 is owned by [Character Creation and Advancement](Character%20Creation%20and%20Advancement.md).
 - **Firearms use a reusable `magazines` system** (chambers, loaded rounds, load order, per-round contents). The Aetherlock is campaign custom content (data) attached to it.
 - **Storage and caching:** see [Records, storage and caching](#records-storage-and-caching). In short: one Firestore document per definition, one document per character-sheet tab, references from sheets to definitions, a persistent browser cache synchronized by "changed since last visit" queries, and a campaign deletion log.
 - **Privacy is screen-only** for character tabs and lines. Viewers' browsers receive the data and the app hides it. The privacy rules themselves are owned by [Campaigns and Shared Data](Campaigns%20and%20Shared%20Data.md#character-sheet-visibility).
@@ -67,7 +67,7 @@ Modern Fantasy cells are illustrative; its magic and armor are open.
 | Concentration (system `concentration`) | `defaultCapacity=1` | `defaultCapacity=1`; authored abilities may raise it | open |
 | Damage (system `damage`) | method `resistance-halving` | same | same, plus an attached `ballistics` system |
 | Firearms (system `magazines`) | disabled | enabled; Aetherlock attaches as data | enabled; bullet types attach through `ballistics` |
-| Level cap and proficiency (variable `maxLevel`, system `proficiency`) | `maxLevel=20`; published table | open: value and scaling past 20 | as Vanilla+ |
+| Level cap and proficiency (variable `maxLevel`, system `proficiency`) | `maxLevel=20`; published table | no cap; proficiency continues the published pattern; see [Character Creation and Advancement](Character%20Creation%20and%20Advancement.md) | as Vanilla+ |
 | Scroll use (system `scrolls`) | method `published` | method `anyone-one-shot`; Arcana-multiplier formula as a method | open |
 
 ## Records, storage and caching
