@@ -65,7 +65,7 @@ Sheet questions and answers, spell and import review, and contextual recommendat
 Do not import old character JSON directly. Rebuild characters from their accepted sheets in [Character Sheets](../Character%20Sheets/x_Directory.md). The old data was partly migrated and internally contradictory:
 
 - **Carol:** production JSON predates her accepted sheet. `Documentation/Troubleshooting/Evidence/carol-pre-migration.json` in the archive holds older inline content if a detail needs recovering. Do not revive retired features to satisfy a missing reference.
-- **Capella:** HP, ability scores, save DCs and attack bonuses disagreed across stored values, formulas and prose. Her new normal and boss sheets supersede that data.
+- **Capella:** HP, ability scores, save DCs and attack bonuses disagreed across stored values, formulas and prose. Her new sheet supersedes that data.
 - **Seraphine:** all 95 spell entries lacked rules text; AC 16 was an unexplained assumption; Cleric 9 had no subclass. Her 38 prepared spells were intentionally permitted by a source note, so do not enforce standard limits without a table decision.
 - **Rall, Aina Quickquiver, Test Character 1 and John Baluci** exist only in the archive. Rall's build looked incomplete, and John Baluci was only on the old `main` branch.
 

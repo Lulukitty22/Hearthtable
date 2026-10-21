@@ -1,28 +1,26 @@
 # Capella
 
-Purpose: develop a new level-12 tabletop character inspired by Capella from Re:Zero, with the same practical depth as Carol's accepted sheet. Status: active design notes, begun 2026-10-20; not a finished playable sheet, production character record, or implemented Manager feature. This file owns Capella's normal concept, trial build, ancestry, equipment, spells, and normal character decisions. [Capella — Boss](Capella%20-%20Boss.md) separately owns boss design and party calibration.
+Purpose: develop a new level-12 tabletop character inspired by Capella from Re:Zero, with the same practical depth as Carol's accepted sheet. Status: accepted normal level-12 build (2026-10-21 at 4:00 am PDT (America/Los_Angeles), user decision), begun 2026-10-20; a tabletop sheet, not a production character record or implemented feature. Remaining open items, including parts of the custom ancestry, stay listed as open below. This file owns Capella's normal concept, build, ancestry, equipment, spells, and character decisions. A boss version is out of scope; its earlier draft was removed on 2026-10-21 and remains in Git history.
 
 Sheet check updated 2026-10-20 at 5:10 pm PDT (America/Los_Angeles): the selected scores, feats, spells, and seven invocations remain unchanged. Resource pools, accessible placement, components, and play-facing concentration ending rules are recorded. Eloquence's feature summary has been corroborated from an official builder export; the full book chapter remains gated. Book bodies now have selected weight/value, and focus-weight bookkeeping follows published analogues below. Practical walkthroughs and further narrative development are deferred at the user's request.
 
-Decisions: start from scratch; preserve her Aberrant Lich/shapechanger identity, Silver Tongue, and Mage Armor as her normal defense. Boss-only mechanics are owned by the [boss draft](Capella%20-%20Boss.md). Her accepted normal role is social infiltration and battlefield control supported by the bodily alteration and illusions below, with the unrestricted extra-concentration exception owned by [Spell Effects and Active State](../Systems/Spell%20Effects%20and%20Active%20State.md#concentration-capacity--selected-2026-10-20). Warlock/Bard is the current trial foundation; the precise build and other ancestry powers are not yet finalized.
+Decisions: start from scratch; preserve her Aberrant Lich/shapechanger identity, Silver Tongue, and Mage Armor as her normal defense. Her accepted normal role is social infiltration and battlefield control supported by the bodily alteration and illusions below, with the unrestricted extra-concentration exception owned by [Spell Effects and Active State](../Systems/Spell%20Effects%20and%20Active%20State.md#concentration-capacity--selected-2026-10-20). The Warlock/Bard build below is accepted; ancestry proposals not marked selected remain open.
 
 Open work: two deferred instrument proficiencies and any later need for exact measurements of items recorded with a dash or unknown volume. The remaining source limitation is explicit below rather than an unfinished feature range/cost/timing check. Concentration's play-facing damage, replacement, automatic-loss, and voluntary-ending choices are selected; implementation lifecycle/reconciliation questions remain in [Spell Effects and Active State](../Systems/Spell%20Effects%20and%20Active%20State.md#concentration-capacity--selected-2026-10-20), not in a second system specification here. The point-buy score package and normal spell toolkit are selected below.
 
-Documentation scope updated 2026-10-20 at 5:43 pm PDT (America/Los_Angeles): normal and boss design now have separate files. This separation does not select a runtime sheet relationship, synchronization model, or boss toggle.
-
 ## Accepted purpose and play style
 
-Capella is a DMPC. Her normal version should be a reasonably optimized level-12 party member, with the explicitly exceptional custom ancestry assessed separately. The potential boss version and its encounter benchmark are owned by the [boss draft](Capella%20-%20Boss.md); a fight against the party is not currently planned.
+Capella is a DMPC. Her normal version should be a reasonably optimized level-12 party member, with the explicitly exceptional custom ancestry assessed separately. A fight against the party is not currently planned.
 
 The user accepted this role description: she studies what someone expects, presents something convincing or disturbing, and exploits the response. During combat she disrupts enemies so the party can act on better terms.
 
 Her contribution can include impersonation, deception, negotiation, intimidation, distraction, misleading perceptions, and effects that inhibit enemy actions or improve the party's opportunities. Preventing or redirecting a fight can be as useful as dealing damage. Actual outcomes still follow the chosen skill or spell rules; appearance alone does not automatically impose Frightened, restraint, paralysis, or a forced decision.
 
-Her magic and appearance should support the concept rather than dictate it. Melee combat and Charisma casting began as preferences, not mandatory constraints. Charisma casting now fits the Warlock/Bard trial naturally. Beast transformation is not a goal merely because a Beast form seems interesting; physical transformation must earn its place through uses the user wants.
+Her magic and appearance should support the concept rather than dictate it. Melee combat and Charisma casting began as preferences, not mandatory constraints. Charisma casting now fits the Warlock/Bard build naturally. Beast transformation is not a goal merely because a Beast form seems interesting; physical transformation must earn its place through uses the user wants.
 
-## Current class trial
+## Class build
 
-Test **Great Old One Warlock 9 / College of Eloquence Bard 3**, total level 12. Prefer revised 2024 classes and spells, plus revised monster versions where available. Eloquence is the older subclass under consideration with revised Bard; verify its feature interactions before finalizing. The proposed explanation that she borrows power from an alien Far Realm patron may conceal that she is herself the alien entity; this is character flavor under discussion, not a separate source of free class abilities.
+Selected: **Great Old One Warlock 9 / College of Eloquence Bard 3**, total level 12. Prefer revised 2024 classes and spells, plus revised monster versions where available. Eloquence is the older subclass used with revised Bard; its practical feature check is recorded under Next normal-character decisions. The proposed explanation that she borrows power from an alien Far Realm patron may conceal that she is herself the alien entity; this is character flavor under discussion, not a separate source of free class abilities.
 
 The three Bard levels provide the intended Silver Tongue feature, skill Expertise, and low-level utility casting. The Warlock investment supplies the main spellcasting and invocation package. Progression selected 2026-10-20 at 4:39 pm PDT (America/Los_Angeles): take Bard 1–3, then Great Old One Warlock 1–9. Starting Bard supplies the chosen three skills and DEX/CHA saving-throw proficiencies already used in the ledger.
 
@@ -32,13 +30,13 @@ Verified 2026-10-20 at 2:11 pm PDT (America/Los_Angeles): Magical Cunning can re
 
 The cost of the split compared with Warlock 12 includes delayed Warlock 10 subclass features, the Warlock 11 sixth-level Mystic Arcanum and third Pact slot, and the Warlock 12 feat/ASI and additional invocation. These are progression delays, not permanent prohibitions if she later gains Warlock levels.
 
-The earlier Moon Druid/Bard comparison remains an available alternative, not a selected second build to maintain. Warlock/Bard is currently preferred because the desired role emphasizes perception and decisions rather than frequent Beast-form combat. Broad monster transformation would require a separate custom feature; it is not granted by the trial class labels.
+The earlier Moon Druid/Bard comparison was not selected. Warlock/Bard was chosen because the desired role emphasizes perception and decisions rather than frequent Beast-form combat. Broad monster transformation would require a separate custom feature; it is not granted by the class labels.
 
 ## Ability scores and skills
 
 Selected 2026-10-20 at 2:29 pm PDT (America/Los_Angeles): use **27-point buy** and the **8/14/14/8/14/18** final score package in STR/DEX/CON/INT/WIS/CHA order. The ledger below supplies these scores through Charlatan, War Caster, and Resilient (CON), without ancestry ability-score increases or free class feats.
 
-At total level 12, proficiency bonus is +4. With CHA 18, the trial spell attack is +8 and save DC 16 before items or explicit custom bonuses. Ordinary proficiency gives Deception/Persuasion +8. Silver Tongue treats a d20 result of 9 or lower as 10 for the eligible Charisma checks, producing a minimum total of 18. It does not apply to Intimidation. Expertise in the two social skills is deliberately not the current plan; the user's desired social minimum is approximately 15–20, rather than the earlier minimum of 23 with CHA 20 and Expertise.
+At total level 12, proficiency bonus is +4. With CHA 18, the spell attack is +8 and save DC 16 before items or explicit custom bonuses. Ordinary proficiency gives Deception/Persuasion +8. Silver Tongue treats a d20 result of 9 or lower as 10 for the eligible Charisma checks, producing a minimum total of 18. It does not apply to Intimidation. Expertise in the two social skills is deliberately not the current plan; the user's desired social minimum is approximately 15–20, rather than the earlier minimum of 23 with CHA 20 and Expertise.
 
 | Priority | Skill | Investment and purpose |
 |---:|---|---|
@@ -86,9 +84,9 @@ The point-buy base costs 0 +7 +4 +0 +7 +9 = **27**. Constitution 16 is not a pre
 | Stealth / Sleight of Hand | +6 each |
 | Thieves' Tools | DEX +6; Advantage when a proficient skill also applies, including the published Sleight of Hand lock-picking check |
 
-The concentration percentage is per check. Separate saves for each maintained spell are selected in the shared concentration specification; each failed save ends only its associated spell. The selected Mage Armor acquisition and casting rules are owned by the normal-defense section below. Eldritch Flesh belongs to the [boss draft](Capella%20-%20Boss.md).
+The concentration percentage is per check. Separate saves for each maintained spell are selected in the shared concentration specification; each failed save ends only its associated spell. The selected Mage Armor acquisition and casting rules are owned by the normal-defense section below.
 
-Wisdom does not set the trial build's spell attacks, save DC, or information supplied by Detect Thoughts; it supports ordinary Insight/Perception and other Wisdom checks/saves. Jack of All Trades adds half proficiency (+2 here) to eligible untrained skill checks; it does not stack onto proficiency/Expertise. For example, untrained Arcana is INT −1 +2 = +1, not a proficient or expert check.
+Wisdom does not set the build's spell attacks, save DC, or information supplied by Detect Thoughts; it supports ordinary Insight/Perception and other Wisdom checks/saves. Jack of All Trades adds half proficiency (+2 here) to eligible untrained skill checks; it does not stack onto proficiency/Expertise. For example, untrained Arcana is INT −1 +2 = +1, not a proficient or expert check.
 
 Sources: [Charlatan](https://roll20.net/compendium/dnd5e/Backgrounds%3ACharlatan?expansion=32231&iframe=true), [War Caster](https://roll20.net/compendium/dnd5e/Feats%3AWar%20Caster?expansion=32231), [Resilient](https://roll20.net/compendium/dnd5e/Feats%3AResilient?expansion=32231), and [revised class grants](https://www.dndbeyond.com/sources/dnd/br-2024/character-classes#Bard).
 
@@ -116,9 +114,9 @@ Unsettling Words summary corroborated 2026-10-20 at 5:07 pm PDT (America/Los_Ang
 
 Source status: the full published book chapter remains gated, but the actual feature summary was read from the page-widget values of [a D&D Beyond-generated Bard 3 character-sheet export](https://www.dndbeyond.com/sheet-pdfs/aDraytion_115491579.pdf), page 2, which identifies Mythic Odysseys of Theros p. 28. The same export corroborates Silver Tongue's d20 floor. The web reader displayed only the blank template; direct PDF widget extraction exposed the stored text. This closes the practical range/cost/timing check using the official builder's summary, not a claim of direct access to the complete rulebook. Unrelated statistics and features in that other character's export are not Capella's build authority.
 
-## Trial invocation package
+## Invocation package
 
-Updated 2026-10-20 at 3:43 pm PDT (America/Los_Angeles): Magic Initiate is complete with Mage Armor, Prestidigitation, and True Strike using CHA. All seven invocation positions are allocated; normal AC is 15 while Mage Armor is active. Eldritch Flesh belongs to the [boss draft](Capella%20-%20Boss.md).
+Updated 2026-10-20 at 3:43 pm PDT (America/Los_Angeles): Magic Initiate is complete with Mage Armor, Prestidigitation, and True Strike using CHA. All seven invocation positions are allocated; normal AC is 15 while Mage Armor is active.
 
 | Invocation | Intended use |
 |---|---|
@@ -140,13 +138,13 @@ Progression audit, 2026-10-20 at 5:03 pm PDT (America/Los_Angeles): the final pa
 
 The user favors Alter Self as the principal published bodily-change option, with Disguise Self and Silent Image also useful. Disguise Self does not require concentration and includes apparent belongings, but does not survive physical inspection as a real alteration. Silent Image creates a separate visual illusion and normally requires concentration.
 
-Alter Self normally requires concentration and provides one option at a time: physical appearance/voice changes, aquatic adaptation, or natural weapons. Appearance changes do not replace statistics, change size, or change the basic body arrangement. Aquatic adaptation grants underwater breathing and a Swim Speed equal to Speed. Natural weapons use the caster's spellcasting ability for attack and damage; under the CHA 18 trial they attack at +8 for 1d6 +4 damage. The user accepted this as a possible physical fallback. It does not supply extra attacks or a complete monster form.
+Alter Self normally requires concentration and provides one option at a time: physical appearance/voice changes, aquatic adaptation, or natural weapons. Appearance changes do not replace statistics, change size, or change the basic body arrangement. Aquatic adaptation grants underwater breathing and a Swim Speed equal to Speed. Natural weapons use the caster's spellcasting ability for attack and damage; at CHA 18 they attack at +8 for 1d6 +4 damage. The user accepted this as a possible physical fallback. It does not supply extra attacks or a complete monster form.
 
 Weapon fallback selected 2026-10-20 at 3:43 pm PDT (America/Los_Angeles): feat-granted True Strike uses CHA for one attack with its proficient material weapon worth at least 1 CP and adds 2d6 Radiant damage at total level 12, without concentration. With the mundane dagger in her accepted starting kit, this is +8 to hit for 1d4 +4 weapon damage plus 2d6 Radiant (or convert the weapon damage to Radiant under the spell). True Strike does not grant Extra Attack or bare-claw casting; her weapon ownership comes from the equipment ledger. Its Magic Initiate origin does not qualify for Warlock Psychic Spells damage conversion. [Revised True Strike](https://www.dndbeyond.com/sources/dnd/br-2024/spell-descriptions#TrueStrike).
 
 More extreme descriptions of changing flesh require an agreed cosmetic allowance or defined ancestry feature. They do not silently grant reach, additional limbs/actions, stronger damage, or arbitrary copied creature abilities. A frightening visual can reinforce an intimidation attempt without automatically causing a combat condition.
 
-Spell-based restraint and movement may accomplish the desired jobs without Beast forms. Hold Person paralyzes eligible Humanoids; it does not mechanically grapple them. Web needs a valid acquisition source outside the normal trial class access. An illusion can conceal an actual climbing method but cannot itself grant climbing. The normal spell toolkit is selected below; Web is not part of it.
+Spell-based restraint and movement may accomplish the desired jobs without Beast forms. Hold Person paralyzes eligible Humanoids; it does not mechanically grapple them. Web needs a valid acquisition source outside the normal class access. An illusion can conceal an actual climbing method but cannot itself grant climbing. The normal spell toolkit is selected below; Web is not part of it.
 
 Under the published single-concentration baseline, Alter Self, Silent Image, Hold Person, and other concentration spells compete. Disguise Self may coexist with a concentration spell. Capella's selected exception permits concurrent concentration within its authored capacity and allows any otherwise eligible concentration spell; assess that additional power explicitly rather than calling it a published class benefit. Failure and lifecycle details remain open in the shared specification.
 
@@ -154,7 +152,7 @@ Body-toolkit scope confirmed 2026-10-20 at 3:09 pm PDT (America/Los_Angeles): re
 
 ## Selected normal spell toolkit
 
-The selected toolkit is listed below; its current total is owned by the entry-count ledger. Include the inherent subclass and class grants associated with the Warlock/Bard trial; overlapping sources are not duplicate entries. Separately labeled utility candidates and Vicious Mockery are not selected. The [campaign book policy](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md#books-and-spell-readiness) replaces a global preparation cap for eligible accessible entries, but not class cantrip choices, spell-tier eligibility, physical acquisition, or casting costs. Book and component ownership are recorded in the starting-equipment ledger; final physical placement remains open.
+The selected toolkit is listed below; its current total is owned by the entry-count ledger. Include the inherent subclass and class grants associated with the Warlock/Bard build; overlapping sources are not duplicate entries. Separately labeled utility candidates and Vicious Mockery are not selected. The [campaign book policy](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md#books-and-spell-readiness) replaces a global preparation cap for eligible accessible entries, but not class cantrip choices, spell-tier eligibility, physical acquisition, or casting costs. Book and component ownership are recorded in the starting-equipment ledger; final physical placement remains open.
 
 ### Published subclass support
 
@@ -173,7 +171,7 @@ Warlock 9 also grants Contact Other Plane through Contact Patron. Its feature pe
 
 Psychic Spells permits eligible Warlock Enchantment and Illusion spells to omit Verbal and Somatic components; any Material components remain. It can also change damage from a Warlock spell to Psychic. Casting origin matters: sharing a spell slot pool does not turn a Bard-origin spell into a Warlock spell. Detect Thoughts is Divination and Alter Self is Transmutation, so neither receives the component exemption. Telepathy is communication, not automatic thought reading. Modify Memory still requires the separate explanatory speech specified in its effect even when its casting components are omitted.
 
-Awakened Mind supplies a telepathic connection, and Clairvoyant Combatant can make a connected enemy's attacks against her less reliable while improving her attacks against it after a failed save. Neither feature specifies concentration. Respect its separate use/recovery limits; it is not an extra spell, unlimited debuff, or a Warlock 10 feature. Eldritch Hex and Thought Shield require Warlock 10 and are not available in this trial.
+Awakened Mind supplies a telepathic connection, and Clairvoyant Combatant can make a connected enemy's attacks against her less reliable while improving her attacks against it after a failed save. Neither feature specifies concentration. Respect its separate use/recovery limits; it is not an extra spell, unlimited debuff, or a Warlock 10 feature. Eldritch Hex and Thought Shield require Warlock 10 and are not available in this build.
 
 ### Five selected class cantrips
 
@@ -248,17 +246,16 @@ References: [Detect Thoughts](https://www.dndbeyond.com/spells/2619099-detect-th
 
 ## Custom ancestry and published references
 
-Scope clarified 2026-10-20 at 2:05 pm PDT (America/Los_Angeles). Retain these design goals and distinguish normal-build work from the separate [boss draft](Capella%20-%20Boss.md):
+Scope clarified 2026-10-20 at 2:05 pm PDT (America/Los_Angeles). Retain these design goals:
 
-Ancestry scope clarified 2026-10-20 at 3:37 pm PDT (America/Los_Angeles): normal AC uses the selected published Mage Armor route. The class/score ledger remains the baseline for reconciling ancestry grants; boss features remain in the separate [boss draft](Capella%20-%20Boss.md).
+Ancestry scope clarified 2026-10-20 at 3:37 pm PDT (America/Los_Angeles): normal AC uses the selected published Mage Armor route. The class/score ledger remains the baseline for reconciling ancestry grants.
 
 - **Aberrant Lich / shapechanger identity.** Aberrant Lich is the name for Capella's custom adaptation of the published Eldritch Lich, rather than a second published creature being combined with it. Use it as her ancestry/template identity around the ordinary class foundation; no full custom class progression is selected.
-- **Boss-only features.** See the [boss draft](Capella%20-%20Boss.md) for Soul Vessel / Far Realm Parasite, Truesight, Eldritch Flesh, and expanded bodily powers; these do not grant normal-build benefits.
 - **Normal defense.** Use the selected Mage Armor acquisition below.
 - **Bodily alteration.** The methods for the normal build are covered by Alter Self, Disguise Self, Silent Image, and the invocation plan above; do not treat a separate broad transformation feature as a current missing requirement.
 - **Concentration exception.** Selected 2026-10-20: apply the extra-capacity feature with unrestricted spell eligibility specified in the shared design linked in the opening. Failure behavior and lifecycle details remain open there.
 
-The Eldritch Lich is the published reference behind her custom ancestry's name. Monster references do not grant complete ability packages to the level-12 character. Doppelganger mechanics have lower importance because normal character skills and spells may supply the desired manipulation. Boss transformation and flesh-manipulation references are owned by the [boss draft](Capella%20-%20Boss.md#boss-ancestry-and-source-boundaries).
+The Eldritch Lich is the published reference behind her custom ancestry's name. Monster references do not grant complete ability packages to the level-12 character. Doppelganger mechanics have lower importance because normal character skills and spells may supply the desired manipulation.
 
 The user does not want ordinary ninth-level Shapechange simply added to the normal build. Arbitrary monster forms with copied strengths are not selected normal-form abilities. Any later proposal to expand transformation beyond the current spell methods needs its own explicit scope and assessment.
 
@@ -282,7 +279,7 @@ Mage Armor supplies base AC **13 + DEX = 15** while she is unarmored. It takes a
 
 The feat also grants **two Wizard-list cantrips**, both using CHA where applicable, without replacing her five class cantrips. Choices completed 2026-10-20 at 3:43 pm PDT (America/Los_Angeles): **Prestidigitation** and **True Strike**. Prestidigitation supplies the published small sensory, cleaning/soiling, temperature/flavor, marking, and brief hand-sized creation effects without concentration; it does not grant automatic social bonuses or control. This acquisition does not grant general Wizard spell access or make feat spells Warlock-origin spells for Psychic Spells. No ordinary armor item is granted or selected by choosing this route.
 
-Armor of Shadows and the alternative Shield/studded-leather routes are not allocated. Shield is not granted. Eldritch Flesh belongs to the [boss draft](Capella%20-%20Boss.md).
+Armor of Shadows and the alternative Shield/studded-leather routes are not allocated. Shield is not granted.
 
 References: [Lessons of the First Ones](https://www.dndbeyond.com/sources/dnd/br-2024/character-classes#LessonsofTheFirstOnes), [Magic Initiate](https://www.dndbeyond.com/sources/dnd/br-2024/feats#MagicInitiate), and [Mage Armor](https://www.dndbeyond.com/sources/dnd/br-2024/spell-descriptions#MageArmor). The shared AC calculation/augment model remains in [Spell Effects and Active State](../Systems/Spell%20Effects%20and%20Active%20State.md#armor-class-formulas-and-augments).
 
@@ -297,7 +294,7 @@ Size selected 2026-10-20 at 3:15 pm PDT (America/Los_Angeles): the normal body i
 
 Movement selected 2026-10-20 at 3:19 pm PDT (America/Los_Angeles): normal form has Speed 30 feet and Fly Speed 30 feet (hover), following the published Eldritch Lich baseline. Innate flight requires no concentration, spell slot, or daily use. No class feat, invocation, score, or selected spell is replaced by this decision; account for flight when assessing the complete custom ancestry. Under revised Flying rules, hover prevents falling because of Prone, Incapacitated, or Fly Speed reduced to zero. It does not prevent those conditions or stop Incapacitated from ending concentration. Ranged threats, spell targeting, space, visibility, and ordinary movement rules still apply. [Flying/Hover reference](https://www.dndbeyond.com/sources/dnd/br-2024/rules-glossary#Flying).
 
-Senses selected 2026-10-20 at 3:13 pm PDT (America/Los_Angeles): the normal form uses ordinary perception, with the skill values owned by the score/skill ledger above. No innate Truesight or other special sense is granted to the normal form. Boss senses are owned by the [boss draft](Capella%20-%20Boss.md#boss-ancestry-and-source-boundaries).
+Senses selected 2026-10-20 at 3:13 pm PDT (America/Los_Angeles): the normal form uses ordinary perception, with the skill values owned by the score/skill ledger above. No innate Truesight or other special sense is granted to the normal form.
 
 Current normal ancestry scope, clarified 2026-10-20 at 3:37 pm PDT (America/Los_Angeles): Aberration type, Unusual Nature, Necrotic resistance, the selected dual concentration, Medium size, ordinary senses, and the selected flight/hover. This is a custom ancestry around the Warlock/Bard classes, not a replacement custom class progression. Published creatures are optional references, with no requirement to use a trait from each. Normal defense is selected above.
 
@@ -400,11 +397,11 @@ Scope selected and checkpoint updated 2026-10-20 at 5:11 pm PDT (America/Los_Ang
 1. The practical Eloquence range/cost/timing check is complete using the official builder export, with its source limitation recorded above. Resource pools and the legality of the selected progression are recorded; do not reopen selected scores, feats, or spells without a concrete conflict.
 2. Component ownership, working accessible placement, selected book values/weights, and the published-item focus-weight analogues are recorded above. Exact physical totals for dashed weights and volume remain unmeasured, not new required character choices. Neither a historical purchase charge nor a remaining cash balance is selected.
 3. Concentration's play-facing damage, replacement, and ending rules are selected in the authoritative system section. Implementation races and lifecycle edge cases remain explicitly deferred where they do not block tabletop use.
-4. Leave the two unchosen Bard instrument proficiencies open as requested. Further normal narrative work is deferred. Active boss work and its open questions are owned by [Capella — Boss](Capella%20-%20Boss.md).
+4. Leave the two unchosen Bard instrument proficiencies open as requested. Further narrative work is deferred.
 
 ## Sources and verification limits
 
-This draft combines user decisions with researched class/spell references; it is not a complete rules audit. Revised Great Old One wording was verified through licensed published text during the toolkit pass. Eloquence's practical feature summary was corroborated from the official builder export as recorded above; the full published chapter was not directly readable. Do not substitute forum summaries, playtest abilities, or older replaced spells as if they were verified revised text. Physical book allowances and component-weight analogues are explicitly distinguished from published spell rules.
+This sheet combines user decisions with researched class/spell references; it is not a complete rules audit. Revised Great Old One wording was verified through licensed published text during the toolkit pass. Eloquence's practical feature summary was corroborated from the official builder export as recorded above; the full published chapter was not directly readable. Do not substitute forum summaries, playtest abilities, or older replaced spells as if they were verified revised text. Physical book allowances and component-weight analogues are explicitly distinguished from published spell rules.
 
 - [Revised Warlock and invocations](https://www.dndbeyond.com/classes/2190885-warlock); [revised Bard and class progression](https://www.dndbeyond.com/sources/dnd/br-2024/character-classes#Bard).
 - [Official Eloquence overview](https://www.dndbeyond.com/posts/864-bard-101-college-of-eloquence); [official revised Warlock overview](https://www.dndbeyond.com/posts/1756-2024-warlock-vs-2014-warlock-whats-new).
