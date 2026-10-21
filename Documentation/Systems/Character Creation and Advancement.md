@@ -16,7 +16,7 @@ Recorded with the user on 2026-10-21, before about 3 am PDT (America/Los_Angeles
 - **Multiclass ability prerequisites only warn.** An unmet prerequisite (such as INT 13 for Wizard) shows a visible warning; the level is still added.
 - **The full order of levels taken is recorded** (Wizard 1, Wizard 2, …, Artificer 1). First class, starting saves, level-1 maximum HP and feat timing derive from it.
 - **Epic Boons follow the published rule:** any feat slot taken at total level 19 or higher may choose an Epic Boon.
-- **Point buy:** Vanilla+ extends the point-buy price pattern without an upper limit. The DM sets the point budget as a campaign option. Proposed range is minimum 5, no maximum. For example, a player could lower other scores to fund DEX 40.
+- **Point buy:** Vanilla+ extends the point-buy price pattern without an upper limit. The DM sets the point budget as a campaign option. Proposed range is minimum 5, no maximum. For example, a player could lower other scores to fund DEX 40. Spending more than the budget is allowed: the app shows a visible warning and the point deficit, so the DM can spot it when reviewing the character. Nothing blocks the overspend.
 
 ## Open questions
 
