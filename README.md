@@ -1,1 +1,21 @@
 # Hearthtable
+
+A hosted web app for running tabletop RPG campaigns together: live character sheets, campaigns with DM approval, and spell, item and effect systems that change real character state.
+
+## Status
+
+Design phase. This repository currently contains documentation only; there is no runtime code, Firebase project or character data yet. Hearthtable replaces Character Manager, an earlier static HTML/JavaScript app that saved characters as JSON committed to GitHub. Its code was intentionally not carried over; the archive is [Lulukitty22/Character_Manager](https://github.com/Lulukitty22/Character_Manager).
+
+## Selected direction
+
+- **Hosting and data:** Firebase. Google sign-in only through Firebase Authentication, Cloud Firestore for live data with native realtime listeners, and Cloud Storage for portrait uploads. Target the no-cost allowances on the Blaze plan.
+- **Accounts:** guests can view public content; creating characters, campaigns or custom entries requires a public Alias and administrator approval.
+- **Campaigns:** no owner role; every campaign DM has equal authority. Joining needs an invite and DM approval.
+- **Characters:** placing a character elsewhere always makes an independent copy. Tabs are public by default and can be made private individually.
+- **Gameplay:** players review and confirm actions, resources are held, and the DM approves at execution time before resolution changes real state.
+- **Sharing:** exported HTML is a live, view-only shell for one character sheet, not an offline snapshot.
+- **Discord:** optional account link, required only for a later bot.
+
+## Documentation
+
+Start with [Documentation/Start Here.md](Documentation/Start%20Here.md), then each folder's `x_Directory.md`. Selected system rules live in `Documentation/Systems`, and `Documentation/Implementation/Lessons from Character Manager.md` lists the previous app's failure modes to design against. Working rules for editing documentation and coordinating agents are in [AGENTS.md](AGENTS.md).
