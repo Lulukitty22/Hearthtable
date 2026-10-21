@@ -4,11 +4,11 @@ Updated 2026-10-18. This is a compact rules and source reference, not executable
 
 ## Levels, slots and spell access
 
-Keep character total, individual class level, effective caster level and casting origin separate. Character total determines proficiency and ordinary cantrip scaling. Class level determines features, preparation allowances and eligible spell tiers. For these three classes, shared caster level is Wizard + Sorcerer + ceil(Artificer/2); a higher shared slot permits eligible upcasting without granting higher-tier spells or class features.
+Keep character total, individual class level, effective caster level and casting origin separate. Character total determines proficiency and ordinary cantrip scaling. Class level determines features, preparation allowances and eligible spell tiers. For these three classes, shared caster level is Wizard + Sorcerer + ceil(Artificer/2); a higher shared slot permits eligible upcasting without granting higher-tier spells or class features. That merged slot table is the published rule; Hearthtable Vanilla+ instead adds each class's own slot table, as owned by [Character Creation and Advancement](../Systems/Character%20Creation%20and%20Advancement.md).
 
 Wizard/Sorcerer spell tiers unlock at class levels 1/3/5/7/9/11/13/15/17. Artificer tiers 1–5 unlock at 1/5/9/13/17. Wizard 9 / Artificer 3, for example, has a sixth-level slot but only fifth-level Wizard and first-level Artificer spells. A class-tier column never grants every spell of that tier: spell membership, edition and subclass grants must be checked individually. Sorcerer does not inherit Wizard-only Fabricate, Wall of Force or book rituals merely by being a full caster.
 
-Proficiency is +2 at total levels 1–4, +3 at 5–8, +4 at 9–12, +5 at 13–16 and +6 at 17–20. Expertise doubles proficiency only for the specified checks; multiple proficiency sources do not double weapon attack proficiency. INT 22 means modifier +6, not blanket +6 damage. Ordinary INT-guided weapon use needs a specific permission; Aetherlock's campaign rule does not extend to swords or whips.
+Proficiency is +2 at total levels 1–4, +3 at 5–8, +4 at 9–12, +5 at 13–16 and +6 at 17–20; Vanilla+ continues the pattern past 20 ([Character Creation and Advancement](../Systems/Character%20Creation%20and%20Advancement.md)). Expertise doubles proficiency only for the specified checks; multiple proficiency sources do not double weapon attack proficiency. INT 22 means modifier +6, not blanket +6 damage. Ordinary INT-guided weapon use needs a specific permission; Aetherlock's campaign rule does not extend to swords or whips.
 
 ## Class checkpoints
 

@@ -24,4 +24,4 @@ Carried over: Systems, Character Sheets, Class Reference and the Firebase cost m
 
 ## Implementation
 
-No runtime code exists yet. Before writing any, read the Systems documents and the lessons note. Do not port code from Character Manager. The first implementation milestone and its acceptance criteria still need agreement with the user; the Firebase project, billing and region have not been set up, and doing so needs the user's explicit approval.
+No runtime code exists yet. Before writing any, read the Systems documents, `Documentation/Implementation/Architecture and Hosting.md` and the lessons note. Do not port code from Character Manager. Milestones and their acceptance criteria live in `Documentation/Implementation/Milestones.md`; coding starts only after the user agrees at the end of Milestone 1. The Firebase project, billing and region have not been set up, and doing so needs the user's explicit approval.

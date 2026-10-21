@@ -2,6 +2,8 @@
 
 Revised 2026-10-21 at 12:51 am PDT (America/Los_Angeles) after checking the plan against the documentation. The revision log at the end lists what changed and why.
 
+Kept as a planning record (user decision, 2026-10-21 at 4:00 am PDT, America/Los_Angeles). Its decisions now live in the documentation: [Modules, Systems and Rulesets](Documentation/Systems/Modules%2C%20Systems%20and%20Rulesets.md), [Character Creation and Advancement](Documentation/Systems/Character%20Creation%20and%20Advancement.md), [Architecture and Hosting](Documentation/Implementation/Architecture%20and%20Hosting.md) and [Milestones](Documentation/Implementation/Milestones.md). Where this plan differs, those documents win.
+
 ## Context
 
 Hearthtable is a fresh start containing only documentation: no code and no Firebase project. The user asked for five things:

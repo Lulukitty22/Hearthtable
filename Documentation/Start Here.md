@@ -1,15 +1,15 @@
 # Start Here
 
-Hearthtable is a planned hosted web app for running tabletop campaigns: shared character sheets, campaigns with DM approval, live updates and spell and item systems. It is a fresh start that replaces Character Manager, an earlier HTML/JavaScript app whose code was not carried over. Current work is **systems design**, using Carol's accepted tabletop build as a concrete example. Firebase (Google sign-in, Firestore and Cloud Storage) is the selected backend direction; no Firebase project, code or character data exists yet.
+Hearthtable is a planned hosted web app for running tabletop campaigns: shared character sheets, campaigns with DM approval, live updates and spell and item systems. It is a fresh start that replaces Character Manager, an earlier HTML/JavaScript app whose code was not carried over. Current work is **Milestone 1, documentation and theory**, using Carol's accepted tabletop build as a concrete example; the roadmap and acceptance criteria are in [Milestones](Implementation/Milestones.md). Firebase (Google sign-in, Firestore and Cloud Storage) is the selected backend direction; no Firebase project, code or character data exists yet.
 
 ## Choose a folder
 
 | Folder | What to expect |
 |---|---|
-| [Systems](Systems/x_Directory.md) | Selected campaign, container, casting and active-effect rules, with genuine open questions. Start with Campaigns and Shared Data to resume the current design discussion. |
+| [Systems](Systems/x_Directory.md) | Module and ruleset architecture, character creation and advancement, and selected campaign, container, casting and active-effect rules, with genuine open questions. Start with Modules, Systems and Rulesets for how the app is layered. |
 | [Character Sheets](Character%20Sheets/x_Directory.md) | Playable tabletop character sheets. Carol's sheet owns her accepted statistics, inventory and spell selections. |
 | [Class Reference](Class%20Reference/x_Directory.md) | Supporting build provenance, weapon rules, costs and reusable mechanics. Calculation examples retain their assumptions and do not reopen selected builds. |
-| [Implementation](Implementation/x_Directory.md) | Implementation planning: lessons from the previous application and the Firebase cost model. Read the lessons note before writing runtime code. |
+| [Implementation](Implementation/x_Directory.md) | Implementation planning: architecture and hosting, milestones, lessons from the previous application and the Firebase cost model. Read Architecture and Hosting and the lessons note before writing runtime code. |
 
 Each folder's `x_Directory.md` describes its files. A topic's opening states its scope, implementation status, selected direction and open work; detailed rules have one authoritative home.
 
