@@ -1,2 +1,14 @@
-// Game-agnostic kernel: record envelope, module registry, resolved-state pipeline, dice, validation and transitions (Step C).
-export {};
+// Game-agnostic kernel: record envelope, identities, module registry, extension points,
+// rulesets, the resolved-state pipeline, dice, validation results and transitions.
+// It knows only records, resources, modifiers, effects, actions, rolls, slots and time.
+
+export * from "./dice";
+export * from "./envelope";
+export * from "./ids";
+export * from "./registry";
+export * from "./resolve";
+export * from "./ruleset";
+export * from "./semver";
+export * from "./transition";
+export * from "./validation";
+export * from "./value";
