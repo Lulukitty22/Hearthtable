@@ -31,7 +31,7 @@ export default tseslint.config(
     languageOptions: { globals: globals.browser },
   },
   {
-    files: ["*.config.{js,ts}", "apps/*/vite.config.ts"],
+    files: ["*.config.{js,ts}", "apps/*/vite.config.ts", "scripts/**"],
     languageOptions: { globals: globals.node },
   },
   prettier,

@@ -1,10 +1,11 @@
 rules_version = '2';
 
-// Emulator-only placeholder: everything is denied until the Rules are written in Milestone 4.
-// The Step B scaffold test writes to the "scaffold" collection, which is opened here alone.
+// Emulator-only, Milestone 2: the app reads and writes records without sign-in. There is no
+// real Firebase project. Milestone 4 replaces this with Rules that enforce authority (who may
+// read and write); until then nothing here may be deployed.
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /scaffold/{id} {
+    match /records/{id} {
       allow read, write: if true;
     }
     match /{document=**} {

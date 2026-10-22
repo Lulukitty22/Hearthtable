@@ -114,7 +114,8 @@ Scaffolded 2026-10-22 at 12:17 pm PDT (America/Los_Angeles) (Milestone 2, Step B
 |---|---|
 | `pnpm install`, then `pnpm exec playwright install chromium` | Install dependencies and Playwright's browser |
 | `pnpm dev` | Run the web app at `http://localhost:5173` |
-| `pnpm emulators` | Start the Auth, Firestore, Storage and Hosting emulators, with the emulator UI at `http://localhost:4000` |
+| `pnpm emulators` | Start the Auth, Firestore, Storage and Hosting emulators, with the emulator UI at `http://localhost:4000`. Data is loaded from `.emulator-data` (git-ignored) and saved there on a clean stop with Ctrl+C; delete the folder to start fresh |
+| `pnpm seed` | With the emulators running, add the core content and Carol; records that already exist are skipped and listed, never overwritten |
 | `pnpm check` | Typecheck, lint, check formatting and run unit tests |
 | `pnpm test:emulator` | Run the emulator tests inside a temporary emulator |
 | `pnpm test:e2e` | Run the Playwright tests against the dev server and a temporary emulator |
@@ -126,7 +127,8 @@ Decisions made while scaffolding:
 - The emulator project ID is `demo-hearthtable`. The `demo-` prefix means Firebase treats it as offline-only, so nothing can reach a real project (user decision).
 - TypeScript is pinned to 6.0, because the ESLint TypeScript plugin does not yet support TypeScript 7.
 - Install scripts for `@firebase/util`, `protobufjs` and `re2` are turned off in `pnpm-workspace.yaml`; none is needed for this app.
-- `firestore.rules` and `storage.rules` deny everything except a `scaffold` collection used by the emulator smoke test. Real Rules come in Milestone 4.
+- `firestore.rules` allows reading and writing the `records` collection without sign-in, for the emulator only, and denies everything else; `storage.rules` denies everything. Real Rules come in Milestone 4, and nothing may be deployed before then.
+- Emulator data persists between runs, and seeding skips existing records (user decisions, 2026-10-22 at 1:52 pm PDT (America/Los_Angeles)).
 
 ## Repository layout
 
@@ -141,7 +143,7 @@ Decisions made while scaffolding:
 - `packages/games/dnd5e-2024`: the game module, including class records and each class's own slot table (Vanilla+ adds slots per class; see [Character Creation and Advancement](../Systems/Character%20Creation%20and%20Advancement.md)).
 - `packages/rulesets/hearthtable-vanilla-plus`: the ruleset data.
 - `packages/engine`: the composition root. It lists the modules and resolves a character's records under a ruleset; views, tests and scripts use it.
-- `packages/storage`: the `Repository` interface plus `memory` and `firestore` adapters.
+- `packages/storage`: the `Repository` interface plus `memory` and `firestore` adapters. Saves are all or nothing, and a save edited from an older revision is refused as a conflict rather than applied. The Firestore adapter's Milestone 2 mapping (one `records` document per record, its id the encoded path, with `ancestors` for listing a sheet's tabs) is provisional until the Milestone 4 schema; Firestore cannot store a list inside a list, so data never uses one.
 - `apps/web`: the React sheet viewer and editor. Tabs come from the `sheet.tabs` registry.
 - `apps/export-shell`: a later app.
 - `content/`: hand-entered record envelopes as JSON: `core/` (features, spells, items), `account/vrlulu/` (VRLulu's Aetherlock, rounds, canisters and Indomitable, and Carol's character, inventory and three books). `content/src` loads and checks them.

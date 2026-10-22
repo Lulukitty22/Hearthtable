@@ -3,11 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Repository interface with memory and Firestore adapters (Step G).",
+  "description": "Repository interface with memory and Firestore adapters.",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./contract": "./src/contract.test-helpers.ts"
   },
   "dependencies": {
+    "@hearthtable/kernel": "workspace:*",
     "firebase": "^13.1.0"
+  },
+  "devDependencies": {
+    "@hearthtable/content": "workspace:*"
   }
 }

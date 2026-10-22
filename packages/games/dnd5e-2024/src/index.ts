@@ -80,7 +80,7 @@ const ClassDefinition = z.looseObject({
   spellcasting: z
     .object({
       ability: z.string(),
-      slots: z.array(z.array(z.number().int().min(0))).length(20),
+      slots: z.record(z.string(), z.array(z.number().int().min(0))),
       maxSpellLevel: z.array(z.number().int().min(0).max(9)).length(20),
     })
     .optional(),
@@ -218,7 +218,7 @@ const derivations: Derivation[] = [
           name: c.name,
           level: c.level,
           ability: sc.ability,
-          slots: sc.slots[index] ?? [],
+          slots: sc.slots[String(index + 1)] ?? [],
           maxSpellLevel: sc.maxSpellLevel[index] ?? 0,
         });
       }
