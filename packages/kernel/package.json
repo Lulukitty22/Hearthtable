@@ -6,5 +6,8 @@
   "description": "Game-agnostic kernel: record envelope, module registry, resolved-state pipeline, dice, validation and transitions (Step C).",
   "exports": {
     ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
   }
 }

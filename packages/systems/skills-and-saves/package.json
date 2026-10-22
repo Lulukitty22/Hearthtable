@@ -1,0 +1,14 @@
+{
+  "name": "@hearthtable/system-skills-and-saves",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@hearthtable/kernel": "workspace:*",
+    "@hearthtable/system-abilities": "workspace:*",
+    "zod": "^4.6.7"
+  }
+}

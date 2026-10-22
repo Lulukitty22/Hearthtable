@@ -68,7 +68,11 @@ export function formatExplanation(e: Explanation): string {
   const note = e.note ? ` (${e.note})` : "";
   if (!e.parts || e.parts.length === 0) return head + note;
   const parts = e.parts
-    .map((p) => (p.value === undefined ? p.label : `${p.label} ${p.value}`))
+    .map(
+      (p) =>
+        (p.value === undefined ? p.label : `${p.label} ${p.value}`) +
+        (p.note ? ` (${p.note})` : ""),
+    )
     .join(" + ");
   return `${head} = ${parts}${note}`;
 }

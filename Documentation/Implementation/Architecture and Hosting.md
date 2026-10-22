@@ -129,7 +129,7 @@ Decisions made while scaffolding:
 
 ## Repository layout
 
-- `packages/kernel`: record envelope, module registry, resolved-state pipeline, dice, validation results and the transition interface.
+- `packages/kernel`: record envelope, module registry, resolved-state pipeline, grants, dice, validation results and the transition interface. Systems read their record data through Zod schemas (`readField`, `readDefinition`) that report problems instead of guessing.
 - `packages/systems/*`: one folder per system. Milestone 2 needs:
   - `abilities`, `proficiency`, `skills-and-saves` (including expertise and initiative), `features` (feats and class features as modifier sources, such as Alert, War Caster and Skill Expert)
   - `hit-points`, `armor-class`, `active-effects` (a minimal store of which effects are active, so AC shows Mage Armor or Shield only when active; no clock or expiry yet)

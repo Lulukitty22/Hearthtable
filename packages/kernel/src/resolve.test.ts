@@ -61,7 +61,7 @@ describe("resolved-state pipeline", () => {
     const value = resolved.get<number>("armor-class.total");
     expect(value).toMatchObject({ kind: "known", value: 16 });
     expect(value.kind === "known" && formatExplanation(value.explain)).toBe(
-      "AC 16 = Mage Armor 13 + DEX 3",
+      "AC 16 = Mage Armor 13 + DEX 3 (from 16)",
     );
   });
 

@@ -67,9 +67,60 @@ importers:
         specifier: ^8.3.5
         version: 8.3.5(@types/node@26.6.5)(yaml@2.9.1)
 
-  packages/games/dnd5e-2024: {}
+  packages/games/dnd5e-2024:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      '@hearthtable/system-abilities':
+        specifier: workspace:*
+        version: link:../../systems/abilities
+      '@hearthtable/system-armor-class':
+        specifier: workspace:*
+        version: link:../../systems/armor-class
+      '@hearthtable/system-hit-points':
+        specifier: workspace:*
+        version: link:../../systems/hit-points
+      '@hearthtable/system-skills-and-saves':
+        specifier: workspace:*
+        version: link:../../systems/skills-and-saves
+      '@hearthtable/system-spellcasting':
+        specifier: workspace:*
+        version: link:../../systems/spellcasting
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+    devDependencies:
+      '@hearthtable/system-active-effects':
+        specifier: workspace:*
+        version: link:../../systems/active-effects
+      '@hearthtable/system-attunement':
+        specifier: workspace:*
+        version: link:../../systems/attunement
+      '@hearthtable/system-containers':
+        specifier: workspace:*
+        version: link:../../systems/containers
+      '@hearthtable/system-features':
+        specifier: workspace:*
+        version: link:../../systems/features
+      '@hearthtable/system-magazines':
+        specifier: workspace:*
+        version: link:../../systems/magazines
+      '@hearthtable/system-proficiency':
+        specifier: workspace:*
+        version: link:../../systems/proficiency
+      '@hearthtable/system-resources':
+        specifier: workspace:*
+        version: link:../../systems/resources
+      '@hearthtable/system-spellbook-readiness':
+        specifier: workspace:*
+        version: link:../../systems/spellbook-readiness
 
-  packages/kernel: {}
+  packages/kernel:
+    dependencies:
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
 
   packages/rulesets/hearthtable-vanilla-plus: {}
 
@@ -78,6 +129,138 @@ importers:
       firebase:
         specifier: ^13.1.0
         version: 13.1.0
+
+  packages/systems/abilities:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/active-effects:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/armor-class:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/attunement:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      '@hearthtable/system-containers':
+        specifier: workspace:*
+        version: link:../containers
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/containers:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/features:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/hit-points:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/magazines:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      '@hearthtable/system-containers':
+        specifier: workspace:*
+        version: link:../containers
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/proficiency:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/resources:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/skills-and-saves:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      '@hearthtable/system-abilities':
+        specifier: workspace:*
+        version: link:../abilities
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/spellbook-readiness:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      '@hearthtable/system-containers':
+        specifier: workspace:*
+        version: link:../containers
+      '@hearthtable/system-spellcasting':
+        specifier: workspace:*
+        version: link:../spellcasting
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/spellcasting:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
 
 packages:
 

@@ -54,7 +54,8 @@ export interface KernelModule {
 /** The kernel's own points. Contributing to them needs no `requires` entry. */
 export const KERNEL_MODULE_ID = "kernel";
 export const DERIVATIONS_POINT = "kernel.derivations";
-const KERNEL_POINTS = [DERIVATIONS_POINT] as const;
+export const GRANT_SOURCES_POINT = "kernel.grantSources";
+const KERNEL_POINTS = [DERIVATIONS_POINT, GRANT_SOURCES_POINT] as const;
 
 export interface Registry {
   readonly modules: ReadonlyMap<string, ModuleManifest>;
