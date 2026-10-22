@@ -4,7 +4,7 @@ This document owns campaign architecture, authority, definition sharing, privacy
 
 ## Current direction
 
-Keep the HTML/JavaScript application and core catalogue separate from private, live campaign data. GitHub can continue hosting source code, static assets and versioned reference files. A managed backend would handle accounts, campaign permissions, requests, resource reservations, rolls, effects and logs.
+Keep the HTML/JavaScript application and core catalogue separate from private, live campaign data. GitHub can continue hosting source code. Core content is stored in Firestore rather than shipped as static files; see [Modules, Systems and Rulesets](Modules%2C%20Systems%20and%20Rulesets.md#records-storage-and-caching). A managed backend would handle accounts, campaign permissions, requests, resource reservations, rolls, effects and logs.
 
 **Firebase is the selected backend direction.** Firebase Authentication with Google sign-in only and Cloud Firestore are selected. Portrait uploads are required, and Blaze billing is acceptable to access needed services while targeting their no-cost allowances. Exact schema, region, billing controls and service configuration remain undecided; no project or billing setup has begun. Hosting must not require the user's PC to stay online. Other character audits remain deferred while this architecture is clarified.
 
@@ -76,7 +76,7 @@ Selected 2026-10-18: if the requested target name/path already exists, reject cr
 
 Name comparison — selected 2026-10-20: within the same destination, names differing only in capitalization or spaces versus underscores count as duplicates. For example, “Moonlit Coast”, “moonlit coast” and “Moonlit_Coast” cannot identify separate entries there. Preserve the chosen display capitalization. Campaign/custom-entry rename behavior still needs design.
 
-Firebase Hosting is being considered for the HTML/JavaScript application, with Firebase services supplying live data, so future shared sheets would use that hosted application rather than fetch runtime/data from GitHub. GitHub could remain source control and a backup destination. This serving model has not been implemented; the previous application's GitHub loaders are summarized in [Lessons from Character Manager](../Implementation/Lessons%20from%20Character%20Manager.md). Firebase [Hosting](https://firebase.google.com/docs/hosting/use-cases) supports web application assets; the selected [Firestore database](https://firebase.google.com/docs/firestore/data-model) stores documents and collections rather than literal URL-shaped files. Exact schema and routing remain unselected.
+Which service serves the application files is compared and decided in [Architecture and Hosting](../Implementation/Architecture%20and%20Hosting.md#serving-the-app-options-compared); Firebase services supply live data either way, so future shared sheets would use that hosted application rather than fetch runtime/data from GitHub. GitHub could remain source control and a backup destination. This serving model has not been implemented; the previous application's GitHub loaders are summarized in [Lessons from Character Manager](../Implementation/Lessons%20from%20Character%20Manager.md). Firebase [Hosting](https://firebase.google.com/docs/hosting/use-cases) supports web application assets; the selected [Firestore database](https://firebase.google.com/docs/firestore/data-model) stores documents and collections rather than literal URL-shaped files. Exact schema and routing remain unselected.
 
 ## Data scopes
 

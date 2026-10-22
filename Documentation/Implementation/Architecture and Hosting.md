@@ -12,12 +12,13 @@ Recorded with the user on 2026-10-21 between 12:10 am and 12:51 am PDT (America/
 - **Security Rules enforce authority, not game math.** See [Security Rules scope](#security-rules-scope).
 - **Stack:** React + TypeScript + Vite in a pnpm monorepo, chosen by the agent at the user's invitation. TypeScript lets one rules engine run in the browser, in tests and in any later server code.
 - **Core content is hand-entered for now.** Importers and LLM helpers come later.
-- **Every state change goes through a named transition** (such as `submitRequest` or `approveRequest`), so any transition can later move into a Cloud Function without changing the user interface; its Rules would change with it.
+- **Every state change goes through a named transition**, as defined in the [kernel contracts](../Systems/Modules%2C%20Systems%20and%20Rulesets.md#kernel-contracts). When a transition later moves into a Cloud Function, its Rules change with it.
 - **Testing** (2026-10-21 at 4:00 am PDT): unit tests, emulator tests, Rules tests from Milestone 4, and one browser end-to-end test from Milestone 2. See [Testing strategy](#testing-strategy).
-- **Cost measurement** (2026-10-21 at 4:00 am PDT): the [Firebase Cost Model](Firebase%20Cost%20Model.md) predates the one-document-per-definition layout. The user expects real usage to be well below it. Rather than re-estimating now, actual reads, writes and storage are to be measured once the app runs, and the cost model updated from those measurements.
+- **Cost measurement** (2026-10-21 at 4:00 am PDT; updated 2026-10-22 at 11:42 am PDT (America/Los_Angeles)): at the user's request the [Firebase Cost Model](Firebase%20Cost%20Model.md) was recalculated for the one-document-per-definition layout. Actual reads, writes and storage are still to be measured once the app runs, and the model updated from those measurements.
 
 ## Open questions
 
+- Which service serves the app's files: Firebase Hosting, Cloudflare Pages or GitHub Pages. See [the comparison](#serving-the-app-options-compared) (opened 2026-10-22 at 11:42 am PDT (America/Los_Angeles)).
 - How the first site administrator is set on real Firebase: by hand in the Firebase console, or with a one-off local script. Decide at Milestone 6 (user decision, 2026-10-21 at 4:00 am PDT).
 - Firebase region, project setup and billing: wait for the user's explicit approval (Milestone 6).
 - Whether privacy beyond character tabs and lines is enforced by Rules; owned by [Modules, Systems and Rulesets](../Systems/Modules%2C%20Systems%20and%20Rulesets.md#open-questions).
@@ -48,6 +49,33 @@ Options for that compute, in order of preference:
 3. **A GCP e2-micro always-free VM**, if a persistent Gateway bot is wanted or Cloud Run work should move onto it.
 
 **Blaze is needed** only once the app moves to real Firebase, and then for portrait Cloud Storage. The budget direction (target no-cost allowances, Blaze acceptable) is owned by [Campaigns and Shared Data](../Systems/Campaigns%20and%20Shared%20Data.md#hosted-backend-comparison).
+
+## Serving the app: options compared
+
+Researched 2026-10-22 at 11:42 am PDT (America/Los_Angeles) at the user's request, because changing the host later means changing sign-in and deployment setup. Firestore, Firebase Authentication and Cloud Storage stay the backend in every option; only the service that serves the app's static files, and any extra compute, differs. Prices are USD from the providers' official pricing pages on that date.
+
+| | Firebase Hosting | Cloudflare Pages | GitHub Pages |
+|---|---|---|---|
+| Free serving | 10 GB stored; 360 MB/day transfer | Unlimited static requests and bandwidth; 500 builds/month | 1 GB site; soft 100 GB/month bandwidth; soft 10 builds/hour |
+| Beyond free | $0.026/GB stored; $0.15/GB transfer | Static serving stays free | No paid tier; GitHub may stop serving and suggest a CDN |
+| Private repository | Works | Works | Needs a paid GitHub plan |
+| Google sign-in | Redirect sign-in works on a custom domain served by Firebase Hosting | Popup sign-in, or a transparent reverse proxy to `firebaseapp.com/__/auth/`, or self-hosted sign-in helper files | Popup sign-in or self-hosted helper files; no proxy option |
+| Local testing | Part of the Firebase Emulator Suite | Separate Wrangler tool | None needed for static files |
+| Preview links per branch | Preview channels | Automatic per branch | No |
+| Terms | General use | General use | Not intended for running an online business or commercial software service |
+
+Compute that comes with each option (needed later for the Discord bot and LLM helpers, not now):
+
+| | Google Cloud / Firebase (Blaze) | Cloudflare | GitHub |
+|---|---|---|---|
+| Free functions | Cloud Functions: 2M invocations, 400,000 GB-seconds, 200,000 GHz-seconds, 5 GB egress per month. Cloud Run: 2M requests, 180,000 vCPU-seconds, 360,000 GB-seconds per month | Workers Free: 100,000 requests/day, 10 ms CPU per request | None for serving (Actions minutes are for builds only) |
+| Paid functions | $0.40 per million invocations plus compute | Workers Paid, $5/month minimum: 10M requests and 30M CPU-ms included, then $0.30 per million requests and $0.02 per million CPU-ms | — |
+| Always-on machine | One free e2-micro VM in us-west1, us-central1 or us-east1, with 30 GB disk and 1 GB egress/month; needs a billing account | Durable Objects (included on Free with daily limits) or Containers on the paid plan | — |
+| Storage extras | Cloud Storage for portraits: 5 GB stored, 100 GB/month download in us-central1, us-west1 or us-east1 | R2: 10 GB stored, 1M writes and 10M reads/month free, no egress fees | — |
+
+Monthly cost estimates for the current layout are in the [Firebase Cost Model](Firebase%20Cost%20Model.md#layout-of-2026-10-22-recalculated). For the user-supplied traffic every option serves the app for $0, and the Firestore bill is the same whichever host is chosen. At ten times that traffic in one large campaign, Firebase Hosting would cost about $0.74–$3.85/month for transfer, while Cloudflare Pages stays at $0 and GitHub Pages stays within its soft limit.
+
+Sources: [Firebase pricing](https://firebase.google.com/pricing), [Google Cloud free tier](https://docs.cloud.google.com/free/docs/free-cloud-features), [Cloudflare Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/), [GitHub Pages limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits), [Firebase redirect sign-in options](https://firebase.google.com/docs/auth/web/redirect-best-practices).
 
 ## Security Rules scope
 

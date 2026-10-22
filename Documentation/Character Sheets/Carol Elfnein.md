@@ -1,6 +1,6 @@
 # Carol Elfnein
 
-Purpose: Carol's accepted playable tabletop baseline, updated 2026-10-18. Status: tabletop sheet; Hearthtable has no runtime character data yet, and the previous application's older JSON is not imported. Supporting rules and provenance live in the [build reference](../Class%20Reference/Carol%20Build%20Reference.md).
+Purpose: Carol's accepted playable tabletop baseline, updated 2026-10-18; slots and Indomitable revised 2026-10-21. Status: tabletop sheet; Hearthtable has no runtime character data yet, and the previous application's older JSON is not imported. Supporting rules and provenance live in the [build reference](../Class%20Reference/Carol%20Build%20Reference.md).
 
 Decisions: Human/Sage, the Wizard/Alchemist build, skill choices and starting spell package below are selected. Questions: remaining equipment bookkeeping and unusual weapon interactions are listed at the end; minor unresolved fields do not block current systems design. See [Lessons from Character Manager](../Implementation/Lessons%20from%20Character%20Manager.md#old-character-data).
 
@@ -126,6 +126,7 @@ See the weapon and ledger for activation, consumption, refill and cost rules.
 
 - Future idea, 2026-10-20: the [Oblex's memory-based impersonations](https://www.dndbeyond.com/posts/235-meet-d-ds-new-scariest-monster-in-mordenkainens) may provide a reference if Autoscorers are revisited. This is an unselected possibility, not a restored feature or current equipment.
 - Genuine unusual payload/critical/Potent Cantrip interactions, unwilling recipients and manufacture-workspace/donor details; most ordinary cases already follow normal spell rules.
+- Indomitable item: weight, attunement and whether it can be lost are not yet set by the DM.
 - Rifle weight, starting loaded chambers, ongoing grenade/casing/Basic Round supply/prices, remaining minor components/hand-use/provenance checks.
 - Continue [systems design](../Systems/Campaigns%20and%20Shared%20Data.md) from the accepted baseline; [Lessons from Character Manager](../Implementation/Lessons%20from%20Character%20Manager.md) lists failure modes to avoid. Implement later; rebuild from this sheet rather than migrating old JSON.
 

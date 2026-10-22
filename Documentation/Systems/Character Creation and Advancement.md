@@ -9,7 +9,7 @@ Recorded with the user on 2026-10-21, before about 3 am PDT (America/Los_Angeles
 - **No individual class goes above level 20.** The only way past total level 20 is multiclassing.
 - **The total-level cap is configurable** (ruleset variable `maxLevel`). Hearthtable Vanilla+ has **no cap by default**.
 - **Each class gives exactly what its own published level 1–20 table gives, and multiclass amounts add together.** Nothing is extrapolated beyond a class's table. Two Wizard 20s would simply give everything twice, within the stacking rule below.
-- **Spell slots add up per class.** Each class's own slot table is summed, replacing the published merged multiclass slot table. Pact Magic stays a separate pool.
+- **Spell slots add up per class.** Each class's own slot table is summed, replacing the published merged multiclass slot table. The summed slots form one shared pool that any eligible spell may use, whichever class supplied the slot (confirmed 2026-10-22 at 11:42 am PDT (America/Los_Angeles)). Pact Magic stays a separate pool. Because every class stays within its own 1–20 table and amounts simply add, nothing beyond level 20 has to be invented.
 - **Proficiency follows total character level** and continues the published pattern past 20: +2 at levels 1–4, then +1 every four levels (+7 at 21–24, +8 at 25–28, and so on). Formula: 2 + floor((total level − 1) / 4).
 - **Cantrip scaling stops at the published tiers** (total levels 5, 11 and 17). Nothing is added past 17.
 - **Multiclass ability prerequisites only warn.** An unmet prerequisite (such as INT 13 for Wizard) shows a visible warning; the level is still added.
@@ -19,7 +19,7 @@ Recorded with the user on 2026-10-21, before about 3 am PDT (America/Los_Angeles
 
 Recorded with the user on 2026-10-21 at 3:46 am PDT (America/Los_Angeles):
 
-- **Point-buy floor and default budget.** The lowest purchasable score is 5; scores below 8 refund 1 point per step. The Vanilla+ default budget is the published 27. The proposed budget range is minimum 5, no maximum.
+- **Point-buy floor and default budget.** The lowest purchasable score is 5; scores below 8 refund 1 point per step. The Vanilla+ default budget is the published 27. The DM's budget may be anywhere from 5 points up, with no maximum (confirmed 2026-10-22 at 11:42 am PDT (America/Los_Angeles)).
 - **Feat and invocation budgets are published, per class.** One Origin feat comes from the background at creation. Each class then gives the feat slots on its own table at its own class level (4, 8, 12 and 16, with the Epic Boon feature at 19; Fighter also 6 and 14; Rogue also 10). Invocations come from the Warlock table. Each class is counted separately and the counts add together.
 - **Over-budget feats or invocations only warn.** The app shows a visible warning with the count over budget; nothing is blocked.
 - **DM grants are real inventory items.** A reward such as "+2 INT for passing a test", an extra feat or an extra invocation is an item carrying that bonus or grant. It sits in inventory like any other item (the DM may make it weightless or unlosable) and never edits the base score or the advancement record. Because the grant exists once, as one item, it applies once. Items must therefore be able to grant ability increases, feats, invocations and features. Feats and invocations granted this way sit outside the class budget and never cause an over-budget warning.

@@ -2,7 +2,7 @@
 
 This document owns the Firebase estimate and its numerical assumptions. Status: planning only, checked 2026-10-19; no service setup or runtime changes. [Campaigns and Shared Data](../Systems/Campaigns%20and%20Shared%20Data.md#planning-scale-and-cost-model) owns the selected budget direction, user-supplied traffic and immediate Firestore updates with native live listeners. The estimates below calculate that selected update model. Actual edits per day, document sizes and permissions queries remain unmeasured.
 
-Note, 2026-10-21 at 4:00 am PDT (America/Los_Angeles): these estimates predate the one-document-per-definition storage layout selected in [Modules, Systems and Rulesets](../Systems/Modules%2C%20Systems%20and%20Rulesets.md#records-storage-and-caching). The user expects real usage to be well below them. Do not re-estimate by hand; measure actual reads, writes and storage once the app runs, then update this model from the measurements.
+Note, 2026-10-21 at 4:00 am PDT (America/Los_Angeles): these estimates predate the one-document-per-definition storage layout selected in [Modules, Systems and Rulesets](../Systems/Modules%2C%20Systems%20and%20Rulesets.md#records-storage-and-caching). The user expects real usage to be well below them. Measure actual reads, writes and storage once the app runs, then update this model from the measurements. Superseded in part 2026-10-22 at 11:42 am PDT (America/Los_Angeles): the user asked for a recalculation under the new layout, given below under [Layout of 2026-10-22, recalculated](#layout-of-2026-10-22-recalculated).
 
 ## What viewing and navigation cost
 
@@ -76,6 +76,23 @@ All rows remain within the write allowance: the paid amounts are listener/rule *
 Worked high-case example: 1,000 writes/day yields `(415 initial + 200 section + 1,000 × 17 update deliveries) × 3 = 52,845` reads/day. Overage costs `(52,845 − 50,000) × 30 ÷ 100,000 × $0.03 = $0.025605/month`, rounded to $0.03 in the table.
 
 The modeled shared audience matters more than the visitors merely staying connected. At 5,000 updates/day, increasing each live update from 2 KiB to 10 KiB raises the high-case subtotal to about $5.06/month through download overage. That sensitivity illustrates why the final document layout matters.
+
+## Layout of 2026-10-22, recalculated
+
+Calculated 2026-10-22 at 11:42 am PDT (America/Los_Angeles) by `layout2Scenarios` in [Firebase Cost Model.cjs](Firebase%20Cost%20Model.cjs), using the rates above. Assumptions, all planning guesses: a sheet references 100 definitions and has 6 tab documents; a warm visit (definitions already cached in the browser) reads the 6 tabs plus 2 "since last visit" checks; a cold visit reads all 100 definitions as well; a campaign home reads 5 documents; each delivered document costs one extra Security Rules read (membership check, since tab privacy is screen-only); documents are 2 KiB; each page load downloads a 2 MiB app. Update audiences are unchanged from the earlier model. "×10" multiplies visitors and the audience of each update by ten, as if one very large campaign, which is pessimistic; ten separate campaigns would cost less. The write count is not multiplied.
+
+| Traffic | Visits | Writes/day | Reads/day | Firestore $/month | Firebase Hosting $/month |
+|---|---|---:|---:|---:|---:|
+| Expected | warm | 1,000 | 11,840 | 0.00 | 0.00 |
+| Expected | cold | 5,000 | 60,780 | 0.10 | 0.00 |
+| High | warm | 1,000 | 34,730 | 0.00 | 0.00 |
+| High | cold | 5,000 | 175,630 | 1.13 | 0.00 |
+| Expected ×10 | cold | 1,000 | 147,800 | 0.88 | 0.74 |
+| Expected ×10 | cold | 5,000 | 607,800 | 6.95 | 0.74 |
+| High ×10 | cold | 1,000 | 396,300 | 3.96 | 3.85 |
+| High ×10 | cold | 5,000 | 1,756,300 | 23.20 | 3.85 |
+
+Cloudflare Pages would serve the same app for $0 in every row, and GitHub Pages stays within its soft 100 GB/month limit in every row (the largest is about 36 GB/month). The Firestore column is the same whichever host serves the app. Most of the cost comes from live updates delivered to many open viewers, not from opening sheets, so the update audience matters more than the storage layout.
 
 ## Implementation boundaries
 

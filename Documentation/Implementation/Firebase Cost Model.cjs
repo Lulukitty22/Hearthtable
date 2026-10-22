@@ -64,5 +64,31 @@ assert.equal(estimate('high',1000).readsDaily,52845);
 assert(Math.abs(estimate('high',1000).modeledSubtotalMonthly-0.025605)<1e-9);
 assert.equal(estimate('expected',1000).modeledSubtotalMonthly,0);
 assert.equal(readFreeThresholds.high.persistedWritesDaily,944);
+// Layout of 2026-10-22: one document per definition, one per sheet tab, persistent browser
+// cache with "since last visit" checks, screen-only tab privacy. Inputs are planning guesses.
+const layout2={definitionsPerSheet:100,tabDocuments:6,sinceVisitChecks:2,homeDocuments:5,
+  ruleReadsPerDelivered:1,documentBytes:2*KiB,appBytesPerLoad:2*MiB};
+function estimate2(name,writesDaily,{cold=false,trafficScale=1}={}){
+  const t=traffic[name],l=layout2,r=rates,a=assumptions;
+  const homes=t.homeViews*trafficScale,sheets=(t.personalSheets+t.guestSheets)*trafficScale;
+  const perSheet=l.tabDocuments+(cold?l.definitionsPerSheet:l.sinceVisitChecks);
+  const audience=(a.sharedWriteFraction*t.sharedAudience+(1-a.sharedWriteFraction)*t.personalAudience)*trafficScale;
+  const delivered=homes*l.homeDocuments+sheets*perSheet+writesDaily*audience;
+  const readsDaily=delivered*(1+l.ruleReadsPerDelivered);
+  const egressGiBMonthly=delivered*l.documentBytes*a.transferMargin*a.days/GiB;
+  const hostingBytesDaily=(homes+sheets)*l.appBytesPerLoad;
+  const firestoreMonthly=excess(readsDaily,r.readsFreeDaily)/100000*r.readPer100k*a.days
+    +excess(writesDaily,r.writesFreeDaily)/100000*r.writePer100k*a.days
+    +excess(egressGiBMonthly,r.firestoreFreeGiBMonthly)*r.firestorePerGiB;
+  const firebaseHostingMonthly=excess(hostingBytesDaily,r.hostingFreeBytesDaily)/GB*r.hostingPerGB*a.days;
+  return{name,cold,trafficScale,writesDaily,readsDaily,hostingMBDaily:hostingBytesDaily/1e6,
+    firestoreMonthly,firebaseHostingMonthly,cloudflarePagesMonthly:0,
+    githubPagesWithinSoftLimit:hostingBytesDaily*a.days<=100*GB};
+}
+const layout2Scenarios=[];
+for(const name of Object.keys(traffic))for(const trafficScale of [1,10])for(const cold of [false,true])
+  for(const w of [1000,5000])layout2Scenarios.push(estimate2(name,w,{cold,trafficScale}));
+assert.equal(estimate2('expected',1000,{cold:true}).readsDaily,14780);
+assert.equal(estimate2('high',1000,{cold:true}).readsDaily,39630);
 console.log(JSON.stringify({checked:'2026-10-19',currency:'USD',rates,assumptions,traffic,
-  scenarios,sensitivity,readFreeThresholds},null,2));
+  scenarios,sensitivity,readFreeThresholds,layout2Checked:'2026-10-22',layout2,layout2Scenarios},null,2));

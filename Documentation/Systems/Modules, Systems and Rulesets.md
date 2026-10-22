@@ -14,6 +14,7 @@ Recorded with the user on 2026-10-21, between 12:10 am and 2:06 am PDT (America/
 - **`maxLevel` is a ruleset variable**, 20 by default. Vanilla+ sets no cap; its scaling past 20 is owned by [Character Creation and Advancement](Character%20Creation%20and%20Advancement.md).
 - **Firearms use a reusable `magazines` system** (chambers, loaded rounds, load order, per-round contents). The Aetherlock is campaign custom content (data) attached to it.
 - **Storage and caching:** see [Records, storage and caching](#records-storage-and-caching). In short: one Firestore document per definition, one document per character-sheet tab, references from sheets to definitions, a persistent browser cache synchronized by "changed since last visit" queries, and a campaign deletion log.
+- **Campaigns may override definitions and set ruleset variables** within what their selected ruleset exposes (selected 2026-10-21 at 12:51 am PDT, confirmed 2026-10-22 at 11:42 am PDT (America/Los_Angeles)). How far a campaign may go before it should become a new ruleset is still open.
 - **Privacy is screen-only** for character tabs and lines. Viewers' browsers receive the data and the app hides it. The privacy rules themselves are owned by [Campaigns and Shared Data](Campaigns%20and%20Shared%20Data.md#character-sheet-visibility).
 
 ## Open questions
@@ -21,6 +22,7 @@ Recorded with the user on 2026-10-21, between 12:10 am and 2:06 am PDT (America/
 - Whether privacy beyond character tabs and lines (whole private campaigns or characters, DM-only notes, hidden actions) is also screen-only or enforced by Security Rules.
 - Modern Fantasy's use of magic and its armor model: deliberately left open until that ruleset is needed. The architecture only has to allow it.
 - Whether the Roblox catalog can be queried directly from a browser (see [the non-5e sketch](#another-game-roblox-roleplay-outfits)).
+- How far campaign overrides may go before they should become a new ruleset.
 - Sub-module versioning (how a system's own version relates to rulesets) stays internal and open.
 
 ## Layers
@@ -91,7 +93,7 @@ Selected 2026-10-21 at 2:06 am PDT (America/Los_Angeles). The aim is to stay wit
 | A definition is edited while sheets are open | 1 per open viewer |
 | Editing one's own inventory | 0 reads; 1–2 writes |
 
-The [Firebase Cost Model](../Implementation/Firebase%20Cost%20Model.md) owns cost estimates; it should be rechecked against this layout.
+The [Firebase Cost Model](../Implementation/Firebase%20Cost%20Model.md) owns cost estimates, including a recalculation for this layout.
 
 **Privacy and totals.** Because privacy is screen-only, a viewer's browser has the full data and computes true totals itself. Private lines appear as placeholders ("Private Item", "Private Spell"), and a total that includes a private source is shown with that source unnamed. The rules live in [Campaigns and Shared Data](Campaigns%20and%20Shared%20Data.md#character-sheet-visibility).
 

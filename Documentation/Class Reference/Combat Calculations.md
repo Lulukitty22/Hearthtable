@@ -1,6 +1,6 @@
 # Combat Calculations
 
-Updated 2026-10-18. These supporting calculations illustrate Carol's selected spells, encounter resources and accuracy assumptions; they are not guaranteed damage or a global damage maximum. Carol's accepted build is recorded in [her sheet](../Character%20Sheets/Carol%20Elfnein.md); [Mechanics Reference](Mechanics%20Reference.md) explains rule boundaries and source confidence. Runtime implementation is deferred. Enemy statistics below are illustrative, not measured campaign values; no character choice is pending here.
+Updated 2026-10-18; slot budget revised 2026-10-22 at 11:42 am PDT (America/Los_Angeles) for per-class slots. These supporting calculations illustrate Carol's selected spells, encounter resources and accuracy assumptions; they are not guaranteed damage or a global damage maximum. Carol's accepted build is recorded in [her sheet](../Character%20Sheets/Carol%20Elfnein.md); [Mechanics Reference](Mechanics%20Reference.md) explains rule boundaries and source confidence. Runtime implementation is deferred. Enemy statistics below are illustrative, not measured campaign values; no character choice is pending here.
 
 ## Common assumptions and direct spells
 
@@ -33,7 +33,7 @@ Three Large leads these mixes but requires three suitable objects and positionin
 
 For a six-turn encounter illustration, two Cone5 plus four Fire Bolt actions give 138 raw without Evoker and 174 with Evoker, against one enemy affected by every cast. It assumes all six actions are available and is not an optimized rotation; setup actions, concentration loss, target count and other spells change the result.
 
-Wizard12/Artificer3 has four slots eligible for Cone of Cold: two fifth-level, one sixth-level and one seventh-level, with a fifth cast possible after Arcane Recovery. The seventh-level slot supports upcasting, not seventh-level Wizard access. Higher slots committed to Guise, Animate, crafting or another spell are unavailable for Cone; there are no parallel free pools. Cone at slots 5/6/7 averages 36/40.5/45, or Evoker 42/46.5/51. The selected split's four-slot budget totals 157.5/181.5 per enemy failing all saves, or 193.5/223.5 after recovering a fifth slot.
+Wizard12/Artificer3 has three slots eligible for Cone of Cold under Vanilla+'s per-class slots (7/3/3/3/2/1, no seventh-level slot): two fifth-level and one sixth-level, with another fifth-level cast possible after Arcane Recovery. Higher slots committed to Guise, Animate, crafting or another spell are unavailable for Cone; Guise in particular competes for the single sixth-level slot. There are no parallel free pools. Cone at slots 5/6 averages 36/40.5, or Evoker 42/46.5. The three-slot budget totals 112.5/130.5 per enemy failing all saves, or 148.5/172.5 after recovering a fifth slot.
 
 ## Accuracy illustrations
 

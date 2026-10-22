@@ -39,8 +39,8 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 - Start Here, each directory file, README and AGENTS.md link to the new documents, with one authoritative home for each decision.
 - A review agent compares the new and changed documents against the baseline for lost facts, duplicate authority and new contradictions, as AGENTS.md requires.
 - `node 'Documentation/Implementation/Firebase Cost Model.cjs'` still passes.
-- The user has reviewed the documents and the Milestone 2 build steps (Step A7) and agreed to start coding.
-- The working branch is committed and pushed.
+- The user has reviewed the documents and the Milestone 2 build steps (Step A7), including whether anything should be generalized beyond 5e, and agreed to start coding.
+- The working branch is committed and pushed, with the user's go-ahead.
 
 ## Milestone 2 build steps
 
@@ -73,6 +73,8 @@ At each step and feature, ask the user about anything unstated, contradictory or
 ## Feature inventory
 
 A reminder and scope list for future work, grouped by area. When building any feature here, ask the user about anything unstated, contradictory or unclear.
+
+Each bullet's rules are owned by the linked Systems or Class Reference document; this list only tracks scope and status.
 
 **Labels:** **M2** = Milestone 2 scope. *Selected* = designed in the documentation and waiting for implementation. *Needs spec* = must be specified in the documentation before implementation. *Future* = proposed or later.
 
@@ -116,7 +118,8 @@ Spells are their own system family; their behavior depends on where a spell is s
 ### D. Crafting, economy and custom content
 
 - *Selected:* custom item and spell definitions as account and campaign content, created by hand entry, with linking, independent customization, publication and manual import.
-- *Needs spec:* campaign-specific edits and house rules — how far a campaign can tweak its ruleset before it should become a new ruleset.
+- *Selected:* a campaign may override definitions and set ruleset variables within what its ruleset exposes.
+- *Needs spec:* how far a campaign can tweak its ruleset before it should become a new ruleset.
 - Crafting methods: systems provide recipe and cost formulas, rulesets set the numbers. Examples: scroll scribing and mounting; magic-item crafting (gp, workdays, tool proficiency by rarity); Aetherlock ammunition recipes; canister charges and refills; Artificer replicas and elixirs.
 - *Needs spec:* economy policy — the parked 120 gp canister refill and DIY casings, currency and work-time rounding, whether crafting uses the score at job start and how temporary buffs count, and shop prices.
 
