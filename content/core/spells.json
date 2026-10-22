@@ -1,6 +1,6 @@
 [
   {
-    "id": "core/fire_bolt",
+    "id": "core/Fire_Bolt",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -10,7 +10,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -18,11 +18,11 @@
       "name": "Fire Bolt",
       "level": 0,
       "school": "Evocation",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"]
     }
   },
   {
-    "id": "core/ray_of_frost",
+    "id": "core/Ray_of_Frost",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -32,7 +32,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -40,11 +40,11 @@
       "name": "Ray of Frost",
       "level": 0,
       "school": "Evocation",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"]
     }
   },
   {
-    "id": "core/minor_illusion",
+    "id": "core/Minor_Illusion",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -54,7 +54,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -62,11 +62,11 @@
       "name": "Minor Illusion",
       "level": 0,
       "school": "Illusion",
-      "classes": ["core/wizard"]
+      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"]
     }
   },
   {
-    "id": "core/mind_sliver",
+    "id": "core/Mind_Sliver",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -76,7 +76,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -84,11 +84,11 @@
       "name": "Mind Sliver",
       "level": 0,
       "school": "Enchantment",
-      "classes": ["core/wizard"]
+      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"]
     }
   },
   {
-    "id": "core/shocking_grasp",
+    "id": "core/Shocking_Grasp",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -98,7 +98,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -106,11 +106,11 @@
       "name": "Shocking Grasp",
       "level": 0,
       "school": "Evocation",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"]
     }
   },
   {
-    "id": "core/mage_hand",
+    "id": "core/Mage_Hand",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -120,7 +120,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -128,11 +128,17 @@
       "name": "Mage Hand",
       "level": 0,
       "school": "Conjuration",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": [
+        "core/Bard",
+        "core/Sorcerer",
+        "core/Warlock",
+        "core/Wizard",
+        "core/Artificer"
+      ]
     }
   },
   {
-    "id": "core/prestidigitation",
+    "id": "core/Prestidigitation",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -142,7 +148,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -150,11 +156,17 @@
       "name": "Prestidigitation",
       "level": 0,
       "school": "Transmutation",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": [
+        "core/Bard",
+        "core/Sorcerer",
+        "core/Warlock",
+        "core/Wizard",
+        "core/Artificer"
+      ]
     }
   },
   {
-    "id": "core/message",
+    "id": "core/Message",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -164,7 +176,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -172,11 +184,17 @@
       "name": "Message",
       "level": 0,
       "school": "Transmutation",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": [
+        "core/Bard",
+        "core/Druid",
+        "core/Sorcerer",
+        "core/Wizard",
+        "core/Artificer"
+      ]
     }
   },
   {
-    "id": "core/true_strike",
+    "id": "core/True_Strike",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -186,7 +204,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -194,11 +212,17 @@
       "name": "True Strike",
       "level": 0,
       "school": "Divination",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": [
+        "core/Bard",
+        "core/Sorcerer",
+        "core/Warlock",
+        "core/Wizard",
+        "core/Artificer"
+      ]
     }
   },
   {
-    "id": "core/mending",
+    "id": "core/Mending",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -208,7 +232,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -216,11 +240,17 @@
       "name": "Mending",
       "level": 0,
       "school": "Transmutation",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": [
+        "core/Bard",
+        "core/Cleric",
+        "core/Druid",
+        "core/Sorcerer",
+        "core/Wizard"
+      ]
     }
   },
   {
-    "id": "core/mage_armor",
+    "id": "core/Mage_Armor",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -230,7 +260,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -238,7 +268,7 @@
       "name": "Mage Armor",
       "level": 1,
       "school": "Abjuration",
-      "classes": ["core/wizard"],
+      "classes": ["core/Sorcerer", "core/Wizard"],
       "whileActive": [
         {
           "type": "base",
@@ -252,7 +282,7 @@
     }
   },
   {
-    "id": "core/shield",
+    "id": "core/Shield",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -262,7 +292,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -270,7 +300,7 @@
       "name": "Shield",
       "level": 1,
       "school": "Abjuration",
-      "classes": ["core/wizard"],
+      "classes": ["core/Sorcerer", "core/Wizard"],
       "whileActive": [
         {
           "type": "bonus",
@@ -281,7 +311,7 @@
     }
   },
   {
-    "id": "core/cure_wounds",
+    "id": "core/Cure_Wounds",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -291,7 +321,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -299,11 +329,18 @@
       "name": "Cure Wounds",
       "level": 1,
       "school": "Abjuration",
-      "classes": ["core/artificer"]
+      "classes": [
+        "core/Bard",
+        "core/Cleric",
+        "core/Druid",
+        "core/Paladin",
+        "core/Ranger",
+        "core/Artificer"
+      ]
     }
   },
   {
-    "id": "core/faerie_fire",
+    "id": "core/Faerie_Fire",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -313,7 +350,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -321,11 +358,11 @@
       "name": "Faerie Fire",
       "level": 1,
       "school": "Evocation",
-      "classes": ["core/artificer"]
+      "classes": ["core/Bard", "core/Druid", "core/Artificer"]
     }
   },
   {
-    "id": "core/identify",
+    "id": "core/Identify",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -335,7 +372,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -343,11 +380,11 @@
       "name": "Identify",
       "level": 1,
       "school": "Divination",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": ["core/Bard", "core/Wizard", "core/Artificer"]
     }
   },
   {
-    "id": "core/detect_magic",
+    "id": "core/Detect_Magic",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -357,7 +394,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -365,11 +402,21 @@
       "name": "Detect Magic",
       "level": 1,
       "school": "Divination",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": [
+        "core/Bard",
+        "core/Cleric",
+        "core/Druid",
+        "core/Paladin",
+        "core/Ranger",
+        "core/Sorcerer",
+        "core/Warlock",
+        "core/Wizard",
+        "core/Artificer"
+      ]
     }
   },
   {
-    "id": "core/healing_word",
+    "id": "core/Healing_Word",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -379,7 +426,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -387,11 +434,11 @@
       "name": "Healing Word",
       "level": 1,
       "school": "Abjuration",
-      "classes": []
+      "classes": ["core/Bard", "core/Cleric", "core/Druid"]
     }
   },
   {
-    "id": "core/ray_of_sickness",
+    "id": "core/Ray_of_Sickness",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -401,7 +448,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -409,11 +456,11 @@
       "name": "Ray of Sickness",
       "level": 1,
       "school": "Necromancy",
-      "classes": ["core/wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"]
     }
   },
   {
-    "id": "core/scorching_ray",
+    "id": "core/Scorching_Ray",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -423,7 +470,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -431,11 +478,11 @@
       "name": "Scorching Ray",
       "level": 2,
       "school": "Evocation",
-      "classes": ["core/wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"]
     }
   },
   {
-    "id": "core/mirror_image",
+    "id": "core/Mirror_Image",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -445,7 +492,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -453,11 +500,11 @@
       "name": "Mirror Image",
       "level": 2,
       "school": "Illusion",
-      "classes": ["core/wizard"]
+      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"]
     }
   },
   {
-    "id": "core/misty_step",
+    "id": "core/Misty_Step",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -467,7 +514,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -475,11 +522,11 @@
       "name": "Misty Step",
       "level": 2,
       "school": "Conjuration",
-      "classes": ["core/wizard"]
+      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"]
     }
   },
   {
-    "id": "core/web",
+    "id": "core/Web",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -489,7 +536,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -497,11 +544,11 @@
       "name": "Web",
       "level": 2,
       "school": "Conjuration",
-      "classes": ["core/wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"]
     }
   },
   {
-    "id": "core/fireball",
+    "id": "core/Fireball",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -511,7 +558,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -519,11 +566,11 @@
       "name": "Fireball",
       "level": 3,
       "school": "Evocation",
-      "classes": ["core/wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"]
     }
   },
   {
-    "id": "core/counterspell",
+    "id": "core/Counterspell",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -533,7 +580,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -541,11 +588,11 @@
       "name": "Counterspell",
       "level": 3,
       "school": "Abjuration",
-      "classes": ["core/wizard"]
+      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"]
     }
   },
   {
-    "id": "core/dispel_magic",
+    "id": "core/Dispel_Magic",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -555,7 +602,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -563,11 +610,21 @@
       "name": "Dispel Magic",
       "level": 3,
       "school": "Abjuration",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": [
+        "core/Bard",
+        "core/Cleric",
+        "core/Druid",
+        "core/Paladin",
+        "core/Ranger",
+        "core/Sorcerer",
+        "core/Warlock",
+        "core/Wizard",
+        "core/Artificer"
+      ]
     }
   },
   {
-    "id": "core/fabricate",
+    "id": "core/Fabricate",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -577,7 +634,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -585,11 +642,11 @@
       "name": "Fabricate",
       "level": 4,
       "school": "Transmutation",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": ["core/Wizard", "core/Artificer"]
     }
   },
   {
-    "id": "core/cone_of_cold",
+    "id": "core/Cone_of_Cold",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -599,7 +656,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -607,11 +664,11 @@
       "name": "Cone of Cold",
       "level": 5,
       "school": "Evocation",
-      "classes": ["core/wizard"]
+      "classes": ["core/Druid", "core/Sorcerer", "core/Wizard"]
     }
   },
   {
-    "id": "core/wall_of_force",
+    "id": "core/Wall_of_Force",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -621,7 +678,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -629,11 +686,11 @@
       "name": "Wall of Force",
       "level": 5,
       "school": "Evocation",
-      "classes": ["core/wizard"]
+      "classes": ["core/Wizard"]
     }
   },
   {
-    "id": "core/animate_objects",
+    "id": "core/Animate_Objects",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -643,7 +700,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -651,11 +708,11 @@
       "name": "Animate Objects",
       "level": 5,
       "school": "Transmutation",
-      "classes": ["core/wizard", "core/artificer"]
+      "classes": ["core/Bard", "core/Sorcerer", "core/Wizard", "core/Artificer"]
     }
   },
   {
-    "id": "core/chain_lightning",
+    "id": "core/Chain_Lightning",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -665,7 +722,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -673,11 +730,11 @@
       "name": "Chain Lightning",
       "level": 6,
       "school": "Evocation",
-      "classes": ["core/wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"]
     }
   },
   {
-    "id": "core/disintegrate",
+    "id": "core/Disintegrate",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -687,7 +744,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "confidence": "class lists record Wizard and Artificer membership only"
+      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -695,11 +752,11 @@
       "name": "Disintegrate",
       "level": 6,
       "school": "Transmutation",
-      "classes": ["core/wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"]
     }
   },
   {
-    "id": "core/tashas_otherworldly_guise",
+    "id": "core/Tasha's_Otherworldly_Guise",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -710,7 +767,7 @@
       "status": "published",
       "edition": "2014",
       "confidence": "community Tasha transcription; no revised replacement claimed",
-      "reference": "Tasha's Cauldron of Everything"
+      "reference": "Tasha's Cauldron of Everything; class lists from that book"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -718,7 +775,7 @@
       "name": "Tasha's Otherworldly Guise",
       "level": 6,
       "school": "Transmutation",
-      "classes": ["core/wizard"],
+      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
       "whileActive": [
         {
           "type": "bonus",

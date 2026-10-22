@@ -1,13 +1,20 @@
-// The inventory as a grid of item tiles. Clicking a tile opens the whole entry: its
-// definition, source and rules, plus this character's own state, which can be edited there
-// (quantity, held or stowed). Attunement order and accessibility show on the tile.
+// The inventory as a grid of item tiles. Clicking a tile opens the whole entry: this
+// character's own copy (quantity, held or stowed, placement, attunement slot, a book's title
+// and spells, a weapon's chambers) and then the shared definition it points at.
 
 import type { LineRow, Weight } from "@hearthtable/system-containers";
 import type { WeaponView } from "@hearthtable/system-magazines";
+import type { BookView } from "@hearthtable/system-spellbook-readiness";
 import { useState } from "react";
-import { describeGrants } from "./describe";
-import { AllFields, DetailPanel, SourceLine, Tile, TileGrid } from "./Grid";
-import { known, sheetRecord, type Data, type TabProps } from "./shared";
+import { EntryBody, nameOfRecord, useOpenEntry } from "./entries";
+import { DetailPanel, Tile, TileGrid } from "./Grid";
+import {
+  known,
+  sheetRecord,
+  sheetRecords,
+  type Data,
+  type TabProps,
+} from "./shared";
 
 type Line = Record<string, unknown> & { id: string };
 
@@ -26,13 +33,19 @@ function editLine(
   }));
 }
 
-const WHEN: Record<string, string> = {
-  owned: "while owned",
-  equipped: "while equipped",
-  held: "while held",
-  attuned: "while attuned",
-  "attuned-and-held": "while attuned and held",
-};
+/** A book line's own record (title, order, spells), kept as its own document. */
+function bookRecordFor(props: TabProps, lineId: string) {
+  return sheetRecords(props, "spellbook").find(
+    (r) => (r.data as { book?: unknown }).book === lineId,
+  );
+}
+
+export function displayName(props: TabProps, row: LineRow): string {
+  const title = (
+    bookRecordFor(props, row.line.id)?.data as { title?: unknown } | undefined
+  )?.title;
+  return typeof title === "string" ? title : row.name;
+}
 
 function ItemDetail({
   props,
@@ -47,41 +60,38 @@ function ItemDetail({
   weapon?: WeaponView;
   onClose: () => void;
 }) {
+  const openEntry = useOpenEntry();
   const line = row.line as Line & { quantity: number; held?: boolean };
-  const def = row.definition as
-    | (Record<string, unknown> & {
-        weight?: number;
-        volume?: number;
-        attunement?: { required: boolean; requiresClass?: string };
-        grants?: unknown;
-        grantsWhen?: string;
-        container?: {
-          maxWeight?: number;
-          maxVolume?: number;
-          maxCount?: number;
-          contentsAddWeight: boolean;
-        };
-      })
-    | undefined;
-  const record = props.records.get(line["ref"] as string);
-  const holdable =
-    def?.grantsWhen === "held" || def?.grantsWhen === "attuned-and-held";
+  const grantsWhen = (row.definition as { grantsWhen?: string } | undefined)
+    ?.grantsWhen;
+  const holdable = grantsWhen === "held" || grantsWhen === "attuned-and-held";
+  const bookRecord = bookRecordFor(props, line.id);
+  const books =
+    known(
+      props.resolved.get<readonly BookView[]>("spellbook-readiness.books"),
+    ) ?? [];
+  const book = books.find((b) => b.lineId === line.id);
+  const title = displayName(props, row);
 
   return (
-    <DetailPanel title={row.name} onClose={onClose}>
-      {row.status === "unresolved" ? (
-        <p className="unresolved">{row.reason}</p>
-      ) : (
-        <SourceLine record={record} />
-      )}
-
+    <DetailPanel title={title} onClose={onClose}>
+      {title !== row.name && <p className="muted">{row.name}</p>}
+      <h3>
+        {String(
+          (
+            props.records.get(props.characterId)?.data as
+              { name?: unknown } | undefined
+          )?.name ?? "This character",
+        )}
+        's copy
+      </h3>
       <div className="detail-grid">
         <label>
           Quantity{" "}
           <input
             type="number"
             min={0}
-            aria-label={`Quantity of ${row.name}`}
+            aria-label={`Quantity of ${title}`}
             value={line.quantity}
             style={{ width: "5em" }}
             onChange={(e) => {
@@ -107,15 +117,6 @@ function ItemDetail({
           </button>
         )}
         <span>
-          Weight:{" "}
-          {def?.weight === undefined ? (
-            <span className="muted">unknown</span>
-          ) : (
-            `${def.weight} lb each`
-          )}
-          {def?.volume !== undefined && ` · ${def.volume} cu ft`}
-        </span>
-        <span>
           {row.depth === undefined ? (
             <span className="unresolved">placement broken</span>
           ) : row.depth === 0 ? (
@@ -124,46 +125,32 @@ function ItemDetail({
             `Packed ${row.depth} deep`
           )}
           {!row.accessible && <span className="badge warn">out of reach</span>}
+          {position >= 0 && (
+            <span className="badge good">attuned, slot {position + 1}</span>
+          )}
         </span>
-        {def?.attunement?.required && (
-          <span>
-            Requires attunement
-            {def.attunement.requiresClass
-              ? ` by ${props.records.get(def.attunement.requiresClass) ? String((props.records.get(def.attunement.requiresClass)?.data as { name?: unknown }).name) : def.attunement.requiresClass}`
-              : ""}
-            {position >= 0 ? (
-              <span className="badge good">attuned, slot {position + 1}</span>
-            ) : (
-              <span className="badge">not attuned</span>
-            )}
-          </span>
-        )}
-        {def?.container && (
-          <span>
-            Container:{" "}
-            {[
-              def.container.maxWeight !== undefined &&
-                `${def.container.maxWeight} lb`,
-              def.container.maxVolume !== undefined &&
-                `${def.container.maxVolume} cu ft`,
-              def.container.maxCount !== undefined &&
-                `${def.container.maxCount} items`,
-            ]
-              .filter(Boolean)
-              .join(", ")}
-            {!def.container.contentsAddWeight && " (contents add no weight)"}
-          </span>
-        )}
       </div>
 
-      {def?.grants !== undefined && (
+      {book && (
         <>
-          <h3>Grants {def.grantsWhen ? WHEN[def.grantsWhen] : ""}</h3>
-          <ul>
-            {describeGrants(def.grants).map((g) => (
-              <li key={g}>{g}</li>
+          <h3>
+            Contains {book.entries.length}
+            {book.capacity !== undefined && ` of ${book.capacity}`} spells
+          </h3>
+          <TileGrid>
+            {book.entries.map((e) => (
+              <Tile
+                key={e.id}
+                name={e.name}
+                {...(e.status === "unresolved"
+                  ? { tone: "bad" as const }
+                  : !e.ready
+                    ? { tone: "warn" as const }
+                    : {})}
+                onOpen={() => openEntry(e.ref)}
+              />
             ))}
-          </ul>
+          </TileGrid>
         </>
       )}
 
@@ -194,7 +181,19 @@ function ItemDetail({
         </>
       )}
 
-      <AllFields record={record} />
+      <details className="notes">
+        <summary>This copy's own fields</summary>
+        <pre className="fields">
+          {JSON.stringify(
+            bookRecord ? { ...line, book: bookRecord.data } : line,
+            null,
+            2,
+          )}
+        </pre>
+      </details>
+
+      <h3>{nameOfRecord(props, line["ref"] as string)}</h3>
+      <EntryBody props={props} id={line["ref"] as string} />
     </DetailPanel>
   );
 }
@@ -212,6 +211,7 @@ export function InventoryTab(props: TabProps) {
         { attuned?: string[] } | undefined
     )?.attuned ?? [];
   const openRow = lines.find((l) => l.line.id === open);
+  const openWeapon = weapons.find((w) => w.lineId === open);
 
   return (
     <section className="panel">
@@ -230,7 +230,7 @@ export function InventoryTab(props: TabProps) {
           return (
             <Tile
               key={row.line.id}
-              name={row.name}
+              name={displayName(props, row)}
               quantity={row.line.quantity}
               badges={[
                 ...(position >= 0 ? [`A${position + 1}`] : []),
@@ -253,13 +253,7 @@ export function InventoryTab(props: TabProps) {
           props={props}
           row={openRow}
           position={attuned.indexOf(openRow.line.id)}
-          {...(weapons.find((w) => w.lineId === openRow.line.id)
-            ? {
-                weapon: weapons.find(
-                  (w) => w.lineId === openRow.line.id,
-                ) as WeaponView,
-              }
-            : {})}
+          {...(openWeapon ? { weapon: openWeapon } : {})}
           onClose={() => setOpen(undefined)}
         />
       )}

@@ -1,51 +1,57 @@
+// Features as tiles grouped by where they came from. Clicking one opens its entry with the
+// choices this character made; spells or items it mentions open in turn.
+
 import type { FeatureRow } from "@hearthtable/system-features";
+import { useOpenEntry } from "./entries";
+import { Tile, TileGrid } from "./Grid";
 import { known, type TabProps } from "./shared";
 
+interface FeatureLine {
+  readonly ref: string;
+  readonly from?: string;
+  readonly choices?: Record<string, string>;
+}
+
 export function FeaturesTab(props: TabProps) {
-  const features =
+  const open = useOpenEntry();
+  const rows =
     known(props.resolved.get<readonly FeatureRow[]>("features.list")) ?? [];
-  const groups = new Map<string, FeatureRow[]>();
-  for (const f of features)
-    groups.set(f.from ?? "Other", [
-      ...(groups.get(f.from ?? "Other") ?? []),
-      f,
-    ]);
+  const lines = ((
+    props.records.get(props.characterId)?.data as
+      { features?: FeatureLine[] } | undefined
+  )?.features ?? []) as readonly FeatureLine[];
+
+  const groups = new Map<
+    string,
+    { row: FeatureRow; line: FeatureLine | undefined }[]
+  >();
+  rows.forEach((row, i) => {
+    const from = row.from ?? "Other";
+    groups.set(from, [...(groups.get(from) ?? []), { row, line: lines[i] }]);
+  });
 
   return (
     <div className="grid">
-      {[...groups].map(([from, rows]) => (
+      {[...groups].map(([from, items]) => (
         <section key={from} className="panel">
           <h2>{from}</h2>
-          <ul>
-            {rows.map((f, i) => (
-              <li key={`${f.ref}-${i}`}>
-                {f.status === "resolved" ? (
-                  f.name
-                ) : (
-                  <span className="unresolved">{f.name}</span>
-                )}
-                {f.status === "unresolved" && (
-                  <span className="muted"> — {f.reason}</span>
-                )}
-                {f.grants.length > 0 && (
-                  <span className="muted">
-                    {" "}
-                    (
-                    {f.grants
-                      .map((g) =>
-                        g.type === "capability"
-                          ? g.id
-                          : "target" in g
-                            ? g.target
-                            : g.pool,
-                      )
-                      .join(", ")}
-                    )
-                  </span>
-                )}
-              </li>
+          <TileGrid>
+            {items.map(({ row, line }, i) => (
+              <Tile
+                key={`${row.ref}-${i}`}
+                name={row.name}
+                {...(row.status === "unresolved"
+                  ? { tone: "bad" as const }
+                  : {})}
+                onOpen={() =>
+                  open(row.ref, {
+                    ...(line?.choices ? { choices: line.choices } : {}),
+                    ...(row.from ? { from: row.from } : {}),
+                  })
+                }
+              />
             ))}
-          </ul>
+          </TileGrid>
         </section>
       ))}
     </div>

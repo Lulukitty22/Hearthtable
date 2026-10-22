@@ -4,8 +4,8 @@
 
 import { classRecords } from "@hearthtable/game-dnd5e-2024";
 import { parseEnvelope, type RecordEnvelope } from "@hearthtable/kernel";
-import vrluluCarol from "../account/vrlulu/carol_elfnein.json";
-import vrluluItems from "../account/vrlulu/items.json";
+import vrluluCarol from "../account/VRLulu/Characters/Carol_Elfnein.json";
+import vrluluItems from "../account/VRLulu/Items.json";
 import coreFeatures from "../core/features.json";
 import coreItems from "../core/items.json";
 import coreSpells from "../core/spells.json";
@@ -32,17 +32,17 @@ export const coreContent: readonly RecordEnvelope[] = [
 
 /** VRLulu's account content: the Aetherlock, its rounds and canisters, and Indomitable. */
 export const vrluluContent: readonly RecordEnvelope[] = load(
-  "account/vrlulu/items.json",
+  "account/VRLulu/Items.json",
   vrluluItems,
 );
 
 /** Carol's sheet: the character (stats tab), her inventory and her three spellbooks. */
 export const carolElfnein: readonly RecordEnvelope[] = load(
-  "account/vrlulu/carol_elfnein.json",
+  "account/VRLulu/Characters/Carol_Elfnein.json",
   vrluluCarol,
 );
 
-export const CAROL_ID = "account/vrlulu/carol_elfnein";
+export const CAROL_ID = "account/VRLulu/Characters/Carol_Elfnein";
 
 /** Everything needed to resolve Carol's sheet. */
 export function carolWithDefinitions(): readonly RecordEnvelope[] {

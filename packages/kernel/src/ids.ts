@@ -1,17 +1,19 @@
 // A record's identity is its full path (user decisions, 2026-10-22): owner, folders and name,
-// such as `account/vrlulu/carol_elfnein`, `campaign/moonlit_coast/characters/vrlulu/carol_elfnein`
-// or `core/fireball`. Each segment is normalized by the duplicate-name rule, so capitalization
-// and spaces versus underscores do not distinguish two names. Renaming means duplicating under
-// the new name and moving means copying; nothing that referenced the old path is rewritten.
+// keeping the chosen capitalization, such as `account/VRLulu/Characters/Carol_Elfnein`,
+// `account/VRLulu/Items/Aetherlock` or `core/Fireball`. Spaces become underscores. Two names
+// that differ only in capitalization or spaces versus underscores are still the same name
+// (the duplicate-name rule): compare with `sameName` or `nameKey`, never with `===` on input.
+// Renaming means duplicating under the new name and moving means copying; nothing that
+// referenced the old path is rewritten.
 
 import { fail, issue, ok, type Result } from "./validation";
 
-/** `<scope>/…/<name>`, e.g. `core/fireball` or `account/vrlulu/carol_elfnein`. */
+/** `<scope>/…/<Name>`, e.g. `core/Fireball` or `account/VRLulu/Characters/Carol_Elfnein`. */
 export type RecordId = `${string}/${string}`;
 
 export const ID_SCOPES = ["core", "account", "campaign"] as const;
 
-/** Normalizes a display name to its identity key. */
+/** The key two names are compared by: lowercased, spaces and underscores the same. */
 export function nameKey(name: string): string {
   return name
     .trim()
@@ -24,12 +26,17 @@ export function sameName(a: string, b: string): boolean {
   return nameKey(a) === nameKey(b);
 }
 
-/** Builds an identity from display names, e.g. `makeId(["account", "VRLulu"], "Carol Elfnein")`. */
+/** A name as it appears in a path: capitals kept, spaces as underscores. */
+export function pathSegment(name: string): string {
+  return name.trim().replace(/[\s_]+/g, "_");
+}
+
+/** Builds an identity from display names, e.g. `makeId(["account", "VRLulu", "Characters"], "Carol Elfnein")`. */
 export function makeId(
   path: readonly string[],
   name: string,
 ): Result<RecordId> {
-  const segments = [...path, name].map(nameKey);
+  const segments = [...path, name].map(pathSegment);
   const bad = segments.find(
     (s) => s === "" || s.includes("/") || s === "." || s === "..",
   );
@@ -54,12 +61,26 @@ export function parseId(
   const scope = segments[0] as string;
   const bad = (why: string) =>
     fail<never>([issue("error", "id.malformed", `"${id}" ${why}.`)]);
-  if (segments.length < 2) return bad("must be a path such as core/fireball");
+  if (segments.length < 2) return bad("must be a path such as core/Fireball");
   if (!(ID_SCOPES as readonly string[]).includes(scope))
     return bad(`must start with ${ID_SCOPES.join(", ")}`);
   if (scope !== "core" && segments.length < 3)
     return bad(`needs the owning ${scope} after "${scope}/"`);
-  if (segments.some((s) => s === "" || s !== nameKey(s)))
-    return bad("has a segment that is empty or not normalized");
+  if (
+    segments.some(
+      (s) => s === "" || s !== pathSegment(s) || s === "." || s === "..",
+    )
+  ) {
+    return bad("has a segment that is empty or contains spaces");
+  }
   return ok({ scope, segments, name: segments[segments.length - 1] as string });
+}
+
+/** Whether two paths name the same record under the duplicate-name rule. */
+export function samePath(a: string, b: string): boolean {
+  const as = a.split("/");
+  const bs = b.split("/");
+  return (
+    as.length === bs.length && as.every((s, i) => sameName(s, bs[i] as string))
+  );
 }

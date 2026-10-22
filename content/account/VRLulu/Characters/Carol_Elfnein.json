@@ -1,12 +1,12 @@
 [
   {
-    "id": "account/vrlulu/carol_elfnein",
+    "id": "account/VRLulu/Characters/Carol_Elfnein",
     "kind": "character",
     "moduleId": "dnd5e-2024",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "vrlulu"
+      "ownerId": "VRLulu"
     },
     "source": {
       "status": "homebrew"
@@ -18,25 +18,25 @@
       "species": "Human",
       "background": "Sage",
       "classLevels": [
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/wizard",
-        "core/artificer",
-        "core/artificer",
-        "core/artificer"
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Wizard",
+        "core/Artificer",
+        "core/Artificer",
+        "core/Artificer"
       ],
       "subclasses": {
-        "core/wizard": "Evoker",
-        "core/artificer": "Alchemist"
+        "core/Wizard": "Evoker",
+        "core/Artificer": "Alchemist"
       },
       "abilities": {
         "base": {
@@ -50,18 +50,18 @@
       },
       "features": [
         {
-          "ref": "core/human",
+          "ref": "core/Human",
           "from": "Human",
           "choices": {
             "skill": "medicine"
           }
         },
         {
-          "ref": "core/alert",
+          "ref": "core/Alert",
           "from": "Human (Versatile)"
         },
         {
-          "ref": "core/sage",
+          "ref": "core/Sage",
           "from": "Sage",
           "choices": {
             "plus2": "int",
@@ -69,16 +69,16 @@
           }
         },
         {
-          "ref": "core/magic_initiate_wizard",
+          "ref": "core/Magic_Initiate_(Wizard)",
           "from": "Sage",
           "choices": {
-            "cantrip1": "core/mage_hand",
-            "cantrip2": "core/prestidigitation",
-            "spell": "core/mage_armor"
+            "cantrip1": "core/Mage_Hand",
+            "cantrip2": "core/Prestidigitation",
+            "spell": "core/Mage_Armor"
           }
         },
         {
-          "ref": "core/wizard_skill_proficiencies",
+          "ref": "core/Wizard_skill_proficiencies",
           "from": "Wizard",
           "choices": {
             "first": "investigation",
@@ -86,56 +86,56 @@
           }
         },
         {
-          "ref": "core/ritual_adept",
+          "ref": "core/Ritual_Adept",
           "from": "Wizard"
         },
         {
-          "ref": "core/arcane_recovery",
+          "ref": "core/Arcane_Recovery",
           "from": "Wizard"
         },
         {
-          "ref": "core/scholar",
+          "ref": "core/Scholar",
           "from": "Wizard",
           "choices": {
             "skill": "arcana"
           }
         },
         {
-          "ref": "core/memorize_spell",
+          "ref": "core/Memorize_Spell",
           "from": "Wizard"
         },
         {
-          "ref": "core/evocation_savant",
+          "ref": "core/Evocation_Savant",
           "from": "Evoker"
         },
         {
-          "ref": "core/potent_cantrip",
+          "ref": "core/Potent_Cantrip",
           "from": "Evoker"
         },
         {
-          "ref": "core/sculpt_spells",
+          "ref": "core/Sculpt_Spells",
           "from": "Evoker"
         },
         {
-          "ref": "core/empowered_evocation",
+          "ref": "core/Empowered_Evocation",
           "from": "Evoker"
         },
         {
-          "ref": "core/ability_score_improvement",
+          "ref": "core/Ability_Score_Improvement",
           "from": "Wizard feat choice",
           "choices": {
             "ability": "int"
           }
         },
         {
-          "ref": "core/war_caster",
+          "ref": "core/War_Caster",
           "from": "Wizard feat choice",
           "choices": {
             "ability": "int"
           }
         },
         {
-          "ref": "core/skill_expert",
+          "ref": "core/Skill_Expert",
           "from": "Wizard feat choice",
           "choices": {
             "ability": "dex",
@@ -144,26 +144,26 @@
           }
         },
         {
-          "ref": "core/artificer_multiclass_proficiencies",
+          "ref": "core/Artificer_multiclass_proficiencies",
           "from": "Artificer (multiclass)",
           "choices": {
             "skill": "nature"
           }
         },
         {
-          "ref": "core/tinkers_magic",
+          "ref": "core/Tinker's_Magic",
           "from": "Artificer"
         },
         {
-          "ref": "core/replicate_magic_item",
+          "ref": "core/Replicate_Magic_Item",
           "from": "Artificer"
         },
         {
-          "ref": "core/alchemist",
+          "ref": "core/Alchemist",
           "from": "Alchemist"
         },
         {
-          "ref": "core/experimental_elixir",
+          "ref": "core/Experimental_Elixir",
           "from": "Alchemist"
         }
       ],
@@ -182,13 +182,13 @@
     }
   },
   {
-    "id": "account/vrlulu/carol_elfnein/inventory",
+    "id": "account/VRLulu/Characters/Carol_Elfnein/Inventory",
     "kind": "inventory",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "vrlulu"
+      "ownerId": "VRLulu"
     },
     "source": {
       "status": "homebrew"
@@ -200,7 +200,7 @@
       "lines": [
         {
           "id": "aetherlock",
-          "ref": "account/vrlulu/aetherlock",
+          "ref": "account/VRLulu/Items/Aetherlock",
           "quantity": 1,
           "magazine": {
             "canister": "canister-1"
@@ -208,200 +208,200 @@
         },
         {
           "id": "wand",
-          "ref": "core/wand_of_the_war_mage_1",
+          "ref": "core/Wand_of_the_War_Mage_+1",
           "quantity": 1
         },
         {
           "id": "manifold",
-          "ref": "core/manifold_tool",
+          "ref": "core/Manifold_Tool",
           "quantity": 1
         },
         {
           "id": "indomitable",
-          "ref": "account/vrlulu/indomitable",
+          "ref": "account/VRLulu/Items/Indomitable_(INT)",
           "quantity": 1
         },
         {
           "id": "goggles",
-          "ref": "core/goggles_of_night",
+          "ref": "core/Goggles_of_Night",
           "quantity": 1
         },
         {
           "id": "alchemy-jug",
-          "ref": "core/alchemy_jug",
+          "ref": "core/Alchemy_Jug",
           "quantity": 1
         },
         {
           "id": "combat-book",
-          "ref": "core/enduring_spellbook",
+          "ref": "core/Enduring_Spellbook",
           "quantity": 1
         },
         {
           "id": "cantrips-book",
-          "ref": "core/enduring_spellbook",
+          "ref": "core/Enduring_Spellbook",
           "quantity": 1
         },
         {
           "id": "workshop-book",
-          "ref": "core/enduring_spellbook",
+          "ref": "core/Enduring_Spellbook",
           "quantity": 1
         },
         {
           "id": "alchemists-supplies",
-          "ref": "core/alchemists_supplies",
+          "ref": "core/Alchemist's_Supplies",
           "quantity": 1
         },
         {
           "id": "herbalism-kit",
-          "ref": "core/herbalism_kit",
+          "ref": "core/Herbalism_Kit",
           "quantity": 1
         },
         {
           "id": "tinkers-tools",
-          "ref": "core/tinkers_tools",
+          "ref": "core/Tinker's_Tools",
           "quantity": 1
         },
         {
           "id": "calligraphers-supplies",
-          "ref": "core/calligraphers_supplies",
+          "ref": "core/Calligrapher's_Supplies",
           "quantity": 1
         },
         {
           "id": "component-pouch",
-          "ref": "core/component_pouch",
+          "ref": "core/Component_Pouch",
           "quantity": 1
         },
         {
           "id": "identify-pearl",
-          "ref": "core/pearl_100gp",
+          "ref": "core/Pearl_(100_gp)",
           "quantity": 1
         },
         {
           "id": "guise-object",
-          "ref": "core/engraved_planar_object",
+          "ref": "core/Engraved_planar_object_(500_gp)",
           "quantity": 1
         },
         {
           "id": "potions",
-          "ref": "core/potion_of_healing",
+          "ref": "core/Potion_of_Healing",
           "quantity": 4
         },
         {
           "id": "canister-1",
-          "ref": "account/vrlulu/charge_canister",
+          "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
           "charges": 12
         },
         {
           "id": "canister-2",
-          "ref": "account/vrlulu/charge_canister",
+          "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
           "charges": 12
         },
         {
           "id": "canister-3",
-          "ref": "account/vrlulu/charge_canister",
+          "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
           "charges": 12
         },
         {
           "id": "canister-4",
-          "ref": "account/vrlulu/charge_canister",
+          "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
           "charges": 12
         },
         {
           "id": "canister-5",
-          "ref": "account/vrlulu/charge_canister",
+          "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
           "charges": 12
         },
         {
           "id": "basic-rounds",
-          "ref": "account/vrlulu/basic_round",
+          "ref": "account/VRLulu/Items/Basic_Round",
           "quantity": 18
         },
         {
           "id": "arcane-rounds",
-          "ref": "account/vrlulu/arcane_round",
+          "ref": "account/VRLulu/Items/Arcane_Round",
           "quantity": 6
         },
         {
           "id": "cone-of-cold-spellrounds",
-          "ref": "account/vrlulu/spellround_cone_of_cold",
+          "ref": "account/VRLulu/Items/Spellround_(Cone_of_Cold)",
           "quantity": 3
         },
         {
           "id": "he-frag-rounds",
-          "ref": "account/vrlulu/he_frag_round",
+          "ref": "account/VRLulu/Items/HE-FRAG_Round",
           "quantity": 3
         },
         {
           "id": "shield-spellrounds",
-          "ref": "account/vrlulu/spellround_shield",
+          "ref": "account/VRLulu/Items/Spellround_(Shield)",
           "quantity": 2
         },
         {
           "id": "cure-wounds-spellrounds",
-          "ref": "account/vrlulu/spellround_cure_wounds",
+          "ref": "account/VRLulu/Items/Spellround_(Cure_Wounds)",
           "quantity": 2
         },
         {
           "id": "robe",
-          "ref": "core/robe",
+          "ref": "core/Robe",
           "quantity": 1
         },
         {
           "id": "ink",
-          "ref": "core/ink",
+          "ref": "core/Ink",
           "quantity": 1
         },
         {
           "id": "paper",
-          "ref": "core/paper",
+          "ref": "core/Paper",
           "quantity": 1
         },
         {
           "id": "rope",
-          "ref": "core/rope",
+          "ref": "core/Rope",
           "quantity": 1
         },
         {
           "id": "bedroll",
-          "ref": "core/bedroll",
+          "ref": "core/Bedroll",
           "quantity": 1
         },
         {
           "id": "waterskin",
-          "ref": "core/waterskin",
+          "ref": "core/Waterskin",
           "quantity": 1
         },
         {
           "id": "rations",
-          "ref": "core/rations",
+          "ref": "core/Rations_(1_day)",
           "quantity": 7
         },
         {
           "id": "bag-of-holding-1",
-          "ref": "core/bag_of_holding",
+          "ref": "core/Bag_of_Holding",
           "quantity": 1
         },
         {
           "id": "bag-of-holding-2",
-          "ref": "core/bag_of_holding",
+          "ref": "core/Bag_of_Holding",
           "quantity": 1
         }
       ]
     }
   },
   {
-    "id": "account/vrlulu/carol_elfnein/books/combat",
+    "id": "account/VRLulu/Characters/Carol_Elfnein/Books/Combat",
     "kind": "spellbook",
     "moduleId": "spellbook-readiness",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "vrlulu"
+      "ownerId": "VRLulu"
     },
     "source": {
       "status": "homebrew"
@@ -415,79 +415,79 @@
       "entries": [
         {
           "id": "combat-1",
-          "ref": "core/mage_armor"
+          "ref": "core/Mage_Armor"
         },
         {
           "id": "combat-2",
-          "ref": "core/shield"
+          "ref": "core/Shield"
         },
         {
           "id": "combat-3",
-          "ref": "core/scorching_ray"
+          "ref": "core/Scorching_Ray"
         },
         {
           "id": "combat-4",
-          "ref": "core/mirror_image"
+          "ref": "core/Mirror_Image"
         },
         {
           "id": "combat-5",
-          "ref": "core/misty_step"
+          "ref": "core/Misty_Step"
         },
         {
           "id": "combat-6",
-          "ref": "core/web"
+          "ref": "core/Web"
         },
         {
           "id": "combat-7",
-          "ref": "core/fireball"
+          "ref": "core/Fireball"
         },
         {
           "id": "combat-8",
-          "ref": "core/counterspell"
+          "ref": "core/Counterspell"
         },
         {
           "id": "combat-9",
-          "ref": "core/dispel_magic"
+          "ref": "core/Dispel_Magic"
         },
         {
           "id": "combat-10",
-          "ref": "core/fabricate"
+          "ref": "core/Fabricate"
         },
         {
           "id": "combat-11",
-          "ref": "core/cone_of_cold"
+          "ref": "core/Cone_of_Cold"
         },
         {
           "id": "combat-12",
-          "ref": "core/wall_of_force"
+          "ref": "core/Wall_of_Force"
         },
         {
           "id": "combat-13",
-          "ref": "core/animate_objects"
+          "ref": "core/Animate_Objects"
         },
         {
           "id": "combat-14",
-          "ref": "core/chain_lightning"
+          "ref": "core/Chain_Lightning"
         },
         {
           "id": "combat-15",
-          "ref": "core/disintegrate"
+          "ref": "core/Disintegrate"
         },
         {
           "id": "combat-16",
-          "ref": "core/tashas_otherworldly_guise"
+          "ref": "core/Tasha's_Otherworldly_Guise"
         }
       ]
     }
   },
   {
-    "id": "account/vrlulu/carol_elfnein/books/cantrips",
+    "id": "account/VRLulu/Characters/Carol_Elfnein/Books/Cantrips",
     "kind": "spellbook",
     "moduleId": "spellbook-readiness",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "vrlulu"
+      "ownerId": "VRLulu"
     },
     "source": {
       "status": "homebrew"
@@ -501,55 +501,55 @@
       "entries": [
         {
           "id": "cantrips-1",
-          "ref": "core/fire_bolt"
+          "ref": "core/Fire_Bolt"
         },
         {
           "id": "cantrips-2",
-          "ref": "core/ray_of_frost"
+          "ref": "core/Ray_of_Frost"
         },
         {
           "id": "cantrips-3",
-          "ref": "core/minor_illusion"
+          "ref": "core/Minor_Illusion"
         },
         {
           "id": "cantrips-4",
-          "ref": "core/mind_sliver"
+          "ref": "core/Mind_Sliver"
         },
         {
           "id": "cantrips-5",
-          "ref": "core/shocking_grasp"
+          "ref": "core/Shocking_Grasp"
         },
         {
           "id": "cantrips-6",
-          "ref": "core/mage_hand"
+          "ref": "core/Mage_Hand"
         },
         {
           "id": "cantrips-7",
-          "ref": "core/prestidigitation"
+          "ref": "core/Prestidigitation"
         },
         {
           "id": "cantrips-8",
-          "ref": "core/message"
+          "ref": "core/Message"
         },
         {
           "id": "cantrips-9",
-          "ref": "core/true_strike"
+          "ref": "core/True_Strike"
         },
         {
           "id": "cantrips-10",
-          "ref": "core/mending"
+          "ref": "core/Mending"
         }
       ]
     }
   },
   {
-    "id": "account/vrlulu/carol_elfnein/books/workshop",
+    "id": "account/VRLulu/Characters/Carol_Elfnein/Books/Workshop",
     "kind": "spellbook",
     "moduleId": "spellbook-readiness",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "vrlulu"
+      "ownerId": "VRLulu"
     },
     "source": {
       "status": "homebrew"
@@ -563,27 +563,27 @@
       "entries": [
         {
           "id": "workshop-1",
-          "ref": "core/cure_wounds"
+          "ref": "core/Cure_Wounds"
         },
         {
           "id": "workshop-2",
-          "ref": "core/faerie_fire"
+          "ref": "core/Faerie_Fire"
         },
         {
           "id": "workshop-3",
-          "ref": "core/identify"
+          "ref": "core/Identify"
         },
         {
           "id": "workshop-4",
-          "ref": "core/detect_magic"
+          "ref": "core/Detect_Magic"
         },
         {
           "id": "workshop-5",
-          "ref": "core/healing_word"
+          "ref": "core/Healing_Word"
         },
         {
           "id": "workshop-6",
-          "ref": "core/ray_of_sickness"
+          "ref": "core/Ray_of_Sickness"
         }
       ]
     }

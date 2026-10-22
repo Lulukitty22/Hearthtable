@@ -179,7 +179,7 @@ export const DEFINITIONS: readonly RecordEnvelope[] = [
   item("core/enduring_spellbook", { name: "Enduring Spellbook", weight: 3 }),
   item("campaign/test/aetherlock", {
     name: "Aetherlock",
-    attunement: { required: true, requiresClass: "core/artificer" },
+    attunement: { required: true, requiresClass: "core/Artificer" },
     magazine: { chambers: 6 },
   }),
   item("campaign/test/charge_canister", {
@@ -191,7 +191,7 @@ export const DEFINITIONS: readonly RecordEnvelope[] = [
     "core/mage_armor",
     "Mage Armor",
     1,
-    ["core/wizard"],
+    ["core/Wizard"],
     [
       {
         type: "base",
@@ -207,12 +207,12 @@ export const DEFINITIONS: readonly RecordEnvelope[] = [
     "core/shield",
     "Shield",
     1,
-    ["core/wizard"],
+    ["core/Wizard"],
     [{ type: "bonus", target: "armor-class", amount: 5 }],
   ),
-  spell("core/fireball", "Fireball", 3, ["core/wizard"]),
+  spell("core/fireball", "Fireball", 3, ["core/Wizard"]),
   spell("core/healing_word", "Healing Word", 1, ["core/bard"]),
-  spell("core/wish", "Wish", 9, ["core/wizard"]),
+  spell("core/wish", "Wish", 9, ["core/Wizard"]),
 ];
 
 export interface CharacterOptions {
@@ -230,8 +230,8 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
   const character = record("account/test/carol", "character", {
     name: "Carol Elfnein",
     classLevels: options.classLevels ?? [
-      ...Array<string>(12).fill("core/wizard"),
-      ...Array<string>(3).fill("core/artificer"),
+      ...Array<string>(12).fill("core/Wizard"),
+      ...Array<string>(3).fill("core/Artificer"),
     ],
     abilities: {
       base: { str: 8, dex: 15, con: 13, int: 15, wis: 10, cha: 10 },

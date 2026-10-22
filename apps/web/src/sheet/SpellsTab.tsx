@@ -8,9 +8,9 @@ import type {
   EntryView,
 } from "@hearthtable/system-spellbook-readiness";
 import { useState } from "react";
-import { describeGrants } from "./describe";
 import { Explained } from "./Explained";
-import { AllFields, DetailPanel, SourceLine, Tile, TileGrid } from "./Grid";
+import { EntryBody } from "./entries";
+import { DetailPanel, Tile, TileGrid } from "./Grid";
 import { known, sheetRecords, type Data, type TabProps } from "./shared";
 
 type Entry = { id: string; ref: string };
@@ -81,40 +81,10 @@ function SpellDetail({
   bookRecordId?: string;
   onClose: () => void;
 }) {
-  const record = props.records.get(entry.ref);
-  const def = record?.data as
-    | {
-        level?: number;
-        school?: string;
-        classes?: string[];
-        whileActive?: unknown;
-      }
-    | undefined;
-  const className = (id: string) =>
-    String(
-      (props.records.get(id)?.data as { name?: unknown } | undefined)?.name ??
-        id,
-    );
   return (
     <DetailPanel title={entry.name} onClose={onClose}>
-      {entry.status === "unresolved" ? (
-        <p className="unresolved">{entry.reasons.join("; ")}</p>
-      ) : (
-        <SourceLine record={record} />
-      )}
-      {def && (
-        <p>
-          {def.level === 0 ? "Cantrip" : `Level ${def.level}`}
-          {def.school && ` ${def.school}`} · in {bookTitle}
-          {def.classes && def.classes.length > 0 && (
-            <span className="muted">
-              {" "}
-              · on the {def.classes.map(className).join(" and ")} lists
-            </span>
-          )}
-        </p>
-      )}
       <p>
+        In {bookTitle}:{" "}
         {entry.ready ? (
           <span className="badge good">ready</span>
         ) : (
@@ -122,19 +92,8 @@ function SpellDetail({
         )}{" "}
         <span className="muted">{entry.reasons.join("; ")}</span>
       </p>
-      {def?.whileActive !== undefined && (
-        <>
-          <h3>While active</h3>
-          <ul>
-            {describeGrants(def.whileActive).map((g) => (
-              <li key={g}>{g}</li>
-            ))}
-          </ul>
-        </>
-      )}
-      <AllFields record={record} />
       {bookRecordId && (
-        <p style={{ marginTop: 12 }}>
+        <p>
           <button
             type="button"
             className="secondary"
@@ -152,6 +111,7 @@ function SpellDetail({
           </button>
         </p>
       )}
+      <EntryBody props={props} id={entry.ref} />
     </DetailPanel>
   );
 }

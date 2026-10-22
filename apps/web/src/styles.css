@@ -518,3 +518,19 @@ dialog.detail::backdrop {
   max-height: 240px;
   overflow: auto;
 }
+
+/* Links to other entries */
+
+.entry-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent-strong);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.entry-link.missing {
+  color: var(--bad);
+}

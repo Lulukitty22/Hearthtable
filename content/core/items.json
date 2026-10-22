@@ -1,6 +1,6 @@
 [
   {
-    "id": "core/potion_of_healing",
+    "id": "core/Potion_of_Healing",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -20,7 +20,7 @@
     }
   },
   {
-    "id": "core/bag_of_holding",
+    "id": "core/Bag_of_Holding",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -45,7 +45,7 @@
     }
   },
   {
-    "id": "core/component_pouch",
+    "id": "core/Component_Pouch",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -65,7 +65,7 @@
     }
   },
   {
-    "id": "core/alchemists_supplies",
+    "id": "core/Alchemist's_Supplies",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -85,7 +85,7 @@
     }
   },
   {
-    "id": "core/herbalism_kit",
+    "id": "core/Herbalism_Kit",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -105,7 +105,7 @@
     }
   },
   {
-    "id": "core/tinkers_tools",
+    "id": "core/Tinker's_Tools",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -125,7 +125,7 @@
     }
   },
   {
-    "id": "core/calligraphers_supplies",
+    "id": "core/Calligrapher's_Supplies",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -145,7 +145,7 @@
     }
   },
   {
-    "id": "core/robe",
+    "id": "core/Robe",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -165,7 +165,7 @@
     }
   },
   {
-    "id": "core/rope",
+    "id": "core/Rope",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -185,7 +185,7 @@
     }
   },
   {
-    "id": "core/bedroll",
+    "id": "core/Bedroll",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -205,7 +205,7 @@
     }
   },
   {
-    "id": "core/waterskin",
+    "id": "core/Waterskin",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -225,7 +225,7 @@
     }
   },
   {
-    "id": "core/rations",
+    "id": "core/Rations_(1_day)",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -245,7 +245,7 @@
     }
   },
   {
-    "id": "core/ink",
+    "id": "core/Ink",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -265,7 +265,7 @@
     }
   },
   {
-    "id": "core/paper",
+    "id": "core/Paper",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -285,7 +285,7 @@
     }
   },
   {
-    "id": "core/wand_of_the_war_mage_1",
+    "id": "core/Wand_of_the_War_Mage_+1",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -316,7 +316,7 @@
     }
   },
   {
-    "id": "core/enduring_spellbook",
+    "id": "core/Enduring_Spellbook",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -334,7 +334,7 @@
     }
   },
   {
-    "id": "core/goggles_of_night",
+    "id": "core/Goggles_of_Night",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -352,7 +352,7 @@
     }
   },
   {
-    "id": "core/alchemy_jug",
+    "id": "core/Alchemy_Jug",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -372,7 +372,7 @@
     }
   },
   {
-    "id": "core/manifold_tool",
+    "id": "core/Manifold_Tool",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -393,7 +393,7 @@
     }
   },
   {
-    "id": "core/pearl_100gp",
+    "id": "core/Pearl_(100_gp)",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -411,7 +411,7 @@
     }
   },
   {
-    "id": "core/engraved_planar_object",
+    "id": "core/Engraved_planar_object_(500_gp)",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,

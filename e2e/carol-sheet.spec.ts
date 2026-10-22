@@ -6,7 +6,7 @@ import { expect, test } from "@playwright/test";
 test("edits to HP and an inventory quantity persist after reload", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
   await expect(
     page.getByRole("heading", { name: "Carol Elfnein" }),
   ).toBeVisible();
@@ -42,7 +42,7 @@ test("edits to HP and an inventory quantity persist after reload", async ({
 test("Mage Armor and Shield change AC from active state, and the Wand only spell attacks", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
   await expect(page.getByTestId("armor-class")).toHaveText("13");
   await page.getByRole("button", { name: "Mage Armor" }).click();
   await expect(page.getByTestId("armor-class")).toHaveText("16");

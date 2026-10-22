@@ -42,8 +42,8 @@ for (const s of [
 ])
   line(`skills.${s}.total`);
 console.log("\nSpellcasting");
-line("spellcasting.classes.core/wizard.attack");
-line("spellcasting.classes.core/wizard.dc");
+line("spellcasting.classes.core/Wizard.attack");
+line("spellcasting.classes.core/Wizard.dc");
 const slots =
   sheet.get<readonly { max: Value<number> }[]>("spellcasting.slots");
 if (slots.kind === "known")

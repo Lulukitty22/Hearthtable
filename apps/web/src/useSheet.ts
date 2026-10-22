@@ -46,8 +46,8 @@ export interface SheetActions {
   reload(): void;
 }
 
-/** Path segments must be normalized names, so the timestamp is lowercased with no colons. */
-const historyKey = (iso: string) => iso.replace(/[^0-9tz]/gi, "").toLowerCase();
+/** A path segment cannot contain "/" or spaces; keep the timestamp's digits and T/Z. */
+const historyKey = (iso: string) => iso.replace(/[^0-9TZ]/g, "");
 
 export function useSheet(
   repo: Repository,
@@ -115,7 +115,7 @@ export function useSheet(
             .filter(
               (r) =>
                 r.kind === "history" &&
-                r.id.startsWith(`${characterId}/history/`),
+                r.id.startsWith(`${characterId}/History/`),
             )
             .map((r) => ({ id: r.id, ...(r.data as Omit<HistoryEntry, "id">) }))
             .sort((a, b) => b.at.localeCompare(a.at))
@@ -145,7 +145,7 @@ export function useSheet(
       setSaving(true);
       const now = new Date().toISOString();
       const entry: RecordEnvelope = {
-        id: `${characterId}/history/${historyKey(now)}` as RecordId,
+        id: `${characterId}/History/${historyKey(now)}` as RecordId,
         kind: "history",
         moduleId: "sheet",
         schemaVersion: 1,

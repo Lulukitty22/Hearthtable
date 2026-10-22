@@ -23,7 +23,7 @@ function edited(patch: {
   return carolWithDefinitions().map((r): RecordEnvelope => {
     if (r.id === CAROL_ID && patch.character)
       return { ...r, data: { ...(r.data as object), ...patch.character } };
-    if (r.id === `${CAROL_ID}/inventory` && patch.inventory)
+    if (r.id === `${CAROL_ID}/Inventory` && patch.inventory)
       return { ...r, data: patch.inventory(r.data as Record<string, unknown>) };
     return r;
   });
@@ -123,8 +123,8 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
     expect(
       slots.map((s) => (s.max.kind === "known" ? s.max.value : null)),
     ).toEqual([7, 3, 3, 3, 2, 1]);
-    expect(value(r, "spellcasting.classes.core/wizard.attack")).toBe(11);
-    expect(value(r, "spellcasting.classes.core/wizard.dc")).toBe(19);
+    expect(value(r, "spellcasting.classes.core/Wizard.attack")).toBe(11);
+    expect(value(r, "spellcasting.classes.core/Wizard.dc")).toBe(19);
   });
 
   test("spellbooks hold 16/10/6 entries, all ready", () => {
@@ -183,12 +183,12 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
   test("AC is 13 with nothing active, 16 with Mage Armor, 21 with Shield too", () => {
     const mageArmor = {
       id: "effect-1",
-      ref: "core/mage_armor",
+      ref: "core/Mage_Armor",
       activatedAt: "2026-10-22T21:00:00.000Z",
     };
     const shield = {
       id: "effect-2",
-      ref: "core/shield",
+      ref: "core/Shield",
       activatedAt: "2026-10-22T21:01:00.000Z",
     };
     const ac = (activeEffects: unknown[]) =>
@@ -211,8 +211,8 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
       }),
     });
     const r = engine.resolve(hold);
-    expect(value(r, "spellcasting.classes.core/wizard.attack")).toBe(12);
-    expect(value(r, "spellcasting.classes.core/wizard.dc")).toBe(19);
+    expect(value(r, "spellcasting.classes.core/Wizard.attack")).toBe(12);
+    expect(value(r, "spellcasting.classes.core/Wizard.dc")).toBe(19);
     const [rifle] = value<readonly WeaponView[]>(r, "magazines.weapons");
     expect(rifle?.aim).toMatchObject({ kind: "known", value: 11 });
   });
@@ -297,18 +297,18 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
 
   test("a deliberately missing definition renders as unresolved, never as a usable default", () => {
     const records = carolWithDefinitions().filter(
-      (r) => r.id !== "core/fireball",
+      (r) => r.id !== "core/Fireball",
     );
     const r = engine.resolve(records);
     const combat = value<readonly BookView[]>(
       r,
       "spellbook-readiness.books",
     )[0];
-    const fireball = combat?.entries.find((e) => e.ref === "core/fireball");
+    const fireball = combat?.entries.find((e) => e.ref === "core/Fireball");
     expect(fireball).toMatchObject({
       status: "unresolved",
       ready: false,
-      reasons: ["Reference not found: core/fireball"],
+      reasons: ["Reference not found: core/Fireball"],
     });
   });
 });

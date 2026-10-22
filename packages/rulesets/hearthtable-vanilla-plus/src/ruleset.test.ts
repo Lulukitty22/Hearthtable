@@ -47,8 +47,8 @@ describe("Hearthtable Vanilla+ Rules", () => {
 
   test("there is no level cap: a level-25 multiclass gets no cap warning and proficiency +8", () => {
     const levels = [
-      ...Array<string>(20).fill("core/wizard"),
-      ...Array<string>(5).fill("core/artificer"),
+      ...Array<string>(20).fill("core/Wizard"),
+      ...Array<string>(5).fill("core/Artificer"),
     ];
     const r = resolveWith(
       carolRecords({ classLevels: levels }),

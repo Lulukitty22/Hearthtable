@@ -1,51 +1,77 @@
-// Plain-language lines for definition rules shown in an entry's detail panel.
+// Plain-language lines for definition rules shown in an entry's panel. A line may point at
+// another entry (a spell a feature lets you cast), which the panel shows as a link.
 
 import { parseGrants, type Grant } from "@hearthtable/kernel";
 
-const label = (target: string) =>
-  target
-    .replace(/^abilities\.(\w+)\.score$/, (_, a: string) => a.toUpperCase())
+export interface Described {
+  readonly text: string;
+  /** Another record this line refers to, shown as a clickable entry. */
+  readonly ref?: string;
+}
+
+const ability = (a: string) => a.toUpperCase();
+
+export function targetLabel(target: string): string {
+  return target
+    .replace(/^abilities\.(\w+)\.score$/, (_, a: string) => ability(a))
     .replace(/^skills\./, "")
-    .replace(/^saves\.(\w+)$/, (_, a: string) => `${a.toUpperCase()} saves`)
+    .replace(/^saves\.(\w+)$/, (_, a: string) => `${ability(a)} saving throws`)
     .replace(/^tools\./, "")
     .replace(/^spellcasting\.attack$/, "spell attacks")
     .replace(/^spellcasting\.dc$/, "spell save DC")
+    .replace(/^weapons\.aim$/, "weapon aim")
     .replace(/^armor-class$/, "AC")
     .replace(/^attunement\.slots$/, "attunement slots")
+    .replace(/^initiative$/, "initiative")
     .replace(/-/g, " ");
+}
 
 function amount(a: Extract<Grant, { type: "bonus" }>["amount"]): string {
   if (typeof a === "number") return a >= 0 ? `+${a}` : String(a);
   const what =
     a.key === "proficiency.bonus"
-      ? "proficiency bonus"
+      ? "your proficiency bonus"
       : a.key.replace(
           /^abilities\.(\w+)\.modifier$/,
-          (_, x: string) => `${x.toUpperCase()} modifier`,
+          (_, x: string) => `your ${ability(x)} modifier`,
         );
   return `+ ${a.times && a.times !== 1 ? `${a.times} × ` : ""}${what}`;
 }
 
-export function describeGrant(g: Grant): string {
+export function describeGrant(
+  g: Grant,
+  nameOf: (id: string) => string,
+): Described {
   switch (g.type) {
     case "bonus":
-      return `${amount(g.amount)} to ${label(g.target)}`;
+      return { text: `${amount(g.amount)} to ${targetLabel(g.target)}` };
     case "proficiency":
-      return `${g.level === 2 ? "Expertise" : "Proficiency"} in ${label(g.target)}`;
+      return {
+        text: `${g.level === 2 ? "Expertise" : "Proficiency"} in ${targetLabel(g.target)}`,
+      };
     case "capability":
-      return g.id.startsWith("spell-access:")
-        ? `Can cast ${g.id.slice("spell-access:".length).split("/").pop()?.replace(/_/g, " ")}`
-        : g.id.replace(/-/g, " ");
+      if (g.id.startsWith("spell-access:")) {
+        const ref = g.id.slice("spell-access:".length);
+        return { text: `Can cast ${nameOf(ref)}`, ref };
+      }
+      return { text: g.id.replace(/-/g, " ") };
     case "resource":
-      return `${g.pool.replace(/-/g, " ")}: ${typeof g.max === "number" ? g.max : amount(g.max).replace(/^\+ /, "")} per ${g.reset}`;
+      return {
+        text: `${g.pool.replace(/-/g, " ")}: ${typeof g.max === "number" ? g.max : amount(g.max).replace(/^\+ /, "")} per ${g.reset}`,
+      };
     case "base":
-      return `AC base ${g.base} + ${g.add.map((k) => k.replace(/^abilities\.(\w+)\.modifier$/, (_, a: string) => a.toUpperCase())).join(" + ")} (${g.label})`;
+      return {
+        text: `AC base ${g.base} + ${g.add.map((k) => k.replace(/^abilities\.(\w+)\.modifier$/, (_, a: string) => ability(a))).join(" + ")} (${g.label})`,
+      };
   }
 }
 
-export function describeGrants(raw: unknown): readonly string[] {
+export function describeGrants(
+  raw: unknown,
+  nameOf: (id: string) => string,
+): readonly Described[] {
   const parsed = parseGrants(raw, "grants");
   return parsed.ok
-    ? parsed.value.map(describeGrant)
-    : ["(these rules could not be read)"];
+    ? parsed.value.map((g) => describeGrant(g, nameOf))
+    : [{ text: "(these rules could not be read)" }];
 }

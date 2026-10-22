@@ -105,11 +105,11 @@ describe("Carol's documented numbers come from the systems", () => {
 
   test("the Wand adds +1 to spell attacks only while attuned and held, never to the DC", () => {
     const stowed = carol();
-    expect(valueOf(stowed, "spellcasting.classes.core/wizard.attack")).toBe(11);
-    expect(valueOf(stowed, "spellcasting.classes.core/wizard.dc")).toBe(19);
+    expect(valueOf(stowed, "spellcasting.classes.core/Wizard.attack")).toBe(11);
+    expect(valueOf(stowed, "spellcasting.classes.core/Wizard.dc")).toBe(19);
     const held = resolveWith(carolRecords({ wandHeld: true }));
-    expect(valueOf(held, "spellcasting.classes.core/wizard.attack")).toBe(12);
-    expect(valueOf(held, "spellcasting.classes.core/wizard.dc")).toBe(19);
+    expect(valueOf(held, "spellcasting.classes.core/Wizard.attack")).toBe(12);
+    expect(valueOf(held, "spellcasting.classes.core/Wizard.dc")).toBe(19);
   });
 
   test("resources come from features, with Tinker's Magic using INT", () => {
@@ -286,7 +286,7 @@ describe("chambered weapons and attunement", () => {
       "attunement.class-requirement",
     );
     const wizardOnly = resolveWith(
-      carolRecords({ classLevels: Array<string>(15).fill("core/wizard") }),
+      carolRecords({ classLevels: Array<string>(15).fill("core/Wizard") }),
     );
     expect(wizardOnly.issues.map((i) => i.code)).toContain(
       "attunement.class-requirement",

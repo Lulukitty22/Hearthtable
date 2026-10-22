@@ -24,12 +24,12 @@ function carolWithUnknownFields(): RecordEnvelope[] {
         nested: { deeper: [1, { kept: true }] },
         empty: {},
       };
-    if (r.id === `${CAROL_ID}/inventory`) {
+    if (r.id === `${CAROL_ID}/Inventory`) {
       data["lines"] = [
         ...(data["lines"] as unknown[]),
         {
           id: "empty-vial",
-          ref: "core/potion_of_healing",
+          ref: "core/Potion_of_Healing",
           quantity: 0,
           addons: { label: "kept" },
           type: "clothing",
@@ -86,7 +86,7 @@ export function repositoryContract(
       expect(
         reloaded.every((r) => r.revision === 2 && r.updatedAt === LATER),
       ).toBe(true);
-      const inventory = reloaded.find((r) => r.id === `${CAROL_ID}/inventory`);
+      const inventory = reloaded.find((r) => r.id === `${CAROL_ID}/Inventory`);
       expect(
         (
           inventory?.data as { lines: { id: string; quantity: number }[] }
@@ -153,7 +153,7 @@ export function repositoryContract(
     test("a save of several records is all or nothing", async () => {
       await ok(repo.save(carolElfnein, { now: NOW }));
       const character = await ok(repo.get(CAROL_ID as RecordId));
-      const inventory = await ok(repo.get(`${CAROL_ID}/inventory` as RecordId));
+      const inventory = await ok(repo.get(`${CAROL_ID}/Inventory` as RecordId));
       if (!character || !inventory) throw new Error("records missing");
       const result = await repo.save(
         [
@@ -193,7 +193,7 @@ export function repositoryContract(
 
     test("delete needs the current revision", async () => {
       await ok(repo.save(carolElfnein, { now: NOW }));
-      const id = `${CAROL_ID}/books/workshop` as RecordId;
+      const id = `${CAROL_ID}/Books/Workshop` as RecordId;
       expect((await repo.delete(id, 0)).ok).toBe(false);
       await ok(repo.delete(id, 1));
       expect(await ok(repo.get(id))).toBeUndefined();
