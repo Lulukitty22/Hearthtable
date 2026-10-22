@@ -5,7 +5,8 @@
   "type": "module",
   "description": "D&D 2024 game module: vocabulary, class records and per-class slot tables.",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./testing": "./src/fixture.test-helpers.ts"
   },
   "dependencies": {
     "@hearthtable/kernel": "workspace:*",

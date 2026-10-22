@@ -3,8 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Hearthtable Vanilla+ ruleset data (Step E).",
+  "description": "Hearthtable Vanilla+ Rules: ruleset data.",
   "exports": {
     ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@hearthtable/kernel": "workspace:*"
+  },
+  "devDependencies": {
+    "@hearthtable/game-dnd5e-2024": "workspace:*"
   }
 }

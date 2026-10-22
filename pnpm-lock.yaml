@@ -122,7 +122,15 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
 
-  packages/rulesets/hearthtable-vanilla-plus: {}
+  packages/rulesets/hearthtable-vanilla-plus:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+    devDependencies:
+      '@hearthtable/game-dnd5e-2024':
+        specifier: workspace:*
+        version: link:../../games/dnd5e-2024
 
   packages/storage:
     dependencies:
