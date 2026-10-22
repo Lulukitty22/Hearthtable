@@ -14,7 +14,9 @@ test("edits to HP and an inventory quantity persist after reload", async ({
 
   await page.getByLabel("Current hit points").fill("61");
   await page.getByRole("tab", { name: "Inventory" }).click();
+  await page.getByRole("button", { name: "Potion of Healing" }).click();
   await page.getByLabel("Quantity of Potion of Healing").fill("3");
+  await page.getByRole("button", { name: "Close" }).click();
   await page
     .getByLabel("Save note")
     .fill("Took 34 fire damage; drank a potion");
@@ -26,9 +28,11 @@ test("edits to HP and an inventory quantity persist after reload", async ({
   await page.reload();
   await expect(page.getByLabel("Current hit points")).toHaveValue("61");
   await page.getByRole("tab", { name: "Inventory" }).click();
+  await page.getByRole("button", { name: "Potion of Healing" }).click();
   await expect(page.getByLabel("Quantity of Potion of Healing")).toHaveValue(
     "3",
   );
+  await page.getByRole("button", { name: "Close" }).click();
   await page.getByText(/History \(1 saves?\)/).click();
   await expect(
     page.getByText("Took 34 fire damage; drank a potion"),
@@ -47,9 +51,13 @@ test("Mage Armor and Shield change AC from active state, and the Wand only spell
 
   await page.getByRole("tab", { name: "Inventory" }).click();
   await expect(page.getByTestId("spell-attack-wizard")).toHaveText("+11");
+  await page.getByRole("button", { name: "Wand of the War Mage +1" }).click();
   await page.getByRole("button", { name: "Stowed" }).click();
+  await page.getByRole("button", { name: "Close" }).click();
   await expect(page.getByTestId("spell-attack-wizard")).toHaveText("+12");
-  await expect(page.getByText("Aim: +11")).toBeVisible();
+  await page.getByRole("button", { name: "Aetherlock" }).click();
+  await expect(page.getByText(/Aim: \+11/)).toBeVisible();
+  await page.getByRole("button", { name: "Close" }).click();
   await page.getByRole("button", { name: "Discard" }).click();
   await expect(page.getByTestId("armor-class")).toHaveText("13");
 });

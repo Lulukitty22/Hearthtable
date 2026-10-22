@@ -40,7 +40,9 @@ describe("Carol's documented numbers come from the systems", () => {
     expect(int.kind === "known" && formatExplanation(int.explain)).toBe(
       "INT 22 = point buy 15 + Sage ability scores 2 + Ability Score Improvement 2 + War Caster 1 + Indomitable 2 (while owned)",
     );
-    expect(r.issues.map((i) => i.code)).toContain("abilities.above-20");
+    expect(r.issues.map((i) => i.code)).toContain(
+      "abilities.above-ordinary-limit",
+    );
   });
 
   test("point buy spends exactly the 27-point budget", () => {

@@ -60,6 +60,7 @@ export const TEST_RULESET: Ruleset = {
   },
   variables: {
     "abilities.pointBudget": 27,
+    "abilities.ordinaryMax": 20,
     "skills-and-saves.initiativeAbility": "dex",
     "hit-points.ability": "con",
     "containers.maxAccessibleDepth": 1,

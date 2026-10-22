@@ -117,8 +117,8 @@ Scaffolded 2026-10-22 at 12:17 pm PDT (America/Los_Angeles) (Milestone 2, Step B
 | `pnpm emulators` | Start the Auth, Firestore, Storage and Hosting emulators, with the emulator UI at `http://localhost:4000`. Data is loaded from `.emulator-data` (git-ignored) and saved there on a clean stop with Ctrl+C; delete the folder to start fresh |
 | `pnpm seed` | With the emulators running, add the core content and Carol; records that already exist are skipped and listed, never overwritten |
 | `pnpm check` | Typecheck, lint, check formatting and run unit tests |
-| `pnpm test:emulator` | Run the emulator tests inside a temporary emulator |
-| `pnpm test:e2e` | Run the Playwright tests against the dev server and a temporary emulator |
+| `pnpm test:emulator` | Run the emulator tests inside a temporary emulator on the test ports (`firebase.test.json`) |
+| `pnpm test:e2e` | Run the Playwright tests against their own dev server (port 5174) and a temporary emulator on separate ports (`firebase.test.json`), so they can run beside your own `pnpm dev` and `pnpm emulators` without touching your data |
 | `pnpm peek` | Print Carol's resolved sheet, with how every number was worked out |
 
 Decisions made while scaffolding:
@@ -144,7 +144,7 @@ Decisions made while scaffolding:
 - `packages/rulesets/hearthtable-vanilla-plus`: the ruleset data.
 - `packages/engine`: the composition root. It lists the modules and resolves a character's records under a ruleset; views, tests and scripts use it.
 - `packages/storage`: the `Repository` interface plus `memory` and `firestore` adapters. Saves are all or nothing, and a save edited from an older revision is refused as a conflict rather than applied. The Firestore adapter's Milestone 2 mapping (one `records` document per record, its id the encoded path, with `ancestors` for listing a sheet's tabs) is provisional until the Milestone 4 schema; Firestore cannot store a list inside a list, so data never uses one.
-- `apps/web`: the React sheet viewer and editor. Each system lists the tabs it provides (`provides.uiTabs`), and the app shows the tabs of enabled modules; a declared tab the app cannot draw shows as unavailable. Numbers show a one-line explanation on hover and the full breakdown on click or tap (user decision, 2026-10-22 at 2:26 pm PDT (America/Los_Angeles)). Edits are drafts until saved; a save writes the changed records and a history record together, and a conflict is shown with an option to load the newer version.
+- `apps/web`: the React sheet viewer and editor. Each system lists the tabs it provides (`provides.uiTabs`), and the app shows the tabs of enabled modules; a declared tab the app cannot draw shows as unavailable. The inventory and each spellbook are grids of tiles showing the entry's name (pictures come later); hovering shows the name and clicking opens the whole entry in a panel, where the character's own state is edited (user decision, 2026-10-22 at 3:24 pm PDT (America/Los_Angeles)). Numbers show a one-line explanation on hover and the full breakdown on click or tap (user decision, 2026-10-22 at 2:26 pm PDT (America/Los_Angeles)). Edits are drafts until saved; a save writes the changed records and a history record together, and a conflict is shown with an option to load the newer version.
 - `apps/export-shell`: a later app.
 - `content/`: hand-entered record envelopes as JSON: `core/` (features, spells, items), `account/vrlulu/` (VRLulu's Aetherlock, rounds, canisters and Indomitable, and Carol's character, inventory and three books). `content/src` loads and checks them.
 

@@ -9,7 +9,11 @@ import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 
 const app = initializeApp({ projectId: "demo-hearthtable" });
 const db = getFirestore(app);
-connectFirestoreEmulator(db, "127.0.0.1", 8080);
+// `firebase emulators:exec` sets FIRESTORE_EMULATOR_HOST; otherwise use the local default.
+const [host = "127.0.0.1", port = "8080"] = (
+  process.env["FIRESTORE_EMULATOR_HOST"] ?? "127.0.0.1:8080"
+).split(":");
+connectFirestoreEmulator(db, host, Number(port));
 const repo = firestoreRepository(db);
 
 const all = [...coreContent, ...vrluluContent, ...carolElfnein];

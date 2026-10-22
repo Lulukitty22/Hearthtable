@@ -26,6 +26,7 @@
   },
   "variables": {
     "abilities.pointBudget": 27,
+    "abilities.ordinaryMax": "unlimited",
     "skills-and-saves.initiativeAbility": "dex",
     "hit-points.ability": "con",
     "containers.maxAccessibleDepth": 1,

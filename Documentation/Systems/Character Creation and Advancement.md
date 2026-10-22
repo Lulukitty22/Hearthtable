@@ -38,7 +38,7 @@ Scores 8–15 match the published table; everything outside that range is a Vani
 
 Ability score policy, confirmed 2026-10-16 and carried over from Character Manager:
 
-- Scores above ordinary published limits are permitted. Show a nonblocking informational marker above 20; never clamp or block an upper score.
+- Scores above ordinary published limits are permitted; never clamp or block an upper score. Changed 2026-10-22 at 3:24 pm PDT (America/Los_Angeles): a ruleset sets its ordinary limit (`abilities.ordinaryMax`), and scores above it get an informational marker. Vanilla+ has no ordinary limit, so it shows no marker (user decision: the note is redundant there).
 - Modifiers stay floor((score − 10) / 2).
 - Label the extended prices as the Vanilla+ extension and allow overrides.
 - Keep starting purchases separate from later level increases and DM grant items. Carol's Indomitable (+2 INT, earned in play) is one such DM grant item, specific to her; see [her sheet](../Character%20Sheets/Carol%20Elfnein.md#identity-and-core-statistics).

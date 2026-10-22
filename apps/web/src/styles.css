@@ -399,3 +399,122 @@ select {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Item and spell grids */
+
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tile {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: linear-gradient(160deg, #2a2119, var(--bg-sunken));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  overflow: hidden;
+}
+
+.tile:hover {
+  border-color: var(--accent);
+}
+
+.tile-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tile-qty {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  font-family: var(--serif);
+  color: var(--accent-strong);
+}
+
+.tile-badges {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  display: flex;
+  gap: 3px;
+}
+
+.tile-badge {
+  font-size: 0.65rem;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--good) 22%, transparent);
+  color: var(--good);
+}
+
+.tile-warn {
+  border-color: color-mix(in srgb, var(--warn) 60%, transparent);
+}
+
+.tile-bad {
+  border-color: var(--bad);
+  color: var(--bad);
+}
+
+.tile-muted {
+  opacity: 0.55;
+}
+
+/* Entry detail panel */
+
+dialog.detail {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  overflow: auto;
+  background: var(--bg-raised);
+  color: var(--text);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+
+dialog.detail::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+.detail-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.detail h3 {
+  margin-top: 12px;
+  font-size: 1rem;
+}
+
+.detail-grid {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.fields {
+  white-space: pre-wrap;
+  font-size: 0.78rem;
+  background: var(--bg-sunken);
+  border-radius: 6px;
+  padding: 8px;
+  max-height: 240px;
+  overflow: auto;
+}

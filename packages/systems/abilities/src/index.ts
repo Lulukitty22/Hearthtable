@@ -1,7 +1,7 @@
 // Ability scores, modifiers and point buy. The game module supplies which abilities exist
 // through `abilities.list`. A score is the character's purchased base plus every bonus grant
 // aimed at it, so DM grant items and feats each show as their own line. Scores above 20 are
-// allowed and get an informational marker; nothing is clamped (Character Creation and
+// allowed; a ruleset with an ordinary limit (`ordinaryMax`) marks scores above it, and nothing is clamped (Character Creation and
 // Advancement owns the policy and the point-buy prices).
 
 import {
@@ -100,12 +100,21 @@ const derivations: Derivation[] = [
         known(purchased, "point buy"),
         ...bonuses,
       ]);
-      if (total.kind === "known" && total.value > 20) {
+      // Rulesets with an ordinary limit mark scores above it; nothing is ever clamped.
+      const limit = ctx.settings.variable<number | "unlimited">(
+        "abilities.ordinaryMax",
+      );
+      if (
+        total.kind === "known" &&
+        limit.kind === "known" &&
+        limit.value !== "unlimited" &&
+        total.value > limit.value
+      ) {
         ctx.report(
           issue(
             "info",
-            "abilities.above-20",
-            `${ability.label} ${total.value} is above the ordinary limit of 20; allowed.`,
+            "abilities.above-ordinary-limit",
+            `${ability.label} ${total.value} is above this ruleset's ordinary limit of ${limit.value}; allowed.`,
             `abilities.${ability.id}`,
           ),
         );
@@ -192,7 +201,10 @@ export const abilities: KernelModule = {
       uiTabs: ["stats"],
       extensionPoints: [ABILITIES_LIST_POINT],
       methods: [{ slot: "pointBuy", options: ["published", "extended"] }],
-      ruleVariables: [{ name: "pointBudget", type: "integer" }],
+      ruleVariables: [
+        { name: "pointBudget", type: "integer" },
+        { name: "ordinaryMax", type: "integer", allowUnlimited: true },
+      ],
     },
   },
   setup: (ctx) => derivations.forEach((d) => ctx.extend(DERIVATIONS_POINT, d)),

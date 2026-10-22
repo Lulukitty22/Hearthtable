@@ -1,0 +1,43 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "hosting": {
+    "public": "apps/web/dist",
+    "ignore": ["**/.*"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "emulators": {
+    "auth": {
+      "port": 9100
+    },
+    "firestore": {
+      "port": 8180,
+      "websocketPort": 9160
+    },
+    "storage": {
+      "port": 9299
+    },
+    "hosting": {
+      "port": 5100
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true,
+    "hub": {
+      "port": 4410
+    },
+    "logging": {
+      "port": 4510
+    }
+  }
+}

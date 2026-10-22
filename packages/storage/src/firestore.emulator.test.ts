@@ -7,8 +7,10 @@ import { repositoryContract } from "./contract.test-helpers";
 import { firestoreRepository } from "./firestore";
 
 const PROJECT = "demo-hearthtable";
-const HOST = "127.0.0.1";
-const PORT = 8080;
+const [HOST = "127.0.0.1", PORT_TEXT = "8180"] = (
+  process.env["FIRESTORE_EMULATOR_HOST"] ?? "127.0.0.1:8180"
+).split(":");
+const PORT = Number(PORT_TEXT);
 
 const app = initializeApp({ projectId: PROJECT }, "storage-contract");
 const db = getFirestore(app);

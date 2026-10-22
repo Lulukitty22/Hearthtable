@@ -10,6 +10,8 @@ const app = initializeApp({
   apiKey: "demo-key",
 });
 const db = getFirestore(app);
-connectFirestoreEmulator(db, "127.0.0.1", 8080);
+// Tests point the app at their own emulator port, so they never touch your local data.
+const port = Number(import.meta.env["VITE_FIRESTORE_EMULATOR_PORT"] ?? 8080);
+connectFirestoreEmulator(db, "127.0.0.1", port);
 
 export const repository: Repository = firestoreRepository(db);

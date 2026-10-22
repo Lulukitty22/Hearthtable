@@ -5,11 +5,13 @@ export default defineConfig({
   globalSetup: "./e2e/global-setup.ts",
   // Tests share one emulator, so they run one at a time.
   workers: 1,
-  use: { baseURL: "http://localhost:5173" },
+  // Its own dev server and emulator ports (firebase.test.json), so a running local session is untouched.
+  use: { baseURL: "http://localhost:5174" },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    command: "pnpm --filter @hearthtable/web dev",
-    url: "http://localhost:5173",
-    reuseExistingServer: !process.env["CI"],
+    command: "pnpm --filter @hearthtable/web dev --port 5174 --strictPort",
+    env: { VITE_FIRESTORE_EMULATOR_PORT: "8180" },
+    url: "http://localhost:5174",
+    reuseExistingServer: false,
   },
 });
