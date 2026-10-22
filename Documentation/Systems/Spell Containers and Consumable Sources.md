@@ -35,7 +35,7 @@ This deletion rule applies to editor and sheet deletion controls. Gameplay dropp
 ## Books and spell readiness
 
 - Every spell, including cantrips, has a book/container entry. Opening a spellbook opens its contents in viewer and editor, like opening a bag or chest.
-- Books have editable names and user-controlled saved tab order.
+- Books have editable names and user-controlled saved tab order. Each book record stores its `title` and `order` (implemented 2026-10-22 at 2:26 pm PDT (America/Los_Angeles)); books without an order come last.
 - A normal campaign book holds 16 spell entries. Every contained eligible spell is ready. Multiple books add capacity without another global preparation cap; they do not grant class cantrips, new spell tiers or extra slots.
 - Cantrips use normal spaces. There is no special cantrip container subtype or capacity exemption.
 - All classes store spells in book items. The character's applicable class/level ability to cast a spell establishes eligibility without another learning step; physical acquisition, scribing and mounting remain distinct operations with their selected costs.

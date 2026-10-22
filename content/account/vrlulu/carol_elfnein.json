@@ -411,6 +411,7 @@
     "data": {
       "book": "combat-book",
       "title": "Combat",
+      "order": 1,
       "entries": [
         {
           "id": "combat-1",
@@ -496,6 +497,7 @@
     "data": {
       "book": "cantrips-book",
       "title": "Cantrips",
+      "order": 2,
       "entries": [
         {
           "id": "cantrips-1",
@@ -557,6 +559,7 @@
     "data": {
       "book": "workshop-book",
       "title": "Workshop/Alchemy",
+      "order": 3,
       "entries": [
         {
           "id": "workshop-1",

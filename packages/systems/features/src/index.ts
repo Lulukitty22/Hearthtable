@@ -116,7 +116,10 @@ export const features: KernelModule = {
     version: "1.0.0",
     requires: [],
     extends: [DERIVATIONS_POINT, GRANT_SOURCES_POINT],
-    provides: { recordKinds: ["feature"] },
+    provides: {
+      uiTabs: ["features"],
+      recordKinds: ["feature"],
+    },
   },
   setup: (ctx) => {
     ctx.extend(DERIVATIONS_POINT, {

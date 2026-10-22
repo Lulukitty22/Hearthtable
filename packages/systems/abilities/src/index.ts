@@ -189,6 +189,7 @@ export const abilities: KernelModule = {
     requires: [],
     extends: [DERIVATIONS_POINT],
     provides: {
+      uiTabs: ["stats"],
       extensionPoints: [ABILITIES_LIST_POINT],
       methods: [{ slot: "pointBuy", options: ["published", "extended"] }],
       ruleVariables: [{ name: "pointBudget", type: "integer" }],

@@ -6,6 +6,8 @@
 // - `book-contents-ready` (Vanilla+): every eligible entry in an accessible book is ready;
 //   books hold `bookCapacity` entries, and over-full books warn.
 // - `published-preparation`: eligible spells on the character's prepared list are ready.
+//
+// Books are listed in the owner's saved order (each book record's `order`).
 
 import type { CasterClass } from "@hearthtable/system-spellcasting";
 import type { LineRow } from "@hearthtable/system-containers";
@@ -82,6 +84,20 @@ function eligibility(
   };
 }
 
+/** Books follow their owner's saved `order`; books without one come last, by id. */
+function byOrder(
+  a: { record: { id: string; data: unknown } },
+  b: { record: { id: string; data: unknown } },
+): number {
+  const order = (r: { data: unknown }) => {
+    const o = (r.data as { order?: unknown }).order;
+    return typeof o === "number" ? o : Number.POSITIVE_INFINITY;
+  };
+  return (
+    order(a.record) - order(b.record) || a.record.id.localeCompare(b.record.id)
+  );
+}
+
 function books(ctx: ResolveContext): Value<readonly BookView[]> {
   const method = ctx.settings.method("spellbook-readiness.readiness");
   if (method.kind === "unresolved") return method;
@@ -96,8 +112,9 @@ function books(ctx: ResolveContext): Value<readonly BookView[]> {
   );
 
   return known(
-    readField(ctx, "spellbook", "entries", SpellbookData.shape.entries).map(
-      ({ record, value }): BookView => {
+    [...readField(ctx, "spellbook", "entries", SpellbookData.shape.entries)]
+      .sort(byOrder)
+      .map(({ record, value }): BookView => {
         const bookLine = (record.data as { book?: unknown }).book;
         const line = lines.value.find((l) => l.line.id === bookLine);
         if (!line) {
@@ -175,8 +192,7 @@ function books(ctx: ResolveContext): Value<readonly BookView[]> {
           ...(cap === undefined ? {} : { capacity: cap }),
           entries,
         };
-      },
-    ),
+      }),
     "Spellbooks",
     { note: method.value },
   );
@@ -192,6 +208,7 @@ export const spellbookReadiness: KernelModule = {
     ],
     extends: [DERIVATIONS_POINT],
     provides: {
+      uiTabs: ["spells"],
       recordKinds: ["spellbook"],
       methods: [
         {

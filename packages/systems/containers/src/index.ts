@@ -250,6 +250,7 @@ export const containers: KernelModule = {
     requires: [],
     extends: [DERIVATIONS_POINT],
     provides: {
+      uiTabs: ["inventory"],
       recordKinds: ["inventory", "item"],
       ruleVariables: [
         { name: "maxAccessibleDepth", type: "integer", allowUnlimited: true },

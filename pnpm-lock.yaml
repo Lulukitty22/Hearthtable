@@ -68,6 +68,48 @@ importers:
 
   apps/web:
     dependencies:
+      '@hearthtable/engine':
+        specifier: workspace:*
+        version: link:../../packages/engine
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../packages/kernel
+      '@hearthtable/ruleset-hearthtable-vanilla-plus':
+        specifier: workspace:*
+        version: link:../../packages/rulesets/hearthtable-vanilla-plus
+      '@hearthtable/storage':
+        specifier: workspace:*
+        version: link:../../packages/storage
+      '@hearthtable/system-active-effects':
+        specifier: workspace:*
+        version: link:../../packages/systems/active-effects
+      '@hearthtable/system-armor-class':
+        specifier: workspace:*
+        version: link:../../packages/systems/armor-class
+      '@hearthtable/system-attunement':
+        specifier: workspace:*
+        version: link:../../packages/systems/attunement
+      '@hearthtable/system-containers':
+        specifier: workspace:*
+        version: link:../../packages/systems/containers
+      '@hearthtable/system-features':
+        specifier: workspace:*
+        version: link:../../packages/systems/features
+      '@hearthtable/system-magazines':
+        specifier: workspace:*
+        version: link:../../packages/systems/magazines
+      '@hearthtable/system-resources':
+        specifier: workspace:*
+        version: link:../../packages/systems/resources
+      '@hearthtable/system-spellbook-readiness':
+        specifier: workspace:*
+        version: link:../../packages/systems/spellbook-readiness
+      '@hearthtable/system-spellcasting':
+        specifier: workspace:*
+        version: link:../../packages/systems/spellcasting
+      firebase:
+        specifier: ^13.1.0
+        version: 13.1.0
       react:
         specifier: ^19.3.1
         version: 19.3.1

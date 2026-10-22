@@ -144,7 +144,7 @@ Decisions made while scaffolding:
 - `packages/rulesets/hearthtable-vanilla-plus`: the ruleset data.
 - `packages/engine`: the composition root. It lists the modules and resolves a character's records under a ruleset; views, tests and scripts use it.
 - `packages/storage`: the `Repository` interface plus `memory` and `firestore` adapters. Saves are all or nothing, and a save edited from an older revision is refused as a conflict rather than applied. The Firestore adapter's Milestone 2 mapping (one `records` document per record, its id the encoded path, with `ancestors` for listing a sheet's tabs) is provisional until the Milestone 4 schema; Firestore cannot store a list inside a list, so data never uses one.
-- `apps/web`: the React sheet viewer and editor. Tabs come from the `sheet.tabs` registry.
+- `apps/web`: the React sheet viewer and editor. Each system lists the tabs it provides (`provides.uiTabs`), and the app shows the tabs of enabled modules; a declared tab the app cannot draw shows as unavailable. Numbers show a one-line explanation on hover and the full breakdown on click or tap (user decision, 2026-10-22 at 2:26 pm PDT (America/Los_Angeles)). Edits are drafts until saved; a save writes the changed records and a history record together, and a conflict is shown with an option to load the newer version.
 - `apps/export-shell`: a later app.
 - `content/`: hand-entered record envelopes as JSON: `core/` (features, spells, items), `account/vrlulu/` (VRLulu's Aetherlock, rounds, canisters and Indomitable, and Carol's character, inventory and three books). `content/src` loads and checks them.
 
