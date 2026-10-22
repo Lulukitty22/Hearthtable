@@ -1,6 +1,6 @@
 # Milestones
 
-Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acceptance criteria, the Milestone 2 build steps and the feature inventory. Status: written 2026-10-21 at 4:00 am PDT (America/Los_Angeles) during Milestone 1 (Step A4). Milestone 1 was accepted on 2026-10-22 at 11:42 am PDT, with no changes to the Milestone 2 build steps; coding may start with Step B. No code exists yet.
+Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acceptance criteria, the Milestone 2 build steps and the feature inventory. Status: written 2026-10-21 at 4:00 am PDT (America/Los_Angeles) during Milestone 1 (Step A4). Milestone 1 was accepted on 2026-10-22 at 11:42 am PDT, with no changes to the Milestone 2 build steps; coding may start with Step B. Step B (scaffold) was completed 2026-10-22 at 12:17 pm PDT (America/Los_Angeles); its commands are in [Architecture and Hosting](Architecture%20and%20Hosting.md#development-setup).
 
 ## Selected decisions
 

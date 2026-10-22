@@ -1,0 +1,10 @@
+packages:
+  - apps/*
+  - packages/*
+  - packages/systems/*
+  - packages/games/*
+  - packages/rulesets/*
+allowBuilds:
+  "@firebase/util": false
+  protobufjs: false
+  re2: false

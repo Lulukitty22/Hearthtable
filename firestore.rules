@@ -1,0 +1,14 @@
+rules_version = '2';
+
+// Emulator-only placeholder: everything is denied until the Rules are written in Milestone 4.
+// The Step B scaffold test writes to the "scaffold" collection, which is opened here alone.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /scaffold/{id} {
+      allow read, write: if true;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

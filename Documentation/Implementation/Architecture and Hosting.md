@@ -106,6 +106,27 @@ Rules check who may read and write: campaign membership, the DM role, delegation
 - ESLint + Prettier.
 - Firebase JavaScript SDK (Auth, Firestore, Storage) only inside the storage and web packages. The engine never imports Firebase.
 
+## Development setup
+
+Scaffolded 2026-10-22 at 12:17 pm PDT (America/Los_Angeles) (Milestone 2, Step B). Requirements: Node 24 or later, pnpm 11 (pinned in `package.json`), and a Java 21 or later JDK for the Firebase emulators. The current Firebase CLI refuses older Java; this machine uses Eclipse Temurin 25. The Firebase CLI is a project dev dependency, not a global install.
+
+| Command | What it does |
+|---|---|
+| `pnpm install`, then `pnpm exec playwright install chromium` | Install dependencies and Playwright's browser |
+| `pnpm dev` | Run the web app at `http://localhost:5173` |
+| `pnpm emulators` | Start the Auth, Firestore, Storage and Hosting emulators, with the emulator UI at `http://localhost:4000` |
+| `pnpm check` | Typecheck, lint, check formatting and run unit tests |
+| `pnpm test:emulator` | Run the emulator tests inside a temporary emulator |
+| `pnpm test:e2e` | Run the Playwright tests against the dev server and a temporary emulator |
+
+Decisions made while scaffolding:
+
+- Packages use the `@hearthtable/` prefix, and packages export their TypeScript sources directly; there is no separate build step for libraries (user decision for the prefix).
+- The emulator project ID is `demo-hearthtable`. The `demo-` prefix means Firebase treats it as offline-only, so nothing can reach a real project (user decision).
+- TypeScript is pinned to 6.0, because the ESLint TypeScript plugin does not yet support TypeScript 7.
+- Install scripts for `@firebase/util`, `protobufjs` and `re2` are turned off in `pnpm-workspace.yaml`; none is needed for this app.
+- `firestore.rules` and `storage.rules` deny everything except a `scaffold` collection used by the emulator smoke test. Real Rules come in Milestone 4.
+
 ## Repository layout
 
 - `packages/kernel`: record envelope, module registry, resolved-state pipeline, dice, validation results and the transition interface.

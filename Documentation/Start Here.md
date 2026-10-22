@@ -1,6 +1,6 @@
 # Start Here
 
-Hearthtable is a planned hosted web app for running tabletop campaigns: shared character sheets, campaigns with DM approval, live updates and spell and item systems. It is a fresh start that replaces Character Manager, an earlier HTML/JavaScript app whose code was not carried over. Current work is **Milestone 1, documentation and theory**, using Carol's accepted tabletop build as a concrete example; the roadmap and acceptance criteria are in [Milestones](Implementation/Milestones.md). Firebase (Google sign-in, Firestore and Cloud Storage) is the selected backend direction; no Firebase project, code or character data exists yet.
+Hearthtable is a planned hosted web app for running tabletop campaigns: shared character sheets, campaigns with DM approval, live updates and spell and item systems. It is a fresh start that replaces Character Manager, an earlier HTML/JavaScript app whose code was not carried over. Current work is **Milestone 2, the engine and Carol offline** (Milestone 1 is accepted), using Carol's accepted tabletop build as a concrete example; the roadmap and acceptance criteria are in [Milestones](Implementation/Milestones.md). Firebase (Google sign-in, Firestore and Cloud Storage) is the selected backend direction; no Firebase project or character data exists yet, and the code is only a scaffold.
 
 ## Choose a folder
 

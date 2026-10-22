@@ -1,0 +1,10 @@
+{
+  "name": "@hearthtable/ruleset-hearthtable-vanilla-plus",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Hearthtable Vanilla+ ruleset data (Step E).",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

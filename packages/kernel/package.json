@@ -1,0 +1,10 @@
+{
+  "name": "@hearthtable/kernel",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Game-agnostic kernel: record envelope, module registry, resolved-state pipeline, dice, validation and transitions (Step C).",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
