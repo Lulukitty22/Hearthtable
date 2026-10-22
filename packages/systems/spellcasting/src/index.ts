@@ -78,8 +78,8 @@ const derivations: Derivation[] = [
       const list = casters(ctx);
       if (list.kind === "unresolved") return list;
       const expended =
-        readField(ctx, "character", "spellcasting", SlotState)[0]?.value
-          .expended ?? {};
+        readField(ctx, "character", "spellcasting", SlotState.optional())[0]
+          ?.value?.expended ?? {};
       const highest = Math.max(0, ...list.value.map((c) => c.slots.length));
       const levels: SlotLevel[] = [];
       for (let level = 1; level <= highest; level++) {

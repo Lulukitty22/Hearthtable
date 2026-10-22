@@ -31,8 +31,8 @@ export interface ResourcePool {
 
 function pools(ctx: ResolveContext): readonly ResourcePool[] {
   const used =
-    readField(ctx, "character", "resources", ResourceState)[0]?.value.used ??
-    {};
+    readField(ctx, "character", "resources", ResourceState.optional())[0]?.value
+      ?.used ?? {};
   const byPool = new Map<
     string,
     ReturnType<typeof grantsOf<"resource">>[number][]

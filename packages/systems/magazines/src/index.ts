@@ -3,15 +3,22 @@
 // declares `magazine.chambers`; the weapon's inventory line records each chamber's round (a line
 // id, or null when empty) and which canister line is installed. A canister definition declares
 // `canister.charges` and its line records charges remaining. The Aetherlock attaches as data.
+// A weapon's `aim` names the ability its attacks use and whether the wielder is proficient (the
+// Aetherlock's proficient INT guidance is a campaign rule); bonus grants aimed at `weapons.aim`
+// add to it. Spell-attack bonuses such as the Wand's never apply to aim.
 
 import type { LineRow } from "@hearthtable/system-containers";
 import {
   DERIVATIONS_POINT,
+  amountValue,
+  grantsOf,
   issue,
   known,
   parseWith,
+  sum,
   type KernelModule,
   type ResolveContext,
+  type Value,
 } from "@hearthtable/kernel";
 import { z } from "zod";
 
@@ -20,12 +27,13 @@ export const ROUND_PAYLOADS_POINT = "magazines.roundPayloads";
 const WeaponRules = z.looseObject({
   magazine: z.object({ chambers: z.number().int().min(1) }).optional(),
   canister: z.object({ charges: z.number().int().min(1) }).optional(),
+  aim: z.object({ ability: z.string(), proficient: z.boolean() }).optional(),
 });
 
 const LineState = z.looseObject({
   magazine: z
     .object({
-      chambers: z.array(z.string().nullable()),
+      chambers: z.array(z.string().nullable()).optional(),
       canister: z.string().nullable().optional(),
     })
     .optional(),
@@ -42,6 +50,10 @@ export interface WeaponView {
   readonly name: string;
   readonly chambers: readonly ChamberView[];
   readonly loaded: number;
+  /** False when the line records no chamber contents yet (shown as "not recorded", not empty). */
+  readonly chambersRecorded: boolean;
+  /** Attack bonus, when the weapon declares how it aims. */
+  readonly aim?: Value<number>;
   readonly canister?: {
     readonly lineId: string;
     readonly name: string;
@@ -124,11 +136,24 @@ function weapons(ctx: ResolveContext): readonly WeaponView[] {
         };
       }
     }
+    const aimRule = rules.value.aim;
+    const aim =
+      aimRule &&
+      sum(`${row.name} aim`, [
+        ctx.get<number>(`abilities.${aimRule.ability}.modifier`),
+        ...(aimRule.proficient ? [ctx.get<number>("proficiency.bonus")] : []),
+        ...grantsOf(ctx, "bonus", "weapons.aim").map((g) =>
+          amountValue(ctx, g.grant.amount, g.source.label, g.source.note),
+        ),
+      ]);
     out.push({
       lineId: row.line.id,
       name: row.name,
+      ...(aim ? { aim } : {}),
       chambers,
       loaded: chambers.filter((c) => c.round).length,
+      chambersRecorded:
+        state.ok && state.value.magazine?.chambers !== undefined,
       ...(canister ? { canister } : {}),
     });
   }

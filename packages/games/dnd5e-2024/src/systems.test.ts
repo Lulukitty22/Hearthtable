@@ -103,11 +103,11 @@ describe("Carol's documented numbers come from the systems", () => {
 
   test("the Wand adds +1 to spell attacks only while attuned and held, never to the DC", () => {
     const stowed = carol();
-    expect(valueOf(stowed, "spellcasting.classes.core:wizard.attack")).toBe(11);
-    expect(valueOf(stowed, "spellcasting.classes.core:wizard.dc")).toBe(19);
+    expect(valueOf(stowed, "spellcasting.classes.core/wizard.attack")).toBe(11);
+    expect(valueOf(stowed, "spellcasting.classes.core/wizard.dc")).toBe(19);
     const held = resolveWith(carolRecords({ wandHeld: true }));
-    expect(valueOf(held, "spellcasting.classes.core:wizard.attack")).toBe(12);
-    expect(valueOf(held, "spellcasting.classes.core:wizard.dc")).toBe(19);
+    expect(valueOf(held, "spellcasting.classes.core/wizard.attack")).toBe(12);
+    expect(valueOf(held, "spellcasting.classes.core/wizard.dc")).toBe(19);
   });
 
   test("resources come from features, with Tinker's Magic using INT", () => {
@@ -125,12 +125,12 @@ describe("AC from active state", () => {
     valueOf<number>(resolveWith(carolRecords(options)), "armor-class.total");
   const mageArmor = {
     id: "a1",
-    ref: "core:mage_armor",
+    ref: "core/mage_armor",
     activatedAt: "2026-10-22T10:00:00.000Z",
   };
   const shield = {
     id: "a2",
-    ref: "core:shield",
+    ref: "core/shield",
     activatedAt: "2026-10-22T10:05:00.000Z",
   };
 
@@ -209,11 +209,11 @@ describe("inventory, books and readiness", () => {
       combat?.entries.map((e) => [e.ref, e.ready]) ?? [],
     );
     expect(ready).toEqual({
-      "core:mage_armor": true,
-      "core:shield": true,
-      "core:fireball": true,
-      "core:healing_word": false,
-      "core:wish": false,
+      "core/mage_armor": true,
+      "core/shield": true,
+      "core/fireball": true,
+      "core/healing_word": false,
+      "core/wish": false,
     });
     const deep = books.find((b) => b.lineId === "deep-book");
     expect(deep?.entries[0]?.ready).toBe(false);
@@ -222,7 +222,7 @@ describe("inventory, books and readiness", () => {
   test("a feature granting spell access makes an off-list spell eligible", () => {
     const r = resolveWith(
       carolRecords({
-        extraFeatures: [{ ref: "core:alchemist_spells", from: "Alchemist 3" }],
+        extraFeatures: [{ ref: "core/alchemist_spells", from: "Alchemist 3" }],
       }),
     );
     const combat = valueOf<readonly BookView[]>(
@@ -230,12 +230,12 @@ describe("inventory, books and readiness", () => {
       "spellbook-readiness.books",
     ).find((b) => b.lineId === "combat-book");
     expect(
-      combat?.entries.find((e) => e.ref === "core:healing_word")?.ready,
+      combat?.entries.find((e) => e.ref === "core/healing_word")?.ready,
     ).toBe(true);
   });
 
   test("switching the ruleset to published preparation changes readiness without editing a system", () => {
-    const prepared = resolveWith(carolRecords({ prepared: ["core:shield"] }), {
+    const prepared = resolveWith(carolRecords({ prepared: ["core/shield"] }), {
       ...TEST_RULESET,
       methods: {
         ...TEST_RULESET.methods,
@@ -247,14 +247,14 @@ describe("inventory, books and readiness", () => {
       "spellbook-readiness.books",
     ).find((b) => b.lineId === "combat-book");
     expect(combat?.entries.filter((e) => e.ready).map((e) => e.ref)).toEqual([
-      "core:shield",
+      "core/shield",
     ]);
   });
 
   test("an over-full book warns but keeps every entry", () => {
     const entries = Array.from({ length: 17 }, (_, i) => ({
       id: `x${i}`,
-      ref: "core:fireball",
+      ref: "core/fireball",
     }));
     const r = resolveWith(carolRecords({ bookEntries: entries }));
     expect(r.issues.map((i) => i.code)).toContain(
@@ -284,7 +284,7 @@ describe("chambered weapons and attunement", () => {
       "attunement.class-requirement",
     );
     const wizardOnly = resolveWith(
-      carolRecords({ classLevels: Array<string>(15).fill("core:wizard") }),
+      carolRecords({ classLevels: Array<string>(15).fill("core/wizard") }),
     );
     expect(wizardOnly.issues.map((i) => i.code)).toContain(
       "attunement.class-requirement",
@@ -297,7 +297,9 @@ describe("unresolved data stays visibly unresolved", () => {
   test("a missing item definition is unresolved, grants nothing and is reported", () => {
     const r = resolveWith(
       carolRecords({
-        extraLines: [{ id: "ghost", ref: "campaign:bluesteel", quantity: 4 }],
+        extraLines: [
+          { id: "ghost", ref: "campaign/test/bluesteel", quantity: 4 },
+        ],
       }),
     );
     const ghost = valueOf<readonly LineRow[]>(r, "containers.lines").find(
@@ -305,14 +307,14 @@ describe("unresolved data stays visibly unresolved", () => {
     );
     expect(ghost).toMatchObject({
       status: "unresolved",
-      reason: "Reference not found: campaign:bluesteel",
+      reason: "Reference not found: campaign/test/bluesteel",
     });
     expect(ghost?.line.quantity).toBe(4);
   });
 
   test("a missing feature definition grants nothing and is listed as unresolved", () => {
     const r = resolveWith(
-      carolRecords({ extraFeatures: [{ ref: "core:mystery_feat" }] }),
+      carolRecords({ extraFeatures: [{ ref: "core/mystery_feat" }] }),
     );
     expect(r.issues.map((i) => i.code)).toContain("features.unresolved");
     expect(valueOf(r, "abilities.int.score")).toBe(22);
@@ -330,13 +332,13 @@ describe("stacking rules", () => {
   test("capabilities are present once however many sources grant them; same-name pools add", () => {
     const records = carolRecords({
       extraFeatures: [
-        { ref: "core:channel_divinity_cleric", from: "Cleric 2" },
-        { ref: "core:channel_divinity_paladin", from: "Paladin 3" },
+        { ref: "core/channel_divinity_cleric", from: "Cleric 2" },
+        { ref: "core/channel_divinity_paladin", from: "Paladin 3" },
       ],
     });
     const extra = [
-      ["core:channel_divinity_cleric", 2],
-      ["core:channel_divinity_paladin", 2],
+      ["core/channel_divinity_cleric", 2],
+      ["core/channel_divinity_paladin", 2],
     ].map(([id, uses]) => ({
       ...records[0],
       id,
@@ -367,13 +369,13 @@ describe("stacking rules", () => {
   test("a capability granted twice is present, and applies once", () => {
     const records = carolRecords({
       extraFeatures: [
-        { ref: "core:extra_attack_fighter", from: "Fighter 5" },
-        { ref: "core:extra_attack_paladin", from: "Paladin 5" },
+        { ref: "core/extra_attack_fighter", from: "Fighter 5" },
+        { ref: "core/extra_attack_paladin", from: "Paladin 5" },
       ],
     });
     const extra = [
-      "core:extra_attack_fighter",
-      "core:extra_attack_paladin",
+      "core/extra_attack_fighter",
+      "core/extra_attack_paladin",
     ].map((id) => ({
       ...records[0],
       id,

@@ -301,8 +301,8 @@ export const containers: KernelModule = {
         return known(total, "Carried weight", {
           note:
             total.unknown > 0
-              ? `${total.unknown} items of unknown weight not included`
-              : "all weights known",
+              ? `${total.pounds} lb known; ${total.unknown} items of unknown weight not included`
+              : `${total.pounds} lb, all weights known`,
         });
       },
     });

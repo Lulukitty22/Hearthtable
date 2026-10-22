@@ -103,43 +103,43 @@ const spell = (
 
 export const DEFINITIONS: readonly RecordEnvelope[] = [
   ...classRecords,
-  feature("core:sage_ability_scores", "Sage ability scores", [
+  feature("core/sage_ability_scores", "Sage ability scores", [
     { type: "bonus", target: "abilities.int.score", amount: 2 },
     { type: "bonus", target: "abilities.con.score", amount: 1 },
   ]),
-  feature("core:sage_proficiencies", "Sage", [
+  feature("core/sage_proficiencies", "Sage", [
     { type: "proficiency", target: "skills.arcana", level: 1 },
     { type: "proficiency", target: "skills.history", level: 1 },
     { type: "proficiency", target: "tools.calligraphers-supplies", level: 1 },
   ]),
-  feature("core:skill_choice", "Skill proficiency", [
+  feature("core/skill_choice", "Skill proficiency", [
     { type: "proficiency", target: "skills.{skill}", level: 1 },
   ]),
-  feature("core:alert", "Alert", [
+  feature("core/alert", "Alert", [
     {
       type: "bonus",
       target: "initiative",
       amount: { key: "proficiency.bonus" },
     },
   ]),
-  feature("core:ability_score_improvement", "Ability Score Improvement", [
+  feature("core/ability_score_improvement", "Ability Score Improvement", [
     { type: "bonus", target: "abilities.{ability}.score", amount: 2 },
   ]),
-  feature("core:war_caster", "War Caster", [
+  feature("core/war_caster", "War Caster", [
     { type: "bonus", target: "abilities.{ability}.score", amount: 1 },
   ]),
-  feature("core:skill_expert", "Skill Expert", [
+  feature("core/skill_expert", "Skill Expert", [
     { type: "bonus", target: "abilities.{ability}.score", amount: 1 },
     { type: "proficiency", target: "skills.{proficiency}", level: 1 },
     { type: "proficiency", target: "skills.{expertise}", level: 2 },
   ]),
-  feature("core:scholar", "Scholar", [
+  feature("core/scholar", "Scholar", [
     { type: "proficiency", target: "skills.{skill}", level: 2 },
   ]),
-  feature("core:arcane_recovery", "Arcane Recovery", [
+  feature("core/arcane_recovery", "Arcane Recovery", [
     { type: "resource", pool: "arcane-recovery", max: 1, reset: "long rest" },
   ]),
-  feature("core:tinkers_magic", "Tinker's Magic", [
+  feature("core/tinkers_magic", "Tinker's Magic", [
     {
       type: "resource",
       pool: "tinkers-magic",
@@ -147,50 +147,50 @@ export const DEFINITIONS: readonly RecordEnvelope[] = [
       reset: "long rest",
     },
   ]),
-  feature("core:alchemist_spells", "Alchemist Spells", [
-    { type: "capability", id: "spell-access:core:healing_word" },
-    { type: "capability", id: "spell-access:core:ray_of_sickness" },
+  feature("core/alchemist_spells", "Alchemist Spells", [
+    { type: "capability", id: "spell-access:core/healing_word" },
+    { type: "capability", id: "spell-access:core/ray_of_sickness" },
   ]),
-  item("core:indomitable", {
+  item("core/indomitable", {
     name: "Indomitable",
     grants: [{ type: "bonus", target: "abilities.int.score", amount: 2 }],
     grantsWhen: "owned",
   }),
-  item("core:wand_of_the_war_mage_1", {
+  item("core/wand_of_the_war_mage_1", {
     name: "Wand of the War Mage +1",
     weight: 1,
     attunement: { required: true },
     grants: [{ type: "bonus", target: "spellcasting.attack", amount: 1 }],
     grantsWhen: "attuned-and-held",
   }),
-  item("core:backpack", {
+  item("core/backpack", {
     name: "Backpack",
     weight: 5,
     volume: 1,
     container: { maxWeight: 30, maxVolume: 1, contentsAddWeight: true },
   }),
-  item("core:bag_of_holding", {
+  item("core/bag_of_holding", {
     name: "Bag of Holding",
     weight: 5,
     container: { maxWeight: 500, maxVolume: 64, contentsAddWeight: false },
   }),
-  item("core:potion_of_healing", { name: "Potion of Healing", weight: 0.5 }),
-  item("core:enduring_spellbook", { name: "Enduring Spellbook", weight: 3 }),
-  item("campaign:aetherlock", {
+  item("core/potion_of_healing", { name: "Potion of Healing", weight: 0.5 }),
+  item("core/enduring_spellbook", { name: "Enduring Spellbook", weight: 3 }),
+  item("campaign/test/aetherlock", {
     name: "Aetherlock",
-    attunement: { required: true, requiresClass: "core:artificer" },
+    attunement: { required: true, requiresClass: "core/artificer" },
     magazine: { chambers: 6 },
   }),
-  item("campaign:charge_canister", {
+  item("campaign/test/charge_canister", {
     name: "Charge canister",
     canister: { charges: 12 },
   }),
-  item("campaign:basic_round", { name: "Basic Round" }),
+  item("campaign/test/basic_round", { name: "Basic Round" }),
   spell(
-    "core:mage_armor",
+    "core/mage_armor",
     "Mage Armor",
     1,
-    ["core:wizard"],
+    ["core/wizard"],
     [
       {
         type: "base",
@@ -203,15 +203,15 @@ export const DEFINITIONS: readonly RecordEnvelope[] = [
     ],
   ),
   spell(
-    "core:shield",
+    "core/shield",
     "Shield",
     1,
-    ["core:wizard"],
+    ["core/wizard"],
     [{ type: "bonus", target: "armor-class", amount: 5 }],
   ),
-  spell("core:fireball", "Fireball", 3, ["core:wizard"]),
-  spell("core:healing_word", "Healing Word", 1, ["core:bard"]),
-  spell("core:wish", "Wish", 9, ["core:wizard"]),
+  spell("core/fireball", "Fireball", 3, ["core/wizard"]),
+  spell("core/healing_word", "Healing Word", 1, ["core/bard"]),
+  spell("core/wish", "Wish", 9, ["core/wizard"]),
 ];
 
 export interface CharacterOptions {
@@ -226,43 +226,43 @@ export interface CharacterOptions {
 }
 
 export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
-  const character = record("account:test_carol", "character", {
+  const character = record("account/test/carol", "character", {
     name: "Carol Elfnein",
     classLevels: options.classLevels ?? [
-      ...Array<string>(12).fill("core:wizard"),
-      ...Array<string>(3).fill("core:artificer"),
+      ...Array<string>(12).fill("core/wizard"),
+      ...Array<string>(3).fill("core/artificer"),
     ],
     abilities: {
       base: { str: 8, dex: 15, con: 13, int: 15, wis: 10, cha: 10 },
     },
     features: [
-      { ref: "core:sage_ability_scores", from: "Sage" },
-      { ref: "core:sage_proficiencies", from: "Sage" },
-      { ref: "core:alert", from: "Human (Versatile)" },
+      { ref: "core/sage_ability_scores", from: "Sage" },
+      { ref: "core/sage_proficiencies", from: "Sage" },
+      { ref: "core/alert", from: "Human (Versatile)" },
       {
-        ref: "core:skill_choice",
+        ref: "core/skill_choice",
         from: "Human (Skillful)",
         choices: { skill: "medicine" },
       },
       {
-        ref: "core:skill_choice",
+        ref: "core/skill_choice",
         from: "Wizard 1",
         choices: { skill: "investigation" },
       },
       {
-        ref: "core:skill_choice",
+        ref: "core/skill_choice",
         from: "Wizard 1",
         choices: { skill: "insight" },
       },
-      { ref: "core:scholar", from: "Wizard 2", choices: { skill: "arcana" } },
+      { ref: "core/scholar", from: "Wizard 2", choices: { skill: "arcana" } },
       {
-        ref: "core:ability_score_improvement",
+        ref: "core/ability_score_improvement",
         from: "Wizard 4",
         choices: { ability: "int" },
       },
-      { ref: "core:war_caster", from: "Wizard 8", choices: { ability: "int" } },
+      { ref: "core/war_caster", from: "Wizard 8", choices: { ability: "int" } },
       {
-        ref: "core:skill_expert",
+        ref: "core/skill_expert",
         from: "Wizard 12",
         choices: {
           ability: "dex",
@@ -271,12 +271,12 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
         },
       },
       {
-        ref: "core:skill_choice",
+        ref: "core/skill_choice",
         from: "Artificer (multiclass)",
         choices: { skill: "nature" },
       },
-      { ref: "core:arcane_recovery", from: "Wizard 1" },
-      { ref: "core:tinkers_magic", from: "Artificer 1" },
+      { ref: "core/arcane_recovery", from: "Wizard 1" },
+      { ref: "core/tinkers_magic", from: "Artificer 1" },
       ...(options.extraFeatures ?? []),
     ],
     hitPoints: { current: 95 },
@@ -288,21 +288,20 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
     spellcasting: { expended: {} },
     ...(options.prepared ? { spellbook: { prepared: options.prepared } } : {}),
   });
-  const inventory = record("account:test_carol.inventory", "inventory", {
+  const inventory = record("account/test/carol.inventory", "inventory", {
+    attuned: ["wand", "aetherlock"],
     lines: [
-      { id: "indomitable", ref: "core:indomitable", quantity: 1 },
+      { id: "indomitable", ref: "core/indomitable", quantity: 1 },
       {
         id: "wand",
-        ref: "core:wand_of_the_war_mage_1",
+        ref: "core/wand_of_the_war_mage_1",
         quantity: 1,
-        attuned: true,
         held: options.wandHeld ?? false,
       },
       {
         id: "aetherlock",
-        ref: "campaign:aetherlock",
+        ref: "campaign/test/aetherlock",
         quantity: 1,
-        attuned: true,
         magazine: {
           chambers: ["round-1", "round-2", null],
           canister: "canister-1",
@@ -310,53 +309,53 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
       },
       {
         id: "canister-1",
-        ref: "campaign:charge_canister",
+        ref: "campaign/test/charge_canister",
         quantity: 1,
         charges: 12,
       },
-      { id: "round-1", ref: "campaign:basic_round", quantity: 1 },
-      { id: "round-2", ref: "campaign:basic_round", quantity: 1 },
-      { id: "backpack", ref: "core:backpack", quantity: 1 },
+      { id: "round-1", ref: "campaign/test/basic_round", quantity: 1 },
+      { id: "round-2", ref: "campaign/test/basic_round", quantity: 1 },
+      { id: "backpack", ref: "core/backpack", quantity: 1 },
       {
         id: "combat-book",
-        ref: "core:enduring_spellbook",
+        ref: "core/enduring_spellbook",
         quantity: 1,
         parent: "backpack",
       },
       {
         id: "bag",
-        ref: "core:bag_of_holding",
+        ref: "core/bag_of_holding",
         quantity: 1,
         parent: "backpack",
       },
       {
         id: "deep-potion",
-        ref: "core:potion_of_healing",
+        ref: "core/potion_of_healing",
         quantity: 2,
         parent: "bag",
       },
       {
         id: "deep-book",
-        ref: "core:enduring_spellbook",
+        ref: "core/enduring_spellbook",
         quantity: 1,
         parent: "bag",
       },
       ...(options.extraLines ?? []),
     ],
   });
-  const combatBook = record("account:test_carol.book.combat", "spellbook", {
+  const combatBook = record("account/test/carol.book.combat", "spellbook", {
     book: "combat-book",
     entries: options.bookEntries ?? [
-      { id: "e1", ref: "core:mage_armor" },
-      { id: "e2", ref: "core:shield" },
-      { id: "e3", ref: "core:fireball" },
-      { id: "e4", ref: "core:healing_word" },
-      { id: "e5", ref: "core:wish" },
+      { id: "e1", ref: "core/mage_armor" },
+      { id: "e2", ref: "core/shield" },
+      { id: "e3", ref: "core/fireball" },
+      { id: "e4", ref: "core/healing_word" },
+      { id: "e5", ref: "core/wish" },
     ],
   });
-  const deepBook = record("account:test_carol.book.deep", "spellbook", {
+  const deepBook = record("account/test/carol.book.deep", "spellbook", {
     book: "deep-book",
-    entries: [{ id: "d1", ref: "core:fireball" }],
+    entries: [{ id: "d1", ref: "core/fireball" }],
   });
   return [...DEFINITIONS, character, inventory, combatBook, deepBook];
 }

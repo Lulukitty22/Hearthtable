@@ -91,7 +91,8 @@ function books(ctx: ResolveContext): Value<readonly BookView[]> {
     "spellbook-readiness.bookCapacity",
   );
   const prepared = new Set(
-    readField(ctx, "character", "spellbook", Prepared)[0]?.value.prepared ?? [],
+    readField(ctx, "character", "spellbook", Prepared.optional())[0]?.value
+      ?.prepared ?? [],
   );
 
   return known(

@@ -1,0 +1,27 @@
+{
+  "name": "@hearthtable/engine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Puts the kernel, systems and game module together and resolves characters under a ruleset.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@hearthtable/game-dnd5e-2024": "workspace:*",
+    "@hearthtable/kernel": "workspace:*",
+    "@hearthtable/system-abilities": "workspace:*",
+    "@hearthtable/system-active-effects": "workspace:*",
+    "@hearthtable/system-armor-class": "workspace:*",
+    "@hearthtable/system-attunement": "workspace:*",
+    "@hearthtable/system-containers": "workspace:*",
+    "@hearthtable/system-features": "workspace:*",
+    "@hearthtable/system-hit-points": "workspace:*",
+    "@hearthtable/system-magazines": "workspace:*",
+    "@hearthtable/system-proficiency": "workspace:*",
+    "@hearthtable/system-resources": "workspace:*",
+    "@hearthtable/system-skills-and-saves": "workspace:*",
+    "@hearthtable/system-spellbook-readiness": "workspace:*",
+    "@hearthtable/system-spellcasting": "workspace:*"
+  }
+}

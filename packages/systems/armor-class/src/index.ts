@@ -84,8 +84,12 @@ const derivations: Derivation[] = [
       const bases = available(ctx);
       if (bases.length === 0)
         return unresolved("No AC base formula is available.");
-      const choice = readField(ctx, "character", "armorClass", Selection)[0]
-        ?.value.selected;
+      const choice = readField(
+        ctx,
+        "character",
+        "armorClass",
+        Selection.optional(),
+      )[0]?.value?.selected;
       const candidates: { base: AvailableBase; at: string; why: string }[] = [];
       const chosen = choice && bases.find((b) => b.id === choice.base);
       if (choice && chosen)

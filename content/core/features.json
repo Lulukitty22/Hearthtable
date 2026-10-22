@@ -1,0 +1,568 @@
+[
+  {
+    "id": "core/human",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024): Resourceful, Skillful, Versatile"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Human",
+      "grants": [
+        {
+          "type": "resource",
+          "pool": "heroic-inspiration",
+          "max": 1,
+          "reset": "long rest"
+        },
+        {
+          "type": "proficiency",
+          "target": "skills.{skill}",
+          "level": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/sage",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024), Sage background"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Sage",
+      "grants": [
+        {
+          "type": "bonus",
+          "target": "abilities.{plus2}.score",
+          "amount": 2
+        },
+        {
+          "type": "bonus",
+          "target": "abilities.{plus1}.score",
+          "amount": 1
+        },
+        {
+          "type": "proficiency",
+          "target": "skills.arcana",
+          "level": 1
+        },
+        {
+          "type": "proficiency",
+          "target": "skills.history",
+          "level": 1
+        },
+        {
+          "type": "proficiency",
+          "target": "tools.calligraphers-supplies",
+          "level": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/alert",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Alert",
+      "grants": [
+        {
+          "type": "bonus",
+          "target": "initiative",
+          "amount": {
+            "key": "proficiency.bonus"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/magic_initiate_wizard",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Magic Initiate (Wizard)",
+      "grants": [
+        {
+          "type": "capability",
+          "id": "spell-access:{cantrip1}"
+        },
+        {
+          "type": "capability",
+          "id": "spell-access:{cantrip2}"
+        },
+        {
+          "type": "capability",
+          "id": "spell-access:{spell}"
+        },
+        {
+          "type": "resource",
+          "pool": "magic-initiate-free-cast",
+          "max": 1,
+          "reset": "long rest"
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/wizard_skill_proficiencies",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Wizard skill proficiencies",
+      "grants": [
+        {
+          "type": "proficiency",
+          "target": "skills.{first}",
+          "level": 1
+        },
+        {
+          "type": "proficiency",
+          "target": "skills.{second}",
+          "level": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/ritual_adept",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Ritual Adept",
+      "grants": []
+    }
+  },
+  {
+    "id": "core/arcane_recovery",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Arcane Recovery",
+      "grants": [
+        {
+          "type": "resource",
+          "pool": "arcane-recovery",
+          "max": 1,
+          "reset": "long rest"
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/scholar",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Scholar",
+      "grants": [
+        {
+          "type": "proficiency",
+          "target": "skills.{skill}",
+          "level": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/memorize_spell",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Memorize Spell",
+      "grants": []
+    }
+  },
+  {
+    "id": "core/evocation_savant",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Evocation Savant",
+      "grants": []
+    }
+  },
+  {
+    "id": "core/potent_cantrip",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Potent Cantrip",
+      "grants": []
+    }
+  },
+  {
+    "id": "core/sculpt_spells",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Sculpt Spells",
+      "grants": []
+    }
+  },
+  {
+    "id": "core/empowered_evocation",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Empowered Evocation",
+      "grants": []
+    }
+  },
+  {
+    "id": "core/ability_score_improvement",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Ability Score Improvement",
+      "grants": [
+        {
+          "type": "bonus",
+          "target": "abilities.{ability}.score",
+          "amount": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/war_caster",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "War Caster",
+      "grants": [
+        {
+          "type": "bonus",
+          "target": "abilities.{ability}.score",
+          "amount": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/skill_expert",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Skill Expert",
+      "grants": [
+        {
+          "type": "bonus",
+          "target": "abilities.{ability}.score",
+          "amount": 1
+        },
+        {
+          "type": "proficiency",
+          "target": "skills.{proficiency}",
+          "level": 1
+        },
+        {
+          "type": "proficiency",
+          "target": "skills.{expertise}",
+          "level": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/artificer_multiclass_proficiencies",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "secondary source: community transcription of the revised Artificer; the official chapter was gated"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Artificer multiclass proficiencies",
+      "grants": [
+        {
+          "type": "proficiency",
+          "target": "skills.{skill}",
+          "level": 1
+        },
+        {
+          "type": "proficiency",
+          "target": "tools.tinkers-tools",
+          "level": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/tinkers_magic",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "secondary source: community transcription of the revised Artificer; the official chapter was gated"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Tinker's Magic",
+      "grants": [
+        {
+          "type": "resource",
+          "pool": "tinkers-magic",
+          "max": {
+            "key": "abilities.int.modifier"
+          },
+          "reset": "long rest"
+        },
+        {
+          "type": "capability",
+          "id": "spell-access:core/mending"
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/replicate_magic_item",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "secondary source: community transcription of the revised Artificer; the official chapter was gated"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Replicate Magic Item",
+      "grants": []
+    }
+  },
+  {
+    "id": "core/alchemist",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "secondary source: community transcription of the revised Artificer; the official chapter was gated"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Alchemist",
+      "grants": [
+        {
+          "type": "proficiency",
+          "target": "tools.alchemists-supplies",
+          "level": 1
+        },
+        {
+          "type": "proficiency",
+          "target": "tools.herbalism-kit",
+          "level": 1
+        },
+        {
+          "type": "capability",
+          "id": "spell-access:core/healing_word"
+        },
+        {
+          "type": "capability",
+          "id": "spell-access:core/ray_of_sickness"
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/experimental_elixir",
+    "kind": "feature",
+    "moduleId": "features",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "secondary source: community transcription of the revised Artificer; the official chapter was gated"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Experimental Elixir",
+      "grants": []
+    }
+  }
+]

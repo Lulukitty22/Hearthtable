@@ -86,8 +86,8 @@ The spell grants 40 ft flight, +2 AC, magical weapon attacks using casting abili
 
 | Category | Selected equipment |
 |---|---|
-| Attuned, 3/3 | Gifted Aetherlock; permanent Wand of the War Mage +1; permanent Manifold Tool |
-| DM grants | Indomitable: +2 INT, earned in play; weight, attunement and whether it can be lost are not yet set by the DM |
+| Attuned, 4/4 | In order: Gifted Aetherlock; permanent Wand of the War Mage +1; permanent Manifold Tool; Indomitable (its own +1 slot makes four) |
+| DM grants | Indomitable: requires attunement; while attuned, +2 INT and +1 attunement slot (selected 2026-10-22 at 1:42 pm PDT (America/Los_Angeles)). Weight and whether it can be lost are not yet set by the DM |
 | Usual replicas | Goggles of Night; Alchemy Jug |
 | Books | Three permanent Enduring Spellbooks, 16/10/6 entries |
 | Physical tools | Alchemist, Herbalism, Tinker and Calligrapher kits |
@@ -126,7 +126,8 @@ See the weapon and ledger for activation, consumption, refill and cost rules.
 
 - Future idea, 2026-10-20: the [Oblex's memory-based impersonations](https://www.dndbeyond.com/posts/235-meet-d-ds-new-scariest-monster-in-mordenkainens) may provide a reference if Autoscorers are revisited. This is an unselected possibility, not a restored feature or current equipment.
 - Genuine unusual payload/critical/Potent Cantrip interactions, unwilling recipients and manufacture-workspace/donor details; most ordinary cases already follow normal spell rules.
-- Indomitable item: weight, attunement and whether it can be lost are not yet set by the DM.
+- Indomitable item: weight and whether it can be lost are not yet set by the DM.
+- Starting state and placement, selected 2026-10-22 at 1:42 pm PDT (America/Los_Angeles): she starts fresh (HP 95/95, nothing spent, nothing active), and every item sits at the top level of her inventory until it is arranged in the editor. Weights use the 2024 equipment table where an item is published; spellbooks, replicas and custom items stay unknown.
 - Rifle weight, starting loaded chambers, ongoing grenade/casing/Basic Round supply/prices, remaining minor components/hand-use/provenance checks.
 - Continue [systems design](../Systems/Campaigns%20and%20Shared%20Data.md) from the accepted baseline; [Lessons from Character Manager](../Implementation/Lessons%20from%20Character%20Manager.md) lists failure modes to avoid. Implement later; rebuild from this sheet rather than migrating old JSON.
 

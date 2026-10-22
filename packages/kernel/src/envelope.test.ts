@@ -6,7 +6,7 @@ import {
 } from "./envelope";
 
 const stored = {
-  id: "campaign:bag_of_holding",
+  id: "campaign/moonlit_coast/bag_of_holding",
   kind: "item",
   moduleId: "containers",
   schemaVersion: 1,
@@ -25,7 +25,7 @@ const stored = {
   updatedAt: "2026-10-22T19:00:00.000Z",
   data: {
     quantity: 0,
-    contents: [{ ref: "core:rope", quantity: 1, addons: { knot: "bowline" } }],
+    contents: [{ ref: "core/rope", quantity: 1, addons: { knot: "bowline" } }],
     clothing: true,
   },
   futureTopLevelField: { nested: { deeper: null } },

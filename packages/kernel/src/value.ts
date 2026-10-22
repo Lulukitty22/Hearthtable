@@ -32,7 +32,7 @@ export function known<T>(
   return {
     kind: "known",
     value,
-    explain: { label, value: display(value), ...extra },
+    explain: { label, ...display(value), ...extra },
   };
 }
 
@@ -77,6 +77,11 @@ export function formatExplanation(e: Explanation): string {
   return `${head} = ${parts}${note}`;
 }
 
-function display(value: unknown): string {
-  return typeof value === "string" ? value : JSON.stringify(value);
+/** Only plain values get a display value; lists and objects describe themselves in `note`. */
+function display(value: unknown): { value?: string } {
+  return typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+    ? { value: String(value) }
+    : {};
 }

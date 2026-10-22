@@ -118,6 +118,7 @@ Scaffolded 2026-10-22 at 12:17 pm PDT (America/Los_Angeles) (Milestone 2, Step B
 | `pnpm check` | Typecheck, lint, check formatting and run unit tests |
 | `pnpm test:emulator` | Run the emulator tests inside a temporary emulator |
 | `pnpm test:e2e` | Run the Playwright tests against the dev server and a temporary emulator |
+| `pnpm peek` | Print Carol's resolved sheet, with how every number was worked out |
 
 Decisions made while scaffolding:
 
@@ -139,10 +140,11 @@ Decisions made while scaffolding:
   - `magazines` (chambers and charge display only)
 - `packages/games/dnd5e-2024`: the game module, including class records and each class's own slot table (Vanilla+ adds slots per class; see [Character Creation and Advancement](../Systems/Character%20Creation%20and%20Advancement.md)).
 - `packages/rulesets/hearthtable-vanilla-plus`: the ruleset data.
+- `packages/engine`: the composition root. It lists the modules and resolves a character's records under a ruleset; views, tests and scripts use it.
 - `packages/storage`: the `Repository` interface plus `memory` and `firestore` adapters.
 - `apps/web`: the React sheet viewer and editor. Tabs come from the `sheet.tabs` registry.
 - `apps/export-shell`: a later app.
-- `content/`: hand-entered Carol records as JSON fixtures, plus the Aetherlock as campaign-content data.
+- `content/`: hand-entered record envelopes as JSON: `core/` (features, spells, items), `account/vrlulu/` (VRLulu's Aetherlock, rounds, canisters and Indomitable, and Carol's character, inventory and three books). `content/src` loads and checks them.
 
 `superiority-dice` is not needed for Milestone 2, because Carol has none; it stays on the roadmap as a test of the `resources` system.
 

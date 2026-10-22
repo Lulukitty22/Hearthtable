@@ -1,14 +1,15 @@
-// Record identities are readable and derived from the name (user decision, 2026-10-22).
-// A name is the identity: renaming means duplicating under the new name, and nothing that
-// referenced the old name is rewritten. Capitalization and spaces versus underscores do not
-// distinguish two names (the duplicate-name rule), so both normalize to the same key.
+// A record's identity is its full path (user decisions, 2026-10-22): owner, folders and name,
+// such as `account/vrlulu/carol_elfnein`, `campaign/moonlit_coast/characters/vrlulu/carol_elfnein`
+// or `core/fireball`. Each segment is normalized by the duplicate-name rule, so capitalization
+// and spaces versus underscores do not distinguish two names. Renaming means duplicating under
+// the new name and moving means copying; nothing that referenced the old path is rewritten.
 
 import { fail, issue, ok, type Result } from "./validation";
 
-/** `<scope>:<key>`, e.g. `core:fireball` or `campaign:aetherlock`. */
-export type RecordId = `${string}:${string}`;
+/** `<scope>/…/<name>`, e.g. `core/fireball` or `account/vrlulu/carol_elfnein`. */
+export type RecordId = `${string}/${string}`;
 
-const SCOPE = /^[a-z0-9][a-z0-9-]*$/;
+export const ID_SCOPES = ["core", "account", "campaign"] as const;
 
 /** Normalizes a display name to its identity key. */
 export function nameKey(name: string): string {
@@ -23,42 +24,42 @@ export function sameName(a: string, b: string): boolean {
   return nameKey(a) === nameKey(b);
 }
 
-export function makeId(scope: string, name: string): Result<RecordId> {
-  const key = nameKey(name);
-  if (!SCOPE.test(scope)) {
+/** Builds an identity from display names, e.g. `makeId(["account", "VRLulu"], "Carol Elfnein")`. */
+export function makeId(
+  path: readonly string[],
+  name: string,
+): Result<RecordId> {
+  const segments = [...path, name].map(nameKey);
+  const bad = segments.find(
+    (s) => s === "" || s.includes("/") || s === "." || s === "..",
+  );
+  if (bad !== undefined) {
     return fail([
       issue(
         "error",
-        "id.bad-scope",
-        `Scope "${scope}" must be lowercase letters, digits or hyphens.`,
+        "id.bad-segment",
+        `"${[...path, name].join(" / ")}": names cannot be empty, contain "/", or be "." or "..".`,
       ),
     ]);
   }
-  if (key === "")
-    return fail([issue("error", "id.empty-name", "A name cannot be empty.")]);
-  // Firestore document IDs cannot contain "/" and cannot be "." or "..".
-  if (key.includes("/") || key === "." || key === "..") {
-    return fail([
-      issue(
-        "error",
-        "id.bad-name",
-        `Name "${name}" cannot contain "/" or be "." or "..".`,
-      ),
-    ]);
-  }
-  return ok(`${scope}:${key}` as RecordId);
+  const id = segments.join("/");
+  const parsed = parseId(id);
+  return parsed.ok ? ok(id as RecordId) : fail(parsed.issues);
 }
 
-export function parseId(id: string): Result<{ scope: string; key: string }> {
-  const at = id.indexOf(":");
-  if (at <= 0 || at === id.length - 1) {
-    return fail([
-      issue(
-        "error",
-        "id.malformed",
-        `"${id}" is not a "<scope>:<name>" identity.`,
-      ),
-    ]);
-  }
-  return ok({ scope: id.slice(0, at), key: id.slice(at + 1) });
+export function parseId(
+  id: string,
+): Result<{ scope: string; segments: readonly string[]; name: string }> {
+  const segments = id.split("/");
+  const scope = segments[0] as string;
+  const bad = (why: string) =>
+    fail<never>([issue("error", "id.malformed", `"${id}" ${why}.`)]);
+  if (segments.length < 2) return bad("must be a path such as core/fireball");
+  if (!(ID_SCOPES as readonly string[]).includes(scope))
+    return bad(`must start with ${ID_SCOPES.join(", ")}`);
+  if (scope !== "core" && segments.length < 3)
+    return bad(`needs the owning ${scope} after "${scope}/"`);
+  if (segments.some((s) => s === "" || s !== nameKey(s)))
+    return bad("has a segment that is empty or not normalized");
+  return ok({ scope, segments, name: segments[segments.length - 1] as string });
 }

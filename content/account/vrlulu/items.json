@@ -1,0 +1,194 @@
+[
+  {
+    "id": "account/vrlulu/aetherlock",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "vrlulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Aetherlock",
+      "attunement": {
+        "required": true,
+        "requiresClass": "core/artificer"
+      },
+      "magazine": {
+        "chambers": 6
+      },
+      "aim": {
+        "ability": "int",
+        "proficient": true
+      }
+    }
+  },
+  {
+    "id": "account/vrlulu/charge_canister",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "vrlulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Charge canister",
+      "canister": {
+        "charges": 12
+      }
+    }
+  },
+  {
+    "id": "account/vrlulu/basic_round",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "vrlulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Basic Round"
+    }
+  },
+  {
+    "id": "account/vrlulu/arcane_round",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "vrlulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Arcane Round"
+    }
+  },
+  {
+    "id": "account/vrlulu/spellround_cone_of_cold",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "vrlulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Spellround (Cone of Cold)"
+    }
+  },
+  {
+    "id": "account/vrlulu/he_frag_round",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "vrlulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "HE-FRAG Round"
+    }
+  },
+  {
+    "id": "account/vrlulu/spellround_shield",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "vrlulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Spellround (Shield)"
+    }
+  },
+  {
+    "id": "account/vrlulu/spellround_cure_wounds",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "vrlulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Spellround (Cure Wounds)"
+    }
+  },
+  {
+    "id": "account/vrlulu/indomitable",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "vrlulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Indomitable (INT)",
+      "attunement": {
+        "required": true
+      },
+      "grants": [
+        {
+          "type": "bonus",
+          "target": "abilities.int.score",
+          "amount": 2
+        },
+        {
+          "type": "bonus",
+          "target": "attunement.slots",
+          "amount": 1
+        }
+      ],
+      "grantsWhen": "attuned"
+    }
+  }
+]

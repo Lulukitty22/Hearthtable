@@ -1,0 +1,431 @@
+[
+  {
+    "id": "core/potion_of_healing",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Potion of Healing",
+      "weight": 0.5
+    }
+  },
+  {
+    "id": "core/bag_of_holding",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Bag of Holding",
+      "weight": 5,
+      "container": {
+        "maxWeight": 500,
+        "maxVolume": 64,
+        "contentsAddWeight": false
+      }
+    }
+  },
+  {
+    "id": "core/component_pouch",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Component Pouch",
+      "weight": 2
+    }
+  },
+  {
+    "id": "core/alchemists_supplies",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Alchemist's Supplies",
+      "weight": 8
+    }
+  },
+  {
+    "id": "core/herbalism_kit",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Herbalism Kit",
+      "weight": 3
+    }
+  },
+  {
+    "id": "core/tinkers_tools",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Tinker's Tools",
+      "weight": 10
+    }
+  },
+  {
+    "id": "core/calligraphers_supplies",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Calligrapher's Supplies",
+      "weight": 5
+    }
+  },
+  {
+    "id": "core/robe",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Robe",
+      "weight": 4
+    }
+  },
+  {
+    "id": "core/rope",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Rope",
+      "weight": 5
+    }
+  },
+  {
+    "id": "core/bedroll",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Bedroll",
+      "weight": 7
+    }
+  },
+  {
+    "id": "core/waterskin",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Waterskin",
+      "weight": 5
+    }
+  },
+  {
+    "id": "core/rations",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Rations (1 day)",
+      "weight": 2
+    }
+  },
+  {
+    "id": "core/ink",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Ink",
+      "weight": 0
+    }
+  },
+  {
+    "id": "core/paper",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Paper",
+      "weight": 0
+    }
+  },
+  {
+    "id": "core/wand_of_the_war_mage_1",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Wand of the War Mage +1",
+      "weight": 1,
+      "attunement": {
+        "required": true
+      },
+      "grants": [
+        {
+          "type": "bonus",
+          "target": "spellcasting.attack",
+          "amount": 1
+        }
+      ],
+      "grantsWhen": "attuned-and-held"
+    }
+  },
+  {
+    "id": "core/enduring_spellbook",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Enduring Spellbook"
+    }
+  },
+  {
+    "id": "core/goggles_of_night",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Goggles of Night"
+    }
+  },
+  {
+    "id": "core/alchemy_jug",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) equipment, checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Alchemy Jug",
+      "weight": 12
+    }
+  },
+  {
+    "id": "core/manifold_tool",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Manifold Tool",
+      "attunement": {
+        "required": true
+      }
+    }
+  },
+  {
+    "id": "core/pearl_100gp",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Pearl (100 gp)"
+    }
+  },
+  {
+    "id": "core/engraved_planar_object",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Engraved planar object (500 gp)"
+    }
+  }
+]

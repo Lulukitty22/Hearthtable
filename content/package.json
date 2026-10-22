@@ -1,0 +1,24 @@
+{
+  "name": "@hearthtable/content",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Hand-entered records: core definitions, VRLulu's account content and Carol Elfnein.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@hearthtable/game-dnd5e-2024": "workspace:*",
+    "@hearthtable/kernel": "workspace:*"
+  },
+  "devDependencies": {
+    "@hearthtable/engine": "workspace:*",
+    "@hearthtable/ruleset-hearthtable-vanilla-plus": "workspace:*",
+    "@hearthtable/system-attunement": "workspace:*",
+    "@hearthtable/system-containers": "workspace:*",
+    "@hearthtable/system-magazines": "workspace:*",
+    "@hearthtable/system-resources": "workspace:*",
+    "@hearthtable/system-spellbook-readiness": "workspace:*",
+    "@hearthtable/system-spellcasting": "workspace:*"
+  }
+}

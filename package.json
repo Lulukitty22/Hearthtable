@@ -17,10 +17,15 @@
     "test:emulator": "firebase emulators:exec --only auth,firestore,storage \"vitest run --project emulator\"",
     "test:e2e": "firebase emulators:exec --only auth,firestore,storage \"playwright test\"",
     "emulators": "firebase emulators:start",
-    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test"
+    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test",
+    "peek": "tsx scripts/peek.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@hearthtable/content": "workspace:*",
+    "@hearthtable/engine": "workspace:*",
+    "@hearthtable/kernel": "workspace:*",
+    "@hearthtable/ruleset-hearthtable-vanilla-plus": "workspace:*",
     "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.5",
     "eslint": "^10.13.0",
@@ -29,6 +34,7 @@
     "firebase-tools": "^15.34.0",
     "globals": "^17.13.0",
     "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
     "typescript": "6.0.3",
     "typescript-eslint": "^8.72.0",
     "vitest": "^5.0.5"

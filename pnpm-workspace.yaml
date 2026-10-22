@@ -1,4 +1,5 @@
 packages:
+  - content
   - apps/*
   - packages/*
   - packages/systems/*
@@ -6,5 +7,6 @@ packages:
   - packages/rulesets/*
 allowBuilds:
   "@firebase/util": false
+  esbuild: true
   protobufjs: false
   re2: false

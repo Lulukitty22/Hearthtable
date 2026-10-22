@@ -45,8 +45,8 @@ function rows(ctx: ResolveContext): readonly ActiveEffectRow[] {
     ctx,
     "character",
     "activeEffects",
-    z.array(ActiveEntry),
-  ).flatMap((f) => f.value);
+    z.array(ActiveEntry).optional(),
+  ).flatMap((f) => f.value ?? []);
   const newest = new Map<string, string>();
   for (const e of entries) {
     const seen = newest.get(e.ref);

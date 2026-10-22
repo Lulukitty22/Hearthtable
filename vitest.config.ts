@@ -9,6 +9,7 @@ export default defineConfig({
           name: "unit",
           include: [
             "packages/**/src/**/*.test.ts",
+            "content/src/**/*.test.ts",
             "apps/*/src/**/*.test.{ts,tsx}",
           ],
           exclude: ["**/*.emulator.test.ts", "**/node_modules/**"],

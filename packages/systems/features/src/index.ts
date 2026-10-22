@@ -46,8 +46,8 @@ function featureRows(ctx: ResolveContext): readonly FeatureRow[] {
     ctx,
     "character",
     "features",
-    z.array(FeatureLine),
-  ).flatMap((f) => f.value);
+    z.array(FeatureLine).optional(),
+  ).flatMap((f) => f.value ?? []);
   return lines.map((line): FeatureRow => {
     const from = line.from === undefined ? {} : { from: line.from };
     const def = readDefinition(ctx, line.ref, "feature", FeatureDefinition);

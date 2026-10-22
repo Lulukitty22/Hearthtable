@@ -1,0 +1,731 @@
+[
+  {
+    "id": "core/fire_bolt",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Fire Bolt",
+      "level": 0,
+      "school": "Evocation",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/ray_of_frost",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Ray of Frost",
+      "level": 0,
+      "school": "Evocation",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/minor_illusion",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Minor Illusion",
+      "level": 0,
+      "school": "Illusion",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/mind_sliver",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Mind Sliver",
+      "level": 0,
+      "school": "Enchantment",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/shocking_grasp",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Shocking Grasp",
+      "level": 0,
+      "school": "Evocation",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/mage_hand",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Mage Hand",
+      "level": 0,
+      "school": "Conjuration",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/prestidigitation",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Prestidigitation",
+      "level": 0,
+      "school": "Transmutation",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/message",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Message",
+      "level": 0,
+      "school": "Transmutation",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/true_strike",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "True Strike",
+      "level": 0,
+      "school": "Divination",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/mending",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Mending",
+      "level": 0,
+      "school": "Transmutation",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/mage_armor",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Mage Armor",
+      "level": 1,
+      "school": "Abjuration",
+      "classes": ["core/wizard"],
+      "whileActive": [
+        {
+          "type": "base",
+          "target": "armor-class",
+          "id": "mage-armor",
+          "label": "Mage Armor",
+          "base": 13,
+          "add": ["abilities.dex.modifier"]
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/shield",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Shield",
+      "level": 1,
+      "school": "Abjuration",
+      "classes": ["core/wizard"],
+      "whileActive": [
+        {
+          "type": "bonus",
+          "target": "armor-class",
+          "amount": 5
+        }
+      ]
+    }
+  },
+  {
+    "id": "core/cure_wounds",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Cure Wounds",
+      "level": 1,
+      "school": "Abjuration",
+      "classes": ["core/artificer"]
+    }
+  },
+  {
+    "id": "core/faerie_fire",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Faerie Fire",
+      "level": 1,
+      "school": "Evocation",
+      "classes": ["core/artificer"]
+    }
+  },
+  {
+    "id": "core/identify",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Identify",
+      "level": 1,
+      "school": "Divination",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/detect_magic",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Detect Magic",
+      "level": 1,
+      "school": "Divination",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/healing_word",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Healing Word",
+      "level": 1,
+      "school": "Abjuration",
+      "classes": []
+    }
+  },
+  {
+    "id": "core/ray_of_sickness",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Ray of Sickness",
+      "level": 1,
+      "school": "Necromancy",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/scorching_ray",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Scorching Ray",
+      "level": 2,
+      "school": "Evocation",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/mirror_image",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Mirror Image",
+      "level": 2,
+      "school": "Illusion",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/misty_step",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Misty Step",
+      "level": 2,
+      "school": "Conjuration",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/web",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Web",
+      "level": 2,
+      "school": "Conjuration",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/fireball",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Fireball",
+      "level": 3,
+      "school": "Evocation",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/counterspell",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Counterspell",
+      "level": 3,
+      "school": "Abjuration",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/dispel_magic",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Dispel Magic",
+      "level": 3,
+      "school": "Abjuration",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/fabricate",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Fabricate",
+      "level": 4,
+      "school": "Transmutation",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/cone_of_cold",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Cone of Cold",
+      "level": 5,
+      "school": "Evocation",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/wall_of_force",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Wall of Force",
+      "level": 5,
+      "school": "Evocation",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/animate_objects",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Animate Objects",
+      "level": 5,
+      "school": "Transmutation",
+      "classes": ["core/wizard", "core/artificer"]
+    }
+  },
+  {
+    "id": "core/chain_lightning",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Chain Lightning",
+      "level": 6,
+      "school": "Evocation",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/disintegrate",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "confidence": "class lists record Wizard and Artificer membership only"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Disintegrate",
+      "level": 6,
+      "school": "Transmutation",
+      "classes": ["core/wizard"]
+    }
+  },
+  {
+    "id": "core/tashas_otherworldly_guise",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2014",
+      "confidence": "community Tasha transcription; no revised replacement claimed",
+      "reference": "Tasha's Cauldron of Everything"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Tasha's Otherworldly Guise",
+      "level": 6,
+      "school": "Transmutation",
+      "classes": ["core/wizard"],
+      "whileActive": [
+        {
+          "type": "bonus",
+          "target": "armor-class",
+          "amount": 2
+        }
+      ]
+    }
+  }
+]

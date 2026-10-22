@@ -20,6 +20,10 @@ Count enclosing physical containers from the character inventory root. UI tabs, 
 
 Access is separate from ownership, carried status, attunement, equipment, class eligibility, charges and activation costs. Opening a tab neither equips an item nor consumes contents. Left-behind, lost or transferred items are not automatically carried. Access does not grant free retrieval or safe extradimensional nesting.
 
+## Attunement — selected 2026-10-22 at 1:42 pm PDT (America/Los_Angeles)
+
+Attunement is an ordered list of slots, like concentration capacity. The inventory records which lines are attuned, in the owner's chosen order. The number of slots is the ruleset's base (3 in Vanilla+) plus any grants that add slots, such as Indomitable. If more items are attuned than there are slots, the items at the end of the order are flagged as over the limit and a warning names them; nothing is unattuned automatically. An item that requires a class (the Aetherlock requires an Artificer) warns when attuned without it. Items say when their grants apply: while owned, equipped, held, attuned, or attuned and held.
+
 ## Movement, removal and deletion
 
 Proposed movement behavior: moving a container preserves descendant identities and contents, then recalculates access at the new depth. Packed items remain viewable/editable, with use controls explaining inaccessibility. These are UX proposals, not new combat action-cost rules.

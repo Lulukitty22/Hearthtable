@@ -65,7 +65,7 @@ const ARTIFICER_SLOTS = [
 const updatedAt = "2026-10-22T00:00:00.000Z";
 
 export const wizard: RecordEnvelope<ClassData> = newEnvelope({
-  id: "core:wizard",
+  id: "core/wizard",
   kind: "class",
   moduleId: "dnd5e-2024",
   schemaVersion: 1,
@@ -92,7 +92,7 @@ export const wizard: RecordEnvelope<ClassData> = newEnvelope({
 });
 
 export const artificer: RecordEnvelope<ClassData> = newEnvelope({
-  id: "core:artificer",
+  id: "core/artificer",
   kind: "class",
   moduleId: "dnd5e-2024",
   schemaVersion: 1,
