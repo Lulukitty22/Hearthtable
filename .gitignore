@@ -9,3 +9,6 @@ firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
 .emulator-data/
+
+# Large source files kept locally (for example the SRD PDF); extracts are committed elsewhere.
+reference/

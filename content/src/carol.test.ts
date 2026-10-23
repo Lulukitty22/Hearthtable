@@ -131,12 +131,13 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
     expect(value(r, "spellcasting.classes.core/Wizard.dc")).toBe(19);
   });
 
-  test("spellbooks hold 16/10/6 entries, all ready", () => {
-    const books = value<readonly BookView[]>(
+  test("spellbooks hold 16/10/6 entries, all ready, plus the overflow test book", () => {
+    const all = value<readonly BookView[]>(
       carol(),
       "spellbook-readiness.books",
     );
-    expect(books.map((b) => b.entries.length)).toEqual([16, 10, 6]);
+    expect(all.map((b) => b.entries.length)).toEqual([16, 10, 6, 8]);
+    const books = all.slice(0, 3); // the accepted sheet's books
     const notReady = books.flatMap((b) =>
       b.entries
         .filter((e) => !e.ready)
@@ -591,5 +592,67 @@ describe("scroll crafting costs", () => {
     expect(value(r, "scroll-crafting.eligible")).toBe(true);
     const v = r.get("scroll-crafting.eligible");
     expect(v.kind === "known" && v.explain.note).toMatch(/proficient:/);
+  });
+});
+
+// Spell Effects and Active State, "Spell details and display": SRD 5.2.1 text and header facts.
+describe("spell details", () => {
+  const spell = (id: string) =>
+    carolWithDefinitions().find((r) => r.id === id)?.data as Record<
+      string,
+      unknown
+    > & { srd?: { paragraphs: string[]; credit: string } };
+
+  test("every spell has a summary and its header facts", () => {
+    const spells = carolWithDefinitions().filter((r) => r.kind === "spell");
+    expect(spells.length).toBe(40);
+    for (const r of spells) {
+      const d = r.data as Record<string, unknown>;
+      for (const k of [
+        "summary",
+        "castingTime",
+        "range",
+        "duration",
+        "components",
+      ])
+        expect(d[k], `${r.id} ${k}`).toBeDefined();
+    }
+  });
+
+  test("SRD spells carry the credited text; others do not", () => {
+    expect(spell("core/Fireball").srd?.paragraphs[0]).toMatch(
+      /^A bright streak/,
+    );
+    expect(spell("core/Fireball").srd?.credit).toMatch(
+      /CC-BY|Creative Commons/,
+    );
+    expect(spell("core/Mind_Sliver").srd).toBeUndefined();
+    expect(spell("core/Tasha's_Otherworldly_Guise").srd).toBeUndefined();
+  });
+
+  test("rituals and costly consumed components are read from the header", () => {
+    expect(spell("core/Find_Familiar")).toMatchObject({
+      ritual: true,
+      castingTime: "1 hour",
+      components: { costGp: 10, consumed: true },
+    });
+    expect(spell("core/Identify")).toMatchObject({
+      ritual: true,
+      components: { costGp: 100, consumed: false },
+    });
+    expect(spell("core/Teleportation_Circle")).toMatchObject({
+      ritual: false,
+      components: { somatic: false, costGp: 50, consumed: true },
+    });
+  });
+
+  test("the overflow book: which test spells Carol can ready", () => {
+    const overflow = value<readonly BookView[]>(
+      carol(),
+      "spellbook-readiness.books",
+    )[3] as BookView;
+    expect(overflow.entries.filter((e) => !e.ready).map((e) => e.name)).toEqual(
+      ["Revivify"],
+    );
   });
 });

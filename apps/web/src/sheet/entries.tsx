@@ -128,6 +128,167 @@ function FeatureBody({
   );
 }
 
+interface Components {
+  readonly verbal: boolean;
+  readonly somatic: boolean;
+  readonly material: string | null;
+  readonly costGp: number | null;
+  readonly consumed: boolean;
+}
+
+interface SpellEffect {
+  readonly attack?: string;
+  readonly save?: { readonly ability: string; readonly success: string };
+  readonly damage?: readonly {
+    readonly dice: string;
+    readonly type: string;
+    readonly per?: string;
+    readonly count?: number;
+  }[];
+  readonly healing?: { readonly dice: string; readonly addsModifier: boolean };
+  readonly area?: string;
+  readonly acBonus?: number;
+  readonly acBase?: string;
+  readonly scaling?: {
+    readonly kind: "cantrip" | "slot";
+    readonly dice?: readonly string[];
+    readonly per?: string;
+    readonly of?: string;
+    readonly note?: string;
+  };
+  readonly review?: string;
+}
+
+function componentText(c: Components): string {
+  const parts = [c.verbal && "V", c.somatic && "S", c.material && "M"].filter(
+    Boolean,
+  );
+  return `${parts.join(", ")}${c.material ? ` (${c.material})` : ""}`;
+}
+
+function scalingText(s: NonNullable<SpellEffect["scaling"]>, level: number) {
+  if (s.note) return s.note;
+  if (s.kind === "cantrip" && s.dice)
+    return `${s.of ?? "damage"} ${s.dice.join(" / ")} at levels 1 / 5 / 11 / 17`;
+  return `+${s.per ?? "?"} ${s.of ?? "damage"} per slot level above ${level}`;
+}
+
+/** The facts stored on a spell definition, as a table (Spell details and display). */
+function SpellFacts({ data }: { data: Record<string, unknown> }) {
+  const c = data["components"] as Components | undefined;
+  const e = (data["effect"] as SpellEffect | undefined) ?? {};
+  const level = (data["level"] as number | undefined) ?? 0;
+  const rows: [string, ReactNode][] = [];
+  const add = (label: string, v: unknown) => {
+    if (v !== undefined && v !== null && v !== "")
+      rows.push([label, v as ReactNode]);
+  };
+  add("Casting time", data["castingTime"] as string | undefined);
+  add("Range", data["range"] as string | undefined);
+  if (c)
+    add(
+      "Components",
+      <>
+        {componentText(c)}
+        {c.costGp !== null && (
+          <span className="badge warn">
+            {c.costGp}+ gp{c.consumed ? ", consumed" : ""}
+          </span>
+        )}
+      </>,
+    );
+  add("Duration", data["duration"] as string | undefined);
+  add(
+    "Attack",
+    e.attack &&
+      `${e.attack === "weapon" ? "weapon" : `${e.attack} spell`} attack`,
+  );
+  add(
+    "Save",
+    e.save &&
+      `${e.save.ability.toUpperCase()} save${e.save.success === "half" ? ", half on success" : ""}`,
+  );
+  add(
+    "Damage",
+    e.damage
+      ?.map(
+        (d) =>
+          `${d.dice} ${d.type}${d.count ? ` × ${d.count} ${d.per ?? ""}s` : ""}`,
+      )
+      .join(" + "),
+  );
+  add(
+    "Healing",
+    e.healing &&
+      `${e.healing.dice}${e.healing.addsModifier ? " + spellcasting modifier" : ""}`,
+  );
+  add("AC", e.acBase ? `base ${e.acBase}` : e.acBonus && `+${e.acBonus}`);
+  add("Area", e.area);
+  add(
+    level === 0 ? "Cantrip upgrade" : "Higher levels",
+    e.scaling && scalingText(e.scaling, level),
+  );
+  if (rows.length === 0) return null;
+  return (
+    <>
+      <table className="spell-facts">
+        <tbody>
+          {rows.map(([label, v]) => (
+            <tr key={label}>
+              <th scope="row">{label}</th>
+              <td>{v}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {e.review === "unreviewed" && (
+        <p className="muted">
+          Effect facts were entered from the text and are not yet reviewed.
+        </p>
+      )}
+    </>
+  );
+}
+
+/** The SRD 5.2.1 rules text, expandable, with its CC-BY credit. */
+function SrdText({ data }: { data: Record<string, unknown> }) {
+  const srd = data["srd"] as
+    | {
+        version: string;
+        credit: string;
+        paragraphs: readonly string[];
+        block?: readonly string[];
+      }
+    | undefined;
+  if (!srd)
+    return (
+      <p className="muted">
+        Not in the SRD 5.2.1; summary only (see the source above).
+      </p>
+    );
+  return (
+    <details className="srd-text">
+      <summary>Full text (SRD {srd.version})</summary>
+      {srd.paragraphs.map((t, i) => {
+        // The SRD starts some paragraphs with a short run-in label, such as "Cantrip Upgrade."
+        const label =
+          /^((?:[A-Z][\w'-]*)(?: [A-Za-z][\w'-]*){0,5})\. (?=[A-Z])/.exec(
+            t,
+          )?.[1];
+        return label ? (
+          <p key={i}>
+            <strong>{label}.</strong> {t.slice(label.length + 2)}
+          </p>
+        ) : (
+          <p key={i}>{t}</p>
+        );
+      })}
+      {srd.block && <pre className="stat-block">{srd.block.join("\n")}</pre>}
+      <p className="credit">{srd.credit}</p>
+    </details>
+  );
+}
+
 function SpellBody({
   props,
   id,
@@ -161,7 +322,15 @@ function SpellBody({
       <p>
         {level === 0 ? "Cantrip" : `Level ${level}`}{" "}
         {String(data["school"] ?? "")}
+        {data["ritual"] === true && <span className="badge">ritual</span>}
+        {data["concentration"] === true && (
+          <span className="badge">concentration</span>
+        )}
       </p>
+      {typeof data["summary"] === "string" && (
+        <p className="spell-summary">{data["summary"]}</p>
+      )}
+      <SpellFacts data={data} />
       {classes.length > 0 && (
         <p>
           Class lists:{" "}
@@ -184,6 +353,7 @@ function SpellBody({
           <span className="muted">{entry.reasons.join("; ")}</span>
         </p>
       ))}
+      <SrdText data={data} />
       {data["whileActive"] !== undefined && (
         <>
           <h3>While active</h3>

@@ -259,6 +259,12 @@
           "attunedTo": null
         },
         {
+          "id": "overflow-book",
+          "ref": "core/Enduring_Spellbook",
+          "quantity": 1,
+          "attunedTo": null
+        },
+        {
           "id": "alchemists-supplies",
           "ref": "core/Alchemist's_Supplies",
           "quantity": 1,
@@ -624,6 +630,60 @@
         {
           "id": "workshop-6",
           "ref": "core/Ray_of_Sickness"
+        }
+      ]
+    }
+  },
+  {
+    "id": "account/VRLulu/Characters/Carol_Elfnein/Books/Overflow",
+    "kind": "spellbook",
+    "moduleId": "spellbook-readiness",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "account",
+      "ownerId": "VRLulu"
+    },
+    "source": {
+      "status": "homebrew"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "book": "overflow-book",
+      "title": "Overflow (test spells)",
+      "order": 4,
+      "entries": [
+        {
+          "id": "overflow-1",
+          "ref": "core/Alarm"
+        },
+        {
+          "id": "overflow-2",
+          "ref": "core/Find_Familiar"
+        },
+        {
+          "id": "overflow-3",
+          "ref": "core/Arcane_Lock"
+        },
+        {
+          "id": "overflow-4",
+          "ref": "core/Tiny_Hut"
+        },
+        {
+          "id": "overflow-5",
+          "ref": "core/Glyph_of_Warding"
+        },
+        {
+          "id": "overflow-6",
+          "ref": "core/Revivify"
+        },
+        {
+          "id": "overflow-7",
+          "ref": "core/Telepathic_Bond"
+        },
+        {
+          "id": "overflow-8",
+          "ref": "core/Teleportation_Circle"
         }
       ]
     }

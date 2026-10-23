@@ -621,3 +621,37 @@ dialog.detail {
     grid-template-columns: 1fr;
   }
 }
+
+/* Spell details (Milestone 3, S3): facts table, summary and expandable SRD text. */
+.spell-summary {
+  font-style: italic;
+}
+.spell-facts {
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+}
+.spell-facts th {
+  text-align: left;
+  padding: 0.15rem 0.75rem 0.15rem 0;
+  font-weight: 600;
+  vertical-align: top;
+  white-space: nowrap;
+}
+.spell-facts td {
+  padding: 0.15rem 0;
+}
+.spell-facts .badge,
+.spell-body .badge {
+  margin-left: 0.4rem;
+}
+.srd-text p {
+  margin: 0.4rem 0;
+}
+.srd-text .stat-block {
+  white-space: pre-wrap;
+  font-size: 0.85em;
+}
+.srd-text .credit {
+  font-size: 0.75em;
+  opacity: 0.75;
+}

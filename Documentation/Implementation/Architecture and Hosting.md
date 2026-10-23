@@ -120,6 +120,7 @@ Scaffolded 2026-10-22 at 12:17 pm PDT (America/Los_Angeles) (Milestone 2, Step B
 | `pnpm check` | Typecheck, lint, check formatting and run unit tests |
 | `pnpm test:emulator` | Run the emulator tests inside a temporary emulator on the test ports (`firebase.test.json`) |
 | `pnpm test:e2e` | Run the Playwright tests against their own dev server (port 5174) and a temporary emulator on separate ports (`firebase.test.json`), so they can run beside your own `pnpm dev` and `pnpm emulators` without touching your data |
+| `pnpm srd:spells` | Copy SRD 5.2.1 spell text and header facts into `content/core/spells.json`. Needs `reference/srd-flow.txt`, made with `pdftotext reference/SRD_CC_v5.2.1.pdf reference/srd-flow.txt` from the official PDF kept (untracked) in `reference/` |
 | `pnpm peek` | Print Carol's resolved sheet, with how every number was worked out |
 
 Decisions made while scaffolding:

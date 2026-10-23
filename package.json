@@ -19,7 +19,8 @@
     "emulators": "node scripts/emulators.mjs",
     "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test",
     "peek": "tsx scripts/peek.ts",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "srd:spells": "tsx scripts/srd-spells.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

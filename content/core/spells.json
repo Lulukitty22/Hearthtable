@@ -10,7 +10,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -19,7 +19,41 @@
       "level": 0,
       "school": "Evocation",
       "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "120 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You hurl a mote of fire at a creature or an object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 Fire damage. A flammable object hit by this spell starts burning if it isn't being worn or carried.",
+          "Cantrip Upgrade. The damage increases by 1d10 when you reach levels 5 (2d10), 11 (3d10), and 17 (4d10)."
+        ]
+      },
+      "summary": "A ranged spell attack that deals fire damage and can set unattended flammable objects alight.",
+      "effect": {
+        "attack": "ranged",
+        "damage": [
+          {
+            "dice": "1d10",
+            "type": "Fire"
+          }
+        ],
+        "scaling": {
+          "kind": "cantrip",
+          "dice": ["1d10", "2d10", "3d10", "4d10"]
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -33,7 +67,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -42,7 +76,41 @@
       "level": 0,
       "school": "Evocation",
       "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "60 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "A frigid beam of blue-white light streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 1d8 Cold damage, and its Speed is reduced by 10 feet until the start of your next turn.",
+          "Cantrip Upgrade. The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8)."
+        ]
+      },
+      "summary": "A ranged spell attack of freezing light that deals cold damage and slows the target by 10 feet until your next turn.",
+      "effect": {
+        "attack": "ranged",
+        "damage": [
+          {
+            "dice": "1d8",
+            "type": "Cold"
+          }
+        ],
+        "scaling": {
+          "kind": "cantrip",
+          "dice": ["1d8", "2d8", "3d8", "4d8"]
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -56,7 +124,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -65,7 +133,32 @@
       "level": 0,
       "school": "Illusion",
       "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "30 feet",
+      "components": {
+        "verbal": false,
+        "somatic": true,
+        "material": "a bit of fleece",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "1 minute",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You create a sound or an image of an object within range that lasts for the duration. See the descriptions below for the effects of each. The illusion ends if you cast this spell again.",
+          "If a creature takes a Study action to examine the sound or image, the creature can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the illusion becomes faint to the creature.",
+          "Sound. If you create a sound, its volume can range from a whisper to a scream. It can be your voice, someone else's voice, a lion's roar, a beating of drums, or any other sound you choose. The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends.",
+          "Image. If you create an image of an object--such as a chair, muddy footprints, or a small chest--it must be no larger than a 5-foot Cube. The image can't create sound, light, smell, or any other sensory effect. Physical interaction with the image reveals it to be an illusion, since things can pass through it."
+        ]
+      },
+      "summary": "Creates a small illusory sound or a still image of an object; a creature that studies it can see through it with an Investigation check.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -79,7 +172,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "Player's Handbook (2024), not in SRD 5.2.1; header facts from the 2024 transcription (https://dnd2024.wikidot.com/spell:mind-sliver), checked 2026-10-23"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -88,7 +181,36 @@
       "level": 0,
       "school": "Enchantment",
       "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "60 feet",
+      "components": {
+        "verbal": true,
+        "somatic": false,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "1 round",
+      "summary": "A psychic jab: the target makes an Intelligence save or takes psychic damage and subtracts 1d4 from its next saving throw before the end of your next turn.",
+      "effect": {
+        "save": {
+          "ability": "int",
+          "success": "none"
+        },
+        "damage": [
+          {
+            "dice": "1d6",
+            "type": "Psychic"
+          }
+        ],
+        "scaling": {
+          "kind": "cantrip",
+          "dice": ["1d6", "2d6", "3d6", "4d6"]
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -102,7 +224,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -111,7 +233,41 @@
       "level": 0,
       "school": "Evocation",
       "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "Touch",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "Lightning springs from you to a creature that you try to touch. Make a melee spell attack against the target. On a hit, the target takes 1d8 Lightning damage, and it can't make Opportunity Attacks until the start of its next turn.",
+          "Cantrip Upgrade. The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8)."
+        ]
+      },
+      "summary": "A melee spell attack that deals lightning damage and stops the target from making Opportunity Attacks until its next turn.",
+      "effect": {
+        "attack": "melee",
+        "damage": [
+          {
+            "dice": "1d8",
+            "type": "Lightning"
+          }
+        ],
+        "scaling": {
+          "kind": "cantrip",
+          "dice": ["1d8", "2d8", "3d8", "4d8"]
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -125,7 +281,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -140,7 +296,32 @@
         "core/Wizard",
         "core/Artificer"
       ],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "30 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "1 minute",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "A spectral, floating hand appears at a point you choose within range. The hand lasts for the duration. The hand vanishes if it is ever more than 30 feet away from you or if you cast this spell again.",
+          "When you cast the spell, you can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial.",
+          "As a Magic action on your later turns, you can control the hand thus again. As part of that action, you can move the hand up to 30 feet.",
+          "The hand can't attack, activate magic items, or carry more than 10 pounds."
+        ]
+      },
+      "summary": "Summons a spectral hand that can carry up to 10 pounds and handle simple objects, but cannot attack or use magic items.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -154,7 +335,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -169,7 +350,35 @@
         "core/Wizard",
         "core/Artificer"
       ],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "10 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Up to 1 hour",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You create a magical effect within range. Choose the effect from the options below. If you cast this spell multiple times, you can have up to three of its non-instantaneous effects active at a time.",
+          "Sensory Effect. You create an instantaneous, harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor.",
+          "Fire Play. You instantaneously light or snuff out a candle, a torch, or a small campfire.",
+          "Clean or Soil. You instantaneously clean or soil an object no larger than 1 cubic foot.",
+          "Minor Sensation. You chill, warm, or flavor up to 1 cubic foot of nonliving material for 1 hour.",
+          "Magic Mark. You make a color, a small mark, or a symbol appear on an object or a surface for 1 hour.",
+          "Minor Creation. You create a nonmagical trinket or an illusory image that can fit in your hand. It lasts until the end of your next turn. A trinket can deal no damage and has no monetary worth."
+        ]
+      },
+      "summary": "A handful of small magical tricks: harmless sensory effects, lighting candles, cleaning, warming, marking or conjuring trinkets.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -183,7 +392,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -198,7 +407,30 @@
         "core/Wizard",
         "core/Artificer"
       ],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "120 feet",
+      "components": {
+        "verbal": false,
+        "somatic": true,
+        "material": "a copper wire",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "1 round",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You point toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear.",
+          "You can cast this spell through solid objects if you are familiar with the target and know it is beyond the barrier. Magical silence; 1 foot of stone, metal, or wood; or a thin sheet of lead blocks the spell."
+        ]
+      },
+      "summary": "Whispers a message to one creature in range, which can whisper a reply only you hear.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -212,7 +444,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -227,7 +459,42 @@
         "core/Wizard",
         "core/Artificer"
       ],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "Self",
+      "components": {
+        "verbal": false,
+        "somatic": true,
+        "material": "a weapon with which you have proficiency and that is worth 1+ CP",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "Guided by a flash of magical insight, you make one attack with the weapon used in the spell's casting. The attack uses your spellcasting ability for the attack and damage rolls instead of using Strength or Dexterity. If the attack deals damage, it can be Radiant damage or the weapon's normal damage type (your choice).",
+          "Cantrip Upgrade. Whether you deal Radiant damage or the weapon's normal damage type, the attack deals extra Radiant damage when you reach levels 5 (1d6), 11 (2d6), and 17 (3d6)."
+        ]
+      },
+      "summary": "Makes one weapon attack using your spellcasting ability, optionally dealing Radiant damage, with extra Radiant damage at higher levels.",
+      "effect": {
+        "attack": "weapon",
+        "damage": [
+          {
+            "dice": "weapon",
+            "type": "Radiant or the weapon's type"
+          }
+        ],
+        "scaling": {
+          "kind": "cantrip",
+          "dice": ["0", "1d6", "2d6", "3d6"],
+          "of": "extra Radiant damage"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -241,7 +508,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -256,7 +523,30 @@
         "core/Sorcerer",
         "core/Wizard"
       ],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "1 minute",
+      "ritual": false,
+      "range": "Touch",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "two lodestones",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage.",
+          "This spell can physically repair a magic item, but it can't restore magic to such an object."
+        ]
+      },
+      "summary": "Repairs a single break or tear up to a foot across in an object; it does not restore a magic item's magic.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -270,7 +560,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -289,7 +579,30 @@
           "base": 13,
           "add": ["abilities.dex.modifier"]
         }
-      ]
+      ],
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "Touch",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a piece of cured leather",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "8 hours",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You touch a willing creature who isn't wearing armor. Until the spell ends, the target's base AC becomes 13 plus its Dexterity modifier. The spell ends early if the target dons armor."
+        ]
+      },
+      "summary": "A willing unarmored creature's base AC becomes 13 plus its Dexterity modifier for the duration.",
+      "effect": {
+        "acBase": "13 + DEX",
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -303,7 +616,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -319,7 +632,30 @@
           "target": "armor-class",
           "amount": 5
         }
-      ]
+      ],
+      "castingTime": "Reaction, which you take when you are hit by an attack roll or targeted by the Magic Missile spell",
+      "ritual": false,
+      "range": "Self",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "1 round",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "An imperceptible barrier of magical force protects you. Until the start of your next turn, you have a +5 bonus to AC, including against the triggering attack, and you take no damage from Magic Missile."
+        ]
+      },
+      "summary": "A reaction barrier: +5 AC until the start of your next turn, including against the triggering attack, and no damage from Magic Missile.",
+      "effect": {
+        "acBonus": 5,
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -333,7 +669,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -349,7 +685,39 @@
         "core/Ranger",
         "core/Artificer"
       ],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "Touch",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.",
+          "Using a Higher-Level Spell Slot. The healing increases by 2d8 for each spell slot level above 1."
+        ]
+      },
+      "summary": "A touched creature regains hit points.",
+      "effect": {
+        "healing": {
+          "dice": "2d8",
+          "addsModifier": true
+        },
+        "scaling": {
+          "kind": "slot",
+          "per": "2d8",
+          "of": "healing"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -363,7 +731,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -372,7 +740,35 @@
       "level": 1,
       "school": "Evocation",
       "classes": ["core/Bard", "core/Druid", "core/Artificer"],
-      "concentration": true
+      "concentration": true,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "60 feet",
+      "components": {
+        "verbal": true,
+        "somatic": false,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Concentration, up to 1 minute",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "Objects in a 20-foot Cube within range are outlined in blue, green, or violet light (your choice). Each creature in the Cube is also outlined if it fails a Dexterity saving throw. For the duration, objects and affected creatures shed Dim Light in a 10-foot radius and can't benefit from the Invisible condition.",
+          "Attack rolls against an affected creature or object have Advantage if the attacker can see it."
+        ]
+      },
+      "summary": "Outlines objects and creatures in a 20-foot cube with light; creatures that fail a Dexterity save are outlined too, can't be Invisible, and are attacked with Advantage.",
+      "effect": {
+        "save": {
+          "ability": "dex",
+          "success": "none"
+        },
+        "area": "20-foot Cube",
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -386,7 +782,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -395,7 +791,30 @@
       "level": 1,
       "school": "Divination",
       "classes": ["core/Bard", "core/Wizard", "core/Artificer"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "1 minute",
+      "ritual": true,
+      "range": "Touch",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a pearl worth 100+ GP",
+        "costGp": 100,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You touch an object throughout the spell's casting. If the object is a magic item or some other magical object, you learn its properties and how to use them, whether it requires Attunement, and how many charges it has, if any. You learn whether any ongoing spells are affecting the item and what they are. If the item was created by a spell, you learn that spell's name.",
+          "If you instead touch a creature throughout the casting, you learn which ongoing spells, if any, are currently affecting it."
+        ]
+      },
+      "summary": "Learns a touched magic item's properties, attunement and charges, or which spells affect a touched creature.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -409,7 +828,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -428,7 +847,30 @@
         "core/Wizard",
         "core/Artificer"
       ],
-      "concentration": true
+      "concentration": true,
+      "castingTime": "Action",
+      "ritual": true,
+      "range": "Self",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Concentration, up to 10 minutes",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "For the duration, you sense the presence of magical effects within 30 feet of yourself. If you sense such effects, you can take the Magic action to see a faint aura around any visible creature or object in the area that bears the magic, and if an effect was created by a spell, you learn the spell's school of magic.",
+          "The spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead."
+        ]
+      },
+      "summary": "Senses magic within 30 feet and lets you see its auras and spell schools.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -442,7 +884,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -451,7 +893,39 @@
       "level": 1,
       "school": "Abjuration",
       "classes": ["core/Bard", "core/Cleric", "core/Druid"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Bonus Action",
+      "ritual": false,
+      "range": "60 feet",
+      "components": {
+        "verbal": true,
+        "somatic": false,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "A creature of your choice that you can see within range regains Hit Points equal to 2d4 plus your spellcasting ability modifier.",
+          "Using a Higher-Level Spell Slot. The healing increases by 2d4 for each spell slot level above 1."
+        ]
+      },
+      "summary": "A creature you can see within range regains hit points, as a Bonus Action.",
+      "effect": {
+        "healing": {
+          "dice": "2d4",
+          "addsModifier": true
+        },
+        "scaling": {
+          "kind": "slot",
+          "per": "2d4",
+          "of": "healing"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -465,7 +939,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -474,7 +948,42 @@
       "level": 1,
       "school": "Necromancy",
       "classes": ["core/Sorcerer", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "60 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You shoot a greenish ray at a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 2d8 Poison damage and has the Poisoned condition until the end of your next turn.",
+          "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 1."
+        ]
+      },
+      "summary": "A ranged spell attack dealing poison damage that also leaves the target Poisoned until the end of your next turn.",
+      "effect": {
+        "attack": "ranged",
+        "damage": [
+          {
+            "dice": "2d8",
+            "type": "Poison"
+          }
+        ],
+        "scaling": {
+          "kind": "slot",
+          "per": "1d8",
+          "of": "damage"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -488,7 +997,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -497,7 +1006,43 @@
       "level": 2,
       "school": "Evocation",
       "classes": ["core/Sorcerer", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "120 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You hurl three fiery rays. You can hurl them at one target within range or at several. Make a ranged spell attack for each ray. On a hit, the target takes 2d6 Fire damage.",
+          "Using a Higher-Level Spell Slot. You create one additional ray for each spell slot level above 2."
+        ]
+      },
+      "summary": "Three fiery rays, each its own ranged spell attack, at one or several targets.",
+      "effect": {
+        "attack": "ranged",
+        "damage": [
+          {
+            "dice": "2d6",
+            "type": "Fire",
+            "per": "ray",
+            "count": 3
+          }
+        ],
+        "scaling": {
+          "kind": "slot",
+          "note": "one additional ray per slot level above 2"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -511,7 +1056,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -520,7 +1065,31 @@
       "level": 2,
       "school": "Illusion",
       "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "Self",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "1 minute",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "Three illusory duplicates of yourself appear in your space. Until the spell ends, the duplicates move with you and mimic your actions, shifting position so it's impossible to track which image is real.",
+          "Each time a creature hits you with an attack roll during the spell's duration, roll a d6 for each of your remaining duplicates. If any of the d6s rolls a 3 or higher, one of the duplicates is hit instead of you, and the duplicate is destroyed. The duplicates otherwise ignore all other damage and effects. The spell ends when all three duplicates are destroyed.",
+          "A creature is unaffected by this spell if it has the Blinded condition, Blindsight, or Truesight."
+        ]
+      },
+      "summary": "Three illusory duplicates that may take hits meant for you; each hit rolls a d6 per duplicate, and a 3 or higher destroys one instead.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -534,7 +1103,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -543,7 +1112,29 @@
       "level": 2,
       "school": "Conjuration",
       "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Bonus Action",
+      "ritual": false,
+      "range": "Self",
+      "components": {
+        "verbal": true,
+        "somatic": false,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space you can see."
+        ]
+      },
+      "summary": "Teleports you up to 30 feet to a space you can see, as a Bonus Action.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -557,7 +1148,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -566,7 +1157,38 @@
       "level": 2,
       "school": "Conjuration",
       "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
-      "concentration": true
+      "concentration": true,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "60 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a bit of spiderweb",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Concentration, up to 1 hour",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You conjure a mass of sticky webbing at a point within range. The webs fill a 20-foot Cube there for the duration. The webs are Difficult Terrain, and the area within them is Lightly Obscured.",
+          "If the webs aren't anchored between two solid masses (such as walls or trees) or layered across a floor, wall, or ceiling, the web collapses on itself, and the spell ends at the start of your next turn. Webs layered over a flat surface have a depth of 5 feet.",
+          "The first time a creature enters the webs on a turn or starts its turn there, it must succeed on a Dexterity saving throw or have the Restrained condition while in the webs or until it breaks free.",
+          "A creature Restrained by the webs can take an action to make a Strength (Athletics) check against your spell save DC. If it succeeds, it is no longer Restrained.",
+          "The webs are flammable. Any 5-foot Cube of webs exposed to fire burns away in 1 round, dealing 2d4 Fire damage to any creature that starts its turn in the fire."
+        ]
+      },
+      "summary": "Fills a 20-foot cube with sticky webs that are Difficult Terrain; creatures entering or starting there make a Dexterity save or are Restrained.",
+      "effect": {
+        "save": {
+          "ability": "dex",
+          "success": "none"
+        },
+        "area": "20-foot Cube",
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -580,7 +1202,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -589,7 +1211,47 @@
       "level": 3,
       "school": "Evocation",
       "classes": ["core/Sorcerer", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "150 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a ball of bat guano and sulfur",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into a fiery explosion. Each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw, taking 8d6 Fire damage on a failed save or half as much damage on a successful one.",
+          "Flammable objects in the area that aren't being worn or carried start burning.",
+          "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 3."
+        ]
+      },
+      "summary": "An explosion of fire in a 20-foot-radius sphere; each creature makes a Dexterity save for half damage.",
+      "effect": {
+        "save": {
+          "ability": "dex",
+          "success": "half"
+        },
+        "damage": [
+          {
+            "dice": "8d6",
+            "type": "Fire"
+          }
+        ],
+        "area": "20-foot-radius Sphere",
+        "scaling": {
+          "kind": "slot",
+          "per": "1d6",
+          "of": "damage"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -603,7 +1265,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -612,7 +1274,33 @@
       "level": 3,
       "school": "Abjuration",
       "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Reaction, which you take when you see a creature within 60 feet of yourself casting a spell with Verbal, Somatic, or Material components",
+      "ritual": false,
+      "range": "60 feet",
+      "components": {
+        "verbal": false,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You attempt to interrupt a creature in the process of casting a spell. The creature makes a Constitution saving throw. On a failed save, the spell dissipates with no effect, and the action, Bonus Action, or Reaction used to cast it is wasted. If that spell was cast with a spell slot, the slot isn't expended."
+        ]
+      },
+      "summary": "A reaction that interrupts a spell being cast within 60 feet; the caster makes a Constitution save or the spell fails, though any slot is kept.",
+      "effect": {
+        "save": {
+          "ability": "con",
+          "success": "none"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -626,7 +1314,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -645,7 +1333,34 @@
         "core/Wizard",
         "core/Artificer"
       ],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "120 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "Choose one creature, object, or magical effect within range. Any ongoing spell of level 3 or lower on the target ends. For each ongoing spell of level 4 or higher on the target, make an ability check using your spellcasting ability (DC 10 plus that spell's level). On a successful check, the spell ends.",
+          "Using a Higher-Level Spell Slot. You automatically end a spell on the target if the spell's level is equal to or less than the level of the spell slot you use."
+        ]
+      },
+      "summary": "Ends spells of level 3 or lower on one target; higher-level spells need a spellcasting ability check against 10 plus their level.",
+      "effect": {
+        "scaling": {
+          "kind": "slot",
+          "note": "automatically ends spells up to the slot level used"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -659,7 +1374,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -668,7 +1383,31 @@
       "level": 4,
       "school": "Transmutation",
       "classes": ["core/Wizard", "core/Artificer"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "10 minutes",
+      "ritual": false,
+      "range": "120 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You convert raw materials into products of the same material. For example, you can fabricate a wooden bridge from a clump of trees, a rope from a patch of hemp, or clothes from flax or wool.",
+          "Choose raw materials that you can see within range. You can fabricate a Large or smaller object (contained within a 10-foot Cube or eight connected 5-foot Cubes) given a sufficient quantity of material. If you're working with metal, stone, or another mineral substance, however, the fabricated object can be no larger than Medium (contained within a 5-foot Cube). The quality of any fabricated objects is based on the quality of the raw materials.",
+          "Creatures and magic items can't be created by this spell. You also can't use it to create items that require a high degree of skill--such as weapons and armor--unless you have proficiency with the type of Artisan's Tools used to craft such objects."
+        ]
+      },
+      "summary": "Turns raw materials into finished goods of the same material, up to Large (Medium for metal or stone).",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -682,7 +1421,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -691,7 +1430,46 @@
       "level": 5,
       "school": "Evocation",
       "classes": ["core/Druid", "core/Sorcerer", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "Self",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a small crystal or glass cone",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You unleash a blast of cold air. Each creature in a 60-foot Cone originating from you makes a Constitution saving throw, taking 8d8 Cold damage on a failed save or half as much damage on a successful one. A creature killed by this spell becomes a frozen statue until it thaws.",
+          "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 5."
+        ]
+      },
+      "summary": "A 60-foot cone of cold; each creature makes a Constitution save for half damage.",
+      "effect": {
+        "save": {
+          "ability": "con",
+          "success": "half"
+        },
+        "damage": [
+          {
+            "dice": "8d8",
+            "type": "Cold"
+          }
+        ],
+        "area": "60-foot Cone",
+        "scaling": {
+          "kind": "slot",
+          "per": "1d8",
+          "of": "damage"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -705,7 +1483,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -714,7 +1492,30 @@
       "level": 5,
       "school": "Evocation",
       "classes": ["core/Wizard"],
-      "concentration": true
+      "concentration": true,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "120 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a shard of glass",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Concentration, up to 10 minutes",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "An Invisible wall of force springs into existence at a point you choose within range. The wall appears in any orientation you choose, as a horizontal or vertical barrier or at an angle. It can be free floating or resting on a solid surface. You can form it into a hemispherical dome or a globe with a radius of up to 10 feet, or you can shape a flat surface made up of ten 10-foot-by-10-foot panels. Each panel must be contiguous with another panel. In any form, the wall is 1/4 inch thick and lasts for the duration. If the wall cuts through a creature's space when it appears, the creature is pushed to one side of the wall (you choose which side).",
+          "Nothing can physically pass through the wall. It is immune to all damage and can't be dispelled by Dispel Magic. A Disintegrate spell destroys the wall instantly, however. The wall also extends into the Ethereal Plane and blocks ethereal travel through the wall."
+        ]
+      },
+      "summary": "Creates an invisible, nearly indestructible wall, dome or globe of force that nothing can physically pass.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -728,7 +1529,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -742,7 +1543,47 @@
         "core/Wizard",
         "core/Artificer"
       ],
-      "concentration": true
+      "concentration": true,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "120 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": null,
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Concentration, up to 1 minute",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "Objects animate at your command. Choose a number of nonmagical objects within range that aren't being worn or carried, aren't fixed to a surface, and aren't Gargantuan. The maximum number of objects is equal to your spellcasting ability modifier; for this number, a Medium or smaller target counts as one object, a Large target counts as two, and a Huge target counts as three.",
+          "Each target animates, sprouts legs, and becomes a Construct that uses the Animated Object stat block; this creature is under your control until the spell ends or until it is reduced to 0 Hit Points. Each creature you make with this spell is an ally to you and your allies. In combat, it shares your Initiative count and takes its turn immediately after yours.",
+          "Until the spell ends, you can take a Bonus Action to mentally command any creature you made with this spell if the creature is within 500 feet of you (if you control multiple creatures, you can command any of them at the same time, issuing the same command to each one). If you issue no commands, the creature takes the Dodge action and moves only to avoid harm. When the creature drops to 0 Hit Points, it reverts to its object form, and any remaining damage carries over to that form.",
+          "Using a Higher-Level Spell Slot. The creature's Slam damage increases by 1d4 (Medium or smaller), 1d6 (Large), or 1d12 (Huge) for each spell slot level above 5."
+        ],
+        "block": [
+          "Animated Object",
+          "Huge or Smaller Construct, Unaligned",
+          "AC 15 HP 10 (Medium or smaller), 20 (Large), 40 (Huge) Speed 30 ft.",
+          "Str 16 +3 +3 Dex 10 +0 +0 Con 10 +0 +0",
+          "Int 3 -4 -4 Wis 3 -4 -4 Cha 1 -5 -5",
+          "Immunities Poison, Psychic; Charmed, Exhaustion, Frightened, Paralyzed, Poisoned",
+          "Senses Blindsight 30 ft.; Passive Perception 6 Languages Understands the languages you know CR None (XP 0; PB equals your Proficiency Bonus)",
+          "Actions",
+          "Slam. Melee Attack Roll: Bonus equals your spell attack modifier, reach 5 ft. Hit: Force damage equal to 1d4 + 3 (Medium or smaller), 2d6 + 3 + your spellcasting ability modifier (Large), or 2d12 + 3 + your spellcasting ability modifier (Huge)."
+        ]
+      },
+      "summary": "Animates nearby nonmagical objects as Constructs under your command, with Slam attacks using your spell attack.",
+      "effect": {
+        "scaling": {
+          "kind": "slot",
+          "note": "Slam damage +1d4 (Medium or smaller), +1d6 (Large) or +1d12 (Huge) per slot level above 5"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -756,7 +1597,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -765,7 +1606,45 @@
       "level": 6,
       "school": "Evocation",
       "classes": ["core/Sorcerer", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "150 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "three silver pins",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You launch a lightning bolt toward a target you can see within range. Three bolts then leap from that target to as many as three other targets of your choice, each of which must be within 30 feet of the first target. A target can be a creature or an object and can be targeted by only one of the bolts.",
+          "Each target makes a Dexterity saving throw, taking 10d8 Lightning damage on a failed save or half as much damage on a successful one.",
+          "Using a Higher-Level Spell Slot. One additional bolt leaps from the first target to another target for each spell slot level above 6."
+        ]
+      },
+      "summary": "A lightning bolt that leaps from the first target to up to three more; each target makes a Dexterity save for half damage.",
+      "effect": {
+        "save": {
+          "ability": "dex",
+          "success": "half"
+        },
+        "damage": [
+          {
+            "dice": "10d8",
+            "type": "Lightning"
+          }
+        ],
+        "scaling": {
+          "kind": "slot",
+          "note": "one additional bolt per slot level above 6"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -779,7 +1658,7 @@
     "source": {
       "status": "published",
       "edition": "2024",
-      "reference": "Player's Handbook (2024); class lists checked 2026-10-22"
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -788,7 +1667,47 @@
       "level": 6,
       "school": "Transmutation",
       "classes": ["core/Sorcerer", "core/Wizard"],
-      "concentration": false
+      "concentration": false,
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "60 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a lodestone and dust",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Instantaneous",
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You launch a green ray at a target you can see within range. The target can be a creature, a nonmagical object, or a creation of magical force, such as the wall created by Wall of Force.",
+          "A creature targeted by this spell makes a Dexterity saving throw. On a failed save, the target takes 10d6 + 40 Force damage. If this damage reduces it to 0 Hit Points, it and everything nonmagical it is wearing and carrying are disintegrated into gray dust. The target can be revived only by a True Resurrection or a Wish spell.",
+          "This spell automatically disintegrates a Large or smaller nonmagical object or a creation of magical force. If such a target is Huge or larger, this spell disintegrates a 10-foot-Cube portion of it.",
+          "Using a Higher-Level Spell Slot. The damage increases by 3d6 for each spell slot level above 6."
+        ]
+      },
+      "summary": "A ray that deals heavy force damage on a failed Dexterity save and turns a creature reduced to 0 hit points into dust.",
+      "effect": {
+        "save": {
+          "ability": "dex",
+          "success": "none"
+        },
+        "damage": [
+          {
+            "dice": "10d6 + 40",
+            "type": "Force"
+          }
+        ],
+        "scaling": {
+          "kind": "slot",
+          "per": "3d6",
+          "of": "damage"
+        },
+        "review": "unreviewed"
+      }
     }
   },
   {
@@ -803,7 +1722,7 @@
       "status": "published",
       "edition": "2014",
       "confidence": "community Tasha transcription; no revised replacement claimed",
-      "reference": "Tasha's Cauldron of Everything; class lists from that book"
+      "reference": "Tasha's Cauldron of Everything (2020), not in SRD 5.2.1; header facts from the transcription named on Carol's sheet (https://dnd5e.wikidot.com/spell:tashas-otherworldly-guise), checked 2026-10-23"
     },
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
@@ -819,7 +1738,422 @@
           "target": "armor-class",
           "amount": 2
         }
-      ]
+      ],
+      "castingTime": "Bonus Action",
+      "ritual": false,
+      "range": "Self",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "an object engraved with a symbol of the Outer Planes, worth 500+ GP",
+        "costGp": 500,
+        "consumed": false
+      },
+      "duration": "Concentration, up to 1 minute",
+      "summary": "Takes on an otherworldly form: a 40-foot flying speed, +2 AC, damage and condition immunities by the planes chosen, and two weapon attacks using your spellcasting ability.",
+      "effect": {
+        "acBonus": 2,
+        "review": "unreviewed"
+      }
+    }
+  },
+  {
+    "id": "core/Alarm",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-23T09:06:24.817Z",
+    "data": {
+      "name": "Alarm",
+      "level": 1,
+      "school": "Abjuration",
+      "classes": ["core/Ranger", "core/Wizard"],
+      "castingTime": "1 minute",
+      "ritual": true,
+      "range": "30 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a bell and silver wire",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "8 hours",
+      "concentration": false,
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You set an alarm against intrusion. Choose a door, a window, or an area within range that is no larger than a 20-foot Cube. Until the spell ends, an alarm alerts you whenever a creature touches or enters the warded area. When you cast the spell, you can designate creatures that won't set off the alarm. You also choose whether the alarm is audible or mental:",
+          "Audible Alarm. The alarm produces the sound of a handbell for 10 seconds within 60 feet of the warded area.",
+          "Mental Alarm. You are alerted by a mental ping if you are within 1 mile of the warded area. This ping awakens you if you're asleep."
+        ]
+      },
+      "summary": "Wards a door, window or small area for 8 hours, alerting you audibly or mentally when a creature enters.",
+      "effect": {
+        "review": "unreviewed"
+      }
+    }
+  },
+  {
+    "id": "core/Find_Familiar",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-23T09:06:24.817Z",
+    "data": {
+      "name": "Find Familiar",
+      "level": 1,
+      "school": "Conjuration",
+      "classes": ["core/Wizard"],
+      "castingTime": "1 hour",
+      "ritual": true,
+      "range": "10 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "burning incense worth 10+ GP, which the spell consumes",
+        "costGp": 10,
+        "consumed": true
+      },
+      "duration": "Instantaneous",
+      "concentration": false,
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You gain the service of a familiar, a spirit that takes an animal form you choose: Bat, Cat, Frog, Hawk, Lizard, Octopus, Owl, Rat, Raven, Spider, Weasel, or another Beast that has a Challenge Rating of 0. Appearing in an unoccupied space within range, the familiar has the statistics of the chosen form (see \"Monsters\"), though it is a Celestial, Fey, or Fiend (your choice) instead of a Beast. Your familiar acts independently of you, but it obeys your commands.",
+          "Telepathic Connection. While your familiar is within 100 feet of you, you can communicate with it telepathically. Additionally, as a Bonus Action, you can see through the familiar's eyes and hear what it hears until the start of your next turn, gaining the benefits of any special senses it has.",
+          "Finally, when you cast a spell with a range of touch, your familiar can deliver the touch. Your familiar must be within 100 feet of you, and it must take a Reaction to deliver the touch when you cast the spell.",
+          "Combat. The familiar is an ally to you and your allies. It rolls its own Initiative and acts on its own turn. A familiar can't attack, but it can take other actions as normal.",
+          "Disappearance of the Familiar. When the familiar drops to 0 Hit Points, it disappears. It reappears after you cast this spell again. As a Magic action, you can temporarily dismiss the familiar to a pocket dimension. Alternatively, you can dismiss it forever. As a Magic action while it is temporarily dismissed, you can cause it to reappear in an unoccupied space within 30 feet of you. Whenever the familiar drops to 0 Hit Points or disappears into the pocket dimension, it leaves behind in its space anything it was wearing or carrying.",
+          "One Familiar Only. You can't have more than one familiar at a time. If you cast this spell while you have a familiar, you instead cause it to adopt a new eligible form."
+        ]
+      },
+      "summary": "Summons a spirit familiar in a small animal form that you can talk to telepathically and see through.",
+      "effect": {
+        "review": "unreviewed"
+      }
+    }
+  },
+  {
+    "id": "core/Arcane_Lock",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-23T09:06:24.817Z",
+    "data": {
+      "name": "Arcane Lock",
+      "level": 2,
+      "school": "Abjuration",
+      "classes": ["core/Wizard"],
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "Touch",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "gold dust worth 25+ GP, which the spell consumes",
+        "costGp": 25,
+        "consumed": true
+      },
+      "duration": "Until dispelled",
+      "concentration": false,
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You touch a closed door, window, gate, container, or hatch and magically lock it for the duration. This lock can't be unlocked by any nonmagical means. You and any creatures you designate when you cast the spell can open and close the object despite the lock. You can also set a password that, when spoken within 5 feet of the object, unlocks it for 1 minute."
+        ]
+      },
+      "summary": "Magically locks a closed door or container so only chosen creatures, or a password, can open it.",
+      "effect": {
+        "review": "unreviewed"
+      }
+    }
+  },
+  {
+    "id": "core/Tiny_Hut",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-23T09:06:24.817Z",
+    "data": {
+      "name": "Tiny Hut",
+      "level": 3,
+      "school": "Evocation",
+      "classes": ["core/Bard", "core/Wizard"],
+      "castingTime": "1 minute",
+      "ritual": true,
+      "range": "Self",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a crystal bead",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "8 hours",
+      "concentration": false,
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "A 10-foot Emanation springs into existence around you and remains stationary for the duration. The spell fails when you cast it if the Emanation isn't big enough to fully encapsulate all creatures in its area.",
+          "Creatures and objects within the Emanation when you cast the spell can move through it freely. All other creatures and objects are barred from passing through it. Spells of level 3 or lower can't be cast through it, and the effects of such spells can't extend into it.",
+          "The atmosphere inside the Emanation is comfortable and dry, regardless of the weather outside. Until the spell ends, you can command the interior to have Dim Light or Darkness (no action required). The Emanation is opaque from the outside and of any color you choose, but it's transparent from the inside.",
+          "The spell ends early if you leave the Emanation or if you cast it again."
+        ]
+      },
+      "summary": "Raises a stationary, comfortable dome around you for 8 hours that bars outsiders and blocks spells of level 3 or lower.",
+      "effect": {
+        "area": "10-foot Emanation",
+        "review": "unreviewed"
+      }
+    }
+  },
+  {
+    "id": "core/Glyph_of_Warding",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-23T09:06:24.817Z",
+    "data": {
+      "name": "Glyph of Warding",
+      "level": 3,
+      "school": "Abjuration",
+      "classes": ["core/Bard", "core/Cleric", "core/Wizard"],
+      "castingTime": "1 hour",
+      "ritual": false,
+      "range": "Touch",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "powdered diamond worth 200+ GP, which the spell consumes",
+        "costGp": 200,
+        "consumed": true
+      },
+      "duration": "Until dispelled or triggered",
+      "concentration": false,
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You inscribe a glyph that later unleashes a magical effect. You inscribe it either on a surface (such as a table or a section of floor) or within an object that can be closed (such as a book or chest) to conceal the glyph. The glyph can cover an area no larger than 10 feet in diameter. If the surface or object is moved more than 10 feet from where you cast this spell, the glyph is broken, and the spell ends without being triggered.",
+          "The glyph is nearly imperceptible and requires a successful Wisdom (Perception) check against your spell save DC to notice.",
+          "When you inscribe the glyph, you set its trigger and choose whether it's an explosive rune or a spell glyph, as explained below.",
+          "Set the Trigger. You decide what triggers the glyph when you cast the spell. For glyphs inscribed on a surface, common triggers include touching or stepping on the glyph, removing another object covering it, or approaching within a certain distance of it. For glyphs inscribed within an object, common triggers include opening that object or seeing the glyph. Once a glyph is triggered, this spell ends.",
+          "You can refine the trigger so that only creatures of certain types activate it (for example, the glyph could be set to affect Aberrations). You can also set conditions for creatures that don't trigger the glyph, such as those who say a certain password.",
+          "Explosive Rune. When triggered, the glyph erupts with magical energy in a 20-foot-radius Sphere centered on the glyph. Each creature in the area makes a Dexterity saving throw. A creature takes 5d8 Acid, Cold, Fire, Lightning, or Thunder damage (your choice when you create the glyph) on a failed save or half as much damage on a successful one.",
+          "Spell Glyph. You can store a prepared spell of level 3 or lower in the glyph by casting it as part of creating the glyph. The spell must target a single creature or an area. The spell being stored has no immediate effect when cast in this way.",
+          "When the glyph is triggered, the stored spell takes effect. If the spell has a target, it targets the creature that triggered the glyph. If the spell affects an area, the area is centered on that creature. If the spell summons Hostile creatures or creates harmful objects or traps, they appear as close as possible to the intruder and attack it. If the spell requires Concentration, it lasts until the end of its full duration.",
+          "Using a Higher-Level Spell Slot. The damage of an explosive rune increases by 1d8 for each spell slot level above 3. If you create a spell glyph, you can store any spell of up to the same level as the spell slot you use for the Glyph of Warding."
+        ]
+      },
+      "summary": "Inscribes a hidden glyph that, when triggered, explodes or releases a stored spell of level 3 or lower.",
+      "effect": {
+        "save": {
+          "ability": "dex",
+          "success": "half"
+        },
+        "damage": [
+          {
+            "dice": "5d8",
+            "type": "Acid, Cold, Fire, Lightning or Thunder"
+          }
+        ],
+        "area": "20-foot-radius Sphere",
+        "scaling": {
+          "kind": "slot",
+          "per": "1d8",
+          "of": "damage"
+        },
+        "review": "unreviewed"
+      }
+    }
+  },
+  {
+    "id": "core/Revivify",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-23T09:06:24.817Z",
+    "data": {
+      "name": "Revivify",
+      "level": 3,
+      "school": "Necromancy",
+      "classes": ["core/Cleric", "core/Druid", "core/Paladin", "core/Ranger"],
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "Touch",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a diamond worth 300+ GP, which the spell consumes",
+        "costGp": 300,
+        "consumed": true
+      },
+      "duration": "Instantaneous",
+      "concentration": false,
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You touch a creature that has died within the last minute. That creature revives with 1 Hit Point. This spell can't revive a creature that has died of old age, nor does it restore any missing body parts."
+        ]
+      },
+      "summary": "Returns a creature that died within the last minute to life with 1 hit point.",
+      "effect": {
+        "review": "unreviewed"
+      }
+    }
+  },
+  {
+    "id": "core/Telepathic_Bond",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-23T09:06:24.817Z",
+    "data": {
+      "name": "Telepathic Bond",
+      "level": 5,
+      "school": "Divination",
+      "classes": ["core/Bard", "core/Wizard"],
+      "castingTime": "Action",
+      "ritual": true,
+      "range": "30 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "two eggs",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "1 hour",
+      "concentration": false,
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "You forge a telepathic link among up to eight willing creatures of your choice within range, psychically linking each creature to all the others for the duration. Creatures that can't communicate in any languages aren't affected by this spell.",
+          "Until the spell ends, the targets can communicate telepathically through the bond whether or not they share a language. The communication is possible over any distance, though it can't extend to other planes of existence."
+        ]
+      },
+      "summary": "Links up to eight willing creatures telepathically for an hour, across any distance on the same plane.",
+      "effect": {
+        "review": "unreviewed"
+      }
+    }
+  },
+  {
+    "id": "core/Teleportation_Circle",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-23T09:06:24.817Z",
+    "data": {
+      "name": "Teleportation Circle",
+      "level": 5,
+      "school": "Conjuration",
+      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "castingTime": "1 minute",
+      "ritual": false,
+      "range": "10 feet",
+      "components": {
+        "verbal": true,
+        "somatic": false,
+        "material": "rare inks worth 50+ GP, which the spell consumes",
+        "costGp": 50,
+        "consumed": true
+      },
+      "duration": "1 round",
+      "concentration": false,
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "As you cast the spell, you draw a 5-foot-radius circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied.",
+          "Many major temples, guildhalls, and other important places have permanent teleportation circles. Each circle includes a unique sigil sequence--a string of runes arranged in a particular pattern.",
+          "When you first gain the ability to cast this spell, you learn the sigil sequences for two destinations on the Material Plane, determined by the GM. You might learn additional sigil sequences during your adventures. You can commit a new sigil sequence to memory after studying it for 1 minute.",
+          "You can create a permanent teleportation circle by casting this spell in the same location every day for 365 days."
+        ]
+      },
+      "summary": "Draws a circle that opens a portal to a known permanent teleportation circle until the end of your next turn.",
+      "effect": {
+        "review": "unreviewed"
+      }
     }
   }
 ]

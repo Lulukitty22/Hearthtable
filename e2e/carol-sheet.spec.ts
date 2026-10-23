@@ -185,3 +185,34 @@ test("the header and every tab show the same numbers from one resolved state", a
   ).toEqual(["7", "3", "3", "3", "2", "1"]);
   await page.getByRole("button", { name: "Discard" }).click();
 });
+
+// Milestone 3, S3: a spell panel shows the summary, the facts and the credited SRD text.
+test("spell panels show summary, facts and the expandable SRD text", async ({
+  page,
+}) => {
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
+  await page.getByRole("tab", { name: "Spells & Books" }).click();
+  await page.getByRole("button", { name: "Fireball", exact: true }).click();
+  const facts = page.locator(".spell-facts");
+  await expect(facts).toContainText("150 feet");
+  await expect(facts).toContainText("DEX save, half on success");
+  await expect(facts).toContainText("8d6 Fire");
+  await expect(facts).toContainText("+1d6 damage per slot level above 3");
+  await expect(page.locator(".spell-summary")).toContainText("20-foot-radius");
+  await page.getByText("Full text (SRD 5.2.1)").click();
+  await expect(page.getByText(/^A bright streak flashes/)).toBeVisible();
+  await expect(page.locator(".srd-text .credit")).toContainText(
+    "Creative Commons Attribution 4.0",
+  );
+  await page.getByRole("button", { name: "Close" }).click();
+
+  await page
+    .getByRole("button", { name: "Teleportation Circle", exact: true })
+    .click();
+  await expect(page.locator(".spell-facts")).toContainText("50+ gp, consumed");
+  await page.getByRole("button", { name: "Close" }).click();
+
+  await page.getByRole("button", { name: "Mind Sliver", exact: true }).click();
+  await expect(page.getByText(/Not in the SRD 5\.2\.1/)).toBeVisible();
+  await page.getByRole("button", { name: "Close" }).click();
+});
