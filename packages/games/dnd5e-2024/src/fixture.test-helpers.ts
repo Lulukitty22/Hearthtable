@@ -14,6 +14,7 @@ import { magazines } from "@hearthtable/system-magazines";
 import { proficiency } from "@hearthtable/system-proficiency";
 import { resources } from "@hearthtable/system-resources";
 import { scrollCrafting } from "@hearthtable/system-scroll-crafting";
+import { scrolls } from "@hearthtable/system-scrolls";
 import { skillsAndSaves } from "@hearthtable/system-skills-and-saves";
 import { spellbookReadiness } from "@hearthtable/system-spellbook-readiness";
 import { spellcasting } from "@hearthtable/system-spellcasting";
@@ -45,6 +46,7 @@ export const MODULES = [
   attunement,
   magazines,
   scrollCrafting,
+  scrolls,
   dnd5e2024,
 ];
 

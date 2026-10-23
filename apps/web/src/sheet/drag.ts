@@ -6,7 +6,9 @@
 // rounds go in chambers). Overfilling is allowed; the engine shows the warning.
 // Dragging from a stack moves one; the caller may ask how many instead (Shift). A moved stack part
 // joins a matching stack at the destination when nothing distinguishes them.
-// Spells move only between books, keeping their level.
+// Spells move only between books, keeping their level. A scroll dropped on a book is mounted:
+// its line becomes a book entry with the same id and state, taking one entry; taking it out
+// turns the entry back into a line (one physical scroll, 2026-10-23).
 
 type Line = Record<string, unknown> & {
   id: string;
@@ -42,6 +44,8 @@ const DISTINCT = [
   "held",
   "equipped",
   "capacityOverride",
+  "scroll",
+  "lost",
 ] as const;
 
 function distinctive(l: Line): boolean {
@@ -170,5 +174,78 @@ export function moveEntry(
     ok: true,
     from: from.filter((e) => e.id !== entryId),
     to: [...to, entry],
+  };
+}
+
+/** Mounts a loose scroll line into a book: the line becomes an entry with the same id. */
+export function mountScroll(
+  lines: readonly Line[],
+  entries: readonly Entry[],
+  lineId: string,
+):
+  | { ok: true; lines: Line[]; entries: Entry[] }
+  | { ok: false; reason: string } {
+  const line = lines.find((l) => l.id === lineId);
+  if (!line)
+    return { ok: false, reason: "That item is no longer in the inventory." };
+  const scroll = line["scroll"] as { spell?: unknown } | undefined;
+  if (!scroll || typeof scroll.spell !== "string")
+    return { ok: false, reason: "Only spells and scrolls go in a spellbook." };
+  if (lines.some((l) => l.parent === lineId))
+    return { ok: false, reason: "Take the items out of it first." };
+  if (entries.some((e) => e.ref === scroll.spell))
+    return { ok: false, reason: "That book already holds this spell." };
+  return {
+    ok: true,
+    lines: lines.filter((l) => l.id !== lineId),
+    entries: [
+      ...entries,
+      { id: line.id, ref: scroll.spell, item: line.ref, scroll },
+    ],
+  };
+}
+
+/** Takes a mounted scroll out of a book, back into the inventory at `target`. */
+export function unmountScroll(
+  entries: readonly Entry[],
+  lines: readonly Line[],
+  entryId: string,
+  target: Target,
+  rulesOf: (ref: string) => ItemRules | undefined,
+):
+  | { ok: true; lines: Line[]; entries: Entry[] }
+  | { ok: false; reason: string } {
+  const entry = entries.find((e) => e.id === entryId);
+  if (!entry)
+    return { ok: false, reason: "That spell is no longer in the book." };
+  if (!entry["scroll"])
+    return {
+      ok: false,
+      reason:
+        "A written spell cannot leave the book; only mounted scrolls can.",
+    };
+  if (lines.some((l) => l.id === entry.id))
+    return {
+      ok: false,
+      reason: "An item with this id is already in the inventory.",
+    };
+  const line: Line = {
+    id: entry.id,
+    ref:
+      typeof entry["item"] === "string" ? entry["item"] : "core/Spell_Scroll",
+    quantity: 1,
+    attunedTo: null,
+    scroll: entry["scroll"],
+  };
+  const atRoot = [...lines, line];
+  const placed =
+    target.kind === "root"
+      ? ({ ok: true, lines: atRoot } as const)
+      : moveItem(atRoot, line.id, target, 1, rulesOf, () => line.id);
+  if (!placed.ok) return placed;
+  return {
+    ok: true,
+    lines: placed.lines,
+    entries: entries.filter((e) => e.id !== entryId),
   };
 }

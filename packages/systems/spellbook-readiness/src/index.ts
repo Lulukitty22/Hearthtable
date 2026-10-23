@@ -7,7 +7,9 @@
 //   books hold `bookCapacity` entries, and over-full books warn.
 // - `published-preparation`: eligible spells on the character's prepared list are ready.
 //
-// Books are listed in the owner's saved order (each book record's `order`).
+// Books are listed in the owner's saved order (each book record's `order`). A book also works as a
+// scroll binder: a mounted scroll is an entry that keeps its scroll state and takes one entry
+// (user decision, 2026-10-23); a spent one stays but is not ready.
 
 import type { CasterClass } from "@hearthtable/system-spellcasting";
 import type { LineRow } from "@hearthtable/system-containers";
@@ -24,8 +26,30 @@ import {
 } from "@hearthtable/kernel";
 import { z } from "zod";
 
+/** A physical scroll's own state, on its inventory line or, once mounted, on its book entry. */
+export const ScrollState = z.looseObject({
+  /** The spell definition the scroll holds. */
+  spell: z.string(),
+  /** The level it was scribed at (upcast scrolls keep their actual level). */
+  castLevel: z.number().int().min(0).max(9),
+  /** Who scribed it, and the numbers frozen when it was scribed (formulas, not rolls). */
+  scribe: z.string().optional(),
+  snapshot: z.record(z.string(), z.unknown()).optional(),
+  /** Used up: it stays as a record but no longer casts. */
+  spent: z.boolean().optional(),
+});
+export type ScrollState = z.infer<typeof ScrollState>;
+
 const SpellbookData = z.looseObject({
-  entries: z.array(z.looseObject({ id: z.string(), ref: z.string() })),
+  entries: z.array(
+    z.looseObject({
+      id: z.string(),
+      ref: z.string(),
+      /** Set when the entry is a mounted scroll; `item` is its item definition. */
+      scroll: ScrollState.optional(),
+      item: z.string().optional(),
+    }),
+  ),
 });
 
 const SpellDefinition = z.looseObject({
@@ -43,6 +67,8 @@ export interface EntryView {
   readonly name: string;
   readonly level?: number;
   readonly status: "resolved" | "unresolved";
+  /** Present when the entry is a mounted scroll rather than a written spell. */
+  readonly scroll?: ScrollState;
   readonly ready: boolean;
   /** Why it is or is not ready. */
   readonly reasons: readonly string[];
@@ -166,6 +192,11 @@ function books(ctx: ResolveContext): Value<readonly BookView[]> {
           const eligible = eligibility(ctx, e.ref, spell.level, spell.classes);
           const reasons = [eligible.why];
           let ready = eligible.ok;
+          if (e.scroll) reasons.push("mounted scroll");
+          if (e.scroll?.spent === true) {
+            ready = false;
+            reasons.push("the scroll is spent");
+          }
           if (method.value === "book-contents-ready") {
             if (!accessible) {
               ready = false;
@@ -181,6 +212,7 @@ function books(ctx: ResolveContext): Value<readonly BookView[]> {
             name: spell.name,
             level: spell.level,
             status: "resolved",
+            ...(e.scroll ? { scroll: e.scroll } : {}),
             ready,
             reasons,
           };

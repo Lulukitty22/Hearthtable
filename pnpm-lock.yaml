@@ -101,6 +101,9 @@ importers:
       '@hearthtable/system-resources':
         specifier: workspace:*
         version: link:../../packages/systems/resources
+      '@hearthtable/system-scrolls':
+        specifier: workspace:*
+        version: link:../../packages/systems/scrolls
       '@hearthtable/system-spellbook-readiness':
         specifier: workspace:*
         version: link:../../packages/systems/spellbook-readiness
@@ -163,6 +166,9 @@ importers:
       '@hearthtable/system-scroll-crafting':
         specifier: workspace:*
         version: link:../packages/systems/scroll-crafting
+      '@hearthtable/system-scrolls':
+        specifier: workspace:*
+        version: link:../packages/systems/scrolls
       '@hearthtable/system-spellbook-readiness':
         specifier: workspace:*
         version: link:../packages/systems/spellbook-readiness
@@ -214,6 +220,9 @@ importers:
       '@hearthtable/system-scroll-crafting':
         specifier: workspace:*
         version: link:../systems/scroll-crafting
+      '@hearthtable/system-scrolls':
+        specifier: workspace:*
+        version: link:../systems/scrolls
       '@hearthtable/system-skills-and-saves':
         specifier: workspace:*
         version: link:../systems/skills-and-saves
@@ -275,6 +284,9 @@ importers:
       '@hearthtable/system-resources':
         specifier: workspace:*
         version: link:../../systems/resources
+      '@hearthtable/system-scrolls':
+        specifier: workspace:*
+        version: link:../../systems/scrolls
       '@hearthtable/system-spellbook-readiness':
         specifier: workspace:*
         version: link:../../systems/spellbook-readiness
@@ -421,6 +433,24 @@ importers:
       '@hearthtable/kernel':
         specifier: workspace:*
         version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/scrolls:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      '@hearthtable/system-containers':
+        specifier: workspace:*
+        version: link:../containers
+      '@hearthtable/system-scroll-crafting':
+        specifier: workspace:*
+        version: link:../scroll-crafting
+      '@hearthtable/system-spellbook-readiness':
+        specifier: workspace:*
+        version: link:../spellbook-readiness
       zod:
         specifier: ^4.6.7
         version: 4.6.7

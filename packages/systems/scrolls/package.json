@@ -1,0 +1,16 @@
+{
+  "name": "@hearthtable/system-scrolls",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@hearthtable/kernel": "workspace:*",
+    "@hearthtable/system-containers": "workspace:*",
+    "@hearthtable/system-scroll-crafting": "workspace:*",
+    "@hearthtable/system-spellbook-readiness": "workspace:*",
+    "zod": "^4.6.7"
+  }
+}

@@ -120,6 +120,8 @@ A loose one-shot scroll that is used, or the scroll of a Spellround that fires, 
 
 Until campaigns and donors exist (Milestone 4), a character scribes scrolls only into their own inventory, using their own Arcana multiplier.
 
+Implementation status, 2026-10-23 at 3:28 am PDT (America/Los_Angeles): built as the `scrolls` system and the sheet's inventory and spellbook views. A scroll is a `core/Spell_Scroll` item line (0.1 lb) carrying `scroll` state: the spell, its cast level, the scribe and the frozen save DC and attack bonus. Dragging it onto a spellbook mounts it: the line becomes a book entry with the same id and state, taking one entry; "Take the scroll out" or dragging it back to the inventory turns it back into the same line. Both views show what mounting or removal would cost at the scroll's level, not yet charged. A scroll can be marked spent or usable by hand until the Milestone 5 casting workflow uses scrolls; a spent mounted scroll is not ready. As with written spells, a book refuses a second entry for a spell it already holds; whether a mounted scroll may duplicate a written spell is open with the duplicate-identity question below. Carol has three test scrolls (Fireball, an upcast Cone of Cold, and a spent Misty Step).
+
 ## Scribing, mounting and removal
 
 Scribing makes a **new scroll**. Under the recorded published baseline, Arcana or Calligrapher proficiency qualifies; the spell must be prepared each inscription day and required components available. Consumed components are spent on completion. Published scribing imposes no additional slot payment. Campaign one-shot eligibility and snapshot exceptions remain separate from that baseline.

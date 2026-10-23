@@ -17,7 +17,8 @@
     "containers",
     "attunement",
     "magazines",
-    "scroll-crafting"
+    "scroll-crafting",
+    "scrolls"
   ],
   "methods": {
     "abilities.pointBuy": "extended",

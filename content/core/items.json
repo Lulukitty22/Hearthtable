@@ -427,5 +427,26 @@
     "data": {
       "name": "Engraved planar object (500 gp)"
     }
+  },
+  {
+    "id": "core/Spell_Scroll",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) Spell Scroll; 0.1 lb is the campaign weight (user decision, 2026-10-23)"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Spell Scroll",
+      "weight": 0.1,
+      "tags": ["scroll"]
+    }
   }
 ]

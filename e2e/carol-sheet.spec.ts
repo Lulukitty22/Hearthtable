@@ -216,3 +216,48 @@ test("spell panels show summary, facts and the expandable SRD text", async ({
   await expect(page.getByText(/Not in the SRD 5\.2\.1/)).toBeVisible();
   await page.getByRole("button", { name: "Close" }).click();
 });
+
+// Milestone 3, S4: a scroll mounts into a book (taking an entry), shows its cost, can be marked
+// spent, and comes back out as the same scroll. Nothing is saved, so other tests are unaffected.
+test("a scroll mounts into a spellbook and comes back out", async ({
+  page,
+}) => {
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
+  await page.getByRole("tab", { name: "Inventory" }).click();
+  const carried = page.getByLabel("Carried items");
+  await carried.getByRole("button", { name: "Scroll: Fireball" }).click();
+  await expect(page.locator(".scroll-facts").first()).toContainText(
+    "Mounting it: 13.379 gp and 32.11 minutes",
+  );
+  await page.getByRole("button", { name: "Close" }).click();
+
+  await carried
+    .getByRole("button", { name: "Scroll: Fireball" })
+    .dragTo(carried.getByRole("button", { name: "Overflow (test spells)" }));
+  await expect(
+    carried.getByRole("button", { name: "Scroll: Fireball" }),
+  ).toHaveCount(0);
+
+  await page.getByRole("tab", { name: "Spells & Books" }).click();
+  const overflow = page.getByLabel("Book Overflow (test spells)");
+  await expect(overflow).toContainText("9 / 16 entries");
+  await overflow.getByRole("button", { name: /Fireball/ }).click();
+  await expect(
+    page.getByRole("heading", { name: "Mounted scroll" }),
+  ).toBeVisible();
+  await expect(page.locator(".scroll-facts")).toContainText("Removing it:");
+  await page.getByRole("button", { name: "Mark spent" }).click();
+  await expect(page.getByText(/the scroll is spent/).first()).toBeVisible();
+  await page
+    .getByRole("button", {
+      name: "Take the scroll out of Overflow (test spells)",
+    })
+    .click();
+  await expect(overflow).toContainText("8 / 16 entries");
+
+  await page.getByRole("tab", { name: "Inventory" }).click();
+  await expect(
+    carried.getByRole("button", { name: "Scroll: Fireball" }),
+  ).toContainText("spent");
+  await page.getByRole("button", { name: "Discard" }).click();
+});

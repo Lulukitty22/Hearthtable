@@ -656,3 +656,109 @@ describe("spell details", () => {
     );
   });
 });
+
+// Milestone 3, S4: scrolls as items (Spell Containers, "Binders and spent scrolls").
+describe("scrolls", () => {
+  type Scroll = import("@hearthtable/system-scrolls").ScrollView;
+  const list = (r: ResolvedCharacter) =>
+    value<readonly Scroll[]>(r, "scrolls.list");
+
+  test("Carol's test scrolls are listed loose, with mounting cost at their own level", () => {
+    const scrolls = list(carol());
+    expect(
+      scrolls.map((s) => [s.name, s.castLevel, s.spent, s.place.kind]),
+    ).toEqual([
+      ["Fireball", 3, false, "inventory"],
+      ["Cone of Cold", 6, false, "inventory"],
+      ["Misty Step", 2, true, "inventory"],
+    ]);
+    const cone = scrolls[1] as Scroll;
+    expect(cone.mounting.kind === "known" && cone.mounting.value.level).toBe(6);
+    const fee =
+      cone.mounting.kind === "known" ? cone.mounting.value.feeGp : undefined;
+    expect(fee?.kind === "known" && fee.value).toBeCloseTo(
+      300 * 0.08919350686224783,
+      6,
+    );
+  });
+
+  test("a mounted scroll is a book entry with the same id; spent ones are not ready", () => {
+    const records = carolWithDefinitions().map((r): RecordEnvelope => {
+      if (r.id === `${CAROL_ID}/Inventory`) {
+        const d = r.data as { lines: { id: string }[] };
+        return {
+          ...r,
+          data: {
+            ...d,
+            lines: d.lines.filter((l) => !l.id.startsWith("scroll-")),
+          },
+        };
+      }
+      if (r.id === `${CAROL_ID}/Books/Overflow`) {
+        const d = r.data as { entries: unknown[] };
+        return {
+          ...r,
+          data: {
+            ...d,
+            entries: [
+              ...d.entries,
+              {
+                id: "scroll-fireball",
+                ref: "core/Fireball",
+                item: "core/Spell_Scroll",
+                scroll: { spell: "core/Fireball", castLevel: 3 },
+              },
+              {
+                id: "scroll-misty-step",
+                ref: "core/Misty_Step",
+                item: "core/Spell_Scroll",
+                scroll: { spell: "core/Misty_Step", castLevel: 2, spent: true },
+              },
+            ],
+          },
+        };
+      }
+      return r;
+    });
+    const r = engine.resolve(records);
+    const overflow = value<readonly BookView[]>(
+      r,
+      "spellbook-readiness.books",
+    )[3] as BookView;
+    expect(overflow.entries.length).toBe(10);
+    const byId = new Map(overflow.entries.map((e) => [e.id, e]));
+    expect(byId.get("scroll-fireball")).toMatchObject({
+      ready: true,
+      scroll: { castLevel: 3 },
+    });
+    expect(byId.get("scroll-misty-step")?.ready).toBe(false);
+    expect(byId.get("scroll-misty-step")?.reasons).toContain(
+      "the scroll is spent",
+    );
+    expect(list(r).map((s) => [s.id, s.place.kind])).toEqual([
+      ["scroll-fireball", "book"],
+      ["scroll-misty-step", "book"],
+    ]);
+  });
+
+  test("loose scrolls weigh 0.1 lb each", () => {
+    const withScrolls = value<{ pounds: number }>(
+      carol(),
+      "containers.carriedWeight",
+    ).pounds;
+    const without = value<{ pounds: number }>(
+      engine.resolve(
+        edited({
+          inventory: (d) => ({
+            ...d,
+            lines: (d["lines"] as { id: string }[]).filter(
+              (l) => !l.id.startsWith("scroll-"),
+            ),
+          }),
+        }),
+      ),
+      "containers.carriedWeight",
+    ).pounds;
+    expect(withScrolls - without).toBeCloseTo(0.3, 6);
+  });
+});

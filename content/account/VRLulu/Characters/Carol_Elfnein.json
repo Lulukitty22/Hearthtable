@@ -265,6 +265,57 @@
           "attunedTo": null
         },
         {
+          "id": "scroll-fireball",
+          "ref": "core/Spell_Scroll",
+          "quantity": 1,
+          "attunedTo": null,
+          "note": "Test scroll (Milestone 3)",
+          "scroll": {
+            "spell": "core/Fireball",
+            "castLevel": 3,
+            "scribe": "account/VRLulu/Characters/Carol_Elfnein",
+            "snapshot": {
+              "saveDc": 19,
+              "attackBonus": 11
+            },
+            "spent": false
+          }
+        },
+        {
+          "id": "scroll-cone-of-cold",
+          "ref": "core/Spell_Scroll",
+          "quantity": 1,
+          "attunedTo": null,
+          "note": "Test scroll (Milestone 3), upcast",
+          "scroll": {
+            "spell": "core/Cone_of_Cold",
+            "castLevel": 6,
+            "scribe": "account/VRLulu/Characters/Carol_Elfnein",
+            "snapshot": {
+              "saveDc": 19,
+              "attackBonus": 11
+            },
+            "spent": false
+          }
+        },
+        {
+          "id": "scroll-misty-step",
+          "ref": "core/Spell_Scroll",
+          "quantity": 1,
+          "attunedTo": null,
+          "note": "Test scroll (Milestone 3), already used",
+          "scroll": {
+            "spell": "core/Misty_Step",
+            "castLevel": 2,
+            "scribe": "account/VRLulu/Characters/Carol_Elfnein",
+            "snapshot": {
+              "saveDc": 19,
+              "attackBonus": 11
+            },
+            "spent": true
+          }
+        },
+        {
           "id": "alchemists-supplies",
           "ref": "core/Alchemist's_Supplies",
           "quantity": 1,

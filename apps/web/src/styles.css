@@ -655,3 +655,8 @@ dialog.detail {
   font-size: 0.75em;
   opacity: 0.75;
 }
+
+/* Scrolls (Milestone 3, S4). */
+.scroll-facts p {
+  margin: 0.35rem 0;
+}

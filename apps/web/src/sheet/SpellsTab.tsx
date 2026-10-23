@@ -2,6 +2,7 @@
 // saved book order. Clicking a tile opens the whole spell entry: readiness and why, its
 // definition and source, and removing it from the book.
 
+import type { ScrollView } from "@hearthtable/system-scrolls";
 import type { SlotLevel } from "@hearthtable/system-spellcasting";
 import type {
   BookView,
@@ -11,7 +12,8 @@ import { useState } from "react";
 import { Explained } from "./Explained";
 import { EntryBody } from "./entries";
 import { DetailPanel, DropTarget, Tile, TileGrid } from "./Grid";
-import { bookDrop } from "./InventoryTab";
+import { bookDrop, takeOut } from "./InventoryTab";
+import { ScrollFacts } from "./ScrollFacts";
 import { known, sheetRecords, type Data, type TabProps } from "./shared";
 
 type Entry = { id: string; ref: string };
@@ -74,26 +76,68 @@ function SpellDetail({
   entry,
   bookTitle,
   bookRecordId,
+  scroll,
+  onNotice,
   onClose,
 }: {
   props: TabProps;
   entry: EntryView;
   bookTitle: string;
   bookRecordId?: string;
+  scroll?: ScrollView;
+  onNotice: (message: string) => void;
   onClose: () => void;
 }) {
   return (
     <DetailPanel title={entry.name} onClose={onClose}>
-      <p>
-        In {bookTitle}:{" "}
-        {entry.ready ? (
-          <span className="badge good">ready</span>
-        ) : (
-          <span className="badge warn">not ready</span>
-        )}{" "}
-        <span className="muted">{entry.reasons.join("; ")}</span>
-      </p>
-      {bookRecordId && (
+      {/* Readiness in each book is shown by the spell body below. */}
+      {scroll && bookRecordId && (
+        <>
+          <h3>Mounted scroll</h3>
+          <ScrollFacts
+            props={props}
+            scroll={scroll}
+            onToggleSpent={() =>
+              props.edit(bookRecordId, (data: Data) => ({
+                ...data,
+                entries: (data["entries"] as Entry[]).map((x) =>
+                  x.id === entry.id
+                    ? {
+                        ...x,
+                        scroll: {
+                          ...((x as { scroll?: object }).scroll ?? {}),
+                          spent: !scroll.spent,
+                        },
+                      }
+                    : x,
+                ),
+              }))
+            }
+          />
+          <p>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => {
+                takeOut(
+                  { props, notice: onNotice },
+                  {
+                    kind: "entry",
+                    bookRecordId,
+                    entryId: entry.id,
+                    level: entry.level ?? -1,
+                  },
+                  { kind: "root" },
+                );
+                onClose();
+              }}
+            >
+              Take the scroll out of {bookTitle}
+            </button>
+          </p>
+        </>
+      )}
+      {bookRecordId && !scroll && (
         <p>
           <button
             type="button"
@@ -141,6 +185,8 @@ export function SpellsTab(props: TabProps) {
   const [message, setMessage] = useState<string | undefined>();
   const drops = { props, notice: setMessage };
 
+  const scrolls =
+    known(props.resolved.get<readonly ScrollView[]>("scrolls.list")) ?? [];
   const openBook = books.find((b) => b.lineId === open?.book);
   const openEntry = openBook?.entries.find((e) => e.id === open?.entry);
 
@@ -173,7 +219,8 @@ export function SpellsTab(props: TabProps) {
         </p>
       )}
       <p className="muted">
-        Drag a spell onto another book to move it; it keeps its level.
+        Drag a spell onto another book to move it; it keeps its level. Drag a
+        scroll from the inventory onto a book to mount it.
       </p>
 
       {books.map((book) => {
@@ -226,6 +273,11 @@ export function SpellsTab(props: TabProps) {
                       <Tile
                         key={e.id}
                         name={e.name}
+                        badges={
+                          e.scroll
+                            ? [e.scroll.spent === true ? "spent" : "scroll"]
+                            : []
+                        }
                         {...(e.status === "unresolved"
                           ? { tone: "bad" as const }
                           : !e.ready
@@ -268,6 +320,14 @@ export function SpellsTab(props: TabProps) {
           {...(recordFor(openBook)
             ? { bookRecordId: (recordFor(openBook) as { id: string }).id }
             : {})}
+          {...(scrolls.find((x) => x.id === openEntry.id)
+            ? {
+                scroll: scrolls.find(
+                  (x) => x.id === openEntry.id,
+                ) as ScrollView,
+              }
+            : {})}
+          onNotice={setMessage}
           onClose={() => setOpen(undefined)}
         />
       )}

@@ -21,6 +21,7 @@
     "@hearthtable/system-features": "workspace:*",
     "@hearthtable/system-magazines": "workspace:*",
     "@hearthtable/system-resources": "workspace:*",
+    "@hearthtable/system-scrolls": "workspace:*",
     "@hearthtable/system-spellbook-readiness": "workspace:*",
     "@hearthtable/system-spellcasting": "workspace:*",
     "firebase": "^13.1.0",

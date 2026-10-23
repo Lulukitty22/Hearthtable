@@ -27,6 +27,7 @@
     "@hearthtable/system-magazines": "workspace:*",
     "@hearthtable/system-proficiency": "workspace:*",
     "@hearthtable/system-resources": "workspace:*",
+    "@hearthtable/system-scrolls": "workspace:*",
     "@hearthtable/system-spellbook-readiness": "workspace:*"
   }
 }
