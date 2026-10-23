@@ -1,6 +1,6 @@
 # Milestone 3 Plan
 
-Purpose: the working plan for Milestone 3, the core systems for spells, inventory and economy, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 12:10 am PDT (America/Los_Angeles); the user answered topics A–F on 2026-10-23 at 1:24 am PDT (America/Los_Angeles). Decisions live in the documents linked below; this plan only orders the work. S1 and S2 are built; S3–S7 are next. Milestone 2 still awaits the user's acceptance.
+Purpose: the working plan for Milestone 3, the core systems for spells, inventory and economy, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 12:10 am PDT (America/Los_Angeles); the user answered topics A–F on 2026-10-23 at 1:53 am PDT (America/Los_Angeles). Decisions live in the documents linked below; this plan only orders the work. The user agreed the plan and its acceptance list, and accepted Milestone 2, on 2026-10-23 at 1:54 am PDT (America/Los_Angeles). S1 and S2 are built; S3–S7 are next.
 
 Selected decisions: crafting jobs and every recipe moved to Milestone 5b ([Crafting Jobs](../Systems/Crafting%20Jobs.md)), so Milestone 3 no longer runs crafting. The other answers are recorded in their owning documents and summarised under [Questions and answers](#questions-and-answers).
 
@@ -53,33 +53,33 @@ Asked one topic at a time on 2026-10-23; each topic notes where its answers are 
 3. What does a loose scroll weigh (needed for carried weight)?
 4. Who may scribe for whom in Milestone 3, given that donors and campaigns come later?
 
-**C. Ammunition and charges (S5)** — answered 2026-10-23 at 1:02 am PDT (America/Los_Angeles): inventory items plus a linked charge counter; no manual spending before Milestone 5. Recorded in [Aetherlock Engineered Rounds](../Class%20Reference/Aetherlock%20Engineered%20Rounds.md).
+**C. Ammunition and charges (S5)** — answered 2026-10-23 at 1:53 am PDT (America/Los_Angeles): inventory items plus a linked charge counter; no manual spending before Milestone 5. Recorded in [Aetherlock Engineered Rounds](../Class%20Reference/Aetherlock%20Engineered%20Rounds.md).
 
 1. Do rounds and canister charges become resources the sheet shows as counters, or stay inventory quantities only?
 2. Should the sheet let the player spend a charge by hand now (before the Milestone 5 casting workflow), as a manual adjustment?
 
-**D. Currency (S6)** — answered 2026-10-23 at 1:10 am PDT: all five coins at 50 per pound, as inventory items; automatic payment after review; exact calculated costs paid rounded up to the copper. Recorded in [Currency and Trade](../Systems/Currency%20and%20Trade.md), with the user's trade-window and market-value ideas.
+**D. Currency (S6)** — answered 2026-10-23 at 1:53 am PDT: all five coins at 50 per pound, as inventory items; automatic payment after review; exact calculated costs paid rounded up to the copper. Recorded in [Currency and Trade](../Systems/Currency%20and%20Trade.md), with the user's trade-window and market-value ideas.
 
 1. Which coins (cp, sp, ep, gp, pp) and do coins have weight (published: 50 coins per pound)?
 2. Is money a line in the inventory (a coin pouch), a separate wallet value on the sheet, or both?
 3. Do purchases and crafting debit money automatically, or does the player adjust it by hand?
 4. Rounding: to the copper, or kept exact until displayed? (Settled scroll costs are fractional, such as 1.34 gp.)
 
-**E. Inventory lifecycle (S7)** — answered 2026-10-23 at 1:16 am PDT (America/Los_Angeles): no transfers before the trade window; lost or destroyed items are marked; moving a full container asks about its contents; lost or stolen containers take their contents; action costs wait for Milestone 5; selling stays open. Recorded in [Spell Containers](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md#item-lifecycle--selected-2026-10-23-at-116-am-pdt-americalos_angeles).
+**E. Inventory lifecycle (S7)** — answered 2026-10-23 at 1:53 am PDT (America/Los_Angeles): no transfers before the trade window; lost or destroyed items are marked; moving a full container asks about its contents; lost or stolen containers take their contents; action costs wait for Milestone 5; selling stays open. Recorded in [Spell Containers](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md#item-lifecycle--selected-2026-10-23-at-153-am-pdt-americalos_angeles).
 
 1. Giving an item to another character: a move between two sheets in one save, or a copy plus deletion?
 2. Selling: a fixed share of the price (published guidance is half), a DM-set price, or by hand?
 3. Lost or destroyed items: deleted, or kept as a record?
 4. Does a container's action cost (retrieving an item from a bag) matter yet, or stay a Milestone 5 rule?
 
-**F. Crafting jobs (S8)** — answered 2026-10-23 at 1:24 am PDT: rules recorded in [Crafting Jobs](../Systems/Crafting%20Jobs.md); building crafting jobs and all recipes moved to Milestone 5b. Until then scrolls drag freely into and out of books with the mounting cost shown. Question 4 (parked economy proposals) stays parked.
+**F. Crafting jobs (S8)** — answered 2026-10-23 at 1:53 am PDT: rules recorded in [Crafting Jobs](../Systems/Crafting%20Jobs.md); building crafting jobs and all recipes moved to Milestone 5b. Until then scrolls drag freely into and out of books with the mounting cost shown. Question 4 (parked economy proposals) stays parked.
 
 1. Does a crafting job use the score at the start of the job, or the current score when it completes? Do temporary buffs count?
 2. Is work time tracked in calendar days on the game clock (Milestone 5), or as a simple counter now?
 3. Which recipes matter first: scrolls, magic items, Aetherlock rounds, canister refills, replicas, elixirs?
 4. The parked economy proposals (120 gp canister refill, DIY casings): keep parked, or decide now?
 
-## Proposed acceptance (to agree with the user)
+## Acceptance (agreed 2026-10-23 at 1:54 am PDT (America/Los_Angeles))
 
 - S1 and S2 reproduce Carol's documented values (a sixth-level scroll at Arcana +16 costs about 891.94 gp and 3.56774 workdays; a fifth-level mounting about 22.30 gp and 53.52 minutes; a cantrip mounting about 2.23 gp and 5.35 minutes).
 - Every spell in Carol's books, and in the overflow book, shows a summary, its facts and, where it is in SRD 5.2, the credited full text.

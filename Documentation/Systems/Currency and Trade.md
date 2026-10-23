@@ -1,6 +1,6 @@
 # Currency and Trade
 
-Purpose: owns coins, how money is stored and paid, cost rounding, item market value and trading between characters. Status: coins, storage, payment and rounding were selected 2026-10-23 at 1:10 am PDT (America/Los_Angeles) for Milestone 3; nothing is implemented yet. Trading and market prices are recorded user ideas, still open.
+Purpose: owns coins, how money is stored and paid, cost rounding, item market value and trading between characters. Status: coins, storage, payment and rounding were selected 2026-10-23 at 1:53 am PDT (America/Los_Angeles) for Milestone 3; nothing is implemented yet. Trading and market prices are recorded user ideas, still open.
 
 Selected decisions:
 
@@ -10,17 +10,17 @@ Selected decisions:
 
 Open questions: market value and selling of crafted items; the trade window; bartering with NPCs or the DM. They are listed under [Open design](#open-design).
 
-## Coins — selected 2026-10-23 at 1:10 am PDT (America/Los_Angeles)
+## Coins — selected 2026-10-23 at 1:53 am PDT (America/Los_Angeles)
 
 The five published coins exist: copper (cp), silver (sp), electrum (ep), gold (gp) and platinum (pp). 1 gp = 10 sp = 2 ep = 100 cp, and 1 pp = 10 gp. Fifty coins of any kind weigh one pound and count toward carried weight, as published.
 
 Coins are stackable inventory items. They can sit loose or in pouches and bags and be dragged like any other item, following the [container rules](Spell%20Containers%20and%20Consumable%20Sources.md). The sheet shows a wallet total summed from the coins the character carries.
 
-## Paying — selected 2026-10-23 at 1:10 am PDT (America/Los_Angeles)
+## Paying — selected 2026-10-23 at 1:53 am PDT (America/Los_Angeles)
 
 Buying something or starting a crafting job shows the cost for review. On confirmation, the app removes the coins, making change between denominations as needed. The player does not adjust coins by hand for these.
 
-## Rounding — selected 2026-10-23 at 1:10 am PDT (America/Los_Angeles)
+## Rounding — selected 2026-10-23 at 1:53 am PDT (America/Los_Angeles)
 
 - **Calculated costs** keep full precision and are shown exactly. These are costs changed by a bonus, such as Carol's discounted scroll scribing and mounting ([Arcana multiplier](Spell%20Containers%20and%20Consumable%20Sources.md#selected-arcana-multiplier)).
 - **Items with a listed price**, such as potions, use that price.
@@ -28,7 +28,7 @@ Buying something or starting a crafting job shows the cost for review. On confir
 
 ## Open design
 
-Recorded 2026-10-23 at 1:10 am PDT (America/Los_Angeles) from the user's notes. These are ideas to address when trading and shops are built, not decisions.
+Recorded 2026-10-23 at 1:53 am PDT (America/Los_Angeles) from the user's notes. These are ideas to address when trading and shops are built, not decisions.
 
 - **Market value is not crafting cost.** A cheaply or quickly crafted item, such as one of Carol's discounted scrolls, should still be listed at a fixed average market price. Use the published price where one exists. Some published prices are ranges: the Dungeon Master's Guide gives magic items wide price bands by rarity. Charisma-based haggling with shopkeepers or the DM could move the final price. How to set the market price, and how haggling works, needs more thought.
 - **Trade window.** Trades happen player to player and player to DM. In play, the DM's side is usually an NPC, but it is the DM improvising or following a preset either way.

@@ -38,7 +38,7 @@ Proposed movement behavior: moving a container preserves descendant identities a
 
 This deletion rule applies to editor and sheet deletion controls. Prevent self-containment, cycles, duplicate ownership, lost contents and double-counted weight.
 
-### Item lifecycle — selected 2026-10-23 at 1:16 am PDT (America/Los_Angeles)
+### Item lifecycle — selected 2026-10-23 at 1:53 am PDT (America/Los_Angeles)
 
 - **Giving items to other characters** waits for the trade window with campaigns (Milestone 4); Milestone 3 has no transfers. Selling also stays open with the trade window ([Currency and Trade](Currency%20and%20Trade.md#open-design)).
 - **Lost or destroyed items** stay in the inventory marked lost or destroyed, like spent scrolls. They add no weight and can be deleted later.
@@ -46,7 +46,7 @@ This deletion rule applies to editor and sheet deletion controls. Prevent self-c
 - **A container that is lost or stolen** takes its contents with it; that is out of the owner's control.
 - **Action costs** for retrieving or moving items in play belong to the turn system in Milestone 5.
 
-Future idea, not planned soon (recorded 2026-10-23 at 1:16 am PDT (America/Los_Angeles)): stealing. When something is stolen, the owner, and possibly the whole party as the DM chooses, is prompted for a roll to notice it. The prompt gives no reason, so it looks the same as any ordinary Perception check the DM asks for.
+Future idea, not planned soon (recorded 2026-10-23 at 1:53 am PDT (America/Los_Angeles)): stealing. When something is stolen, the owner, and possibly the whole party as the DM chooses, is prompted for a roll to notice it. The prompt gives no reason, so it looks the same as any ordinary Perception check the DM asks for.
 
 ## Books and spell readiness
 
@@ -174,7 +174,7 @@ Implementation status, 2026-10-23 at 12:16 am PDT (America/Los_Angeles): the `sc
 | +16, Carol | 0.08919350686224783 | 891.93507 gp / 3.56774 days |
 | +20 | 1/27 | 370.37 gp / 1.48148 days |
 
-Each +5 divides cost/time by three. The curve is positive and approaches zero. Evaluate the expression rather than a rounded decay constant. Preserve computational precision; display rounding must not turn positive costs into free work. One workday is eight hours; fractional-day estimates are allowed. Currency rounding is owned by [Currency and Trade](Currency%20and%20Trade.md#rounding--selected-2026-10-23-at-110-am-pdt-americalos_angeles); how rate changes during a job apply is owned by [Crafting Jobs](Crafting%20Jobs.md); work-time rounding remains open.
+Each +5 divides cost/time by three. The curve is positive and approaches zero. Evaluate the expression rather than a rounded decay constant. Preserve computational precision; display rounding must not turn positive costs into free work. One workday is eight hours; fractional-day estimates are allowed. Currency rounding is owned by [Currency and Trade](Currency%20and%20Trade.md#rounding--selected-2026-10-23-at-153-am-pdt-americalos_angeles); how rate changes during a job apply is owned by [Crafting Jobs](Crafting%20Jobs.md); work-time rounding remains open.
 
 Arcana 0 or a negative score does not bypass proficiency eligibility. The +5 normalization is a house rule, not a published minimum.
 

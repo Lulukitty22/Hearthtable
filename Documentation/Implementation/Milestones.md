@@ -20,11 +20,11 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 | Milestone | Scope | Status |
 |---|---|---|
 | **1. Documentation and theory** | The architecture, rulesets and theory sketches; character creation; hosting and stack; milestone criteria; open-work stubs. | Accepted by the user 2026-10-22 at 11:42 am PDT (America/Los_Angeles) |
-| **2. Engine + Carol offline** | Kernel, Milestone 2 systems, the Vanilla+ ruleset, Carol hand-entered, storage adapters, sheet viewer and basic editor, all on the emulator. | Built 2026-10-23 at 12:08 am PDT (America/Los_Angeles); awaiting the user's acceptance |
-| 3. Core systems deep plan | Write a second plan for spells (details, scrolls as items, cost calculation), inventory (lifecycle, currency, ammunition counters) and economy rules. Then build them. Crafting jobs moved to 5b (2026-10-23 at 1:24 am PDT). | Plan answered 2026-10-23; [Milestone 3 Plan](Milestone%203%20Plan.md) |
+| **2. Engine + Carol offline** | Kernel, Milestone 2 systems, the Vanilla+ ruleset, Carol hand-entered, storage adapters, sheet viewer and basic editor, all on the emulator. | Built 2026-10-23 at 12:08 am PDT; accepted by the user 2026-10-23 at 1:54 am PDT (America/Los_Angeles) |
+| 3. Core systems deep plan | Write a second plan for spells (details, scrolls as items, cost calculation), inventory (lifecycle, currency, ammunition counters) and economy rules. Then build them. Crafting jobs moved to 5b (2026-10-23 at 1:53 am PDT). | Plan agreed by the user 2026-10-23 at 1:54 am PDT (America/Los_Angeles); building. [Milestone 3 Plan](Milestone%203%20Plan.md) |
 | 4. Accounts and campaigns on the emulator | Sign-in, Alias, approval, folders, campaigns, membership, privacy, Rules and the Firestore schema. | Tentative |
 | 5. Gameplay loop | Specify, then build, turns, initiative, rests and conditions. Then the casting workflow: holds, approval, resolution, polls, rolls and effects on the game clock. | Tentative; see [Notes for Milestone 5](#notes-for-milestone-5) |
-| 5b. Crafting | Crafting jobs with paid stretches, split rates and progress: scroll scribing, mounting and removal, Aetherlock rounds, canister refills, magic items, replicas and elixirs ([Crafting Jobs](../Systems/Crafting%20Jobs.md)). Moved from Milestone 3 by the user, 2026-10-23 at 1:24 am PDT. | Tentative |
+| 5b. Crafting | Crafting jobs with paid stretches, split rates and progress: scroll scribing, mounting and removal, Aetherlock rounds, canister refills, magic items, replicas and elixirs ([Crafting Jobs](../Systems/Crafting%20Jobs.md)). Moved from Milestone 3 by the user, 2026-10-23 at 1:53 am PDT. | Tentative |
 | 6. Move to real Firebase | Only with the user's explicit approval: project, region, Blaze, deployment, first administrator. | Tentative |
 | Later | NPCs and encounters, export shell, portraits, Discord bot, LLM helpers, importers, other rulesets and games. | Tentative |
 
@@ -121,7 +121,7 @@ Spells are their own system family; their behavior depends on where a spell is s
 - *Selected:* deletion is blocked until a container is empty. Moving a container preserves its contents. Cycles and self-containment are prevented.
 - *Selected:* queued holds remove quantities from inventory at submission.
 - *Selected:* disabled missing-item placeholders when a custom definition is absent.
-- *Selected 2026-10-23 at 1:16 am PDT:* item lifecycle — transfers wait for the trade window (Milestone 4); lost or destroyed items are marked, not removed; moving a full container asks about its contents; action costs belong to Milestone 5 ([Spell Containers](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md#item-lifecycle--selected-2026-10-23-at-116-am-pdt-americalos_angeles)).
+- *Selected 2026-10-23 at 1:53 am PDT:* item lifecycle — transfers wait for the trade window (Milestone 4); lost or destroyed items are marked, not removed; moving a full container asks about its contents; action costs belong to Milestone 5 ([Spell Containers](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md#item-lifecycle--selected-2026-10-23-at-153-am-pdt-americalos_angeles)).
 - *Future:* stealing, with a hidden notice roll for the owner or party.
 - *Needs spec:* sale prices; ammunition and consumable tracking rules; volume estimates.
 
@@ -131,9 +131,9 @@ Spells are their own system family; their behavior depends on where a spell is s
 - *Selected:* a campaign may override definitions and set ruleset variables within what its ruleset exposes.
 - *Needs spec:* how far a campaign can tweak its ruleset before it should become a new ruleset.
 - Crafting methods: systems provide recipe and cost formulas, rulesets set the numbers. Examples: scroll scribing and mounting; magic-item crafting (gp, workdays, tool proficiency by rarity); Aetherlock ammunition recipes; canister charges and refills; Artificer replicas and elixirs.
-- *Selected 2026-10-23 at 1:10 am PDT:* coins, paying and cost rounding ([Currency and Trade](../Systems/Currency%20and%20Trade.md)).
+- *Selected 2026-10-23 at 1:53 am PDT:* coins, paying and cost rounding ([Currency and Trade](../Systems/Currency%20and%20Trade.md)).
 - *Future:* a trade window for player-to-player and player-to-DM trades, with barter valued in coin from library prices, and market value kept separate from crafting cost ([Currency and Trade](../Systems/Currency%20and%20Trade.md#open-design)).
-- *Selected 2026-10-23 at 1:24 am PDT:* crafting jobs run in paid stretches of up to one workday, each at the rate in effect when paid; temporary bonuses count while they last; progress is marked by hand until the game clock. Built in Milestone 5b ([Crafting Jobs](../Systems/Crafting%20Jobs.md)).
+- *Selected 2026-10-23 at 1:53 am PDT:* crafting jobs run in paid stretches of up to one workday, each at the rate in effect when paid; temporary bonuses count while they last; progress is marked by hand until the game clock. Built in Milestone 5b ([Crafting Jobs](../Systems/Crafting%20Jobs.md)).
 - *Needs spec:* economy policy — the parked 120 gp canister refill and DIY casings, work-time rounding and shop prices.
 
 ### E. Weapons and combat items
