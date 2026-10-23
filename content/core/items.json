@@ -448,5 +448,125 @@
       "weight": 0.1,
       "tags": ["scroll"]
     }
+  },
+  {
+    "id": "core/Copper_Piece",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) coin values; 50 coins weigh 1 lb"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Copper Piece (cp)",
+      "weight": 0.02,
+      "tags": ["coin"],
+      "coin": {
+        "valueCp": 1
+      }
+    }
+  },
+  {
+    "id": "core/Silver_Piece",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) coin values; 50 coins weigh 1 lb"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Silver Piece (sp)",
+      "weight": 0.02,
+      "tags": ["coin"],
+      "coin": {
+        "valueCp": 10
+      }
+    }
+  },
+  {
+    "id": "core/Electrum_Piece",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) coin values; 50 coins weigh 1 lb"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Electrum Piece (ep)",
+      "weight": 0.02,
+      "tags": ["coin"],
+      "coin": {
+        "valueCp": 50
+      }
+    }
+  },
+  {
+    "id": "core/Gold_Piece",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) coin values; 50 coins weigh 1 lb"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Gold Piece (gp)",
+      "weight": 0.02,
+      "tags": ["coin"],
+      "coin": {
+        "valueCp": 100
+      }
+    }
+  },
+  {
+    "id": "core/Platinum_Piece",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) coin values; 50 coins weigh 1 lb"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Platinum Piece (pp)",
+      "weight": 0.02,
+      "tags": ["coin"],
+      "coin": {
+        "valueCp": 1000
+      }
+    }
   }
 ]

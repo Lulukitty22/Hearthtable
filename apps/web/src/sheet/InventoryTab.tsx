@@ -5,6 +5,7 @@
 // asks how many. Clicking a tile opens the whole entry; several windows can stay open at once.
 
 import type { LineRow, Weight } from "@hearthtable/system-containers";
+import { formatPurse, type Wallet } from "@hearthtable/system-currency";
 import type { WeaponView } from "@hearthtable/system-magazines";
 import type { ScrollView } from "@hearthtable/system-scrolls";
 import type { BookView } from "@hearthtable/system-spellbook-readiness";
@@ -602,6 +603,7 @@ export function InventoryTab(props: TabProps) {
   const rows =
     known(props.resolved.get<readonly LineRow[]>("containers.lines")) ?? [];
   const weight = known(props.resolved.get<Weight>("containers.carriedWeight"));
+  const wallet = known(props.resolved.get<Wallet>("currency.wallet"));
   const sheet: Sheet = {
     props,
     rows,
@@ -630,6 +632,14 @@ export function InventoryTab(props: TabProps) {
           Carried weight: {weight.pounds} lb known
           {weight.unknown > 0 &&
             `; ${weight.unknown} items of unknown weight not counted`}
+        </p>
+      )}
+      {wallet && (
+        <p data-testid="wallet">
+          Wallet: {formatPurse(wallet.purse)}{" "}
+          <span className="muted">
+            (worth {Number((wallet.totalCp / 100).toFixed(2))} gp)
+          </span>
         </p>
       )}
       <p className="muted">

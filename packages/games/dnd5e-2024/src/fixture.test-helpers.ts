@@ -8,6 +8,7 @@ import { armorClass } from "@hearthtable/system-armor-class";
 import { attunement } from "@hearthtable/system-attunement";
 import { concentration } from "@hearthtable/system-concentration";
 import { containers } from "@hearthtable/system-containers";
+import { currency } from "@hearthtable/system-currency";
 import { features } from "@hearthtable/system-features";
 import { hitPoints } from "@hearthtable/system-hit-points";
 import { magazines } from "@hearthtable/system-magazines";
@@ -47,6 +48,7 @@ export const MODULES = [
   magazines,
   scrollCrafting,
   scrolls,
+  currency,
   dnd5e2024,
 ];
 

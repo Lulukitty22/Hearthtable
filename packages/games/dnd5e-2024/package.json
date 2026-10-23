@@ -23,6 +23,7 @@
     "@hearthtable/system-attunement": "workspace:*",
     "@hearthtable/system-concentration": "workspace:*",
     "@hearthtable/system-containers": "workspace:*",
+    "@hearthtable/system-currency": "workspace:*",
     "@hearthtable/system-features": "workspace:*",
     "@hearthtable/system-magazines": "workspace:*",
     "@hearthtable/system-proficiency": "workspace:*",

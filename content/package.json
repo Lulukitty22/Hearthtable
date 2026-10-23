@@ -17,6 +17,7 @@
     "@hearthtable/system-attunement": "workspace:*",
     "@hearthtable/system-concentration": "workspace:*",
     "@hearthtable/system-containers": "workspace:*",
+    "@hearthtable/system-currency": "workspace:*",
     "@hearthtable/system-magazines": "workspace:*",
     "@hearthtable/system-resources": "workspace:*",
     "@hearthtable/system-scroll-crafting": "workspace:*",

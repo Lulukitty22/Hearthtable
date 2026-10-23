@@ -1,6 +1,6 @@
 # Currency and Trade
 
-Purpose: owns coins, how money is stored and paid, cost rounding, item market value and trading between characters. Status: coins, storage, payment and rounding were selected 2026-10-23 at 1:53 am PDT (America/Los_Angeles) for Milestone 3; nothing is implemented yet. Trading and market prices are recorded user ideas, still open.
+Purpose: owns coins, how money is stored and paid, cost rounding, item market value and trading between characters. Status: coins, storage, payment and rounding were selected 2026-10-23 at 1:53 am PDT (America/Los_Angeles) for Milestone 3. Coins, the wallet and the payment rule are implemented (2026-10-23 at 4:02 am PDT (America/Los_Angeles)); nothing uses the payment rule yet, since shops and crafting jobs come later. Trading and market prices are recorded user ideas, still open.
 
 Selected decisions:
 
@@ -25,6 +25,10 @@ Buying something or starting a crafting job shows the cost for review. On confir
 - **Calculated costs** keep full precision and are shown exactly. These are costs changed by a bonus, such as Carol's discounted scroll scribing and mounting ([Arcana multiplier](Spell%20Containers%20and%20Consumable%20Sources.md#selected-arcana-multiplier)).
 - **Items with a listed price**, such as potions, use that price.
 - **Payment** is broken down to copper, the smallest coin, and rounds up to the next whole copper when a fraction remains. The raw price stays visible next to it. For example, 2.23 gp is exactly 223 cp; 8.38 sp is 83.8 cp, so 84 cp is paid and 83.8 cp is shown as the raw price.
+
+## Implementation — 2026-10-23 at 4:02 am PDT (America/Los_Angeles)
+
+The `currency` system adds up every carried coin into the wallet shown on the Inventory tab; coins are the five `core/...Piece` items, each 0.02 lb (50 to the pound) with its value in copper. `planPayment` is the paying rule: the price is rounded up to the next whole copper, coins are taken smallest first, any coin that turns out not to be needed is put back, and change is given in the largest coins. Electrum is spent like any coin but never given as change, because it is rarely used; that detail is an implementation choice the user can change. Carol carries a labelled test purse (3 pp, 25 gp, 2 ep, 14 sp, 37 cp) because her real gold is not set on her sheet (user decision, 2026-10-23 at 4:02 am PDT (America/Los_Angeles)).
 
 ## Open design
 

@@ -18,6 +18,7 @@
     "@hearthtable/system-armor-class": "workspace:*",
     "@hearthtable/system-attunement": "workspace:*",
     "@hearthtable/system-containers": "workspace:*",
+    "@hearthtable/system-currency": "workspace:*",
     "@hearthtable/system-features": "workspace:*",
     "@hearthtable/system-magazines": "workspace:*",
     "@hearthtable/system-resources": "workspace:*",

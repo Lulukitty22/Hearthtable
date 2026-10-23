@@ -4,9 +4,9 @@ Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acce
 
 ## Current progress
 
-Updated 2026-10-23 at 3:31 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 3 Plan](Milestone%203%20Plan.md) owns the slice details.
+Updated 2026-10-23 at 4:02 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 3 Plan](Milestone%203%20Plan.md) owns the slice details.
 
-**Now:** Milestone 3, building slices S6–S7. Milestones 1 and 2 are accepted.
+**Now:** Milestone 3, building slice S7. Milestones 1 and 2 are accepted.
 
 | Milestone 3 slice | What it adds | Status |
 |---|---|---|
@@ -15,8 +15,8 @@ Updated 2026-10-23 at 3:31 am PDT (America/Los_Angeles). This section is the one
 | S3 Spell details | Summaries, facts table, credited SRD 5.2.1 text, overflow test book | Built; effect facts reviewed by the user 2026-10-23 at 3:20 am PDT (America/Los_Angeles) |
 | S4 Scrolls as items | Scroll items holding their spell; drag into a spellbook (one entry); mounting cost shown; spent marker; 0.1 lb | Built 2026-10-23 at 3:28 am PDT (America/Los_Angeles) |
 | S5 Charge counters | Each canister's charges shown as a counter, display only | Built 2026-10-23 at 3:31 am PDT (America/Los_Angeles) |
-| S6 Coins | Five coins as inventory items, 50 per pound, wallet total, payment rounding | Next |
-| S7 Item lifecycle | Lost or destroyed marking; moving a container with contents asks first | Planned |
+| S6 Coins | Five coins as inventory items, 50 per pound, wallet total, payment rounding | Built 2026-10-23 at 4:02 am PDT (America/Los_Angeles) (Carol has a labelled test purse) |
+| S7 Item lifecycle | Lost or destroyed marking; moving a container with contents asks first | Next |
 
 When S7 is done, Milestone 3 is checked against its [acceptance list](Milestone%203%20Plan.md#acceptance-agreed-2026-10-23-at-154-am-pdt-americalos_angeles).
 

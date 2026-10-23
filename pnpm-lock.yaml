@@ -92,6 +92,9 @@ importers:
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../../packages/systems/containers
+      '@hearthtable/system-currency':
+        specifier: workspace:*
+        version: link:../../packages/systems/currency
       '@hearthtable/system-features':
         specifier: workspace:*
         version: link:../../packages/systems/features
@@ -157,6 +160,9 @@ importers:
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../packages/systems/containers
+      '@hearthtable/system-currency':
+        specifier: workspace:*
+        version: link:../packages/systems/currency
       '@hearthtable/system-magazines':
         specifier: workspace:*
         version: link:../packages/systems/magazines
@@ -202,6 +208,9 @@ importers:
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../systems/containers
+      '@hearthtable/system-currency':
+        specifier: workspace:*
+        version: link:../systems/currency
       '@hearthtable/system-features':
         specifier: workspace:*
         version: link:../systems/features
@@ -272,6 +281,9 @@ importers:
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../../systems/containers
+      '@hearthtable/system-currency':
+        specifier: workspace:*
+        version: link:../../systems/currency
       '@hearthtable/system-features':
         specifier: workspace:*
         version: link:../../systems/features
@@ -376,6 +388,18 @@ importers:
       '@hearthtable/kernel':
         specifier: workspace:*
         version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/currency:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      '@hearthtable/system-containers':
+        specifier: workspace:*
+        version: link:../containers
       zod:
         specifier: ^4.6.7
         version: 4.6.7

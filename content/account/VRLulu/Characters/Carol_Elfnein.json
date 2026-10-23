@@ -487,6 +487,41 @@
           "ref": "core/Bag_of_Holding",
           "quantity": 1,
           "attunedTo": null
+        },
+        {
+          "id": "coins-pp",
+          "ref": "core/Platinum_Piece",
+          "quantity": 3,
+          "attunedTo": null,
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
+        },
+        {
+          "id": "coins-gp",
+          "ref": "core/Gold_Piece",
+          "quantity": 25,
+          "attunedTo": null,
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
+        },
+        {
+          "id": "coins-ep",
+          "ref": "core/Electrum_Piece",
+          "quantity": 2,
+          "attunedTo": null,
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
+        },
+        {
+          "id": "coins-sp",
+          "ref": "core/Silver_Piece",
+          "quantity": 14,
+          "attunedTo": null,
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
+        },
+        {
+          "id": "coins-cp",
+          "ref": "core/Copper_Piece",
+          "quantity": 37,
+          "attunedTo": null,
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
         }
       ]
     }

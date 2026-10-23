@@ -18,7 +18,8 @@
     "attunement",
     "magazines",
     "scroll-crafting",
-    "scrolls"
+    "scrolls",
+    "currency"
   ],
   "methods": {
     "abilities.pointBuy": "extended",

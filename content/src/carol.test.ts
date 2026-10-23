@@ -777,3 +777,31 @@ test("each canister is a counter, with the installed one named", () => {
     ["canister-5", 12, 12, undefined],
   ]);
 });
+
+// Milestone 3, S6: coins as inventory items and the wallet total.
+test("Carol's test purse: wallet total and coin weight", () => {
+  const wallet = value<{ totalCp: number; purse: Record<string, number> }>(
+    carol(),
+    "currency.wallet",
+  );
+  expect(wallet.purse).toEqual({ cp: 37, sp: 14, ep: 2, gp: 25, pp: 3 });
+  expect(wallet.totalCp).toBe(5777);
+  const coins = 37 + 14 + 2 + 25 + 3;
+  const without = value<{ pounds: number }>(
+    engine.resolve(
+      edited({
+        inventory: (d) => ({
+          ...d,
+          lines: (d["lines"] as { id: string }[]).filter(
+            (l) => !l.id.startsWith("coins-"),
+          ),
+        }),
+      }),
+    ),
+    "containers.carriedWeight",
+  ).pounds;
+  expect(
+    value<{ pounds: number }>(carol(), "containers.carriedWeight").pounds -
+      without,
+  ).toBeCloseTo(coins / 50, 6);
+});
