@@ -10,10 +10,19 @@
 // Options: --autostart starts at once; --test-cycle starts, stops once the app is up, and exits
 // (used to check the launcher).
 //
+// Command line control, for the user and for agents, talking to the open launcher window:
+//   "Hearthtable Launcher.exe" start    starts everything (opens the launcher first if needed)
+//   "Hearthtable Launcher.exe" stop     stops and waits until the emulators have saved
+//   "Hearthtable Launcher.exe" status   Running, Stopping or Stopped
+//   "Hearthtable Launcher.exe" log 40   the last 40 log lines
+// Opening the exe again while it is open just brings the window forward.
+//
 // Built with the C# 5 compiler that ships with Windows (.NET Framework 4); see build.bat.
 
 using System;
 using System.Diagnostics;
+using System.IO.Pipes;
+using System.Threading;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -76,6 +85,39 @@ static class Native
         public UIntPtr PeakJobMemoryUsed;
     }
 
+    [DllImport("userenv.dll", SetLastError = true)]
+    static extern bool CreateEnvironmentBlock(out IntPtr block, IntPtr token, bool inherit);
+
+    [DllImport("userenv.dll", SetLastError = true)]
+    static extern bool DestroyEnvironmentBlock(IntPtr block);
+
+    /** The user's normal Windows environment, as a fresh sign-in would have it; null if unavailable. */
+    public static System.Collections.Generic.Dictionary<string, string> UserEnvironment()
+    {
+        IntPtr block;
+        IntPtr token = System.Security.Principal.WindowsIdentity.GetCurrent().Token;
+        if (!CreateEnvironmentBlock(out block, token, false)) return null;
+        try
+        {
+            System.Collections.Generic.Dictionary<string, string> env =
+                new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            IntPtr p = block;
+            while (true)
+            {
+                string entry = Marshal.PtrToStringUni(p);
+                if (string.IsNullOrEmpty(entry)) break;
+                int eq = entry.IndexOf('=', 1);
+                if (eq > 0) env[entry.Substring(0, eq)] = entry.Substring(eq + 1);
+                p = new IntPtr(p.ToInt64() + (entry.Length + 1) * 2);
+            }
+            return env;
+        }
+        finally
+        {
+            DestroyEnvironmentBlock(block);
+        }
+    }
+
     /** A job whose processes all end when the launcher's handle to it closes. */
     public static IntPtr KillOnCloseJob()
     {
@@ -110,7 +152,7 @@ class LauncherForm : Form
     readonly Button browserButton = new Button();
     readonly Button forceButton = new Button();
     readonly Label status = new Label();
-    readonly Timer stopTimer = new Timer();
+    readonly System.Windows.Forms.Timer stopTimer = new System.Windows.Forms.Timer();
     readonly IntPtr job = Native.KillOnCloseJob();
     StreamWriter logFile;
     Process child;
@@ -176,6 +218,98 @@ class LauncherForm : Form
         Append("Log file: " + file);
         SetState();
         if (testCycle || autostart) Shown += delegate { StartAll(); };
+        Thread server = new Thread(Serve);
+        server.IsBackground = true;
+        server.Start();
+    }
+
+    /** One command from the command line, run on the window's thread. */
+    string Command(string line)
+    {
+        string[] parts = line.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        string cmd = parts.Length > 0 ? parts[0].ToLowerInvariant() : "";
+        switch (cmd)
+        {
+            case "start":
+                if (Running) return "Already running.";
+                StartAll();
+                return Running ? "Starting." : "Could not start; see the launcher log.";
+            case "stop":
+                if (!Running) return "Not running.";
+                StopAll();
+                return "Stopping.";
+            case "status":
+                return stopping ? "Stopping" : Running ? "Running" : "Stopped";
+            case "log":
+                int n;
+                if (parts.Length < 2 || !int.TryParse(parts[1], out n)) n = 40;
+                string[] lines = log.Lines;
+                int from = Math.Max(0, lines.Length - n - 1);
+                return string.Join(Environment.NewLine, lines, from, lines.Length - from).TrimEnd();
+            case "show":
+                if (WindowState == FormWindowState.Minimized) WindowState = FormWindowState.Normal;
+                Activate();
+                return "Shown.";
+            default:
+                return "Unknown command. Use start, stop, status or log [lines].";
+        }
+    }
+
+    /** Answers commands sent through a named pipe, one per connection. */
+    void Serve()
+    {
+        while (true)
+        {
+            try
+            {
+                using (NamedPipeServerStream pipe = new NamedPipeServerStream(PipeName(root), PipeDirection.InOut, 1))
+                {
+                    pipe.WaitForConnection();
+                    StreamReader reader = new StreamReader(pipe);
+                    StreamWriter writer = new StreamWriter(pipe);
+                    string request = reader.ReadLine() ?? "";
+                    string reply = (string)Invoke(new Func<string>(() => Command(request)));
+                    writer.Write(reply);
+                    writer.Flush();
+                    pipe.WaitForPipeDrain();
+                }
+            }
+            catch (Exception)
+            {
+                Thread.Sleep(200);
+            }
+        }
+    }
+
+    public static string PipeName(string root)
+    {
+        uint hash = 2166136261;
+        foreach (char c in root.ToLowerInvariant().TrimEnd('\\'))
+        {
+            hash ^= c;
+            hash *= 16777619;
+        }
+        return "HearthtableLauncher-" + hash.ToString("x8");
+    }
+
+    /** Sends one command to the open launcher; null when no launcher is open. */
+    public static string Send(string root, string command, int timeoutMs)
+    {
+        try
+        {
+            using (NamedPipeClientStream pipe = new NamedPipeClientStream(".", PipeName(root), PipeDirection.InOut))
+            {
+                pipe.Connect(timeoutMs);
+                StreamWriter writer = new StreamWriter(pipe);
+                writer.WriteLine(command);
+                writer.Flush();
+                return new StreamReader(pipe).ReadToEnd();
+            }
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     bool Running { get { return child != null && !child.HasExited; } }
@@ -217,6 +351,18 @@ class LauncherForm : Form
         info.RedirectStandardInput = true;
         info.StandardOutputEncoding = Encoding.UTF8;
         info.StandardErrorEncoding = Encoding.UTF8;
+        // Start from the user's normal environment, whoever opened the launcher. A terminal such as
+        // Git Bash changes the environment so that Ctrl+C no longer reaches pnpm and Firebase,
+        // and Stop could not save. HEARTHTABLE_NO_BROWSER is kept for tests.
+        System.Collections.Generic.Dictionary<string, string> clean = Native.UserEnvironment();
+        if (clean != null)
+        {
+            string noBrowser = Environment.GetEnvironmentVariable("HEARTHTABLE_NO_BROWSER");
+            info.EnvironmentVariables.Clear();
+            foreach (System.Collections.Generic.KeyValuePair<string, string> kv in clean)
+                info.EnvironmentVariables[kv.Key] = kv.Value;
+            if (noBrowser != null) info.EnvironmentVariables["HEARTHTABLE_NO_BROWSER"] = noBrowser;
+        }
         if (testCycle) info.EnvironmentVariables["HEARTHTABLE_NO_BROWSER"] = "1";
         child = new Process();
         child.StartInfo = info;
@@ -224,6 +370,9 @@ class LauncherForm : Form
         child.OutputDataReceived += delegate(object s, DataReceivedEventArgs e) { if (e.Data != null) Append(e.Data); };
         child.ErrorDataReceived += delegate(object s, DataReceivedEventArgs e) { if (e.Data != null) Append(e.Data); };
         child.Exited += delegate { BeginInvoke(new Action(OnChildExited)); };
+        // Windows passes "ignore Ctrl+C" down to child processes. If whoever opened the launcher
+        // had it set (some terminals do), Stop could never reach the emulators; clear it first.
+        Native.SetConsoleCtrlHandler(IntPtr.Zero, false);
         try
         {
             child.Start();
@@ -328,6 +477,61 @@ class LauncherForm : Form
         StopAll();
     }
 
+    /** Command line mode: prints the open launcher's answer. */
+    static int RunCommand(string root, string[] args)
+    {
+        Native.AttachConsole(0xFFFFFFFF); // the calling terminal, so the answer is printed there
+        string cmd = args[0].ToLowerInvariant();
+        string line = string.Join(" ", args);
+        string reply = Send(root, line, 500);
+        if (reply == null)
+        {
+            if (cmd == "start")
+            {
+                // Opened through the shell, so the window does not inherit this terminal's
+                // console: Ctrl+C from Stop must reach only the launcher's own processes.
+                Process.Start(new ProcessStartInfo(Application.ExecutablePath, "--autostart")
+                {
+                    UseShellExecute = true,
+                    WorkingDirectory = root,
+                });
+                for (int i = 0; i < 50 && reply == null; i++)
+                {
+                    Thread.Sleep(200);
+                    reply = Send(root, "status", 200);
+                }
+                Console.WriteLine(reply == null ? "Opened the launcher." : "Opened the launcher; " + reply + ".");
+                return 0;
+            }
+            if (cmd == "log")
+            {
+                string file = Path.Combine(root, "logs", "launcher-" + DateTime.Now.ToString("yyyy-MM-dd") + ".log");
+                Console.WriteLine(File.Exists(file) ? "The launcher is not open. Today's log: " + file : "The launcher is not open.");
+                return 0;
+            }
+            Console.WriteLine(cmd == "status" ? "Stopped (the launcher is not open)." : "The launcher is not open.");
+            return cmd == "status" ? 0 : 1;
+        }
+        if (cmd == "stop" && reply == "Stopping.")
+        {
+            Console.WriteLine("Stopping; waiting for the emulators to save...");
+            for (int i = 0; i < 180; i++)
+            {
+                Thread.Sleep(1000);
+                string state = Send(root, "status", 500);
+                if (state == null || state == "Stopped")
+                {
+                    Console.WriteLine("Stopped.");
+                    return 0;
+                }
+            }
+            Console.WriteLine("Still stopping after three minutes; see the launcher window.");
+            return 1;
+        }
+        Console.WriteLine(reply);
+        return 0;
+    }
+
     [STAThread]
     static void Main(string[] args)
     {
@@ -338,6 +542,14 @@ class LauncherForm : Form
                 "Hearthtable Launcher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
+        string[] commands = { "start", "stop", "status", "log" };
+        if (args.Length > 0 && Array.IndexOf(commands, args[0].ToLowerInvariant()) >= 0)
+        {
+            Environment.Exit(RunCommand(root, args));
+            return;
+        }
+        // A second window would fight the first for the same ports: bring the open one forward.
+        if (Send(root, "show", 300) != null) return;
         bool test = Array.IndexOf(args, "--test-cycle") >= 0;
         Application.EnableVisualStyles();
         bool autostart = Array.IndexOf(args, "--autostart") >= 0;

@@ -99,7 +99,10 @@ if (!stopping) {
   let opened = false;
   run("web", "pnpm dev", {
     onLine: (line) => {
-      if (!opened && line.includes("Local:")) {
+      // Vite may colour its output, so compare without colour codes.
+      // eslint-disable-next-line no-control-regex
+      const plain = line.replace(/\x1b\[[0-9;?]*[A-Za-z]/g, "");
+      if (!opened && plain.includes("Local:")) {
         opened = true;
         if (!process.env["HEARTHTABLE_NO_BROWSER"])
           spawn("cmd", ["/c", "start", "", WEB], {
