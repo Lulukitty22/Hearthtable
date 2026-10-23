@@ -34,7 +34,10 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 6. **S6 — Characters in campaigns.** Copying a character into a campaign, DM mode editing, and delegated control with revocation.
 7. **S7 — DM review queue.** Everything a DM approves outside gameplay waits as a proposed change: inserting, deleting or replacing a campaign character, a player's edits to their campaign character, and players' proposed edits to campaign library definitions. The DM accepts or rejects each; accepted changes save with the usual history.
 8. **S8 — Privacy.** Private campaigns, private characters, private tabs and private lines with per-player grants, placeholders and unnamed contributions to totals, all screen-only.
-9. **S9 — Moving today's data in.** VR_Lulu's existing records and Carol become owned by a real (emulator) account, keeping their paths.
+9. **S9 — Concurrent-edit review.** The side-by-side difference window when someone else saves a sheet you are editing, choosing per item, with later updates queued ([Concurrent editing](../Systems/Campaigns%20and%20Shared%20Data.md#concurrent-editing-and-difference-review)).
+10. **S10 — Live HTML sheet export.** The view-only, character-only export shell that loads current data under the viewer's permissions ([Live character-sheet exports](../Systems/Campaigns%20and%20Shared%20Data.md#live-character-sheet-exports)).
+11. **S11 — Portraits.** Uploading a character portrait to Cloud Storage, following the character's visibility; if uploads prove impractical on the free tier, a portrait is an image link instead (user decision, 2026-10-23 at 5:32 am PDT (America/Los_Angeles)).
+12. **S12 — Moving today's data in.** VR_Lulu's existing records and Carol become owned by the seeded VR_Lulu account, keeping their paths.
 
 ## Questions for the user
 
@@ -63,7 +66,7 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 
 **F. Deferred pieces (confirm they stay out)**
 
-1. Concurrent-editing difference review, live HTML exports, portraits, Discord linking and core-maintainer publishing: leave all for later milestones?
+1. Concurrent-editing difference review, live HTML exports, portraits, Discord linking and core-maintainer publishing: leave all for later milestones? — answered 2026-10-23 at 5:32 am PDT (America/Los_Angeles): only Discord linking and core-maintainer publishing are deferred; difference review, live exports and portraits are slices S9–S11.
 
 ## Proposed acceptance (to agree with the user)
 
@@ -71,4 +74,8 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 - A second account joins the campaign through an invite and DM approval, and its copied character is inserted only after DM approval.
 - Rules tests show a pending account, a non-member and a revoked delegate are refused, and a DM is allowed.
 - Private tabs and lines show placeholders to other viewers while totals stay true.
+- A player's edit to their campaign character waits in the DM review queue and saves only when a DM accepts it.
+- Editing a sheet while another account saves it shows the difference window.
+- An exported HTML sheet shows the character's current data and hides what the viewer may not see.
+- A portrait can be uploaded (or linked) and shows on the sheet.
 - Carol and VR_Lulu's content load under the seeded account exactly as before.

@@ -46,7 +46,7 @@ Hosting must favor low cost. Running the optional bot on the user's PC is accept
 
 ### Portrait uploads
 
-Selected 2026-10-19: support portrait uploads. Cloud Storage for Firebase is the proposed file-storage service, while Firestore stores the associated character data and file references. Image formats, upload limits, compression, access rules, retention and region still need design and cost accounting. Portrait access must follow the applicable character visibility rules. The selected live-only export scope is unchanged; no image snapshot/export feature is implied.
+Selected 2026-10-19: support portrait uploads. Fallback selected 2026-10-23 at 5:32 am PDT (America/Los_Angeles): if uploads prove impractical with Firebase or its free tier, a portrait is stored as a link to an image instead. Cloud Storage for Firebase is the proposed file-storage service, while Firestore stores the associated character data and file references. Image formats, upload limits, compression, access rules, retention and region still need design and cost accounting. Portrait access must follow the applicable character visibility rules. The selected live-only export scope is unchanged; no image snapshot/export feature is implied.
 
 ## Account organization and address design
 
