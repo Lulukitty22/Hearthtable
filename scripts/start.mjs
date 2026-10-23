@@ -1,4 +1,4 @@
-// `pnpm start` (or double-click "Start Hearthtable.bat"): one window for local development.
+// `pnpm start`, also what "Hearthtable Launcher.exe" runs: one window for local development.
 // Starts the emulators, waits until Firestore answers, runs `pnpm seed --refresh`, then starts
 // the web app and opens it in the browser. Ctrl+C stops everything: the console passes it to
 // every process, so the emulators save their data on the way out, and this script waits for
