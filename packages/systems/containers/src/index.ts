@@ -29,6 +29,8 @@ export const InventoryLine = z.looseObject({
   /** Slot id inside a slotted container, such as a chamber. */
   slot: z.string().optional(),
   capacityOverride: z.boolean().optional(),
+  /** Marked lost or destroyed: kept as a record, but weightless, out of reach and disabled. */
+  lost: z.enum(["lost", "destroyed"]).optional(),
 });
 export type InventoryLine = z.infer<typeof InventoryLine>;
 
@@ -38,6 +40,8 @@ export const ItemDefinition = z.looseObject({
   weight: z.number().min(0).optional(),
   /** Cubic feet per unit; absent means unknown. */
   volume: z.number().min(0).optional(),
+  /** False for items that cannot be lost or destroyed, such as a DM grant (Indomitable). */
+  canBeLost: z.boolean().optional(),
   /** Kinds this item counts as for containers' `accepts`, e.g. `aetherlock-round`. */
   tags: z.array(z.string()).optional(),
   container: z
@@ -74,6 +78,8 @@ export interface LineRow {
   /** Enclosing containers from the root; undefined when the chain is broken. */
   readonly depth?: number;
   readonly accessible: boolean;
+  /** Lost or destroyed, itself or through the container it is in (which takes its contents). */
+  readonly lost?: "lost" | "destroyed";
 }
 
 export interface Weight {
@@ -86,6 +92,22 @@ function lines(ctx: ResolveContext): readonly InventoryLine[] {
   return readField(ctx, "inventory", "lines", z.array(InventoryLine)).flatMap(
     (f) => f.value,
   );
+}
+
+/** A line's own lost state, or the nearest enclosing container's. */
+function lostState(
+  line: InventoryLine,
+  byId: ReadonlyMap<string, InventoryLine>,
+): "lost" | "destroyed" | undefined {
+  const seen = new Set<string>();
+  let current: InventoryLine | undefined = line;
+  while (current && !seen.has(current.id)) {
+    if (current.lost) return current.lost;
+    seen.add(current.id);
+    current =
+      current.parent === undefined ? undefined : byId.get(current.parent);
+  }
+  return undefined;
 }
 
 function rows(ctx: ResolveContext): readonly LineRow[] {
@@ -150,7 +172,18 @@ function rows(ctx: ResolveContext): readonly LineRow[] {
         );
       }
     }
+    const lost = lostState(line, byId);
+    if (line.lost && def.ok && def.value.canBeLost === false)
+      ctx.report(
+        issue(
+          "warning",
+          "containers.cannot-be-lost",
+          `${def.value.name} cannot be lost or destroyed, but is marked ${line.lost}.`,
+          line.id,
+        ),
+      );
     const accessible =
+      lost === undefined &&
       typeof depth === "number" &&
       maxDepth.kind === "known" &&
       (maxDepth.value === "unlimited" || depth <= maxDepth.value);
@@ -158,6 +191,7 @@ function rows(ctx: ResolveContext): readonly LineRow[] {
       line,
       accessible,
       ...(typeof depth === "number" ? { depth } : {}),
+      ...(lost ? { lost } : {}),
     };
     if (!def.ok) {
       ctx.report(
@@ -191,7 +225,7 @@ function carried(
   seen: ReadonlySet<string> = new Set(),
 ): Weight {
   // Broken (looping) nesting is reported elsewhere; never walk it twice.
-  if (seen.has(row.line.id)) return { pounds: 0, unknown: 0 };
+  if (seen.has(row.line.id) || row.lost) return { pounds: 0, unknown: 0 };
   const path = new Set([...seen, row.line.id]);
   const own = row.definition?.weight;
   let pounds = own === undefined ? 0 : own * row.line.quantity;

@@ -11,6 +11,7 @@ import type { ScrollView } from "@hearthtable/system-scrolls";
 import type { BookView } from "@hearthtable/system-spellbook-readiness";
 import { useState, type DragEvent } from "react";
 import {
+  emptyContainer,
   moveEntry,
   moveItem,
   mountScroll,
@@ -54,6 +55,43 @@ interface Sheet {
   readonly scrolls: readonly ScrollView[];
   readonly open: (lineId: string) => void;
   readonly notice: (message: string) => void;
+  /** Asks what to do with a container's contents before it moves. */
+  readonly askMove: (move: PendingMove) => void;
+}
+
+interface PendingMove {
+  readonly lineId: string;
+  readonly target: Target;
+  readonly count: number;
+  readonly name: string;
+  readonly inside: number;
+}
+
+/** Moves a line, optionally emptying it where it stands first. */
+function applyMove(
+  sheet: Sheet,
+  move: Pick<PendingMove, "lineId" | "target" | "count">,
+  emptyFirst: boolean,
+) {
+  const { props } = sheet;
+  const inventory = sheetRecord(props, "inventory");
+  if (!inventory) return;
+  const start = emptyFirst
+    ? emptyContainer(storedLines(props), move.lineId)
+    : storedLines(props);
+  const result = moveItem(
+    start,
+    move.lineId,
+    move.target,
+    move.count,
+    rulesOf(props),
+    () => `line-${Date.now().toString(36)}`,
+  );
+  if (!result.ok) return sheet.notice(result.reason);
+  props.edit(inventory.id, (data: Data) => ({
+    ...data,
+    lines: result.lines,
+  }));
 }
 
 function editLine(
@@ -125,21 +163,20 @@ function itemDrop(sheet: Sheet, target: Target): DropProps {
       if (d.kind === "entry") return takeOut(sheet, d, target);
       const count = howMany(d, e);
       if (count === undefined) return;
-      const inventory = sheetRecord(props, "inventory");
-      if (!inventory) return;
-      const result = moveItem(
-        storedLines(props),
-        d.lineId,
-        target,
-        count,
-        rulesOf(props),
-        () => `line-${Date.now().toString(36)}`,
-      );
-      if (!result.ok) return sheet.notice(result.reason);
-      props.edit(inventory.id, (data: Data) => ({
-        ...data,
-        lines: result.lines,
-      }));
+      // Moving a container that holds items asks first (Item lifecycle, 2026-10-23).
+      const inside = storedLines(props).filter(
+        (l) => l.parent === d.lineId,
+      ).length;
+      const row = sheet.rows.find((r) => r.line.id === d.lineId);
+      if (inside > 0 && row)
+        return sheet.askMove({
+          lineId: d.lineId,
+          target,
+          count,
+          name: displayName(props, row),
+          inside,
+        });
+      applyMove(sheet, { lineId: d.lineId, target, count }, false);
     },
   };
 }
@@ -278,8 +315,9 @@ function ItemTile({ sheet, row }: { sheet: Sheet; row: LineRow }) {
         ...(position >= 0 ? [`A${position + 1}`] : []),
         ...(held ? ["held"] : []),
         ...(spent ? ["spent"] : []),
+        ...(row.lost ? [row.lost] : []),
       ]}
-      {...(spent
+      {...(spent || row.lost
         ? { tone: "muted" as const }
         : row.status === "unresolved"
           ? { tone: "bad" as const }
@@ -475,6 +513,7 @@ function ItemDetail({
           attunedCount={sheet.attuned.length}
         />
       </div>
+      <Lifecycle props={props} row={row} />
 
       {scroll && (
         <>
@@ -592,6 +631,59 @@ function ItemDetail({
   );
 }
 
+/** Marking an item lost or destroyed, or restoring it (Item lifecycle, 2026-10-23). */
+function Lifecycle({ props, row }: { props: TabProps; row: LineRow }) {
+  const own = (row.line as { lost?: "lost" | "destroyed" }).lost;
+  const canBeLost =
+    (row.definition as { canBeLost?: boolean } | undefined)?.canBeLost !==
+    false;
+  const set = (lost: "lost" | "destroyed" | undefined) =>
+    editLine(props, row.line.id, (l) => {
+      const { lost: _old, ...rest } = l;
+      return (lost ? { ...rest, lost } : rest) as Line;
+    });
+  if (row.lost && !own)
+    return (
+      <p className="muted">
+        <span className="badge warn">{row.lost}</span> with the container it is
+        in.
+      </p>
+    );
+  if (own)
+    return (
+      <p>
+        <span className="badge warn">{own}</span>{" "}
+        <span className="muted">
+          Kept as a record: no weight, no effects; any attunement stays until
+          ended.
+        </span>{" "}
+        <button
+          type="button"
+          className="secondary"
+          onClick={() => set(undefined)}
+        >
+          Restore
+        </button>
+      </p>
+    );
+  if (!canBeLost)
+    return <p className="muted">This item cannot be lost or destroyed.</p>;
+  return (
+    <p className="chips">
+      <button type="button" className="secondary" onClick={() => set("lost")}>
+        Mark lost
+      </button>
+      <button
+        type="button"
+        className="secondary"
+        onClick={() => set("destroyed")}
+      >
+        Mark destroyed
+      </button>
+    </p>
+  );
+}
+
 function nameOfLine(sheet: Sheet, lineId: string | undefined): string {
   const row = sheet.rows.find((r) => r.line.id === lineId);
   return row ? displayName(sheet.props, row) : String(lineId);
@@ -600,6 +692,7 @@ function nameOfLine(sheet: Sheet, lineId: string | undefined): string {
 export function InventoryTab(props: TabProps) {
   const [openIds, setOpenIds] = useState<readonly string[]>([]);
   const [message, setMessage] = useState<string | undefined>();
+  const [pending, setPending] = useState<PendingMove | undefined>();
   const rows =
     known(props.resolved.get<readonly LineRow[]>("containers.lines")) ?? [];
   const weight = known(props.resolved.get<Weight>("containers.carriedWeight"));
@@ -621,6 +714,7 @@ export function InventoryTab(props: TabProps) {
       known(props.resolved.get<readonly ScrollView[]>("scrolls.list")) ?? [],
     open: (id) => setOpenIds((ids) => (ids.includes(id) ? ids : [...ids, id])),
     notice: (m) => setMessage(m),
+    askMove: (m) => setPending(m),
   };
   const loose = rows.filter((r) => r.line.parent === undefined);
 
@@ -646,6 +740,47 @@ export function InventoryTab(props: TabProps) {
         Drag items onto a container or into its open window to pack them;
         Shift-drag to choose how many to take from a stack.
       </p>
+      {pending && (
+        <div
+          className="error-box"
+          role="alertdialog"
+          aria-label="Move a container"
+        >
+          <p>
+            {pending.name} holds {pending.inside}{" "}
+            {pending.inside === 1 ? "item" : "items"}. What should happen to
+            {pending.inside === 1 ? " it" : " them"}?
+          </p>
+          <p className="chips">
+            <button
+              type="button"
+              onClick={() => {
+                applyMove(sheet, pending, false);
+                setPending(undefined);
+              }}
+            >
+              Move with its contents
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => {
+                applyMove(sheet, pending, true);
+                setPending(undefined);
+              }}
+            >
+              Leave the contents here
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => setPending(undefined)}
+            >
+              Cancel
+            </button>
+          </p>
+        </div>
+      )}
       {message && (
         <p className="error-box" role="status">
           {message}{" "}

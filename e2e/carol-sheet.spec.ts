@@ -291,3 +291,46 @@ test("the wallet adds up Carol's coins", async ({ page }) => {
       .getByRole("button", { name: "Gold Piece (gp)" }),
   ).toContainText("×25");
 });
+
+// Milestone 3, S7: marking an item lost, and the prompt before moving a container with contents.
+test("items can be marked lost, and moving a full container asks first", async ({
+  page,
+}) => {
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
+  await page.getByRole("tab", { name: "Inventory" }).click();
+  const carried = page.getByLabel("Carried items");
+  const weightText = async () =>
+    Number(
+      (await page.getByText(/Carried weight:/).textContent())?.match(
+        /([\d.]+) lb/,
+      )?.[1],
+    );
+  const before = await weightText();
+  await carried.getByRole("button", { name: "Bedroll" }).click();
+  await page.getByRole("button", { name: "Mark lost" }).click();
+  await expect(carried.getByRole("button", { name: "Bedroll" })).toContainText(
+    "lost",
+  );
+  expect(await weightText()).toBeLessThan(before);
+  await page.getByRole("button", { name: "Restore" }).click();
+  await expect(
+    carried.getByRole("button", { name: "Bedroll" }),
+  ).not.toContainText("lost");
+  await page.getByRole("button", { name: "Close" }).click();
+
+  // Put the rope in the first bag, then move that bag into the second one.
+  const bags = carried.getByRole("button", { name: "Bag of Holding" });
+  await bags.first().click();
+  await carried
+    .getByRole("button", { name: "Rope" })
+    .dragTo(page.getByLabel("Contents of Bag of Holding").first());
+  await page.getByRole("button", { name: "Close" }).click();
+  await bags.first().dragTo(bags.nth(1));
+  const ask = page.getByRole("alertdialog", { name: "Move a container" });
+  await expect(ask).toContainText(/Bag of Holding holds \d+ items?/);
+  await ask.getByRole("button", { name: "Leave the contents here" }).click();
+  await expect(ask).toBeHidden();
+  await expect(carried.getByRole("button", { name: "Rope" })).toBeVisible();
+  await expect(bags).toHaveCount(1);
+  await page.getByRole("button", { name: "Discard" }).click();
+});

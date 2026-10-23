@@ -805,3 +805,55 @@ test("Carol's test purse: wallet total and coin weight", () => {
       without,
   ).toBeCloseTo(coins / 50, 6);
 });
+
+// Milestone 3, S7: lost or destroyed items (Spell Containers, "Item lifecycle").
+describe("lost and destroyed items", () => {
+  const mark = (changes: Record<string, Record<string, unknown>>) =>
+    engine.resolve(
+      edited({
+        inventory: (d) => ({
+          ...d,
+          lines: (d["lines"] as { id: string }[]).map((l) =>
+            changes[l.id] ? { ...l, ...changes[l.id] } : l,
+          ),
+        }),
+      }),
+    );
+
+  test("a lost Wand grants nothing but keeps its attunement slot", () => {
+    const held = mark({ wand: { held: true } });
+    expect(value(held, "spellcasting.classes.core/Wizard.attack")).toBe(12);
+    const lost = mark({ wand: { held: true, lost: "lost" } });
+    expect(value(lost, "spellcasting.classes.core/Wizard.attack")).toBe(11);
+    expect(value<readonly string[]>(lost, "attunement.order")).toContain(
+      "wand",
+    );
+  });
+
+  test("a lost bag takes its contents: no weight, out of reach, coins leave the wallet", () => {
+    const base = value<{ pounds: number }>(
+      carol(),
+      "containers.carriedWeight",
+    ).pounds;
+    const r = mark({
+      "coins-gp": { parent: "bag-of-holding-1" },
+      "bag-of-holding-1": { lost: "destroyed" },
+    });
+    const rows = value<readonly LineRow[]>(r, "containers.lines");
+    const gp = rows.find((x) => x.line.id === "coins-gp");
+    expect(gp?.lost).toBe("destroyed");
+    expect(gp?.accessible).toBe(false);
+    expect(value<{ totalCp: number }>(r, "currency.wallet").totalCp).toBe(
+      5777 - 2500,
+    );
+    // The bag's fixed 5 lb and the 25 gold pieces' half pound are gone.
+    expect(
+      base - value<{ pounds: number }>(r, "containers.carriedWeight").pounds,
+    ).toBeCloseTo(5.5, 6);
+  });
+
+  test("an item that cannot be lost warns when marked lost", () => {
+    const r = mark({ indomitable: { lost: "lost" } });
+    expect(r.issues.map((i) => i.code)).toContain("containers.cannot-be-lost");
+  });
+});

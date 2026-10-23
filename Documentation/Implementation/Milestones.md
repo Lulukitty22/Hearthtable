@@ -4,9 +4,9 @@ Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acce
 
 ## Current progress
 
-Updated 2026-10-23 at 4:02 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 3 Plan](Milestone%203%20Plan.md) owns the slice details.
+Updated 2026-10-23 at 4:09 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 3 Plan](Milestone%203%20Plan.md) owns the slice details.
 
-**Now:** Milestone 3, building slice S7. Milestones 1 and 2 are accepted.
+**Now:** Milestone 3 is built and awaits the user's acceptance. Milestones 1 and 2 are accepted.
 
 | Milestone 3 slice | What it adds | Status |
 |---|---|---|
@@ -16,13 +16,13 @@ Updated 2026-10-23 at 4:02 am PDT (America/Los_Angeles). This section is the one
 | S4 Scrolls as items | Scroll items holding their spell; drag into a spellbook (one entry); mounting cost shown; spent marker; 0.1 lb | Built 2026-10-23 at 3:28 am PDT (America/Los_Angeles) |
 | S5 Charge counters | Each canister's charges shown as a counter, display only | Built 2026-10-23 at 3:31 am PDT (America/Los_Angeles) |
 | S6 Coins | Five coins as inventory items, 50 per pound, wallet total, payment rounding | Built 2026-10-23 at 4:02 am PDT (America/Los_Angeles) (Carol has a labelled test purse) |
-| S7 Item lifecycle | Lost or destroyed marking; moving a container with contents asks first | Next |
+| S7 Item lifecycle | Lost or destroyed marking; moving a container with contents asks first | Built 2026-10-23 at 4:09 am PDT (America/Los_Angeles) |
 
-When S7 is done, Milestone 3 is checked against its [acceptance list](Milestone%203%20Plan.md#acceptance-agreed-2026-10-23-at-154-am-pdt-americalos_angeles).
+Every item on Milestone 3's [acceptance list](Milestone%203%20Plan.md#acceptance-agreed-2026-10-23-at-154-am-pdt-americalos_angeles) has a unit or browser test that passes (2026-10-23 at 4:09 am PDT (America/Los_Angeles)).
 
 **After Milestone 3:** Milestone 4 (accounts and campaigns), Milestone 5 (gameplay loop and casting), Milestone 5b (crafting), Milestone 6 (real Firebase, only with the user's approval); see the [roadmap](#roadmap).
 
-**Waiting on the user:** review of the Codex chat's Hearthside UI prototypes (`prototypes/hearthside/`, checklist in `REVIEW.md`).
+**Waiting on the user:** acceptance of Milestone 3; Carol's real gold amount (she has a labelled test purse); review of the Codex chat's Hearthside UI prototypes (`prototypes/hearthside/`, checklist in `REVIEW.md`).
 
 **Running it locally:** double-click `Hearthtable Launcher.exe` (or `pnpm start`); see [development setup](Architecture%20and%20Hosting.md#development-setup).
 
@@ -45,7 +45,7 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 |---|---|---|
 | **1. Documentation and theory** | The architecture, rulesets and theory sketches; character creation; hosting and stack; milestone criteria; open-work stubs. | Accepted by the user 2026-10-22 at 11:42 am PDT (America/Los_Angeles) |
 | **2. Engine + Carol offline** | Kernel, Milestone 2 systems, the Vanilla+ ruleset, Carol hand-entered, storage adapters, sheet viewer and basic editor, all on the emulator. | Built 2026-10-23 at 12:08 am PDT; accepted by the user 2026-10-23 at 1:54 am PDT (America/Los_Angeles) |
-| 3. Core systems deep plan | Write a second plan for spells (details, scrolls as items, cost calculation), inventory (lifecycle, currency, ammunition counters) and economy rules. Then build them. Crafting jobs moved to 5b (2026-10-23 at 1:53 am PDT). | Plan agreed by the user 2026-10-23 at 1:54 am PDT (America/Los_Angeles); building. [Milestone 3 Plan](Milestone%203%20Plan.md) |
+| 3. Core systems deep plan | Write a second plan for spells (details, scrolls as items, cost calculation), inventory (lifecycle, currency, ammunition counters) and economy rules. Then build them. Crafting jobs moved to 5b (2026-10-23 at 1:53 am PDT). | Plan agreed by the user 2026-10-23 at 1:54 am PDT; built 2026-10-23 at 4:09 am PDT (America/Los_Angeles), awaiting the user's acceptance. [Milestone 3 Plan](Milestone%203%20Plan.md) |
 | 4. Accounts and campaigns on the emulator | Sign-in, Alias, approval, folders, campaigns, membership, privacy, Rules and the Firestore schema. | Tentative |
 | 5. Gameplay loop | Specify, then build, turns, initiative, rests and conditions. Then the casting workflow: holds, approval, resolution, polls, rolls and effects on the game clock. | Tentative; see [Notes for Milestone 5](#notes-for-milestone-5) |
 | 5b. Crafting | Crafting jobs with paid stretches, split rates and progress: scroll scribing, mounting and removal, Aetherlock rounds, canister refills, magic items, replicas and elixirs ([Crafting Jobs](../Systems/Crafting%20Jobs.md)). Moved from Milestone 3 by the user, 2026-10-23 at 1:53 am PDT. | Tentative |

@@ -117,7 +117,7 @@ function wallet(ctx: ResolveContext): Value<Wallet> {
       row.definition as { coin?: { valueCp?: unknown } } | undefined
     )?.coin;
     const d = DENOMINATIONS.find((x) => x.valueCp === coin?.valueCp);
-    if (!d || (row.line as { lost?: unknown }).lost) continue;
+    if (!d || row.lost) continue;
     purse[d.symbol] += row.line.quantity;
     lines.push({ lineId: row.line.id, symbol: d.symbol });
   }

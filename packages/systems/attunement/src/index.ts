@@ -85,7 +85,10 @@ const source: GrantSource = (ctx) => {
   const attuned = new Set(attunedOrder(ctx));
   const out: SourcedGrant[] = [];
   for (const row of lineRows(ctx)) {
-    if (row.status !== "resolved" || row.line.quantity < 1) continue;
+    // A lost or destroyed item is disabled: it grants nothing, though it keeps any attunement
+    // slot until attunement is ended by hand (user decision, 2026-10-23).
+    if (row.status !== "resolved" || row.line.quantity < 1 || row.lost)
+      continue;
     const rules = parseWith(ItemRules, row.definition, row.line.ref);
     const state = parseWith(LineState, row.line, row.line.id);
     if (!rules.ok || !state.ok || rules.value.grants === undefined) continue;

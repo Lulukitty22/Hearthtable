@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
+  emptyContainer,
   moveEntry,
   moveItem,
   mountScroll,
@@ -265,4 +266,17 @@ describe("scrolls keep their identity between the inventory and a book", () => {
       : r;
     expect(r2.ok && r2.lines.filter((l) => l.parent === "bag").length).toBe(2);
   });
+});
+
+test("emptying a container leaves its contents where the container stands", () => {
+  const lines = [
+    { id: "outer", ref: "bag", quantity: 1 },
+    { id: "inner", ref: "bag", quantity: 1, parent: "outer" },
+    { id: "potion", ref: "potion", quantity: 2, parent: "inner" },
+  ];
+  expect(emptyContainer(lines, "inner")).toEqual([
+    lines[0],
+    lines[1],
+    { id: "potion", ref: "potion", quantity: 2, parent: "outer" },
+  ]);
 });

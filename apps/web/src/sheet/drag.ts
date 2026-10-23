@@ -249,3 +249,16 @@ export function unmountScroll(
     entries: entries.filter((e) => e.id !== entryId),
   };
 }
+
+/** Takes everything directly inside a container out to where the container itself is. */
+export function emptyContainer(lines: readonly Line[], lineId: string): Line[] {
+  const holder = lines.find((l) => l.id === lineId);
+  if (!holder) return [...lines];
+  return lines.map((l) => {
+    if (l.parent !== lineId) return l;
+    const { parent: _p, slot: _s, ...rest } = l;
+    return (
+      holder.parent === undefined ? rest : { ...rest, parent: holder.parent }
+    ) as Line;
+  });
+}

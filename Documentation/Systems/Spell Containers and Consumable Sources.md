@@ -45,6 +45,9 @@ This deletion rule applies to editor and sheet deletion controls. Prevent self-c
 - **Moving a container that holds items** alerts the player and asks what to do with the contents, for example move, trade or store them, before going ahead.
 - **A container that is lost or stolen** takes its contents with it; that is out of the owner's control.
 - **Action costs** for retrieving or moving items in play belong to the turn system in Milestone 5.
+- **Effects of a lost or destroyed item** (user decision, 2026-10-23 at 4:09 am PDT (America/Los_Angeles)): it is disabled. It grants nothing, but it keeps any attunement slot it holds until attunement is ended by hand, for example in case it is recovered.
+
+Implementation status, 2026-10-23 at 4:09 am PDT (America/Los_Angeles): built. An inventory line's `lost` field is `lost` or `destroyed`; the item window has Mark lost, Mark destroyed and Restore. A lost or destroyed line, and everything inside it, adds no weight, is out of reach, counts nothing toward the wallet and grants nothing. Items whose definition sets `canBeLost: false`, such as Indomitable, offer no such buttons and warn if marked anyway. Dragging a container that holds items asks first: move it with its contents, leave the contents where it stands, or cancel. Trading the contents waits for the trade window.
 
 Future idea, not planned soon (recorded 2026-10-23 at 1:53 am PDT (America/Los_Angeles)): stealing. When something is stolen, the owner, and possibly the whole party as the DM chooses, is prompted for a roll to notice it. The prompt gives no reason, so it looks the same as any ordinary Perception check the DM asks for.
 
