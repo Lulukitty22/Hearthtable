@@ -573,7 +573,7 @@ describe("scroll crafting costs", () => {
     expect(known(sixth.workdays)).toBeCloseTo(3.56774, 5);
   });
 
-  test("mounting: fifth level about 22.30 gp and 53.52 minutes; cantrip 1.34 gp and 42.81 minutes", () => {
+  test("mounting: fifth level about 22.30 gp and 53.52 minutes; cantrip 2.23 gp and 5.35 minutes", () => {
     const rows = value<readonly MountingCost[]>(
       carol(),
       "scroll-crafting.mounting",
@@ -582,8 +582,8 @@ describe("scroll crafting costs", () => {
     expect(known(fifth.feeGp)).toBeCloseTo(22.2984, 3);
     expect(known(fifth.hours) * 60).toBeCloseTo(53.52, 2);
     const cantrip = rows.find((row) => row.level === 0) as MountingCost;
-    expect(known(cantrip.feeGp)).toBeCloseTo(1.3379, 3);
-    expect(known(cantrip.hours) * 60).toBeCloseTo(42.81, 2);
+    expect(known(cantrip.feeGp)).toBeCloseTo(2.2298, 3);
+    expect(known(cantrip.hours) * 60).toBeCloseTo(5.35, 2);
   });
 
   test("Carol may scribe: Arcana and Calligrapher's Supplies proficiency", () => {

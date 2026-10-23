@@ -28,7 +28,7 @@ Attunement is an ordered list of slots, like concentration capacity. Changed 202
 
 A container may have fixed slots laid out on a grid, each holding one item, and may accept only certain kinds of item (by tag). The Aetherlock's chambers are such slots and accept only Aetherlock rounds; the layout is owned by [Aetherlock Engineered Rounds](../Class%20Reference/Aetherlock%20Engineered%20Rounds.md). A line inside a slotted container names its slot. Breaking a slot or kind rule is a visible warning, like overfilling.
 
-In the app, items move by dragging between the carried grid, open container windows and slots. A drag refuses moves that make no sense: into itself or something it holds, into a non-container, into a container that does not accept that kind, spells anywhere but a book, and a spell onto another level's row. Overfilling stays allowed with its warning. Dragging from a stack moves one; Shift asks how many. A moved part joins a matching plain stack at the destination; items with their own state (attunement, charges, held) move whole. Windows stay open until closed. The action cost of retrieving or moving items in play remains open below.
+In the app, items move by dragging between the carried grid, open container windows and slots. A drag refuses moves that make no sense: into itself or something it holds, into a non-container, into a container that does not accept that kind, spells anywhere but a book, and a spell onto another level's row. Overfilling stays allowed with its warning. Dragging from a stack moves one; Shift asks how many. A moved part joins a matching plain stack at the destination; items with their own state (attunement, charges, held) move whole. Windows stay open until closed. The action cost of retrieving or moving items in play belongs to Milestone 5.
 
 ## Movement, removal and deletion
 
@@ -36,7 +36,17 @@ Proposed movement behavior: moving a container preserves descendant identities a
 
 **Selected deletion rule:** block deletion until the container is empty. The user must remove or move contents first. No automatic unpacking, movement to root, or recursive child deletion. Spell entries count as book contents. An empty child container remains an item in its parent until removed.
 
-This deletion rule applies to editor and sheet deletion controls. Gameplay dropping, selling, transferring and destruction still need lifecycle rules. Prevent self-containment, cycles, duplicate ownership, lost contents and double-counted weight. Moving/retrieving inner containers and handling their action costs remain open.
+This deletion rule applies to editor and sheet deletion controls. Prevent self-containment, cycles, duplicate ownership, lost contents and double-counted weight.
+
+### Item lifecycle — selected 2026-10-23 at 1:16 am PDT (America/Los_Angeles)
+
+- **Giving items to other characters** waits for the trade window with campaigns (Milestone 4); Milestone 3 has no transfers. Selling also stays open with the trade window ([Currency and Trade](Currency%20and%20Trade.md#open-design)).
+- **Lost or destroyed items** stay in the inventory marked lost or destroyed, like spent scrolls. They add no weight and can be deleted later.
+- **Moving a container that holds items** alerts the player and asks what to do with the contents, for example move, trade or store them, before going ahead.
+- **A container that is lost or stolen** takes its contents with it; that is out of the owner's control.
+- **Action costs** for retrieving or moving items in play belong to the turn system in Milestone 5.
+
+Future idea, not planned soon (recorded 2026-10-23 at 1:16 am PDT (America/Los_Angeles)): stealing. When something is stolen, the owner, and possibly the whole party as the DM chooses, is prompted for a roll to notice it. The prompt gives no reason, so it looks the same as any ordinary Perception check the DM asks for.
 
 ## Books and spell readiness
 
@@ -102,13 +112,21 @@ Separate three data layers:
 
 Fresh True Strike belongs to the current wielder's firing-time casting. It is not part of the scroll snapshot or fuze. Fuze selection changes delivery within approved rules, not the paid spell. See [Aetherlock](../Class%20Reference/Aetherlock%20Engineered%20Rounds.md) for actions, Shield delivery, ammunition and charge timing.
 
+## Binders and spent scrolls — selected 2026-10-23 at 12:58 am PDT (America/Los_Angeles)
+
+A scroll binder is not a separate item: a spellbook works as the binder, and scrolls are mounted into it. Each mounted scroll occupies one of the book's 16 entries, like a written spell. The user plans to redesign how and where spellbooks and spell entries are handled in Milestone 5 ([note](../Implementation/Milestones.md#notes-for-milestone-5)).
+
+A loose one-shot scroll that is used, or the scroll of a Spellround that fires, stays in the inventory marked **spent** rather than disappearing. It keeps its identity and snapshot and no longer casts. Further ideas for spent scrolls are recorded for Milestone 5.
+
+Until campaigns and donors exist (Milestone 4), a character scribes scrolls only into their own inventory, using their own Arcana multiplier.
+
 ## Scribing, mounting and removal
 
 Scribing makes a **new scroll**. Under the recorded published baseline, Arcana or Calligrapher proficiency qualifies; the spell must be prepared each inscription day and required components available. Consumed components are spent on completion. Published scribing imposes no additional slot payment. Campaign one-shot eligibility and snapshot exceptions remain separate from that baseline.
 
 Mounting secures an **existing scroll** in a binder or one-scroll Spellround. The selected baseline for levels 1–9 is 50 gp and two hours per spell level, multiplied by the operator's Arcana multiplier M. Mounting and removal use the same schedule for binders and Spellrounds. See the [completed-ammunition ledger](../Class%20Reference/Aetherlock%20Costs%20and%20Damage.md#completed-ammunition) for Carol's discounted fifth-level mounting example. This 2026-10-18 clarification supersedes the earlier undiscounted level 1+ handling rule. Moving an existing scroll does not charge for scribing a new one.
 
-Cantrip mounting and removal each use a baseline of 15 gp and one eight-hour workday, multiplied by the operator's selected Arcana multiplier. This replaces the 25 gp/one-hour proposal. Creating a new cantrip scroll is a separate scribing operation with its own cost. Level 1+ mounting/removal also uses M under the latest clarification, with its distinct baseline of 50 gp/two hours per level.
+Cantrip mounting and removal each use a baseline of **25 gp and one hour**, multiplied by the operator's Arcana multiplier (user decision, 2026-10-23 at 12:58 am PDT (America/Los_Angeles)). The level 1–9 schedule follows the published Wizard rate for copying a spell into a book (50 gp and two hours per level); a cantrip counts as half a level on that pattern. This replaces the earlier 15 gp/one-workday cantrip value, which had been taken from the cantrip row of the scribing table and made cantrips slower to mount than level-1 spells. Creating a new cantrip scroll is a separate scribing operation with its own cost.
 
 No cheaper own-book backup rate or extra mounting Arcana check has been selected. Ordinary chamber loading of completed ammunition is free under the weapon rule; it is not the hours-long job of installing/removing its scroll.
 
@@ -137,7 +155,7 @@ Published Wizard transcription uses 50 gp/two hours per level for a new spell, o
 
 Prior sources, recorded as verified 2026-10-17: [scribing](https://www.dndbeyond.com/sources/dnd/br-2024/equipment#ScribingSpellScrolls), [scroll use/copying](https://www.dndbeyond.com/sources/dnd/br-2024/magic-items-a-z#SpellScroll), and [Wizard transcription](https://www.dndbeyond.com/sources/dnd/br-2024/character-classes#Wizard). Published scroll rules provide the researched one-use analogue; that research question is closed. They do not establish every campaign exception above.
 
-The estimated 0.1 lb/page and 1.6 lb/16 pages are not settled total book weights; cover/frame weight remains separate.
+The estimated 0.1 lb/page and 1.6 lb/16 pages are not settled total book weights; cover/frame weight remains separate. A loose scroll weighs 0.1 lb (user decision, 2026-10-23 at 12:58 am PDT (America/Los_Angeles)).
 
 ### Selected Arcana multiplier
 
@@ -156,7 +174,7 @@ Implementation status, 2026-10-23 at 12:16 am PDT (America/Los_Angeles): the `sc
 | +16, Carol | 0.08919350686224783 | 891.93507 gp / 3.56774 days |
 | +20 | 1/27 | 370.37 gp / 1.48148 days |
 
-Each +5 divides cost/time by three. The curve is positive and approaches zero. Evaluate the expression rather than a rounded decay constant. Preserve computational precision; display rounding must not turn positive costs into free work. One workday is eight hours; fractional-day estimates are allowed. Currency/work rounding, job-start score and temporary buff treatment remain open.
+Each +5 divides cost/time by three. The curve is positive and approaches zero. Evaluate the expression rather than a rounded decay constant. Preserve computational precision; display rounding must not turn positive costs into free work. One workday is eight hours; fractional-day estimates are allowed. Currency rounding is owned by [Currency and Trade](Currency%20and%20Trade.md#rounding--selected-2026-10-23-at-110-am-pdt-americalos_angeles); how rate changes during a job apply is owned by [Crafting Jobs](Crafting%20Jobs.md); work-time rounding remains open.
 
 Arcana 0 or a negative score does not bypass proficiency eligibility. The +5 normalization is a house rule, not a published minimum.
 

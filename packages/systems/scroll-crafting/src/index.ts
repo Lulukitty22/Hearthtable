@@ -4,7 +4,7 @@
 //
 // - `arcana-power` (Vanilla+): M = 3^((5 − A)/5), where A is the total Arcana modifier. Scribing
 //   materials and workdays are multiplied by the scribe's M; mounting and removal (50 gp and two
-//   hours per spell level, cantrips 15 gp and one workday) by the operator's M. Values keep full
+//   hours per spell level, cantrips 25 gp and one hour, half a level) by the operator's M. Values keep full
 //   precision; rounding for display is still open.
 // - `published`: no multiplier, and mounting is not a rule, so mounting values are unresolved.
 //
@@ -42,8 +42,6 @@ export interface MountingCost {
   readonly feeGp: Value<number>;
   readonly hours: Value<number>;
 }
-
-const HOURS_PER_WORKDAY = 8;
 
 function baseline(ctx: ResolveContext): readonly ScribingBaseline[] {
   return ctx.registry
@@ -145,13 +143,13 @@ const derivations: Derivation[] = [
           level,
           feeGp: scaled(
             `${levelName(level)} mounting fee (gp)`,
-            level === 0 ? 15 : 50 * level,
+            level === 0 ? 25 : 50 * level,
             "gp",
             m,
           ),
           hours: scaled(
             `${levelName(level)} mounting hours`,
-            level === 0 ? HOURS_PER_WORKDAY : 2 * level,
+            level === 0 ? 1 : 2 * level,
             "hours",
             m,
           ),

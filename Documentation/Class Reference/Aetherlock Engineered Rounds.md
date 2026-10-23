@@ -75,6 +75,8 @@ The 100 gp grenade price and conversion allowance are campaign selections, not p
 
 A reusable canister holds **12 charges**. Physical ammunition and magical power are distinct owned supplies.
 
+On the sheet (user decision, 2026-10-23 at 1:02 am PDT (America/Los_Angeles)): rounds stay inventory items with quantities and chambers, and each canister's charges also show as a counter in the resources area, linked to its canister item. Until the Milestone 5 casting workflow, the sheet shows rounds and charges but offers no control to spend them by hand.
+
 | Mode | Charges per projectile | Example |
 |---|---:|---|
 | Basic/Arcane | 1 | Triple burst costs 3; two Guise triple bursts cost 6. |

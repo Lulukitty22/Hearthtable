@@ -45,10 +45,10 @@ The table uses purchased Basic Rounds and Carol's scribing/mounting where eligib
 | Cone of Cold 5 | Basic + Carol's fifth-level scroll +22.30 gp discounted mounting | 2.22984 workdays +0.89194 hours | 157.09 gp | 8d8 +6 = 42 Cold with eligible Evoker bonus; DC 19 CON half |
 | Shield 1 | Basic + Carol's first-level scroll +4.46 gp discounted mounting | 0.08919 workday +0.17839 hours | 7.69 gp | +5 AC; selected rifle Reaction delivery |
 | Cure Wounds 1 | Basic + Carol's first-level scroll +4.46 gp discounted mounting | 0.08919 workday +0.17839 hours | 7.69 gp | 2d8 +6 = 15 healing |
-| Cantrip | Basic + new scroll + separate mount | Two ×0.08919 workday, about 85.63 minutes | 3.68 gp | Depends on spell and donor scaling |
+| Cantrip | Basic + new scroll + separate mount | 0.08919 workday +0.08919 hour, about 48.16 minutes | 4.57 gp | Depends on spell and donor scaling |
 | Revivify 3 — example only | Basic + donor scroll +300 gp consumed diamond + discounted mounting | 5 × scribe M workdays +6 × installer M hours | 301 gp +150 gp × scribe M +150 gp × installer M | Eligible dead creature returns with 1 HP; qualified donor needed |
 
-For handling an existing scroll with Carol's Arcana, a fifth-level mounting/removal job starts from 250 gp/10 hours and costs about 22.30 gp and 53.52 minutes after the multiplier. Cantrip mounting/removal alone costs about 1.34 gp and 42.81 minutes; new scribing is a separate job.
+For handling an existing scroll with Carol's Arcana, a fifth-level mounting/removal job starts from 250 gp/10 hours and costs about 22.30 gp and 53.52 minutes after the multiplier. Cantrip mounting/removal alone costs about 2.23 gp and 5.35 minutes (25 gp/one-hour baseline, recalculated 2026-10-23 at 12:58 am PDT (America/Los_Angeles)); new scribing is a separate job.
 
 Cone of Cold has no priced consumed component in this example. Shield/Cure Wounds have V/S and no material component. Revivify is not a new grant or stock selection; Carol cannot supply it. Do not apply her Arcana discount to another donor's work.
 

@@ -168,6 +168,14 @@ The user selected partial automation: allow a feature even when some parts need 
 
 Review of prose against structured fields and later LLM-assisted extraction remain design work.
 
+## Spell details and display — selected 2026-10-23 at 12:58 am PDT (America/Los_Angeles)
+
+Each spell definition stores structured facts: level, school, casting time, range, components with any costly or consumed materials, duration, concentration, ritual, attack or save, damage or healing formulas, upcast scaling and the classes whose lists include it. A spell's panel shows a short summary first, then the full rules text where the spell is in SRD 5.2 (expandable, with the CC-BY-4.0 credit), then the facts. Facts that name another record, such as the classes that can cast it, use the same hover and click windows as other links.
+
+SRD 5.2 is open under CC-BY-4.0, so its text may be copied and changed with credit. The full 2024 Player's Handbook on D&D Beyond is not open; spells outside the SRD get a summary in our own words and no copied text. When sources disagree, SRD 5.2 decides, then the 2024 Player's Handbook.
+
+Order of entry: Carol's spells, then Capella's, then others as needed. A few extra ritual spells and spells with costly or consumed components (such as Teleportation Circle) are added for testing in a separate overflow spellbook in Carol's inventory.
+
 ## Definition updates and publication
 
 Definition publication, independent customization and live links belong to [Campaigns and Shared Data](Campaigns%20and%20Shared%20Data.md#publication-and-approval). Track origin, source, rules edition and revision; refresh dependent views consistently without converting independent historical copies into live links.
