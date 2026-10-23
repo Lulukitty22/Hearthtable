@@ -489,39 +489,51 @@
           "attunedTo": null
         },
         {
+          "id": "test-purse",
+          "ref": "core/Pouch",
+          "quantity": 1,
+          "attunedTo": null,
+          "note": "Test purse (Milestone 3); Carol's real gold is not yet set"
+        },
+        {
           "id": "coins-pp",
           "ref": "core/Platinum_Piece",
           "quantity": 3,
           "attunedTo": null,
-          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set",
+          "parent": "test-purse"
         },
         {
           "id": "coins-gp",
           "ref": "core/Gold_Piece",
           "quantity": 25,
           "attunedTo": null,
-          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set",
+          "parent": "test-purse"
         },
         {
           "id": "coins-ep",
           "ref": "core/Electrum_Piece",
           "quantity": 2,
           "attunedTo": null,
-          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set",
+          "parent": "test-purse"
         },
         {
           "id": "coins-sp",
           "ref": "core/Silver_Piece",
           "quantity": 14,
           "attunedTo": null,
-          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set",
+          "parent": "test-purse"
         },
         {
           "id": "coins-cp",
           "ref": "core/Copper_Piece",
           "quantity": 37,
           "attunedTo": null,
-          "note": "Test coins (Milestone 3); Carol's real gold is not yet set"
+          "note": "Test coins (Milestone 3); Carol's real gold is not yet set",
+          "parent": "test-purse"
         }
       ]
     }
@@ -547,67 +559,147 @@
       "entries": [
         {
           "id": "combat-1",
-          "ref": "core/Mage_Armor"
+          "ref": "core/Mage_Armor",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Mage_Armor",
+            "castLevel": 1
+          }
         },
         {
           "id": "combat-2",
-          "ref": "core/Shield"
+          "ref": "core/Shield",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Shield",
+            "castLevel": 1
+          }
         },
         {
           "id": "combat-3",
-          "ref": "core/Scorching_Ray"
+          "ref": "core/Scorching_Ray",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Scorching_Ray",
+            "castLevel": 2
+          }
         },
         {
           "id": "combat-4",
-          "ref": "core/Mirror_Image"
+          "ref": "core/Mirror_Image",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Mirror_Image",
+            "castLevel": 2
+          }
         },
         {
           "id": "combat-5",
-          "ref": "core/Misty_Step"
+          "ref": "core/Misty_Step",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Misty_Step",
+            "castLevel": 2
+          }
         },
         {
           "id": "combat-6",
-          "ref": "core/Web"
+          "ref": "core/Web",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Web",
+            "castLevel": 2
+          }
         },
         {
           "id": "combat-7",
-          "ref": "core/Fireball"
+          "ref": "core/Fireball",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Fireball",
+            "castLevel": 3
+          }
         },
         {
           "id": "combat-8",
-          "ref": "core/Counterspell"
+          "ref": "core/Counterspell",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Counterspell",
+            "castLevel": 3
+          }
         },
         {
           "id": "combat-9",
-          "ref": "core/Dispel_Magic"
+          "ref": "core/Dispel_Magic",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Dispel_Magic",
+            "castLevel": 3
+          }
         },
         {
           "id": "combat-10",
-          "ref": "core/Fabricate"
+          "ref": "core/Fabricate",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Fabricate",
+            "castLevel": 4
+          }
         },
         {
           "id": "combat-11",
-          "ref": "core/Cone_of_Cold"
+          "ref": "core/Cone_of_Cold",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Cone_of_Cold",
+            "castLevel": 5
+          }
         },
         {
           "id": "combat-12",
-          "ref": "core/Wall_of_Force"
+          "ref": "core/Wall_of_Force",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Wall_of_Force",
+            "castLevel": 5
+          }
         },
         {
           "id": "combat-13",
-          "ref": "core/Animate_Objects"
+          "ref": "core/Animate_Objects",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Animate_Objects",
+            "castLevel": 5
+          }
         },
         {
           "id": "combat-14",
-          "ref": "core/Chain_Lightning"
+          "ref": "core/Chain_Lightning",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Chain_Lightning",
+            "castLevel": 6
+          }
         },
         {
           "id": "combat-15",
-          "ref": "core/Disintegrate"
+          "ref": "core/Disintegrate",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Disintegrate",
+            "castLevel": 6
+          }
         },
         {
           "id": "combat-16",
-          "ref": "core/Tasha's_Otherworldly_Guise"
+          "ref": "core/Tasha's_Otherworldly_Guise",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Tasha's_Otherworldly_Guise",
+            "castLevel": 6
+          }
         }
       ]
     }
@@ -633,43 +725,93 @@
       "entries": [
         {
           "id": "cantrips-1",
-          "ref": "core/Fire_Bolt"
+          "ref": "core/Fire_Bolt",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Fire_Bolt",
+            "castLevel": 0
+          }
         },
         {
           "id": "cantrips-2",
-          "ref": "core/Ray_of_Frost"
+          "ref": "core/Ray_of_Frost",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Ray_of_Frost",
+            "castLevel": 0
+          }
         },
         {
           "id": "cantrips-3",
-          "ref": "core/Minor_Illusion"
+          "ref": "core/Minor_Illusion",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Minor_Illusion",
+            "castLevel": 0
+          }
         },
         {
           "id": "cantrips-4",
-          "ref": "core/Mind_Sliver"
+          "ref": "core/Mind_Sliver",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Mind_Sliver",
+            "castLevel": 0
+          }
         },
         {
           "id": "cantrips-5",
-          "ref": "core/Shocking_Grasp"
+          "ref": "core/Shocking_Grasp",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Shocking_Grasp",
+            "castLevel": 0
+          }
         },
         {
           "id": "cantrips-6",
-          "ref": "core/Mage_Hand"
+          "ref": "core/Mage_Hand",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Mage_Hand",
+            "castLevel": 0
+          }
         },
         {
           "id": "cantrips-7",
-          "ref": "core/Prestidigitation"
+          "ref": "core/Prestidigitation",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Prestidigitation",
+            "castLevel": 0
+          }
         },
         {
           "id": "cantrips-8",
-          "ref": "core/Message"
+          "ref": "core/Message",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Message",
+            "castLevel": 0
+          }
         },
         {
           "id": "cantrips-9",
-          "ref": "core/True_Strike"
+          "ref": "core/True_Strike",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/True_Strike",
+            "castLevel": 0
+          }
         },
         {
           "id": "cantrips-10",
-          "ref": "core/Mending"
+          "ref": "core/Mending",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Mending",
+            "castLevel": 0
+          }
         }
       ]
     }
@@ -695,27 +837,57 @@
       "entries": [
         {
           "id": "workshop-1",
-          "ref": "core/Cure_Wounds"
+          "ref": "core/Cure_Wounds",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Cure_Wounds",
+            "castLevel": 1
+          }
         },
         {
           "id": "workshop-2",
-          "ref": "core/Faerie_Fire"
+          "ref": "core/Faerie_Fire",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Faerie_Fire",
+            "castLevel": 1
+          }
         },
         {
           "id": "workshop-3",
-          "ref": "core/Identify"
+          "ref": "core/Identify",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Identify",
+            "castLevel": 1
+          }
         },
         {
           "id": "workshop-4",
-          "ref": "core/Detect_Magic"
+          "ref": "core/Detect_Magic",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Detect_Magic",
+            "castLevel": 1
+          }
         },
         {
           "id": "workshop-5",
-          "ref": "core/Healing_Word"
+          "ref": "core/Healing_Word",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Healing_Word",
+            "castLevel": 1
+          }
         },
         {
           "id": "workshop-6",
-          "ref": "core/Ray_of_Sickness"
+          "ref": "core/Ray_of_Sickness",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Ray_of_Sickness",
+            "castLevel": 1
+          }
         }
       ]
     }
@@ -741,35 +913,75 @@
       "entries": [
         {
           "id": "overflow-1",
-          "ref": "core/Alarm"
+          "ref": "core/Alarm",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Alarm",
+            "castLevel": 1
+          }
         },
         {
           "id": "overflow-2",
-          "ref": "core/Find_Familiar"
+          "ref": "core/Find_Familiar",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Find_Familiar",
+            "castLevel": 1
+          }
         },
         {
           "id": "overflow-3",
-          "ref": "core/Arcane_Lock"
+          "ref": "core/Arcane_Lock",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Arcane_Lock",
+            "castLevel": 2
+          }
         },
         {
           "id": "overflow-4",
-          "ref": "core/Tiny_Hut"
+          "ref": "core/Tiny_Hut",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Tiny_Hut",
+            "castLevel": 3
+          }
         },
         {
           "id": "overflow-5",
-          "ref": "core/Glyph_of_Warding"
+          "ref": "core/Glyph_of_Warding",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Glyph_of_Warding",
+            "castLevel": 3
+          }
         },
         {
           "id": "overflow-6",
-          "ref": "core/Revivify"
+          "ref": "core/Revivify",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Revivify",
+            "castLevel": 3
+          }
         },
         {
           "id": "overflow-7",
-          "ref": "core/Telepathic_Bond"
+          "ref": "core/Telepathic_Bond",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Telepathic_Bond",
+            "castLevel": 5
+          }
         },
         {
           "id": "overflow-8",
-          "ref": "core/Teleportation_Circle"
+          "ref": "core/Teleportation_Circle",
+          "item": "core/Spell_Scroll",
+          "scroll": {
+            "spell": "core/Teleportation_Circle",
+            "castLevel": 5
+          }
         }
       ]
     }

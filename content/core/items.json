@@ -568,5 +568,29 @@
         "valueCp": 1000
       }
     }
+  },
+  {
+    "id": "core/Pouch",
+    "kind": "item",
+    "moduleId": "containers",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "Player's Handbook (2024) Pouch: 1 lb, holds up to 6 lb (its 1/5 cubic foot limit is not entered because coins have no recorded volume)"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-22T20:30:00.000Z",
+    "data": {
+      "name": "Pouch",
+      "weight": 1,
+      "container": {
+        "maxWeight": 6,
+        "contentsAddWeight": true
+      }
+    }
   }
 ]

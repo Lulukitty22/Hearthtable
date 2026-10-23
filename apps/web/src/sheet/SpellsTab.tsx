@@ -59,7 +59,16 @@ function AddSpell({
             ...data,
             entries: [
               ...(data["entries"] as Entry[]),
-              { id: `entry-${Date.now()}`, ref: choice },
+              // Adding a spell to a book is mounting its scroll (every book entry is a scroll).
+              {
+                id: `entry-${Date.now()}`,
+                ref: choice,
+                item: "core/Spell_Scroll",
+                scroll: {
+                  spell: choice,
+                  castLevel: spells.find((x) => x.id === choice)?.level ?? 0,
+                },
+              },
             ],
           }));
           setChoice("");

@@ -146,13 +146,31 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
     expect(notReady).toEqual([]);
   });
 
-  test("every item is at the top level and reachable", () => {
+  test("every item is reachable; only the test purse's coins are packed", () => {
     const lines = value<readonly LineRow[]>(carol(), "containers.lines");
+    expect(lines.every((l) => l.accessible && l.status === "resolved")).toBe(
+      true,
+    );
+    expect(lines.filter((l) => l.depth !== 0).map((l) => l.line.id)).toEqual([
+      "coins-pp",
+      "coins-gp",
+      "coins-ep",
+      "coins-sp",
+      "coins-cp",
+    ]);
     expect(
-      lines.every(
-        (l) => l.depth === 0 && l.accessible && l.status === "resolved",
-      ),
-    ).toBe(true);
+      new Set(lines.filter((l) => l.depth !== 0).map((l) => l.line.parent)),
+    ).toEqual(new Set(["test-purse"]));
+  });
+
+  test("every spell in her books is a mounted scroll at its own level", () => {
+    const books = value<readonly BookView[]>(
+      carol(),
+      "spellbook-readiness.books",
+    );
+    const entries = books.flatMap((b) => b.entries);
+    expect(entries.length).toBe(40);
+    expect(entries.every((e) => e.scroll?.castLevel === e.level)).toBe(true);
   });
 
   test("container depth decides accessibility once items are packed", () => {
@@ -664,7 +682,7 @@ describe("scrolls", () => {
     value<readonly Scroll[]>(r, "scrolls.list");
 
   test("Carol's test scrolls are listed loose, with mounting cost at their own level", () => {
-    const scrolls = list(carol());
+    const scrolls = list(carol()).filter((s) => s.place.kind === "inventory");
     expect(
       scrolls.map((s) => [s.name, s.castLevel, s.spent, s.place.kind]),
     ).toEqual([
@@ -735,7 +753,11 @@ describe("scrolls", () => {
     expect(byId.get("scroll-misty-step")?.reasons).toContain(
       "the scroll is spent",
     );
-    expect(list(r).map((s) => [s.id, s.place.kind])).toEqual([
+    expect(
+      list(r)
+        .filter((s) => s.id.startsWith("scroll-"))
+        .map((s) => [s.id, s.place.kind]),
+    ).toEqual([
       ["scroll-fireball", "book"],
       ["scroll-misty-step", "book"],
     ]);

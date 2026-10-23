@@ -28,7 +28,7 @@ Buying something or starting a crafting job shows the cost for review. On confir
 
 ## Implementation — 2026-10-23 at 4:02 am PDT (America/Los_Angeles)
 
-The `currency` system adds up every carried coin into the wallet shown on the Inventory tab; coins are the five `core/...Piece` items, each 0.02 lb (50 to the pound) with its value in copper. `planPayment` is the paying rule: the price is rounded up to the next whole copper, coins are taken smallest first, any coin that turns out not to be needed is put back, and change is given in the largest coins. Electrum is spent like any coin but never given as change, because it is rarely used; that detail is an implementation choice the user can change. Carol carries a labelled test purse (3 pp, 25 gp, 2 ep, 14 sp, 37 cp) because her real gold is not set on her sheet (user decision, 2026-10-23 at 4:02 am PDT (America/Los_Angeles)).
+The `currency` system adds up every carried coin into the wallet shown on the Inventory tab; coins are the five `core/...Piece` items, each 0.02 lb (50 to the pound) with its value in copper. `planPayment` is the paying rule: the price is rounded up to the next whole copper, coins are taken smallest first, any coin that turns out not to be needed is put back, and change is given in the largest coins. Electrum is spent like any coin but never given as change, because it is rarely used; that detail is an implementation choice the user can change. Carol carries a labelled test purse, a published Pouch (1 lb, holds 6 lb) containing 3 pp, 25 gp, 2 ep, 14 sp and 37 cp, because her real gold is not set on her sheet (user decision, 2026-10-23 at 4:02 am PDT (America/Los_Angeles)).
 
 ## Open design
 

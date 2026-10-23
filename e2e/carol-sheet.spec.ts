@@ -278,16 +278,22 @@ test("canister charges appear as counters on the Stats tab", async ({
 });
 
 // Milestone 3, S6: coins are inventory items and add up to a wallet total.
-test("the wallet adds up Carol's coins", async ({ page }) => {
+test("the wallet adds up Carol's coins, kept in her test purse", async ({
+  page,
+}) => {
   await page.goto("/VRLulu/Characters/Carol_Elfnein");
   await page.getByRole("tab", { name: "Inventory" }).click();
   await expect(page.getByTestId("wallet")).toContainText(
     "3 pp, 25 gp, 2 ep, 14 sp, 37 cp",
   );
   await expect(page.getByTestId("wallet")).toContainText("worth 57.77 gp");
+  await page
+    .getByLabel("Carried items")
+    .getByRole("button", { name: "Pouch", exact: true })
+    .click();
   await expect(
     page
-      .getByLabel("Carried items")
+      .getByLabel("Contents of Pouch")
       .getByRole("button", { name: "Gold Piece (gp)" }),
   ).toContainText("×25");
 });
