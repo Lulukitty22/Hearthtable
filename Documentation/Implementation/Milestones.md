@@ -6,7 +6,7 @@ Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acce
 
 Updated 2026-10-23 at 4:57 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 3 Plan](Milestone%203%20Plan.md) owns the slice details.
 
-**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Next is confirming Milestone 4's contents with the user.
+**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Milestone 4's scope is confirmed (2026-10-23 at 5:00 am PDT (America/Los_Angeles)); its plan is being drafted.
 
 | Milestone 3 slice | What it adds | Status |
 |---|---|---|
@@ -20,9 +20,9 @@ Updated 2026-10-23 at 4:57 am PDT (America/Los_Angeles). This section is the one
 
 Every item on Milestone 3's [acceptance list](Milestone%203%20Plan.md#acceptance-agreed-2026-10-23-at-154-am-pdt-americalos_angeles) has a unit or browser test that passes (2026-10-23 at 4:09 am PDT (America/Los_Angeles)).
 
-**After Milestone 3:** Milestone 4 (accounts and campaigns), Milestone 5 (gameplay loop and casting), Milestone 5b (crafting), Milestone 6 (real Firebase, only with the user's approval); see the [roadmap](#roadmap).
+**After Milestone 3:** Milestone 4 (accounts and campaigns), Milestone 5 (gameplay loop and casting), Milestone 5b (crafting), Milestone 5c (trade window), Milestone 6 (real Firebase, only with the user's approval); see the [roadmap](#roadmap).
 
-**Waiting on the user:** confirming Milestone 4's scope; Carol's real gold amount (she has a labelled test purse); review of the Codex chat's Hearthside UI prototypes (`prototypes/hearthside/`, checklist in `REVIEW.md`).
+**Waiting on the user:** Carol's real gold amount (she has a labelled test purse); review of the Codex chat's Hearthside UI prototypes (`prototypes/hearthside/`, checklist in `REVIEW.md`).
 
 **Running it locally:** double-click `Hearthtable Launcher.exe` (or `pnpm start`); see [development setup](Architecture%20and%20Hosting.md#development-setup).
 
@@ -46,9 +46,10 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 | **1. Documentation and theory** | The architecture, rulesets and theory sketches; character creation; hosting and stack; milestone criteria; open-work stubs. | Accepted by the user 2026-10-22 at 11:42 am PDT (America/Los_Angeles) |
 | **2. Engine + Carol offline** | Kernel, Milestone 2 systems, the Vanilla+ ruleset, Carol hand-entered, storage adapters, sheet viewer and basic editor, all on the emulator. | Built 2026-10-23 at 12:08 am PDT; accepted by the user 2026-10-23 at 1:54 am PDT (America/Los_Angeles) |
 | 3. Core systems deep plan | Write a second plan for spells (details, scrolls as items, cost calculation), inventory (lifecycle, currency, ammunition counters) and economy rules. Then build them. Crafting jobs moved to 5b (2026-10-23 at 1:53 am PDT). | Accepted by the user 2026-10-23 at 4:57 am PDT (America/Los_Angeles). [Milestone 3 Plan](Milestone%203%20Plan.md) |
-| 4. Accounts and campaigns on the emulator | Sign-in, Alias, approval, folders, campaigns, membership, privacy, Rules and the Firestore schema. | Tentative |
+| 4. Accounts and campaigns on the emulator | Sign-in, Alias, approval, folders, campaigns, membership, privacy, Rules and the Firestore schema. | Scope confirmed by the user 2026-10-23 at 5:00 am PDT (America/Los_Angeles); plan to be drafted |
 | 5. Gameplay loop | Specify, then build, turns, initiative, rests and conditions. Then the casting workflow: holds, approval, resolution, polls, rolls and effects on the game clock. | Tentative; see [Notes for Milestone 5](#notes-for-milestone-5) |
 | 5b. Crafting | Crafting jobs with paid stretches, split rates and progress: scroll scribing, mounting and removal, Aetherlock rounds, canister refills, magic items, replicas and elixirs ([Crafting Jobs](../Systems/Crafting%20Jobs.md)). Moved from Milestone 3 by the user, 2026-10-23 at 1:53 am PDT. | Tentative |
+| 5c. Trade window | Player-to-player and player-to-DM trades with barter valued in coin from library prices, and selling ([Currency and Trade](../Systems/Currency%20and%20Trade.md#open-design)). Made its own milestone by the user, 2026-10-23 at 5:00 am PDT (America/Los_Angeles); it needs campaigns (Milestone 4). | Tentative |
 | 6. Move to real Firebase | Only with the user's explicit approval: project, region, Blaze, deployment, first administrator. | Tentative |
 | Later | NPCs and encounters, export shell, portraits, Discord bot, LLM helpers, importers, other rulesets and games. | Tentative |
 
@@ -156,7 +157,7 @@ Spells are their own system family; their behavior depends on where a spell is s
 - *Needs spec:* how far a campaign can tweak its ruleset before it should become a new ruleset.
 - Crafting methods: systems provide recipe and cost formulas, rulesets set the numbers. Examples: scroll scribing and mounting; magic-item crafting (gp, workdays, tool proficiency by rarity); Aetherlock ammunition recipes; canister charges and refills; Artificer replicas and elixirs.
 - *Selected 2026-10-23 at 1:53 am PDT:* coins, paying and cost rounding ([Currency and Trade](../Systems/Currency%20and%20Trade.md)).
-- *Future:* a trade window for player-to-player and player-to-DM trades, with barter valued in coin from library prices, and market value kept separate from crafting cost ([Currency and Trade](../Systems/Currency%20and%20Trade.md#open-design)).
+- *Milestone 5c:* a trade window for player-to-player and player-to-DM trades, with barter valued in coin from library prices, and market value kept separate from crafting cost ([Currency and Trade](../Systems/Currency%20and%20Trade.md#open-design)).
 - *Selected 2026-10-23 at 1:53 am PDT:* crafting jobs run in paid stretches of up to one workday, each at the rate in effect when paid; temporary bonuses count while they last; progress is marked by hand until the game clock. Built in Milestone 5b ([Crafting Jobs](../Systems/Crafting%20Jobs.md)).
 - *Needs spec:* economy policy — the parked 120 gp canister refill and DIY casings, work-time rounding and shop prices.
 
