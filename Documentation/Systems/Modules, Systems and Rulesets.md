@@ -22,7 +22,6 @@ Recorded with the user on 2026-10-21, between 12:10 am and 2:06 am PDT (America/
 
 ## Open questions
 
-- Whether privacy beyond character tabs and lines (whole private campaigns or characters, DM-only notes, hidden actions) is also screen-only or enforced by Security Rules.
 - Modern Fantasy's use of magic and its armor model: deliberately left open until that ruleset is needed. The architecture only has to allow it.
 - Whether the Roblox catalog can be queried directly from a browser (see [the non-5e sketch](#another-game-roblox-roleplay-outfits)).
 - How far campaign overrides may go before they should become a new ruleset.

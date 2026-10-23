@@ -86,7 +86,7 @@ Sources: [Durable Objects pricing](https://developers.cloudflare.com/durable-obj
 
 ## Security Rules scope
 
-Rules check who may read and write: campaign membership, the DM role, delegation and its revocation, DM approval for character changes, the account approval and administrator fields, and site-administrator read access. They do not check whether a hold amount or a calculation is correct, and they do not hide private character tabs or lines (privacy there is screen-only).
+Rules check who may read and write: campaign membership, the DM role, delegation and its revocation, DM approval for character changes, the account approval and administrator fields, and site-administrator read access. They do not check whether a hold amount or a calculation is correct, and they do not hide private content: all privacy (campaigns, characters, tabs, lines, DM-only notes) is screen-only ([Character-sheet visibility](../Systems/Campaigns%20and%20Shared%20Data.md#character-sheet-visibility)).
 
 ## Local development on the emulator
 
