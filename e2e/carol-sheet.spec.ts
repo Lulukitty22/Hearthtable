@@ -157,3 +157,31 @@ test("a potion cannot be dropped into a chamber", async ({ page }) => {
     page.getByRole("region", { name: "Unsaved changes" }),
   ).toBeHidden();
 });
+
+test("the header and every tab show the same numbers from one resolved state", async ({
+  page,
+}) => {
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
+  const header = async () => ({
+    ac: await page.getByTestId("armor-class").textContent(),
+    attack: await page.getByTestId("spell-attack-wizard").textContent(),
+  });
+  await page.getByRole("button", { name: "Mage Armor" }).click();
+  const first = await header();
+  expect(first.ac).toBe("16");
+  for (const tab of ["Inventory", "Spells & Books", "Features", "Stats"]) {
+    await page.getByRole("tab", { name: tab }).click();
+    expect(await header()).toEqual(first);
+  }
+  await page.getByRole("tab", { name: "Spells & Books" }).click();
+  await expect(
+    page.locator(".vital-label", { hasText: /^Level 1$/ }).first(),
+  ).toBeVisible();
+  const slots = await page
+    .locator(".vital", { hasText: /^Level \d/ })
+    .allTextContents();
+  expect(
+    slots.map((t) => t.replace(/\s+/g, " ").match(/(\d+) \/ (\d+)/)?.[2]),
+  ).toEqual(["7", "3", "3", "3", "2", "1"]);
+  await page.getByRole("button", { name: "Discard" }).click();
+});

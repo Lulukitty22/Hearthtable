@@ -418,3 +418,36 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
     });
   });
 });
+
+describe("one resolved state", () => {
+  test("every view's list agrees with the single values, and each value is computed once", () => {
+    const r = carol();
+    const abilities = value<
+      readonly { id: string; score: { value: number } }[]
+    >(r, "abilities.all");
+    for (const a of abilities)
+      expect(a.score.value).toBe(value(r, `abilities.${a.id}.score`));
+    const skills = value<readonly { id: string; total: { value: number } }[]>(
+      r,
+      "skills.all",
+    );
+    for (const s of skills)
+      expect(s.total.value).toBe(value(r, `skills.${s.id}.total`));
+    const profiles = value<
+      readonly { id: string; attack: { value: number } }[]
+    >(r, "spellcasting.profiles");
+    for (const p of profiles)
+      expect(p.attack.value).toBe(
+        value(r, `spellcasting.classes.${p.id}.attack`),
+      );
+    // Reading again returns the very same resolved value, not a recomputation.
+    for (const key of [
+      "hit-points.max",
+      "armor-class.total",
+      "initiative.total",
+      "spellcasting.slots",
+    ]) {
+      expect(r.get(key)).toBe(r.get(key));
+    }
+  });
+});

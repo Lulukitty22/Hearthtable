@@ -4,7 +4,7 @@ A hosted web app for running tabletop RPG campaigns together: live character she
 
 ## Status
 
-Milestone 2 (engine and Carol offline); see [Milestones](Documentation/Implementation/Milestones.md). Milestone 2 has started: the workspace is scaffolded (see [development setup](Documentation/Implementation/Architecture%20and%20Hosting.md#development-setup)), but there is no app logic, Firebase project or character data yet. Hearthtable replaces Character Manager, an earlier static HTML/JavaScript app that saved characters as JSON committed to GitHub. Its code was intentionally not carried over; the archive is [Lulukitty22/Character_Manager](https://github.com/Lulukitty22/Character_Manager).
+Milestone 2 (engine and Carol offline); see [Milestones](Documentation/Implementation/Milestones.md). Milestone 2's build is complete and awaiting the user's acceptance: the rules engine, the Hearthtable Vanilla+ ruleset, Carol's hand-entered records, saving to the local Firebase emulator and her sheet in the browser all work (see [development setup](Documentation/Implementation/Architecture%20and%20Hosting.md#development-setup) for how to run it). There is no real Firebase project yet; accounts and campaigns come in Milestone 4. Hearthtable replaces Character Manager, an earlier static HTML/JavaScript app that saved characters as JSON committed to GitHub. Its code was intentionally not carried over; the archive is [Lulukitty22/Character_Manager](https://github.com/Lulukitty22/Character_Manager).
 
 ## Selected direction
 

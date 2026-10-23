@@ -12,6 +12,7 @@ import type {
 import { hearthtableVanillaPlus } from "@hearthtable/ruleset-hearthtable-vanilla-plus";
 import type { Repository, StorageError } from "@hearthtable/storage";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { settleDrafts } from "./saveDrafts";
 
 export const engine = createEngine(hearthtableVanillaPlus);
 
@@ -142,6 +143,8 @@ export function useSheet(
   const save = useCallback(
     async (note: string) => {
       if (drafts.size === 0) return true;
+      // The drafts as sent; edits made while the save is in flight are kept (settleDrafts).
+      const sent = drafts;
       setSaving(true);
       const now = new Date().toISOString();
       const entry: RecordEnvelope = {
@@ -155,12 +158,12 @@ export function useSheet(
         updatedAt: now,
         data: {
           at: now,
-          changed: [...drafts.keys()],
+          changed: [...sent.keys()],
           ...(note.trim() ? { note: note.trim() } : {}),
         },
         raw: {},
       };
-      const result = await repo.save([...drafts.values(), entry], { now });
+      const result = await repo.save([...sent.values(), entry], { now });
       setSaving(false);
       if (!result.ok) {
         setSaveErrors(result.errors);
@@ -171,7 +174,7 @@ export function useSheet(
         for (const r of result.value) next.set(r.id, r);
         return next;
       });
-      setDrafts(new Map());
+      setDrafts((current) => settleDrafts(current, sent, result.value));
       setSaveErrors([]);
       return true;
     },
