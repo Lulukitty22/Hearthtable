@@ -723,7 +723,7 @@ export function InventoryTab(props: TabProps) {
       <h2>Inventory</h2>
       {weight && (
         <p className="muted">
-          Carried weight: {weight.pounds} lb known
+          Carried weight: {Number(weight.pounds.toFixed(2))} lb known
           {weight.unknown > 0 &&
             `; ${weight.unknown} items of unknown weight not counted`}
         </p>
