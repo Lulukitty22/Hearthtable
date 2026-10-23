@@ -81,6 +81,46 @@ export interface WeaponView {
   };
 }
 
+/** A charge canister in the inventory, with the weapon it is installed in, if any. */
+export interface CanisterView {
+  readonly lineId: string;
+  readonly ref: string;
+  readonly name: string;
+  readonly charges?: number;
+  readonly max: number;
+  readonly installedIn?: { readonly lineId: string; readonly name: string };
+}
+
+/** Every canister the character carries, as counters (Aetherlock Engineered Rounds, S5).
+ * Display only: spending charges belongs to the Milestone 5 casting workflow. */
+function canisters(ctx: ResolveContext): readonly CanisterView[] {
+  const all = ctx.get<readonly LineRow[]>("containers.lines");
+  if (all.kind === "unresolved") return [];
+  const installed = new Map<string, { lineId: string; name: string }>();
+  for (const row of all.value) {
+    const state = parseWith(LineState, row.line, row.line.id);
+    const id = state.ok ? state.value.magazine?.canister : undefined;
+    if (id) installed.set(id, { lineId: row.line.id, name: row.name });
+  }
+  return all.value.flatMap((row): CanisterView[] => {
+    const rules = parseWith(WeaponRules, row.definition ?? {}, row.line.ref);
+    if (!rules.ok || !rules.value.canister) return [];
+    const state = parseWith(LineState, row.line, row.line.id);
+    const charges = state.ok ? state.value.charges : undefined;
+    const where = installed.get(row.line.id);
+    return [
+      {
+        lineId: row.line.id,
+        ref: row.line.ref,
+        name: row.name,
+        max: rules.value.canister.charges,
+        ...(charges === undefined ? {} : { charges }),
+        ...(where ? { installedIn: where } : {}),
+      },
+    ];
+  });
+}
+
 function weapons(ctx: ResolveContext): readonly WeaponView[] {
   const all = ctx.get<readonly LineRow[]>("containers.lines");
   if (all.kind === "unresolved") return [];
@@ -175,9 +215,19 @@ export const magazines: KernelModule = {
     extends: [DERIVATIONS_POINT],
     provides: { extensionPoints: [ROUND_PAYLOADS_POINT] },
   },
-  setup: (ctx) =>
+  setup: (ctx) => {
     ctx.extend(DERIVATIONS_POINT, {
       key: "magazines.weapons",
       compute: (rc: ResolveContext) => known(weapons(rc), "Chambered weapons"),
-    }),
+    });
+    ctx.extend(DERIVATIONS_POINT, {
+      key: "magazines.canisters",
+      compute: (rc: ResolveContext) => {
+        const list = canisters(rc);
+        return known(list, "Charge canisters", {
+          note: `${list.reduce((n, c) => n + (c.charges ?? 0), 0)} charges in ${list.length} canisters`,
+        });
+      },
+    });
+  },
 };

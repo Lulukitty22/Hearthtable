@@ -1,7 +1,9 @@
 import type { Value } from "@hearthtable/kernel";
 import type { AttunedSlot } from "@hearthtable/system-attunement";
+import type { CanisterView } from "@hearthtable/system-magazines";
 import type { ResourcePool } from "@hearthtable/system-resources";
 import { Explained } from "./Explained";
+import { EntryLink } from "./entries";
 import { known, type TabProps } from "./shared";
 
 interface AbilityRow {
@@ -42,6 +44,8 @@ export function StatsTab(props: TabProps) {
     ) ?? [];
   const pools =
     known(resolved.get<readonly ResourcePool[]>("resources.pools")) ?? [];
+  const canisters =
+    known(resolved.get<readonly CanisterView[]>("magazines.canisters")) ?? [];
   const attunement = known(
     resolved.get<{ used: number; max: number; slots: readonly AttunedSlot[] }>(
       "attunement.slots",
@@ -143,8 +147,34 @@ export function StatsTab(props: TabProps) {
                 </td>
               </tr>
             ))}
+            {canisters.map((c, i) => (
+              <tr key={c.lineId} data-testid={`canister-${c.lineId}`}>
+                <td>
+                  <EntryLink id={c.ref} props={props}>
+                    {c.name} {i + 1}
+                  </EntryLink>{" "}
+                  <span className="muted">
+                    ({c.installedIn ? `in ${c.installedIn.name}` : "spare"})
+                  </span>
+                </td>
+                <td className="num">
+                  {c.charges ?? (
+                    <span className="unresolved" title="No charges recorded">
+                      ?
+                    </span>
+                  )}{" "}
+                  / {c.max}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
+        {canisters.length > 0 && (
+          <p className="muted">
+            Canister charges are display only for now; firing the Aetherlock
+            spends them once the casting workflow exists (Milestone 5).
+          </p>
+        )}
 
         <h2 style={{ marginTop: 16 }}>Attunement</h2>
         {attunement ? (

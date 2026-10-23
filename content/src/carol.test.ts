@@ -762,3 +762,18 @@ describe("scrolls", () => {
     expect(withScrolls - without).toBeCloseTo(0.3, 6);
   });
 });
+
+// Milestone 3, S5: canister charges as counters (Aetherlock Engineered Rounds).
+test("each canister is a counter, with the installed one named", () => {
+  type Canister = import("@hearthtable/system-magazines").CanisterView;
+  const list = value<readonly Canister[]>(carol(), "magazines.canisters");
+  expect(
+    list.map((c) => [c.lineId, c.charges, c.max, c.installedIn?.name]),
+  ).toEqual([
+    ["canister-1", 12, 12, "Aetherlock"],
+    ["canister-2", 12, 12, undefined],
+    ["canister-3", 12, 12, undefined],
+    ["canister-4", 12, 12, undefined],
+    ["canister-5", 12, 12, undefined],
+  ]);
+});

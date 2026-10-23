@@ -261,3 +261,18 @@ test("a scroll mounts into a spellbook and comes back out", async ({
   ).toContainText("spent");
   await page.getByRole("button", { name: "Discard" }).click();
 });
+
+// Milestone 3, S5: canister charges show as counters next to the other resources.
+test("canister charges appear as counters on the Stats tab", async ({
+  page,
+}) => {
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
+  await page.getByRole("tab", { name: "Stats" }).click();
+  await expect(page.getByTestId("canister-canister-1")).toContainText(
+    "in Aetherlock",
+  );
+  await expect(page.getByTestId("canister-canister-1")).toContainText(
+    "12 / 12",
+  );
+  await expect(page.getByTestId("canister-canister-5")).toContainText("spare");
+});
