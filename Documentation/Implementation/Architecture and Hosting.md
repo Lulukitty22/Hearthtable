@@ -116,6 +116,7 @@ Scaffolded 2026-10-22 at 12:17 pm PDT (America/Los_Angeles) (Milestone 2, Step B
 | `pnpm dev` | Run the web app at `http://localhost:5173` |
 | `pnpm emulators` | Start the Auth, Firestore, Storage and Hosting emulators, with the emulator UI at `http://localhost:4000`. Data is loaded from `.emulator-data` (git-ignored) and saved there on a clean stop with Ctrl+C; delete the folder to start fresh |
 | `pnpm seed` | With the emulators running, add the core content and Carol; records that already exist are skipped and listed, never overwritten |
+| `pnpm seed --refresh` | Also updates seeded records nobody has changed since seeding (so improved content reaches the emulator); changed records are listed and kept |
 | `pnpm check` | Typecheck, lint, check formatting and run unit tests |
 | `pnpm test:emulator` | Run the emulator tests inside a temporary emulator on the test ports (`firebase.test.json`) |
 | `pnpm test:e2e` | Run the Playwright tests against their own dev server (port 5174) and a temporary emulator on separate ports (`firebase.test.json`), so they can run beside your own `pnpm dev` and `pnpm emulators` without touching your data |
