@@ -2,6 +2,30 @@
 
 Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acceptance criteria, the Milestone 2 build steps and the feature inventory. Status: written 2026-10-21 at 4:00 am PDT (America/Los_Angeles) during Milestone 1 (Step A4). Milestone 1 was accepted on 2026-10-22 at 11:42 am PDT, with no changes to the Milestone 2 build steps; coding may start with Step B. Step B (scaffold) was completed 2026-10-22 at 12:17 pm PDT (America/Los_Angeles); its commands are in [Architecture and Hosting](Architecture%20and%20Hosting.md#development-setup). Step C (kernel) was completed 2026-10-22 at 12:46 pm PDT (America/Los_Angeles) in `packages/kernel`, with unit tests for the envelope round trip, the registry's undeclared-dependency rejection and the ruleset compatibility check. Step D (systems and game module) was completed 2026-10-22 at 1:13 pm PDT (America/Los_Angeles): the thirteen Milestone 2 systems in `packages/systems` and `packages/games/dnd5e-2024`, with an integration test that reproduces Carol's documented numbers from a test fixture. The Artificer slot table is verified only at level 3 (the level Carol uses); its other rows follow the earlier published table and are marked unverified in the class record. Step E (ruleset) was completed 2026-10-22 at 1:18 pm PDT (America/Los_Angeles): `packages/rulesets/hearthtable-vanilla-plus/src/hearthtable-vanilla-plus.json` holds the Vanilla+ data, and a test checks it names only existing systems, methods and variables. Step F (Carol's content) was completed 2026-10-22 at 1:42 pm PDT (America/Los_Angeles) in `content/`, with the Milestone 2 expected-values test in `content/src/carol.test.ts`; `pnpm peek` prints her resolved sheet. Step G (storage) was completed 2026-10-22 at 1:52 pm PDT (America/Los_Angeles): both adapters pass the same contract tests, including the no-change and edit round trips (the Firestore one against the emulator), and `pnpm seed` loads Carol into the emulator. Step H (sheet viewer and editor) was completed 2026-10-22 at 2:26 pm PDT (America/Los_Angeles): `pnpm dev` shows Carol's sheet from the emulator in the selected dark fantasy theme, with Stats, Inventory, Spells & Books and Features tabs declared by the systems; editing of HP, quantities, book contents, active effects and the Wand's held state; and saving with an optional note into the sheet's history. Two Playwright tests cover the browser acceptance checks.
 
+## Current progress
+
+Updated 2026-10-23 at 3:20 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 3 Plan](Milestone%203%20Plan.md) owns the slice details.
+
+**Now:** Milestone 3, building slices S4–S7. Milestones 1 and 2 are accepted.
+
+| Milestone 3 slice | What it adds | Status |
+|---|---|---|
+| S1 Concentration limit | Tracks maintained concentration spells against the limit and warns when over it | Built (engine only, not shown on the sheet yet) |
+| S2 Scroll costs | Scribing and mounting prices and times from the Arcana multiplier | Built (engine only, not shown on the sheet yet) |
+| S3 Spell details | Summaries, facts table, credited SRD 5.2.1 text, overflow test book | Built; effect facts reviewed by the user 2026-10-23 at 3:20 am PDT (America/Los_Angeles) |
+| S4 Scrolls as items | Scroll items holding their spell; drag into a spellbook (one entry); mounting cost shown; spent marker; 0.1 lb | Next |
+| S5 Charge counters | Each canister's charges shown as a counter, display only | Planned |
+| S6 Coins | Five coins as inventory items, 50 per pound, wallet total, payment rounding | Planned |
+| S7 Item lifecycle | Lost or destroyed marking; moving a container with contents asks first | Planned |
+
+When S7 is done, Milestone 3 is checked against its [acceptance list](Milestone%203%20Plan.md#acceptance-agreed-2026-10-23-at-154-am-pdt-americalos_angeles).
+
+**After Milestone 3:** Milestone 4 (accounts and campaigns), Milestone 5 (gameplay loop and casting), Milestone 5b (crafting), Milestone 6 (real Firebase, only with the user's approval); see the [roadmap](#roadmap).
+
+**Waiting on the user:** review of the Codex chat's Hearthside UI prototypes (`prototypes/hearthside/`, checklist in `REVIEW.md`).
+
+**Running it locally:** double-click `Hearthtable Launcher.exe` (or `pnpm start`); see [development setup](Architecture%20and%20Hosting.md#development-setup).
+
 ## Selected decisions
 
 Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):

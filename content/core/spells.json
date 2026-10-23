@@ -52,7 +52,7 @@
           "kind": "cantrip",
           "dice": ["1d10", "2d10", "3d10", "4d10"]
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -109,7 +109,7 @@
           "kind": "cantrip",
           "dice": ["1d8", "2d8", "3d8", "4d8"]
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -157,7 +157,7 @@
       },
       "summary": "Creates a small illusory sound or a still image of an object; a creature that studies it can see through it with an Investigation check.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -209,7 +209,7 @@
           "kind": "cantrip",
           "dice": ["1d6", "2d6", "3d6", "4d6"]
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -266,7 +266,7 @@
           "kind": "cantrip",
           "dice": ["1d8", "2d8", "3d8", "4d8"]
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -320,7 +320,7 @@
       },
       "summary": "Summons a spectral hand that can carry up to 10 pounds and handle simple objects, but cannot attack or use magic items.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -377,7 +377,7 @@
       },
       "summary": "A handful of small magical tricks: harmless sensory effects, lighting candles, cleaning, warming, marking or conjuring trinkets.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -429,7 +429,7 @@
       },
       "summary": "Whispers a message to one creature in range, which can whisper a reply only you hear.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -493,7 +493,7 @@
           "dice": ["0", "1d6", "2d6", "3d6"],
           "of": "extra Radiant damage"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -545,7 +545,7 @@
       },
       "summary": "Repairs a single break or tear up to a foot across in an object; it does not restore a magic item's magic.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -601,7 +601,7 @@
       "summary": "A willing unarmored creature's base AC becomes 13 plus its Dexterity modifier for the duration.",
       "effect": {
         "acBase": "13 + DEX",
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -654,7 +654,7 @@
       "summary": "A reaction barrier: +5 AC until the start of your next turn, including against the triggering attack, and no damage from Magic Missile.",
       "effect": {
         "acBonus": 5,
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -716,7 +716,7 @@
           "per": "2d8",
           "of": "healing"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -767,7 +767,7 @@
           "success": "none"
         },
         "area": "20-foot Cube",
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -813,7 +813,7 @@
       },
       "summary": "Learns a touched magic item's properties, attunement and charges, or which spells affect a touched creature.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -869,7 +869,7 @@
       },
       "summary": "Senses magic within 30 feet and lets you see its auras and spell schools.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -924,7 +924,7 @@
           "per": "2d4",
           "of": "healing"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -982,7 +982,7 @@
           "per": "1d8",
           "of": "damage"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1041,7 +1041,7 @@
           "kind": "slot",
           "note": "one additional ray per slot level above 2"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1088,7 +1088,7 @@
       },
       "summary": "Three illusory duplicates that may take hits meant for you; each hit rolls a d6 per duplicate, and a 3 or higher destroys one instead.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1133,7 +1133,7 @@
       },
       "summary": "Teleports you up to 30 feet to a space you can see, as a Bonus Action.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1187,7 +1187,7 @@
           "success": "none"
         },
         "area": "20-foot Cube",
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1250,7 +1250,7 @@
           "per": "1d6",
           "of": "damage"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1299,7 +1299,7 @@
           "ability": "con",
           "success": "none"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1359,7 +1359,7 @@
           "kind": "slot",
           "note": "automatically ends spells up to the slot level used"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1406,7 +1406,7 @@
       },
       "summary": "Turns raw materials into finished goods of the same material, up to Large (Medium for metal or stone).",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1468,7 +1468,7 @@
           "per": "1d8",
           "of": "damage"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1514,7 +1514,7 @@
       },
       "summary": "Creates an invisible, nearly indestructible wall, dome or globe of force that nothing can physically pass.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1582,7 +1582,7 @@
           "kind": "slot",
           "note": "Slam damage +1d4 (Medium or smaller), +1d6 (Large) or +1d12 (Huge) per slot level above 5"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1643,7 +1643,7 @@
           "kind": "slot",
           "note": "one additional bolt per slot level above 6"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1706,7 +1706,7 @@
           "per": "3d6",
           "of": "damage"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1753,7 +1753,7 @@
       "summary": "Takes on an otherworldly form: a 40-foot flying speed, +2 AC, damage and condition immunities by the planes chosen, and two weapon attacks using your spellcasting ability.",
       "effect": {
         "acBonus": 2,
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1800,7 +1800,7 @@
       },
       "summary": "Wards a door, window or small area for 8 hours, alerting you audibly or mentally when a creature enters.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1850,7 +1850,7 @@
       },
       "summary": "Summons a spirit familiar in a small animal form that you can talk to telepathically and see through.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1895,7 +1895,7 @@
       },
       "summary": "Magically locks a closed door or container so only chosen creatures, or a password, can open it.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -1944,7 +1944,7 @@
       "summary": "Raises a stationary, comfortable dome around you for 8 hours that bars outsiders and blocks spells of level 3 or lower.",
       "effect": {
         "area": "10-foot Emanation",
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -2013,7 +2013,7 @@
           "per": "1d8",
           "of": "damage"
         },
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -2058,7 +2058,7 @@
       },
       "summary": "Returns a creature that died within the last minute to life with 1 hit point.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -2104,7 +2104,7 @@
       },
       "summary": "Links up to eight willing creatures telepathically for an hour, across any distance on the same plane.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   },
@@ -2152,7 +2152,7 @@
       },
       "summary": "Draws a circle that opens a portal to a known permanent teleportation circle until the end of your next turn.",
       "effect": {
-        "review": "unreviewed"
+        "review": "reviewed"
       }
     }
   }
