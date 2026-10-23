@@ -196,200 +196,240 @@
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
-      "attuned": ["aetherlock", "wand", "manifold", "indomitable"],
       "lines": [
         {
           "id": "aetherlock",
           "ref": "account/VRLulu/Items/Aetherlock",
           "quantity": 1,
+          "attunedTo": "account/VRLulu/Characters/Carol_Elfnein",
           "magazine": {
             "canister": "canister-1"
-          }
+          },
+          "attunedSlot": 1
         },
         {
           "id": "wand",
           "ref": "core/Wand_of_the_War_Mage_+1",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": "account/VRLulu/Characters/Carol_Elfnein",
+          "attunedSlot": 2
         },
         {
           "id": "manifold",
           "ref": "core/Manifold_Tool",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": "account/VRLulu/Characters/Carol_Elfnein",
+          "attunedSlot": 3
         },
         {
           "id": "indomitable",
           "ref": "account/VRLulu/Items/Indomitable_(INT)",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": "account/VRLulu/Characters/Carol_Elfnein",
+          "attunedSlot": 4
         },
         {
           "id": "goggles",
           "ref": "core/Goggles_of_Night",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "alchemy-jug",
           "ref": "core/Alchemy_Jug",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "combat-book",
           "ref": "core/Enduring_Spellbook",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "cantrips-book",
           "ref": "core/Enduring_Spellbook",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "workshop-book",
           "ref": "core/Enduring_Spellbook",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "alchemists-supplies",
           "ref": "core/Alchemist's_Supplies",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "herbalism-kit",
           "ref": "core/Herbalism_Kit",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "tinkers-tools",
           "ref": "core/Tinker's_Tools",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "calligraphers-supplies",
           "ref": "core/Calligrapher's_Supplies",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "component-pouch",
           "ref": "core/Component_Pouch",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "identify-pearl",
           "ref": "core/Pearl_(100_gp)",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "guise-object",
           "ref": "core/Engraved_planar_object_(500_gp)",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "potions",
           "ref": "core/Potion_of_Healing",
-          "quantity": 4
+          "quantity": 4,
+          "attunedTo": null
         },
         {
           "id": "canister-1",
           "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
+          "attunedTo": null,
           "charges": 12
         },
         {
           "id": "canister-2",
           "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
+          "attunedTo": null,
           "charges": 12
         },
         {
           "id": "canister-3",
           "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
+          "attunedTo": null,
           "charges": 12
         },
         {
           "id": "canister-4",
           "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
+          "attunedTo": null,
           "charges": 12
         },
         {
           "id": "canister-5",
           "ref": "account/VRLulu/Items/Charge_canister",
           "quantity": 1,
+          "attunedTo": null,
           "charges": 12
         },
         {
           "id": "basic-rounds",
           "ref": "account/VRLulu/Items/Basic_Round",
-          "quantity": 18
+          "quantity": 18,
+          "attunedTo": null
         },
         {
           "id": "arcane-rounds",
           "ref": "account/VRLulu/Items/Arcane_Round",
-          "quantity": 6
+          "quantity": 6,
+          "attunedTo": null
         },
         {
           "id": "cone-of-cold-spellrounds",
           "ref": "account/VRLulu/Items/Spellround_(Cone_of_Cold)",
-          "quantity": 3
+          "quantity": 3,
+          "attunedTo": null
         },
         {
           "id": "he-frag-rounds",
           "ref": "account/VRLulu/Items/HE-FRAG_Round",
-          "quantity": 3
+          "quantity": 3,
+          "attunedTo": null
         },
         {
           "id": "shield-spellrounds",
           "ref": "account/VRLulu/Items/Spellround_(Shield)",
-          "quantity": 2
+          "quantity": 2,
+          "attunedTo": null
         },
         {
           "id": "cure-wounds-spellrounds",
           "ref": "account/VRLulu/Items/Spellround_(Cure_Wounds)",
-          "quantity": 2
+          "quantity": 2,
+          "attunedTo": null
         },
         {
           "id": "robe",
           "ref": "core/Robe",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "ink",
           "ref": "core/Ink",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "paper",
           "ref": "core/Paper",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "rope",
           "ref": "core/Rope",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "bedroll",
           "ref": "core/Bedroll",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "waterskin",
           "ref": "core/Waterskin",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "rations",
           "ref": "core/Rations_(1_day)",
-          "quantity": 7
+          "quantity": 7,
+          "attunedTo": null
         },
         {
           "id": "bag-of-holding-1",
           "ref": "core/Bag_of_Holding",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         },
         {
           "id": "bag-of-holding-2",
           "ref": "core/Bag_of_Holding",
-          "quantity": 1
+          "quantity": 1,
+          "attunedTo": null
         }
       ]
     }

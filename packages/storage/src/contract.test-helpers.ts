@@ -180,6 +180,16 @@ export function repositoryContract(
       expect(await ok(repo.get(bad.id))).toBeUndefined();
     });
 
+    test("an undefined field is rejected before anything is written", async () => {
+      const bad = {
+        ...(carolElfnein[0] as RecordEnvelope),
+        data: { name: "Carol", attunedSlot: undefined },
+      };
+      const result = await repo.save([bad], { now: NOW });
+      expect(!result.ok && result.errors[0]?.code).toBe("invalid");
+      expect(await ok(repo.get(bad.id))).toBeUndefined();
+    });
+
     test("listing a sheet returns it and its tabs, not neighbours with similar names", async () => {
       const neighbour = {
         ...(carolElfnein[0] as RecordEnvelope),

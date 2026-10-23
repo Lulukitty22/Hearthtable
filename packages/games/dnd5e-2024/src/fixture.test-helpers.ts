@@ -290,7 +290,6 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
     ...(options.prepared ? { spellbook: { prepared: options.prepared } } : {}),
   });
   const inventory = record("account/test/carol.inventory", "inventory", {
-    attuned: ["wand", "aetherlock"],
     lines: [
       { id: "indomitable", ref: "core/indomitable", quantity: 1 },
       {
@@ -298,11 +297,15 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
         ref: "core/wand_of_the_war_mage_1",
         quantity: 1,
         held: options.wandHeld ?? false,
+        attunedTo: "account/test/carol",
+        attunedSlot: 1,
       },
       {
         id: "aetherlock",
         ref: "campaign/test/aetherlock",
         quantity: 1,
+        attunedTo: "account/test/carol",
+        attunedSlot: 2,
         magazine: {
           chambers: ["round-1", "round-2", null],
           canister: "canister-1",

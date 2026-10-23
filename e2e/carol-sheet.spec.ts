@@ -61,3 +61,28 @@ test("Mage Armor and Shield change AC from active state, and the Wand only spell
   await page.getByRole("button", { name: "Discard" }).click();
   await expect(page.getByTestId("armor-class")).toHaveText("13");
 });
+
+test("ending and restoring an attunement changes the item's bonus", async ({
+  page,
+}) => {
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
+  const int = page.getByTestId("ability-int");
+  await expect(int).toHaveText("22");
+  await page.getByRole("tab", { name: "Inventory" }).click();
+  await page.getByRole("button", { name: "Indomitable (INT)" }).click();
+  await expect(
+    page.getByText("Attuned to Carol Elfnein, slot 4"),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "End attunement" }).click();
+  await expect(page.getByText("Not attuned")).toBeVisible();
+  await page.getByRole("button", { name: "Attune", exact: true }).click();
+  await expect(
+    page.getByText("Attuned to Carol Elfnein, slot 4"),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "End attunement" }).click();
+  await page.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("tab", { name: "Stats" }).click();
+  await expect(int).toHaveText("20");
+  await page.getByRole("button", { name: "Discard" }).click();
+  await expect(int).toHaveText("22");
+});

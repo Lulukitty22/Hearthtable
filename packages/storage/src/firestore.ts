@@ -25,6 +25,7 @@ import {
   ancestorsOf,
   conflict,
   nestedListPath,
+  undefinedPath,
   type Repository,
   type StorageError,
   type StorageResult,
@@ -115,6 +116,13 @@ export function firestoreRepository(db: Firestore): Repository {
             message: `${r.id} appears twice in one save.`,
           });
         seen.add(r.id);
+        const missing = undefinedPath(r.data);
+        if (missing)
+          invalid.push({
+            code: "invalid",
+            id: r.id,
+            message: `${r.id}: data.${missing} is undefined; remove the field instead of setting it to undefined.`,
+          });
         const nested = nestedListPath(r.data);
         if (nested)
           invalid.push({

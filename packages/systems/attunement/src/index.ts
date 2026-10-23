@@ -3,8 +3,11 @@
 // or attuned and held (the Wand of the War Mage's +1 to spell attacks). A line with quantity 0
 // grants nothing.
 //
-// Attunement is an ordered list of slots (user decision, 2026-10-22): the inventory records
-// `attuned` as line ids in the owner's chosen order. There are `maxSlots` slots plus any bonus
+// Attunement is recorded on each inventory line (user decision, 2026-10-22), like quantity or
+// charges: `attunedTo` is the path of the character the item is attuned to, or null when it is
+// not attuned, and `attunedSlot` is its position in the owner's chosen order. Only lines attuned
+// to the character whose inventory holds them count; a line attuned to someone else grants this
+// character nothing and is noted. Attuned items form an ordered list of slots: `maxSlots` plus any bonus
 // grants aimed at `attunement.slots`, such as Indomitable's +1 while attuned. Items past the
 // limit, in that order, are flagged and warned about; nothing is unattuned automatically and
 // the recorded state stays as authored. Attuning without a class requirement also warns.
@@ -12,6 +15,7 @@
 import type { LineRow } from "@hearthtable/system-containers";
 import {
   DERIVATIONS_POINT,
+  samePath,
   GRANT_SOURCES_POINT,
   amountValue,
   grantsOf,
@@ -19,7 +23,6 @@ import {
   known,
   parseGrants,
   parseWith,
-  readField,
   sum,
   type GrantSource,
   type KernelModule,
@@ -32,6 +35,8 @@ import { z } from "zod";
 const LineState = z.looseObject({
   held: z.boolean().optional(),
   equipped: z.boolean().optional(),
+  attunedTo: z.string().nullable().optional(),
+  attunedSlot: z.number().int().min(1).optional(),
 });
 
 const ItemRules = z.looseObject({
@@ -133,36 +138,34 @@ export const attunement: KernelModule = {
     ctx.extend(DERIVATIONS_POINT, {
       key: "attunement.order",
       compute: (rc: ResolveContext) => {
-        const order = readField(
-          rc,
-          "inventory",
-          "attuned",
-          z.array(z.string()).optional(),
-        ).flatMap((f) => f.value ?? []);
-        const lines = new Set(lineRows(rc).map((r) => r.line.id));
-        const seen = new Set<string>();
-        for (const id of order) {
-          if (!lines.has(id))
+        const character = rc.ofKind("character")[0]?.id;
+        const attuned: { id: string; slot: number; index: number }[] = [];
+        lineRows(rc).forEach((row, index) => {
+          const state = parseWith(LineState, row.line, row.line.id);
+          const to = state.ok ? state.value.attunedTo : undefined;
+          if (!state.ok || to === undefined || to === null) return;
+          if (character === undefined || !samePath(to, character)) {
             rc.report(
               issue(
-                "error",
-                "attunement.missing-line",
-                `Attuned line ${id} is not in the inventory.`,
-                id,
+                "info",
+                "attunement.other-character",
+                `${row.name} is attuned to ${to}, not to this character, so it grants nothing here.`,
+                row.line.id,
               ),
             );
-          if (seen.has(id))
-            rc.report(
-              issue(
-                "error",
-                "attunement.duplicate",
-                `Line ${id} is attuned twice.`,
-                id,
-              ),
-            );
-          seen.add(id);
-        }
-        return known(order, "Attunement order");
+            return;
+          }
+          attuned.push({
+            id: row.line.id,
+            slot: state.value.attunedSlot ?? Number.POSITIVE_INFINITY,
+            index,
+          });
+        });
+        attuned.sort((a, b) => a.slot - b.slot || a.index - b.index);
+        return known(
+          attuned.map((a) => a.id),
+          "Attunement order",
+        );
       },
     });
     ctx.extend(DERIVATIONS_POINT, {

@@ -61,7 +61,7 @@ export function StatsTab(props: TabProps) {
           {abilities.map((a) => (
             <div key={a.id} className="vital">
               <div className="vital-label">{a.label}</div>
-              <div className="vital-value">
+              <div className="vital-value" data-testid={`ability-${a.id}`}>
                 <Explained value={a.score} />
               </div>
               <Explained value={a.modifier} style="signed" />

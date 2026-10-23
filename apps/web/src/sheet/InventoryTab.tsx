@@ -47,16 +47,77 @@ export function displayName(props: TabProps, row: LineRow): string {
   return typeof title === "string" ? title : row.name;
 }
 
+/** Attuning sets the line's `attunedTo` to this character and puts it in the last slot. */
+function Attunement({
+  props,
+  line,
+  position,
+  attunedCount,
+}: {
+  props: TabProps;
+  line: Line;
+  position: number;
+  attunedCount: number;
+}) {
+  const to = line["attunedTo"] as string | null | undefined;
+  const required = (
+    props.records.get(line["ref"] as string)?.data as
+      { attunement?: { required?: boolean } } | undefined
+  )?.attunement?.required;
+  if (!required && (to === undefined || to === null)) return null;
+  const characterName = String(
+    (
+      props.records.get(props.characterId)?.data as
+        { name?: unknown } | undefined
+    )?.name ?? props.characterId,
+  );
+  return (
+    <span>
+      {position >= 0 ? (
+        <span className="badge good">
+          Attuned to {characterName}, slot {position + 1}
+        </span>
+      ) : to ? (
+        <span className="badge warn">Attuned to {to}</span>
+      ) : (
+        <span className="badge">Not attuned</span>
+      )}{" "}
+      <button
+        type="button"
+        className="secondary"
+        onClick={() =>
+          editLine(props, line.id, (l) =>
+            position >= 0
+              ? (({ attunedSlot: _slot, ...rest }) => ({
+                  ...rest,
+                  attunedTo: null,
+                }))(l)
+              : {
+                  ...l,
+                  attunedTo: props.characterId,
+                  attunedSlot: attunedCount + 1,
+                },
+          )
+        }
+      >
+        {position >= 0 ? "End attunement" : "Attune"}
+      </button>
+    </span>
+  );
+}
+
 function ItemDetail({
   props,
   row,
   position,
+  attunedCount,
   weapon,
   onClose,
 }: {
   props: TabProps;
   row: LineRow;
   position: number;
+  attunedCount: number;
   weapon?: WeaponView;
   onClose: () => void;
 }) {
@@ -125,10 +186,13 @@ function ItemDetail({
             `Packed ${row.depth} deep`
           )}
           {!row.accessible && <span className="badge warn">out of reach</span>}
-          {position >= 0 && (
-            <span className="badge good">attuned, slot {position + 1}</span>
-          )}
         </span>
+        <Attunement
+          props={props}
+          line={line}
+          position={position}
+          attunedCount={attunedCount}
+        />
       </div>
 
       {book && (
@@ -205,11 +269,9 @@ export function InventoryTab(props: TabProps) {
   const weight = known(props.resolved.get<Weight>("containers.carriedWeight"));
   const weapons =
     known(props.resolved.get<readonly WeaponView[]>("magazines.weapons")) ?? [];
+  // Attuned line ids in slot order, as resolved from each line's `attunedTo` and `attunedSlot`.
   const attuned =
-    (
-      sheetRecord(props, "inventory")?.data as
-        { attuned?: string[] } | undefined
-    )?.attuned ?? [];
+    known(props.resolved.get<readonly string[]>("attunement.order")) ?? [];
   const openRow = lines.find((l) => l.line.id === open);
   const openWeapon = weapons.find((w) => w.lineId === open);
 
@@ -253,6 +315,7 @@ export function InventoryTab(props: TabProps) {
           props={props}
           row={openRow}
           position={attuned.indexOf(openRow.line.id)}
+          attunedCount={attuned.length}
           {...(openWeapon ? { weapon: openWeapon } : {})}
           onClose={() => setOpen(undefined)}
         />

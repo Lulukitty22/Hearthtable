@@ -10,6 +10,7 @@ import {
 import {
   conflict,
   nestedListPath,
+  undefinedPath,
   type Repository,
   type StorageError,
   type StorageResult,
@@ -76,6 +77,13 @@ export function memoryRepository(
         ) {
           errors.push(conflict(r.id, r.revision, actual));
         }
+        const missing = undefinedPath(r.data);
+        if (missing)
+          errors.push({
+            code: "invalid",
+            id: r.id,
+            message: `${r.id}: data.${missing} is undefined; remove the field instead of setting it to undefined.`,
+          });
         const nested = nestedListPath(r.data);
         if (nested)
           errors.push({

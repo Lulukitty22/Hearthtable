@@ -69,6 +69,23 @@ export function ancestorsOf(id: string): readonly string[] {
   return parts.slice(0, -1).map((_, i) => parts.slice(0, i + 1).join("/"));
 }
 
+/** Firestore cannot store `undefined`; remove the field instead. Reports where one occurs. */
+export function undefinedPath(value: unknown, path = ""): string | undefined {
+  if (value === undefined) return path || "(the value itself)";
+  if (Array.isArray(value)) {
+    for (const [i, item] of value.entries()) {
+      const inner = undefinedPath(item, `${path}[${i}]`);
+      if (inner) return inner;
+    }
+  } else if (typeof value === "object" && value !== null) {
+    for (const [k, v] of Object.entries(value)) {
+      const inner = undefinedPath(v, path ? `${path}.${k}` : k);
+      if (inner) return inner;
+    }
+  }
+  return undefined;
+}
+
 /** Firestore cannot store a list directly inside a list; report where one occurs. */
 export function nestedListPath(value: unknown, path = ""): string | undefined {
   if (Array.isArray(value)) {

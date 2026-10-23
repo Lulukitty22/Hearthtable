@@ -233,12 +233,31 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
     ]);
   });
 
+  test("an item attuned to another character grants this one nothing", () => {
+    const r = engine.resolve(
+      edited({
+        inventory: (data) => ({
+          ...data,
+          lines: (data["lines"] as Record<string, unknown>[]).map((l) =>
+            l["id"] === "indomitable"
+              ? { ...l, attunedTo: "account/VRLulu/Characters/Someone_Else" }
+              : l,
+          ),
+        }),
+      }),
+    );
+    expect(value(r, "abilities.int.score")).toBe(20);
+    expect(r.issues.map((i) => i.code)).toContain("attunement.other-character");
+  });
+
   test("unattuning Indomitable removes its +2 INT and its slot", () => {
     const r = engine.resolve(
       edited({
         inventory: (data) => ({
           ...data,
-          attuned: ["aetherlock", "wand", "manifold"],
+          lines: (data["lines"] as Record<string, unknown>[]).map((l) =>
+            l["id"] === "indomitable" ? { ...l, attunedTo: null } : l,
+          ),
         }),
       }),
     );
@@ -251,7 +270,11 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
       edited({
         inventory: (data) => ({
           ...data,
-          attuned: ["aetherlock", "wand", "manifold", "indomitable", "goggles"],
+          lines: (data["lines"] as Record<string, unknown>[]).map((l) =>
+            l["id"] === "goggles"
+              ? { ...l, attunedTo: CAROL_ID, attunedSlot: 5 }
+              : l,
+          ),
         }),
       }),
     );
