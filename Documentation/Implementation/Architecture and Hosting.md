@@ -19,7 +19,7 @@ Recorded with the user on 2026-10-21 between 12:10 am and 12:51 am PDT (America/
 
 ## Open questions
 
-- How the first site administrator is set on real Firebase: by hand in the Firebase console, or with a one-off local script. Decide at Milestone 6 (user decision, 2026-10-21 at 4:00 am PDT).
+- How the first site administrator is set on real Firebase: by hand, either editing the account document in the Firebase console or placing the document directly (user direction, 2026-10-22 at 11:45 pm PDT (America/Los_Angeles)); the exact steps are written at Milestone 6.
 - Firebase region, project setup and billing: wait for the user's explicit approval (Milestone 6).
 - Whether privacy beyond character tabs and lines is enforced by Rules; owned by [Modules, Systems and Rulesets](../Systems/Modules%2C%20Systems%20and%20Rulesets.md#open-questions).
 

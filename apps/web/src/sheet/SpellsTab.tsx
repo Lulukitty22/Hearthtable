@@ -10,7 +10,8 @@ import type {
 import { useState } from "react";
 import { Explained } from "./Explained";
 import { EntryBody } from "./entries";
-import { DetailPanel, Tile, TileGrid } from "./Grid";
+import { DetailPanel, DropTarget, Tile, TileGrid } from "./Grid";
+import { bookDrop } from "./InventoryTab";
 import { known, sheetRecords, type Data, type TabProps } from "./shared";
 
 type Entry = { id: string; ref: string };
@@ -137,6 +138,9 @@ export function SpellsTab(props: TabProps) {
         book.name,
     );
 
+  const [message, setMessage] = useState<string | undefined>();
+  const drops = { props, notice: setMessage };
+
   const openBook = books.find((b) => b.lineId === open?.book);
   const openEntry = openBook?.entries.find((e) => e.id === open?.entry);
 
@@ -155,6 +159,23 @@ export function SpellsTab(props: TabProps) {
         </div>
       </section>
 
+      {message && (
+        <p className="error-box" role="status">
+          {message}{" "}
+          <button
+            type="button"
+            className="link-button"
+            onClick={() => setMessage(undefined)}
+            aria-label="Dismiss"
+          >
+            ×
+          </button>
+        </p>
+      )}
+      <p className="muted">
+        Drag a spell onto another book to move it; it keeps its level.
+      </p>
+
       {books.map((book) => {
         const record = recordFor(book);
         const title = titleOf(book);
@@ -165,7 +186,12 @@ export function SpellsTab(props: TabProps) {
             e,
           ]);
         return (
-          <section key={book.lineId} className="panel">
+          <DropTarget
+            key={book.lineId}
+            className="panel"
+            drop={bookDrop(drops, book.lineId)}
+            aria-label={`Book ${title}`}
+          >
             <h2>
               {title}{" "}
               <span
@@ -192,7 +218,10 @@ export function SpellsTab(props: TabProps) {
                         ? "Cantrips"
                         : `Level ${level}`}
                   </div>
-                  <TileGrid>
+                  <TileGrid
+                    drop={bookDrop(drops, book.lineId, level)}
+                    label={`${title}, ${level === 0 ? "cantrips" : `level ${level}`}`}
+                  >
                     {entries.map((e) => (
                       <Tile
                         key={e.id}
@@ -205,6 +234,16 @@ export function SpellsTab(props: TabProps) {
                         onOpen={() =>
                           setOpen({ book: book.lineId, entry: e.id })
                         }
+                        {...(record
+                          ? {
+                              drag: {
+                                kind: "entry" as const,
+                                bookRecordId: record.id,
+                                entryId: e.id,
+                                level: e.level ?? -1,
+                              },
+                            }
+                          : {})}
                       />
                     ))}
                   </TileGrid>
@@ -217,7 +256,7 @@ export function SpellsTab(props: TabProps) {
                 present={new Set(book.entries.map((e) => e.ref))}
               />
             )}
-          </section>
+          </DropTarget>
         );
       })}
 

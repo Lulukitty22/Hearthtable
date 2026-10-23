@@ -7,7 +7,15 @@ export default defineConfig({
   workers: 1,
   // Its own dev server and emulator ports (firebase.test.json), so a running local session is untouched.
   use: { baseURL: "http://localhost:5174" },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1600, height: 1000 },
+      },
+    },
+  ],
   webServer: {
     command: "pnpm --filter @hearthtable/web dev --port 5174 --strictPort",
     env: { VITE_FIRESTORE_EMULATOR_PORT: "8180" },

@@ -1,7 +1,8 @@
-// Chambered weapons: chambers, what each holds, and the installed charge canister. Milestone 2
-// covers display only; firing, loading actions and charge costs come later. A weapon definition
-// declares `magazine.chambers`; the weapon's inventory line records each chamber's round (a line
-// id, or null when empty) and which canister line is installed. A canister definition declares
+// Chambered weapons: chambers, what each holds, and the installed charge canister. Firing and
+// charge costs come later. A weapon definition declares `magazine.chambers`, and its chambers
+// are the weapon's container slots (2026-10-22): a round is loaded by placing a round line inside
+// the weapon with that chamber's `slot`. The weapon's line records which canister line is
+// installed (`magazine.canister`). A canister definition declares
 // `canister.charges` and its line records charges remaining. The Aetherlock attaches as data.
 // A weapon's `aim` names the ability its attacks use and whether the wielder is proficient (the
 // Aetherlock's proficient INT guidance is a campaign rule); bonus grants aimed at `weapons.aim`
@@ -26,6 +27,20 @@ export const ROUND_PAYLOADS_POINT = "magazines.roundPayloads";
 
 const WeaponRules = z.looseObject({
   magazine: z.object({ chambers: z.number().int().min(1) }).optional(),
+  container: z
+    .looseObject({
+      slots: z
+        .array(
+          z.object({
+            id: z.string(),
+            label: z.string().optional(),
+            x: z.number(),
+            y: z.number(),
+          }),
+        )
+        .optional(),
+    })
+    .optional(),
   canister: z.object({ charges: z.number().int().min(1) }).optional(),
   aim: z.object({ ability: z.string(), proficient: z.boolean() }).optional(),
 });
@@ -33,7 +48,6 @@ const WeaponRules = z.looseObject({
 const LineState = z.looseObject({
   magazine: z
     .object({
-      chambers: z.array(z.string().nullable()).optional(),
       canister: z.string().nullable().optional(),
     })
     .optional(),
@@ -42,6 +56,13 @@ const LineState = z.looseObject({
 
 export interface ChamberView {
   readonly index: number;
+  /** The container slot this chamber is, with its grid position. */
+  readonly slot: {
+    readonly id: string;
+    readonly label?: string | undefined;
+    readonly x: number;
+    readonly y: number;
+  };
   readonly round?: { readonly lineId: string; readonly name: string };
 }
 
@@ -50,8 +71,6 @@ export interface WeaponView {
   readonly name: string;
   readonly chambers: readonly ChamberView[];
   readonly loaded: number;
-  /** False when the line records no chamber contents yet (shown as "not recorded", not empty). */
-  readonly chambersRecorded: boolean;
   /** Attack bonus, when the weapon declares how it aims. */
   readonly aim?: Value<number>;
   readonly canister?: {
@@ -71,34 +90,24 @@ function weapons(ctx: ResolveContext): readonly WeaponView[] {
     const rules = parseWith(WeaponRules, row.definition ?? {}, row.line.ref);
     if (!rules.ok || !rules.value.magazine) continue;
     const state = parseWith(LineState, row.line, row.line.id);
-    const recorded = state.ok ? (state.value.magazine?.chambers ?? []) : [];
     const size = rules.value.magazine.chambers;
-    if (recorded.length > size) {
+    const slots = rules.value.container?.slots ?? [];
+    if (slots.length !== size) {
       ctx.report(
         issue(
           "error",
-          "magazines.too-many-chambers",
-          `${row.name} records ${recorded.length} chambers but has ${size}.`,
-          row.line.id,
+          "magazines.chamber-slots",
+          `${row.name} has ${size} chambers but ${slots.length} chamber slots.`,
+          row.line.ref,
         ),
       );
     }
-    const chambers = Array.from({ length: size }, (_, index): ChamberView => {
-      const id = recorded[index] ?? null;
-      if (id === null) return { index };
-      const round = byId.get(id);
-      if (!round) {
-        ctx.report(
-          issue(
-            "error",
-            "magazines.missing-round",
-            `${row.name} chamber ${index + 1} holds missing line ${id}.`,
-            row.line.id,
-          ),
-        );
-        return { index, round: { lineId: id, name: "Reference not found" } };
-      }
-      return { index, round: { lineId: id, name: round.name } };
+    const inside = all.value.filter((r) => r.line.parent === row.line.id);
+    const chambers = slots.map((slot, index): ChamberView => {
+      const round = inside.find((r) => r.line.slot === slot.id);
+      return round
+        ? { index, slot, round: { lineId: round.line.id, name: round.name } }
+        : { index, slot };
     });
     const canisterId = state.ok ? state.value.magazine?.canister : undefined;
     let canister: WeaponView["canister"];
@@ -152,8 +161,6 @@ function weapons(ctx: ResolveContext): readonly WeaponView[] {
       ...(aim ? { aim } : {}),
       chambers,
       loaded: chambers.filter((c) => c.round).length,
-      chambersRecorded:
-        state.ok && state.value.magazine?.chambers !== undefined,
       ...(canister ? { canister } : {}),
     });
   }

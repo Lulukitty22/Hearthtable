@@ -15,12 +15,55 @@
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
       "name": "Aetherlock",
+      "weight": 8,
       "attunement": {
         "required": true,
         "requiresClass": "core/Artificer"
       },
       "magazine": {
         "chambers": 6
+      },
+      "container": {
+        "slots": [
+          {
+            "id": "top-left",
+            "label": "Top left",
+            "x": -1,
+            "y": 2
+          },
+          {
+            "id": "top-right",
+            "label": "Top right",
+            "x": 1,
+            "y": 2
+          },
+          {
+            "id": "middle-left",
+            "label": "Middle left",
+            "x": -2,
+            "y": 0
+          },
+          {
+            "id": "middle-right",
+            "label": "Middle right",
+            "x": 2,
+            "y": 0
+          },
+          {
+            "id": "bottom-left",
+            "label": "Bottom left",
+            "x": -1,
+            "y": -2
+          },
+          {
+            "id": "bottom-right",
+            "label": "Bottom right",
+            "x": 1,
+            "y": -2
+          }
+        ],
+        "accepts": ["aetherlock-round"],
+        "contentsAddWeight": true
       },
       "aim": {
         "ability": "int",
@@ -64,7 +107,8 @@
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
-      "name": "Basic Round"
+      "name": "Basic Round",
+      "tags": ["aetherlock-round"]
     }
   },
   {
@@ -82,7 +126,8 @@
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
-      "name": "Arcane Round"
+      "name": "Arcane Round",
+      "tags": ["aetherlock-round"]
     }
   },
   {
@@ -100,7 +145,8 @@
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
-      "name": "Spellround (Cone of Cold)"
+      "name": "Spellround (Cone of Cold)",
+      "tags": ["aetherlock-round"]
     }
   },
   {
@@ -118,7 +164,8 @@
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
-      "name": "HE-FRAG Round"
+      "name": "HE-FRAG Round",
+      "tags": ["aetherlock-round"]
     }
   },
   {
@@ -136,7 +183,8 @@
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
-      "name": "Spellround (Shield)"
+      "name": "Spellround (Shield)",
+      "tags": ["aetherlock-round"]
     }
   },
   {
@@ -154,7 +202,8 @@
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
-      "name": "Spellround (Cure Wounds)"
+      "name": "Spellround (Cure Wounds)",
+      "tags": ["aetherlock-round"]
     }
   },
   {
@@ -173,9 +222,11 @@
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
       "name": "Indomitable (INT)",
+      "weight": 0,
       "attunement": {
         "required": true
       },
+      "canBeLost": false,
       "grants": [
         {
           "type": "bonus",

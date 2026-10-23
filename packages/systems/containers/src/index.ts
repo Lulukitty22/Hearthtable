@@ -4,6 +4,11 @@
 // the inventory root; a line is accessible when its depth is at most `maxAccessibleDepth`.
 // Unknown measurements are never treated as zero: totals say how many are unknown. Capacity
 // problems are warnings; an explicit override keeps the contents and the warning visible.
+//
+// A container may have fixed slots laid out on a grid (user decision, 2026-10-22), such as the
+// Aetherlock's six chambers in a hexagonal ring. A line inside it names its `slot`; each slot
+// holds one item. A container may also say which kinds of item it `accepts`, by tag. Breaking a
+// slot or kind rule is a visible warning, like overfilling; the recorded state is kept.
 
 import {
   DERIVATIONS_POINT,
@@ -21,6 +26,8 @@ export const InventoryLine = z.looseObject({
   ref: z.string(),
   quantity: z.number().int().min(0),
   parent: z.string().optional(),
+  /** Slot id inside a slotted container, such as a chamber. */
+  slot: z.string().optional(),
   capacityOverride: z.boolean().optional(),
 });
 export type InventoryLine = z.infer<typeof InventoryLine>;
@@ -31,8 +38,23 @@ export const ItemDefinition = z.looseObject({
   weight: z.number().min(0).optional(),
   /** Cubic feet per unit; absent means unknown. */
   volume: z.number().min(0).optional(),
+  /** Kinds this item counts as for containers' `accepts`, e.g. `aetherlock-round`. */
+  tags: z.array(z.string()).optional(),
   container: z
     .object({
+      /** Fixed slots with grid positions (x right, y up); each holds one item. */
+      slots: z
+        .array(
+          z.object({
+            id: z.string(),
+            label: z.string().optional(),
+            x: z.number(),
+            y: z.number(),
+          }),
+        )
+        .optional(),
+      /** Only items carrying one of these tags belong here. */
+      accepts: z.array(z.string()).optional(),
       maxWeight: z.number().min(0).optional(),
       maxVolume: z.number().min(0).optional(),
       maxCount: z.number().int().min(0).optional(),
@@ -184,6 +206,86 @@ function carried(
   return { pounds, unknown };
 }
 
+function checkSlotsAndKinds(
+  ctx: ResolveContext,
+  row: LineRow,
+  inside: readonly LineRow[],
+) {
+  const limits = row.definition?.container;
+  if (!limits) return;
+  const slotIds = new Set((limits.slots ?? []).map((s) => s.id));
+  const taken = new Map<string, string>();
+  for (const child of inside) {
+    const where = `${child.name} in ${row.name}`;
+    if (
+      limits.accepts &&
+      !(child.definition?.tags ?? []).some((t) => limits.accepts?.includes(t))
+    ) {
+      ctx.report(
+        issue(
+          "warning",
+          "containers.wrong-kind",
+          `${where}: ${row.name} only holds ${limits.accepts.join(", ")}.`,
+          child.line.id,
+        ),
+      );
+    }
+    const slot = child.line.slot;
+    if (slotIds.size === 0) {
+      if (slot !== undefined)
+        ctx.report(
+          issue(
+            "warning",
+            "containers.no-slots",
+            `${where} names slot ${slot}, but ${row.name} has no slots.`,
+            child.line.id,
+          ),
+        );
+      continue;
+    }
+    if (slot === undefined) {
+      ctx.report(
+        issue(
+          "warning",
+          "containers.unslotted",
+          `${where} is not in any slot.`,
+          child.line.id,
+        ),
+      );
+    } else if (!slotIds.has(slot)) {
+      ctx.report(
+        issue(
+          "error",
+          "containers.unknown-slot",
+          `${where} names slot ${slot}, which ${row.name} does not have.`,
+          child.line.id,
+        ),
+      );
+    } else {
+      const other = taken.get(slot);
+      if (other)
+        ctx.report(
+          issue(
+            "warning",
+            "containers.slot-taken",
+            `${where} shares slot ${slot} with ${other}; a slot holds one item.`,
+            child.line.id,
+          ),
+        );
+      taken.set(slot, child.name);
+      if (child.line.quantity > 1)
+        ctx.report(
+          issue(
+            "warning",
+            "containers.slot-over",
+            `${where} holds ${child.line.quantity} in one slot; a slot holds one item.`,
+            child.line.id,
+          ),
+        );
+    }
+  }
+}
+
 function checkCapacity(
   ctx: ResolveContext,
   all: readonly LineRow[],
@@ -193,6 +295,7 @@ function checkCapacity(
     const limits = row.definition?.container;
     if (!limits) continue;
     const inside = children.get(row.line.id) ?? [];
+    checkSlotsAndKinds(ctx, row, inside);
     const contents = inside.reduce(
       (acc, c) => {
         const w = carried(c, children);

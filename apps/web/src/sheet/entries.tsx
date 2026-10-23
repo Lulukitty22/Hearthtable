@@ -203,6 +203,8 @@ interface ContainerRules {
   readonly maxWeight?: number;
   readonly maxVolume?: number;
   readonly maxCount?: number;
+  readonly slots?: readonly unknown[];
+  readonly accepts?: readonly string[];
   readonly contentsAddWeight: boolean;
 }
 
@@ -211,10 +213,13 @@ function ContainerLine({ c }: { c: ContainerRules }) {
     c.maxWeight !== undefined && `${c.maxWeight} lb`,
     c.maxVolume !== undefined && `${c.maxVolume} cu ft`,
     c.maxCount !== undefined && `${c.maxCount} items`,
+    c.slots !== undefined && `${c.slots.length} slots, one item each`,
+    c.accepts !== undefined &&
+      `holds only ${c.accepts.map((a) => a.replace(/-/g, " ")).join(", ")}`,
   ].filter(Boolean);
   return (
     <p>
-      Container: {limits.join(", ")}
+      Container: {limits.length > 0 ? limits.join(", ") : "no stated limits"}
       {!c.contentsAddWeight && " (contents add no weight)"}
     </p>
   );

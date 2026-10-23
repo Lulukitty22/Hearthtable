@@ -7,8 +7,8 @@ Updated 2026-10-18. This document owns the selected campaign mechanics for Carol
 | Rule | Selected value |
 |---|---|
 | Attunement | Requires an Artificer. Aetherlock, permanent Wand and permanent Manifold use Carol's three slots. |
-| Frame | Two-Handed rifle, no Light property. Weight remains open. |
-| Capacity | Six unrestricted chambers, with any available mix. Physical rounds do not refill on rests. |
+| Frame | Two-Handed rifle, no Light property. Weight 8 lb (selected 2026-10-22 at 11:45 pm PDT (America/Los_Angeles)). |
+| Capacity | Six unrestricted chambers, with any available mix. Physical rounds do not refill on rests. The chambers sit in a hexagonal ring around an empty centre (0, 0): top-left (-1, +2), top-right (+1, +2), middle-left (-2, 0), middle-right (+2, 0), bottom-left (-1, -2), bottom-right (+1, -2) (selected 2026-10-22 at 11:45 pm PDT (America/Los_Angeles)). Each holds one round. |
 | Range | 80/240 ft. Attack rolls have Disadvantage beyond 80 ft; no delivery beyond 240 ft. This replaces compatible payload casting range, including Touch; other area/target restrictions remain except explicit Self/cone changes. |
 | Aim | d20 +11: INT +6 and proficiency bonus +5 under the proficient INT-guidance campaign rule. Wand does not boost gun aim. |
 | Basic damage | 2d10 +6 Piercing, mean 17. Spellround and HE-FRAG replace this damage entirely. |

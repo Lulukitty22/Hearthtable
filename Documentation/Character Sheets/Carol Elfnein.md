@@ -87,7 +87,7 @@ The spell grants 40 ft flight, +2 AC, magical weapon attacks using casting abili
 | Category | Selected equipment |
 |---|---|
 | Attuned, 4/4 | In order: Gifted Aetherlock; permanent Wand of the War Mage +1; permanent Manifold Tool; Indomitable (its own +1 slot makes four) |
-| DM grants | Indomitable: requires attunement; while attuned, +2 INT and +1 attunement slot (selected 2026-10-22 at 1:42 pm PDT (America/Los_Angeles)). Weight and whether it can be lost are not yet set by the DM |
+| DM grants | Indomitable: requires attunement; while attuned, +2 INT and +1 attunement slot (selected 2026-10-22 at 1:42 pm PDT (America/Los_Angeles)). Weightless (0 lb) and cannot be lost (selected 2026-10-22 at 11:45 pm PDT (America/Los_Angeles)) |
 | Usual replicas | Goggles of Night; Alchemy Jug |
 | Books | Three permanent Enduring Spellbooks, 16/10/6 entries |
 | Physical tools | Alchemist, Herbalism, Tinker and Calligrapher kits |
@@ -104,7 +104,7 @@ Past purchase/crafting details and gold are unspecified; do not invent debits. D
 
 Custom Artificer-attuned Two-Handed rifle, no Light property, range 80/240 ft, six unrestricted chambers. Proficient INT aim is +11; Basic damage is 2d10 +6 Piercing. Each permitted attack fires 1–3 Basic/Arcane projectiles or one Spellround/HE-FRAG. Guise provides two attack opportunities; fresh True Strike instead uses its normal Magic action for one enhanced projectile. There is no free True Strike added to a Guise burst.
 
-Physical loading and chamber/fuze selection have no separate action cost. Replacing a charge canister costs a Bonus Action and immediately locks the rifle through the entire next own turn; it is ready at the start of the second subsequent own turn. This also blocks rifle Shield reactions. Rifle weight and initial loaded order remain pending.
+Physical loading and chamber/fuze selection have no separate action cost. Replacing a charge canister costs a Bonus Action and immediately locks the rifle through the entire next own turn; it is ready at the start of the second subsequent own turn. This also blocks rifle Shield reactions. The rifle weighs 8 lb (selected 2026-10-22 at 11:45 pm PDT (America/Los_Angeles)). Its initial loaded order remains pending; rounds are loaded in the app by dragging them into the chambers.
 
 Scroll payloads preserve donor formulas and use no fresh payload slot at firing. Current binder casting instead uses the current caster's resources and statistics. Fuzes, valid targets, friendly fire, Shield delivery and charge costs follow the [weapon rules](../Class%20Reference/Aetherlock%20Engineered%20Rounds.md); [the ledger](../Class%20Reference/Aetherlock%20Costs%20and%20Damage.md) owns crafting and firing-power prices. Scribing a new scroll and installing/removing an existing one are separate operations under the selected [scroll lifecycle](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md).
 | Starting rounds | Carried | Spell level |
@@ -126,9 +126,8 @@ See the weapon and ledger for activation, consumption, refill and cost rules.
 
 - Future idea, 2026-10-20: the [Oblex's memory-based impersonations](https://www.dndbeyond.com/posts/235-meet-d-ds-new-scariest-monster-in-mordenkainens) may provide a reference if Autoscorers are revisited. This is an unselected possibility, not a restored feature or current equipment.
 - Genuine unusual payload/critical/Potent Cantrip interactions, unwilling recipients and manufacture-workspace/donor details; most ordinary cases already follow normal spell rules.
-- Indomitable item: weight and whether it can be lost are not yet set by the DM.
 - Starting state and placement, selected 2026-10-22 at 1:42 pm PDT (America/Los_Angeles): she starts fresh (HP 95/95, nothing spent, nothing active), and every item sits at the top level of her inventory until it is arranged in the editor. Weights use the 2024 equipment table where an item is published; spellbooks, replicas and custom items stay unknown.
-- Rifle weight, starting loaded chambers, ongoing grenade/casing/Basic Round supply/prices, remaining minor components/hand-use/provenance checks.
+- Starting loaded chambers, ongoing grenade/casing/Basic Round supply/prices, remaining minor components/hand-use/provenance checks.
 - Continue [systems design](../Systems/Campaigns%20and%20Shared%20Data.md) from the accepted baseline; [Lessons from Character Manager](../Implementation/Lessons%20from%20Character%20Manager.md) lists failure modes to avoid. Implement later; rebuild from this sheet rather than migrating old JSON.
 
 ## Sources

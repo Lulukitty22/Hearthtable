@@ -181,12 +181,24 @@ export const DEFINITIONS: readonly RecordEnvelope[] = [
     name: "Aetherlock",
     attunement: { required: true, requiresClass: "core/Artificer" },
     magazine: { chambers: 6 },
+    container: {
+      slots: ["a", "b", "c", "d", "e", "f"].map((id, i) => ({
+        id,
+        x: i,
+        y: 0,
+      })),
+      accepts: ["aetherlock-round"],
+      contentsAddWeight: true,
+    },
   }),
   item("campaign/test/charge_canister", {
     name: "Charge canister",
     canister: { charges: 12 },
   }),
-  item("campaign/test/basic_round", { name: "Basic Round" }),
+  item("campaign/test/basic_round", {
+    name: "Basic Round",
+    tags: ["aetherlock-round"],
+  }),
   spell(
     "core/mage_armor",
     "Mage Armor",
@@ -306,10 +318,7 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
         quantity: 1,
         attunedTo: "account/test/carol",
         attunedSlot: 2,
-        magazine: {
-          chambers: ["round-1", "round-2", null],
-          canister: "canister-1",
-        },
+        magazine: { canister: "canister-1" },
       },
       {
         id: "canister-1",
@@ -317,8 +326,20 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
         quantity: 1,
         charges: 12,
       },
-      { id: "round-1", ref: "campaign/test/basic_round", quantity: 1 },
-      { id: "round-2", ref: "campaign/test/basic_round", quantity: 1 },
+      {
+        id: "round-1",
+        ref: "campaign/test/basic_round",
+        quantity: 1,
+        parent: "aetherlock",
+        slot: "a",
+      },
+      {
+        id: "round-2",
+        ref: "campaign/test/basic_round",
+        quantity: 1,
+        parent: "aetherlock",
+        slot: "b",
+      },
       { id: "backpack", ref: "core/backpack", quantity: 1 },
       {
         id: "combat-book",

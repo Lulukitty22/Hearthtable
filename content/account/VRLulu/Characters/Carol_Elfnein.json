@@ -79,7 +79,7 @@
         },
         {
           "ref": "core/Wizard_skill_proficiencies",
-          "from": "Wizard",
+          "from": "Wizard 1",
           "choices": {
             "first": "investigation",
             "second": "insight"
@@ -87,56 +87,56 @@
         },
         {
           "ref": "core/Ritual_Adept",
-          "from": "Wizard"
+          "from": "Wizard 1"
         },
         {
           "ref": "core/Arcane_Recovery",
-          "from": "Wizard"
+          "from": "Wizard 1"
         },
         {
           "ref": "core/Scholar",
-          "from": "Wizard",
+          "from": "Wizard 2",
           "choices": {
             "skill": "arcana"
           }
         },
         {
           "ref": "core/Memorize_Spell",
-          "from": "Wizard"
+          "from": "Wizard 5"
         },
         {
           "ref": "core/Evocation_Savant",
-          "from": "Evoker"
+          "from": "Evoker (Wizard 3)"
         },
         {
           "ref": "core/Potent_Cantrip",
-          "from": "Evoker"
+          "from": "Evoker (Wizard 3)"
         },
         {
           "ref": "core/Sculpt_Spells",
-          "from": "Evoker"
+          "from": "Evoker (Wizard 6)"
         },
         {
           "ref": "core/Empowered_Evocation",
-          "from": "Evoker"
+          "from": "Evoker (Wizard 10)"
         },
         {
           "ref": "core/Ability_Score_Improvement",
-          "from": "Wizard feat choice",
+          "from": "Wizard 4 feat",
           "choices": {
             "ability": "int"
           }
         },
         {
           "ref": "core/War_Caster",
-          "from": "Wizard feat choice",
+          "from": "Wizard 8 feat",
           "choices": {
             "ability": "int"
           }
         },
         {
           "ref": "core/Skill_Expert",
-          "from": "Wizard feat choice",
+          "from": "Wizard 12 feat",
           "choices": {
             "ability": "dex",
             "proficiency": "perception",
@@ -145,26 +145,26 @@
         },
         {
           "ref": "core/Artificer_multiclass_proficiencies",
-          "from": "Artificer (multiclass)",
+          "from": "Artificer 1 (multiclass)",
           "choices": {
             "skill": "nature"
           }
         },
         {
           "ref": "core/Tinker's_Magic",
-          "from": "Artificer"
+          "from": "Artificer 1"
         },
         {
           "ref": "core/Replicate_Magic_Item",
-          "from": "Artificer"
+          "from": "Artificer 2"
         },
         {
           "ref": "core/Alchemist",
-          "from": "Alchemist"
+          "from": "Alchemist (Artificer 3)"
         },
         {
           "ref": "core/Experimental_Elixir",
-          "from": "Alchemist"
+          "from": "Alchemist (Artificer 3)"
         }
       ],
       "hitPoints": {

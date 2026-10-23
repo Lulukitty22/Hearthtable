@@ -534,3 +534,90 @@ dialog.detail::backdrop {
 .entry-link.missing {
   color: var(--bad);
 }
+
+/* Drag and drop, floating windows and chambers (engine chat, 2026-10-22; restyle freely) */
+
+dialog.detail {
+  position: fixed;
+  margin: 0;
+  z-index: 40;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.55);
+}
+
+.detail-head {
+  cursor: move;
+  user-select: none;
+}
+
+.tile[draggable="true"] {
+  cursor: grab;
+}
+
+.drop-zone {
+  min-height: 72px;
+  border: 1px dashed transparent;
+  border-radius: var(--radius);
+  padding: 4px;
+}
+
+.drop-ok {
+  outline: 2px solid var(--good);
+  outline-offset: 2px;
+}
+
+.drop-no {
+  outline: 2px dashed var(--bad);
+  outline-offset: 2px;
+}
+
+.chamber-ring {
+  position: relative;
+  margin: 8px auto;
+}
+
+.chamber {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--bg-sunken);
+}
+
+.chamber .tile {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 0.65rem;
+}
+
+.chamber-empty {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.inventory-layout.with-windows {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 440px);
+  gap: 14px;
+  align-items: start;
+}
+
+.inventory-layout .windows {
+  display: grid;
+  gap: 12px;
+}
+
+.panel.window {
+  border-color: var(--accent);
+}
+
+@media (max-width: 800px) {
+  .inventory-layout.with-windows {
+    grid-template-columns: 1fr;
+  }
+}

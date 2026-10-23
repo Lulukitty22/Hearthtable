@@ -298,15 +298,98 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
     });
   });
 
-  test("the Aetherlock shows six chambers with loading not yet recorded, and a 12/12 canister", () => {
+  test("the Aetherlock has six empty chambers in a hexagonal ring and a 12/12 canister", () => {
     const [rifle] = value<readonly WeaponView[]>(carol(), "magazines.weapons");
     expect(rifle).toMatchObject({
       name: "Aetherlock",
-      chambersRecorded: false,
       loaded: 0,
       canister: { charges: 12, max: 12 },
     });
-    expect(rifle?.chambers).toHaveLength(6);
+    expect(rifle?.chambers.map((c) => [c.slot.x, c.slot.y])).toEqual([
+      [-1, 2],
+      [1, 2],
+      [-2, 0],
+      [2, 0],
+      [-1, -2],
+      [1, -2],
+    ]);
+  });
+
+  type Line = Record<string, unknown>;
+  const withLines = (extra: Line[]) =>
+    edited({
+      inventory: (data) => ({
+        ...data,
+        lines: [...(data["lines"] as Line[]), ...extra],
+      }),
+    });
+
+  test("a round placed in a chamber is loaded", () => {
+    const r = engine.resolve(
+      withLines([
+        {
+          id: "loaded-1",
+          ref: "account/VRLulu/Items/Basic_Round",
+          quantity: 1,
+          attunedTo: null,
+          parent: "aetherlock",
+          slot: "top-left",
+        },
+      ]),
+    );
+    const [rifle] = value<readonly WeaponView[]>(r, "magazines.weapons");
+    expect(rifle?.loaded).toBe(1);
+    expect(rifle?.chambers[0]?.round?.name).toBe("Basic Round");
+    expect(r.issues.filter((i) => i.severity !== "info")).toEqual([]);
+  });
+
+  test("wrong kinds, shared chambers and stacked chambers are kept but warned", () => {
+    const r = engine.resolve(
+      withLines([
+        {
+          id: "potion-in-gun",
+          ref: "core/Potion_of_Healing",
+          quantity: 1,
+          attunedTo: null,
+          parent: "aetherlock",
+          slot: "top-right",
+        },
+        {
+          id: "two-a",
+          ref: "account/VRLulu/Items/Basic_Round",
+          quantity: 1,
+          attunedTo: null,
+          parent: "aetherlock",
+          slot: "top-left",
+        },
+        {
+          id: "two-b",
+          ref: "account/VRLulu/Items/Arcane_Round",
+          quantity: 1,
+          attunedTo: null,
+          parent: "aetherlock",
+          slot: "top-left",
+        },
+        {
+          id: "stack",
+          ref: "account/VRLulu/Items/Basic_Round",
+          quantity: 3,
+          attunedTo: null,
+          parent: "aetherlock",
+          slot: "middle-left",
+        },
+      ]),
+    );
+    const codes = r.issues.map((i) => i.code);
+    expect(codes).toEqual(
+      expect.arrayContaining([
+        "containers.wrong-kind",
+        "containers.slot-taken",
+        "containers.slot-over",
+      ]),
+    );
+    const lines = value<readonly LineRow[]>(r, "containers.lines");
+    expect(lines.find((l) => l.line.id === "stack")?.line.quantity).toBe(3);
   });
 
   test("carried weight counts known weights and says how many are unknown", () => {

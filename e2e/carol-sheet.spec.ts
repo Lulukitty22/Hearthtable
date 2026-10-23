@@ -86,3 +86,74 @@ test("ending and restoring an attunement changes the item's bonus", async ({
   await page.getByRole("button", { name: "Discard" }).click();
   await expect(int).toHaveText("22");
 });
+
+test("rounds drag into chambers and items into bags, and stay there after saving", async ({
+  page,
+}) => {
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
+  await page.getByRole("tab", { name: "Inventory" }).click();
+  await page.getByRole("button", { name: "Aetherlock" }).click();
+  const topLeft = page.getByLabel("Top left: empty");
+  await expect(topLeft).toBeVisible();
+  await page
+    .getByRole("button", { name: "Basic Round" })
+    .first()
+    .dragTo(topLeft);
+  await expect(page.getByLabel("Top left: Basic Round")).toBeVisible();
+  await expect(
+    page
+      .getByLabel("Carried items")
+      .getByRole("button", { name: "Basic Round" }),
+  ).toContainText("×17");
+
+  await page.getByRole("button", { name: "Close" }).click();
+  // Earlier tests share this emulator, so read how many potions there are now.
+  const potions = page
+    .getByLabel("Carried items")
+    .getByRole("button", { name: "Potion of Healing" });
+  const before = Number(
+    (await potions.textContent())?.match(/×(\d+)/)?.[1] ?? 1,
+  );
+  await page
+    .getByLabel("Carried items")
+    .getByRole("button", { name: "Bag of Holding" })
+    .first()
+    .click();
+  await page
+    .getByRole("button", { name: "Potion of Healing" })
+    .dragTo(page.getByLabel("Contents of Bag of Holding"));
+  await expect(
+    page
+      .getByLabel("Contents of Bag of Holding")
+      .getByRole("button", { name: "Potion of Healing" }),
+  ).toBeVisible();
+
+  await page.getByLabel("Save note").fill("Loaded a round; packed a potion");
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(
+    page.getByRole("region", { name: "Unsaved changes" }),
+  ).toBeHidden();
+  await page.reload();
+  await page.getByRole("tab", { name: "Inventory" }).click();
+  await page.getByRole("button", { name: "Aetherlock" }).click();
+  await expect(page.getByLabel("Top left: Basic Round")).toBeVisible();
+  await expect(
+    page
+      .getByLabel("Carried items")
+      .getByRole("button", { name: "Potion of Healing" }),
+  ).toContainText(`×${before - 1}`);
+});
+
+test("a potion cannot be dropped into a chamber", async ({ page }) => {
+  await page.goto("/VRLulu/Characters/Carol_Elfnein");
+  await page.getByRole("tab", { name: "Inventory" }).click();
+  await page.getByRole("button", { name: "Aetherlock" }).click();
+  await page
+    .getByLabel("Carried items")
+    .getByRole("button", { name: "Potion of Healing" })
+    .dragTo(page.getByLabel("Bottom right: empty"));
+  await expect(page.getByLabel("Bottom right: empty")).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Unsaved changes" }),
+  ).toBeHidden();
+});
