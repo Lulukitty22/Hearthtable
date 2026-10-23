@@ -63,7 +63,7 @@ export function conflict(
   return { code: "conflict", id, expected, actual, message };
 }
 
-/** Every path a record sits under, e.g. `account`, `account/VRLulu`, `account/VRLulu/Characters`. */
+/** Every path a record sits under, e.g. `account`, `account/VR_Lulu`, `account/VR_Lulu/Characters`. */
 export function ancestorsOf(id: string): readonly string[] {
   const parts = id.split("/");
   return parts.slice(0, -1).map((_, i) => parts.slice(0, i + 1).join("/"));

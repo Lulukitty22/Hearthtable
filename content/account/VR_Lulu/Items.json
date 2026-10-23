@@ -1,12 +1,12 @@
 [
   {
-    "id": "account/VRLulu/Items/Aetherlock",
+    "id": "account/VR_Lulu/Items/Aetherlock",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "VRLulu"
+      "ownerId": "VR_Lulu"
     },
     "source": {
       "status": "homebrew"
@@ -72,13 +72,13 @@
     }
   },
   {
-    "id": "account/VRLulu/Items/Charge_canister",
+    "id": "account/VR_Lulu/Items/Charge_canister",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "VRLulu"
+      "ownerId": "VR_Lulu"
     },
     "source": {
       "status": "homebrew"
@@ -93,13 +93,13 @@
     }
   },
   {
-    "id": "account/VRLulu/Items/Basic_Round",
+    "id": "account/VR_Lulu/Items/Basic_Round",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "VRLulu"
+      "ownerId": "VR_Lulu"
     },
     "source": {
       "status": "homebrew"
@@ -112,13 +112,13 @@
     }
   },
   {
-    "id": "account/VRLulu/Items/Arcane_Round",
+    "id": "account/VR_Lulu/Items/Arcane_Round",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "VRLulu"
+      "ownerId": "VR_Lulu"
     },
     "source": {
       "status": "homebrew"
@@ -131,13 +131,13 @@
     }
   },
   {
-    "id": "account/VRLulu/Items/Spellround_(Cone_of_Cold)",
+    "id": "account/VR_Lulu/Items/Spellround_(Cone_of_Cold)",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "VRLulu"
+      "ownerId": "VR_Lulu"
     },
     "source": {
       "status": "homebrew"
@@ -150,13 +150,13 @@
     }
   },
   {
-    "id": "account/VRLulu/Items/HE-FRAG_Round",
+    "id": "account/VR_Lulu/Items/HE-FRAG_Round",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "VRLulu"
+      "ownerId": "VR_Lulu"
     },
     "source": {
       "status": "homebrew"
@@ -169,13 +169,13 @@
     }
   },
   {
-    "id": "account/VRLulu/Items/Spellround_(Shield)",
+    "id": "account/VR_Lulu/Items/Spellround_(Shield)",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "VRLulu"
+      "ownerId": "VR_Lulu"
     },
     "source": {
       "status": "homebrew"
@@ -188,13 +188,13 @@
     }
   },
   {
-    "id": "account/VRLulu/Items/Spellround_(Cure_Wounds)",
+    "id": "account/VR_Lulu/Items/Spellround_(Cure_Wounds)",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "VRLulu"
+      "ownerId": "VR_Lulu"
     },
     "source": {
       "status": "homebrew"
@@ -207,13 +207,13 @@
     }
   },
   {
-    "id": "account/VRLulu/Items/Indomitable_(INT)",
+    "id": "account/VR_Lulu/Items/Indomitable_(INT)",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
       "scope": "account",
-      "ownerId": "VRLulu"
+      "ownerId": "VR_Lulu"
     },
     "source": {
       "status": "homebrew"

@@ -1,6 +1,6 @@
 // A record's identity is its full path (user decisions, 2026-10-22): owner, folders and name,
-// keeping the chosen capitalization, such as `account/VRLulu/Characters/Carol_Elfnein`,
-// `account/VRLulu/Items/Aetherlock` or `core/Fireball`. Spaces become underscores. Two names
+// keeping the chosen capitalization, such as `account/VR_Lulu/Characters/Carol_Elfnein`,
+// `account/VR_Lulu/Items/Aetherlock` or `core/Fireball`. Spaces become underscores. Two names
 // that differ only in capitalization or spaces versus underscores are still the same name
 // (the duplicate-name rule): compare with `sameName` or `nameKey`, never with `===` on input.
 // Renaming means duplicating under the new name and moving means copying; nothing that
@@ -8,7 +8,7 @@
 
 import { fail, issue, ok, type Result } from "./validation";
 
-/** `<scope>/…/<Name>`, e.g. `core/Fireball` or `account/VRLulu/Characters/Carol_Elfnein`. */
+/** `<scope>/…/<Name>`, e.g. `core/Fireball` or `account/VR_Lulu/Characters/Carol_Elfnein`. */
 export type RecordId = `${string}/${string}`;
 
 export const ID_SCOPES = ["core", "account", "campaign"] as const;
@@ -31,7 +31,7 @@ export function pathSegment(name: string): string {
   return name.trim().replace(/[\s_]+/g, "_");
 }
 
-/** Builds an identity from display names, e.g. `makeId(["account", "VRLulu", "Characters"], "Carol Elfnein")`. */
+/** Builds an identity from display names, e.g. `makeId(["account", "VR_Lulu", "Characters"], "Carol Elfnein")`. */
 export function makeId(
   path: readonly string[],
   name: string,

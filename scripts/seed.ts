@@ -1,4 +1,4 @@
-// `pnpm seed`: adds the hand-entered content (core definitions, VRLulu's account content and
+// `pnpm seed`: adds the hand-entered content (core definitions, VR_Lulu's account content and
 // Carol) to the running Firestore emulator. Records that already exist are skipped and listed,
 // so edits made in the app are never overwritten (user decision, 2026-10-22).
 //

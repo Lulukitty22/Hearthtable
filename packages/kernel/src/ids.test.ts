@@ -9,30 +9,30 @@ test("capitalization and spaces versus underscores do not distinguish names", ()
 });
 
 test("an id is the full path, keeping the chosen capitals", () => {
-  const carol = makeId(["account", "VRLulu", "Characters"], "Carol Elfnein");
+  const carol = makeId(["account", "VR_Lulu", "Characters"], "Carol Elfnein");
   expect(carol.ok && carol.value).toBe(
-    "account/VRLulu/Characters/Carol_Elfnein",
+    "account/VR_Lulu/Characters/Carol_Elfnein",
   );
   const copy = makeId(
-    ["campaign", "Moonlit Coast", "Characters", "VRLulu"],
+    ["campaign", "Moonlit Coast", "Characters", "VR_Lulu"],
     "Carol Elfnein",
   );
   expect(copy.ok && copy.value).toBe(
-    "campaign/Moonlit_Coast/Characters/VRLulu/Carol_Elfnein",
+    "campaign/Moonlit_Coast/Characters/VR_Lulu/Carol_Elfnein",
   );
 });
 
 test("paths that differ only in capitals or underscores are the same record name", () => {
   expect(
     samePath(
-      "account/VRLulu/Items/Aetherlock",
-      "account/vrlulu/items/aetherlock",
+      "account/VR_Lulu/Items/Aetherlock",
+      "account/vr_lulu/items/aetherlock",
     ),
   ).toBe(true);
   expect(
     samePath(
-      "account/VRLulu/Items/Aetherlock",
-      "account/VRLulu/Items/Aetherlock_2",
+      "account/VR_Lulu/Items/Aetherlock",
+      "account/VR_Lulu/Items/Aetherlock_2",
     ),
   ).toBe(false);
 });

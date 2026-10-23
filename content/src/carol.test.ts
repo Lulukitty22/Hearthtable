@@ -263,7 +263,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
           ...data,
           lines: (data["lines"] as Record<string, unknown>[]).map((l) =>
             l["id"] === "indomitable"
-              ? { ...l, attunedTo: "account/VRLulu/Characters/Someone_Else" }
+              ? { ...l, attunedTo: "account/VR_Lulu/Characters/Someone_Else" }
               : l,
           ),
         }),
@@ -352,7 +352,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
       withLines([
         {
           id: "loaded-1",
-          ref: "account/VRLulu/Items/Basic_Round",
+          ref: "account/VR_Lulu/Items/Basic_Round",
           quantity: 1,
           attunedTo: null,
           parent: "aetherlock",
@@ -379,7 +379,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
         },
         {
           id: "two-a",
-          ref: "account/VRLulu/Items/Basic_Round",
+          ref: "account/VR_Lulu/Items/Basic_Round",
           quantity: 1,
           attunedTo: null,
           parent: "aetherlock",
@@ -387,7 +387,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
         },
         {
           id: "two-b",
-          ref: "account/VRLulu/Items/Arcane_Round",
+          ref: "account/VR_Lulu/Items/Arcane_Round",
           quantity: 1,
           attunedTo: null,
           parent: "aetherlock",
@@ -395,7 +395,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
         },
         {
           id: "stack",
-          ref: "account/VRLulu/Items/Basic_Round",
+          ref: "account/VR_Lulu/Items/Basic_Round",
           quantity: 3,
           attunedTo: null,
           parent: "aetherlock",

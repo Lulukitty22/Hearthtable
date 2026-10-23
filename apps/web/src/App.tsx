@@ -1,6 +1,6 @@
 // Character sheets read from and saved to the local emulator. The web address is the record's
-// path (user decision, 2026-10-22): /VRLulu/Characters/Carol_Elfnein shows the record
-// account/VRLulu/Characters/Carol_Elfnein, and /Campaigns/<name>/… a campaign's copy.
+// path (user decision, 2026-10-22): /VR_Lulu/Characters/Carol_Elfnein shows the record
+// account/VR_Lulu/Characters/Carol_Elfnein, and /Campaigns/<name>/… a campaign's copy.
 // Tabs come from the systems: each module lists the tabs it provides (`provides.uiTabs`), and
 // the app shows the tabs of the modules the ruleset enables, in a fixed order. A tab a module
 // declares but this app cannot draw is shown as unavailable rather than hidden.

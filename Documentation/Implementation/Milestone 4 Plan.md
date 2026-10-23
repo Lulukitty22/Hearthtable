@@ -33,18 +33,18 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 5. **S5 — Campaigns and membership.** Creating a campaign (first DM, account link, campaign view), invite codes, join requests, approval, and DMs granting or revoking DM.
 6. **S6 — Characters in campaigns.** Copying a character into a campaign with DM approval of the insertion, DM mode editing, and delegated control with revocation.
 7. **S7 — Privacy.** Private tabs and private lines with per-player grants, placeholders and unnamed contributions to totals.
-8. **S8 — Moving today's data in.** VRLulu's existing records and Carol become owned by a real (emulator) account, keeping their paths.
+8. **S8 — Moving today's data in.** VR_Lulu's existing records and Carol become owned by a real (emulator) account, keeping their paths.
 
 ## Questions for the user
 
-**A. Alias**
+**A. Alias** — answered 2026-10-23 at 5:13 am PDT (America/Los_Angeles): letters, digits, `_` and `-`; 4–32 characters; capitals ignored and `_` equal to `-`; fixed once chosen; the user's Alias is now `VR_Lulu`. Recorded in [Guest viewing and accounts](../Systems/Campaigns%20and%20Shared%20Data.md#guest-viewing-and-accounts).
 
 1. Which characters and length are allowed (for example letters, digits, spaces, underscores, hyphens; 3–24 characters)?
 2. Can an Alias be changed later? Its paths would change, which breaks old exports.
 
 **B. Sign-in on the emulator**
 
-1. The Auth emulator offers fake Google accounts. Should Carol's records belong to a seeded "VRLulu" account that you sign in as, with you as the first administrator?
+1. The Auth emulator offers fake Google accounts. Should Carol's records belong to a seeded "VR_Lulu" account that you sign in as, with you as the first administrator?
 2. Any other seeded test accounts (a second player, a second DM) for trying campaigns?
 
 **C. What "approval of character changes" means in Milestone 4**
@@ -70,4 +70,4 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 - A second account joins the campaign through an invite and DM approval, and its copied character is inserted only after DM approval.
 - Rules tests show a pending account, a non-member and a revoked delegate are refused, and a DM is allowed.
 - Private tabs and lines show placeholders to other viewers while totals stay true.
-- Carol and VRLulu's content load under the seeded account exactly as before.
+- Carol and VR_Lulu's content load under the seeded account exactly as before.

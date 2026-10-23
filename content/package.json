@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Hand-entered records: core definitions, VRLulu's account content and Carol Elfnein.",
+  "description": "Hand-entered records: core definitions, VR_Lulu's account content and Carol Elfnein.",
   "exports": {
     ".": "./src/index.ts"
   },

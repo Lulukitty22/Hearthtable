@@ -4,8 +4,8 @@
 
 import { classRecords } from "@hearthtable/game-dnd5e-2024";
 import { parseEnvelope, type RecordEnvelope } from "@hearthtable/kernel";
-import vrluluCarol from "../account/VRLulu/Characters/Carol_Elfnein.json";
-import vrluluItems from "../account/VRLulu/Items.json";
+import vrluluCarol from "../account/VR_Lulu/Characters/Carol_Elfnein.json";
+import vrluluItems from "../account/VR_Lulu/Items.json";
 import coreFeatures from "../core/features.json";
 import coreItems from "../core/items.json";
 import coreSpells from "../core/spells.json";
@@ -30,19 +30,19 @@ export const coreContent: readonly RecordEnvelope[] = [
   ...load("core/items.json", coreItems),
 ];
 
-/** VRLulu's account content: the Aetherlock, its rounds and canisters, and Indomitable. */
+/** VR_Lulu's account content: the Aetherlock, its rounds and canisters, and Indomitable. */
 export const vrluluContent: readonly RecordEnvelope[] = load(
-  "account/VRLulu/Items.json",
+  "account/VR_Lulu/Items.json",
   vrluluItems,
 );
 
 /** Carol's sheet: the character (stats tab), her inventory and her three spellbooks. */
 export const carolElfnein: readonly RecordEnvelope[] = load(
-  "account/VRLulu/Characters/Carol_Elfnein.json",
+  "account/VR_Lulu/Characters/Carol_Elfnein.json",
   vrluluCarol,
 );
 
-export const CAROL_ID = "account/VRLulu/Characters/Carol_Elfnein";
+export const CAROL_ID = "account/VR_Lulu/Characters/Carol_Elfnein";
 
 /** Everything needed to resolve Carol's sheet. */
 export function carolWithDefinitions(): readonly RecordEnvelope[] {
