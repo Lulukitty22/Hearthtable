@@ -12,3 +12,7 @@ ui-debug.log*
 
 # Large source files kept locally (for example the SRD PDF); extracts are committed elsewhere.
 reference/
+
+# The launcher is built locally from tools/launcher; its logs stay local.
+Hearthtable Launcher.exe
+logs/
