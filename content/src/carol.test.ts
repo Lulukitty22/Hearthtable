@@ -8,6 +8,10 @@ import type { AttunedSlot } from "@hearthtable/system-attunement";
 import type { LineRow } from "@hearthtable/system-containers";
 import type { WeaponView } from "@hearthtable/system-magazines";
 import type { ResourcePool } from "@hearthtable/system-resources";
+import type {
+  MountingCost,
+  ScribingCost,
+} from "@hearthtable/system-scroll-crafting";
 import type { SlotLevel } from "@hearthtable/system-spellcasting";
 import type { BookView } from "@hearthtable/system-spellbook-readiness";
 import { describe, expect, test } from "vitest";
@@ -449,5 +453,143 @@ describe("one resolved state", () => {
     ]) {
       expect(r.get(key)).toBe(r.get(key));
     }
+  });
+});
+
+describe("concentration capacity", () => {
+  const at = (minute: number) =>
+    `2026-10-23T08:${String(minute).padStart(2, "0")}:00.000Z`;
+  const active = (...refs: string[]) =>
+    edited({
+      character: {
+        activeEffects: refs.map((ref, i) => ({
+          id: `e${i}`,
+          ref,
+          activatedAt: at(i),
+        })),
+      },
+    });
+
+  test("Carol maintains one concentration; non-concentration effects do not count", () => {
+    const r = engine.resolve(
+      active("core/Mage_Armor", "core/Tasha's_Otherworldly_Guise"),
+    );
+    expect(value(r, "concentration.capacity")).toBe(1);
+    const held = value<readonly { name: string; overLimit: boolean }[]>(
+      r,
+      "concentration.maintained",
+    );
+    expect(held.map((h) => [h.name, h.overLimit])).toEqual([
+      ["Tasha's Otherworldly Guise", false],
+    ]);
+    expect(r.issues.map((i) => i.code)).not.toContain(
+      "concentration.over-capacity",
+    );
+  });
+
+  test("a second concentration is over the limit and warned, newest first to go", () => {
+    const r = engine.resolve(
+      active("core/Tasha's_Otherworldly_Guise", "core/Web"),
+    );
+    const held = value<readonly { name: string; overLimit: boolean }[]>(
+      r,
+      "concentration.maintained",
+    );
+    expect(held.map((h) => [h.name, h.overLimit])).toEqual([
+      ["Tasha's Otherworldly Guise", false],
+      ["Web", true],
+    ]);
+    expect(r.issues.map((i) => i.code)).toContain(
+      "concentration.over-capacity",
+    );
+  });
+
+  test("an authored grant can raise capacity, as Capella's does", () => {
+    const records = carolWithDefinitions().map((r): RecordEnvelope => {
+      if (r.id === CAROL_ID) {
+        const data = r.data as { features: unknown[] };
+        return {
+          ...r,
+          data: {
+            ...data,
+            features: [
+              ...data.features,
+              { ref: "core/Test_Second_Concentration" },
+            ],
+            activeEffects: [
+              { id: "a", ref: "core/Web", activatedAt: at(0) },
+              { id: "b", ref: "core/Detect_Magic", activatedAt: at(1) },
+            ],
+          },
+        };
+      }
+      return r;
+    });
+    const grant = {
+      ...(records.find((r) => r.kind === "feature") as RecordEnvelope),
+      id: "core/Test_Second_Concentration" as RecordEnvelope["id"],
+      data: {
+        name: "Second concentration",
+        grants: [
+          { type: "bonus", target: "concentration.capacity", amount: 1 },
+        ],
+      },
+      raw: {},
+    };
+    const r = engine.resolve([...records, grant]);
+    expect(value(r, "concentration.capacity")).toBe(2);
+    expect(r.issues.map((i) => i.code)).not.toContain(
+      "concentration.over-capacity",
+    );
+  });
+});
+
+// Spell Containers and Consumable Sources, "Scribing, mounting and removal", with the worked
+// examples from Aetherlock Costs and Damage (Carol's Arcana +16).
+describe("scroll crafting costs", () => {
+  const known = <T>(v: { kind: string; value?: T }): T => {
+    if (v.kind !== "known") throw new Error("unresolved");
+    return v.value as T;
+  };
+
+  test("Carol's Arcana multiplier", () => {
+    expect(value(carol(), "skills.arcana.total")).toBe(16);
+    expect(value<number>(carol(), "scroll-crafting.multiplier")).toBeCloseTo(
+      0.08919350686224783,
+      15,
+    );
+  });
+
+  test("a sixth-level scroll: about 891.94 gp and 3.56774 workdays", () => {
+    const rows = value<readonly ScribingCost[]>(
+      carol(),
+      "scroll-crafting.scribing",
+    );
+    expect(rows.map((row) => row.level)).toEqual([
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+    ]);
+    const sixth = rows.find((row) => row.level === 6) as ScribingCost;
+    expect(known(sixth.materialsGp)).toBeCloseTo(891.93507, 4);
+    expect(known(sixth.workdays)).toBeCloseTo(3.56774, 5);
+  });
+
+  test("mounting: fifth level about 22.30 gp and 53.52 minutes; cantrip 1.34 gp and 42.81 minutes", () => {
+    const rows = value<readonly MountingCost[]>(
+      carol(),
+      "scroll-crafting.mounting",
+    );
+    const fifth = rows.find((row) => row.level === 5) as MountingCost;
+    expect(known(fifth.feeGp)).toBeCloseTo(22.2984, 3);
+    expect(known(fifth.hours) * 60).toBeCloseTo(53.52, 2);
+    const cantrip = rows.find((row) => row.level === 0) as MountingCost;
+    expect(known(cantrip.feeGp)).toBeCloseTo(1.3379, 3);
+    expect(known(cantrip.hours) * 60).toBeCloseTo(42.81, 2);
+  });
+
+  test("Carol may scribe: Arcana and Calligrapher's Supplies proficiency", () => {
+    const r = carol();
+    expect(value(r, "scroll-crafting.eligible")).toBe(true);
+    const v = r.get("scroll-crafting.eligible");
+    expect(v.kind === "known" && v.explain.note).toMatch(/proficient:/);
   });
 });

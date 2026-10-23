@@ -13,6 +13,7 @@
     "@hearthtable/system-abilities": "workspace:*",
     "@hearthtable/system-armor-class": "workspace:*",
     "@hearthtable/system-hit-points": "workspace:*",
+    "@hearthtable/system-scroll-crafting": "workspace:*",
     "@hearthtable/system-skills-and-saves": "workspace:*",
     "@hearthtable/system-spellcasting": "workspace:*",
     "zod": "^4.6.7"
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@hearthtable/system-active-effects": "workspace:*",
     "@hearthtable/system-attunement": "workspace:*",
+    "@hearthtable/system-concentration": "workspace:*",
     "@hearthtable/system-containers": "workspace:*",
     "@hearthtable/system-features": "workspace:*",
     "@hearthtable/system-magazines": "workspace:*",

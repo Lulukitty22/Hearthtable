@@ -18,7 +18,8 @@
       "name": "Fire Bolt",
       "level": 0,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"]
+      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
+      "concentration": false
     }
   },
   {
@@ -40,7 +41,8 @@
       "name": "Ray of Frost",
       "level": 0,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"]
+      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
+      "concentration": false
     }
   },
   {
@@ -62,7 +64,8 @@
       "name": "Minor Illusion",
       "level": 0,
       "school": "Illusion",
-      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"]
+      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -84,7 +87,8 @@
       "name": "Mind Sliver",
       "level": 0,
       "school": "Enchantment",
-      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"]
+      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -106,7 +110,8 @@
       "name": "Shocking Grasp",
       "level": 0,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"]
+      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
+      "concentration": false
     }
   },
   {
@@ -134,7 +139,8 @@
         "core/Warlock",
         "core/Wizard",
         "core/Artificer"
-      ]
+      ],
+      "concentration": false
     }
   },
   {
@@ -162,7 +168,8 @@
         "core/Warlock",
         "core/Wizard",
         "core/Artificer"
-      ]
+      ],
+      "concentration": false
     }
   },
   {
@@ -190,7 +197,8 @@
         "core/Sorcerer",
         "core/Wizard",
         "core/Artificer"
-      ]
+      ],
+      "concentration": false
     }
   },
   {
@@ -218,7 +226,8 @@
         "core/Warlock",
         "core/Wizard",
         "core/Artificer"
-      ]
+      ],
+      "concentration": false
     }
   },
   {
@@ -246,7 +255,8 @@
         "core/Druid",
         "core/Sorcerer",
         "core/Wizard"
-      ]
+      ],
+      "concentration": false
     }
   },
   {
@@ -269,6 +279,7 @@
       "level": 1,
       "school": "Abjuration",
       "classes": ["core/Sorcerer", "core/Wizard"],
+      "concentration": false,
       "whileActive": [
         {
           "type": "base",
@@ -301,6 +312,7 @@
       "level": 1,
       "school": "Abjuration",
       "classes": ["core/Sorcerer", "core/Wizard"],
+      "concentration": false,
       "whileActive": [
         {
           "type": "bonus",
@@ -336,7 +348,8 @@
         "core/Paladin",
         "core/Ranger",
         "core/Artificer"
-      ]
+      ],
+      "concentration": false
     }
   },
   {
@@ -358,7 +371,8 @@
       "name": "Faerie Fire",
       "level": 1,
       "school": "Evocation",
-      "classes": ["core/Bard", "core/Druid", "core/Artificer"]
+      "classes": ["core/Bard", "core/Druid", "core/Artificer"],
+      "concentration": true
     }
   },
   {
@@ -380,7 +394,8 @@
       "name": "Identify",
       "level": 1,
       "school": "Divination",
-      "classes": ["core/Bard", "core/Wizard", "core/Artificer"]
+      "classes": ["core/Bard", "core/Wizard", "core/Artificer"],
+      "concentration": false
     }
   },
   {
@@ -412,7 +427,8 @@
         "core/Warlock",
         "core/Wizard",
         "core/Artificer"
-      ]
+      ],
+      "concentration": true
     }
   },
   {
@@ -434,7 +450,8 @@
       "name": "Healing Word",
       "level": 1,
       "school": "Abjuration",
-      "classes": ["core/Bard", "core/Cleric", "core/Druid"]
+      "classes": ["core/Bard", "core/Cleric", "core/Druid"],
+      "concentration": false
     }
   },
   {
@@ -456,7 +473,8 @@
       "name": "Ray of Sickness",
       "level": 1,
       "school": "Necromancy",
-      "classes": ["core/Sorcerer", "core/Wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -478,7 +496,8 @@
       "name": "Scorching Ray",
       "level": 2,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -500,7 +519,8 @@
       "name": "Mirror Image",
       "level": 2,
       "school": "Illusion",
-      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"]
+      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -522,7 +542,8 @@
       "name": "Misty Step",
       "level": 2,
       "school": "Conjuration",
-      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"]
+      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -544,7 +565,8 @@
       "name": "Web",
       "level": 2,
       "school": "Conjuration",
-      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"]
+      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
+      "concentration": true
     }
   },
   {
@@ -566,7 +588,8 @@
       "name": "Fireball",
       "level": 3,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -588,7 +611,8 @@
       "name": "Counterspell",
       "level": 3,
       "school": "Abjuration",
-      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"]
+      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -620,7 +644,8 @@
         "core/Warlock",
         "core/Wizard",
         "core/Artificer"
-      ]
+      ],
+      "concentration": false
     }
   },
   {
@@ -642,7 +667,8 @@
       "name": "Fabricate",
       "level": 4,
       "school": "Transmutation",
-      "classes": ["core/Wizard", "core/Artificer"]
+      "classes": ["core/Wizard", "core/Artificer"],
+      "concentration": false
     }
   },
   {
@@ -664,7 +690,8 @@
       "name": "Cone of Cold",
       "level": 5,
       "school": "Evocation",
-      "classes": ["core/Druid", "core/Sorcerer", "core/Wizard"]
+      "classes": ["core/Druid", "core/Sorcerer", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -686,7 +713,8 @@
       "name": "Wall of Force",
       "level": 5,
       "school": "Evocation",
-      "classes": ["core/Wizard"]
+      "classes": ["core/Wizard"],
+      "concentration": true
     }
   },
   {
@@ -708,7 +736,13 @@
       "name": "Animate Objects",
       "level": 5,
       "school": "Transmutation",
-      "classes": ["core/Bard", "core/Sorcerer", "core/Wizard", "core/Artificer"]
+      "classes": [
+        "core/Bard",
+        "core/Sorcerer",
+        "core/Wizard",
+        "core/Artificer"
+      ],
+      "concentration": true
     }
   },
   {
@@ -730,7 +764,8 @@
       "name": "Chain Lightning",
       "level": 6,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -752,7 +787,8 @@
       "name": "Disintegrate",
       "level": 6,
       "school": "Transmutation",
-      "classes": ["core/Sorcerer", "core/Wizard"]
+      "classes": ["core/Sorcerer", "core/Wizard"],
+      "concentration": false
     }
   },
   {
@@ -776,6 +812,7 @@
       "level": 6,
       "school": "Transmutation",
       "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "concentration": true,
       "whileActive": [
         {
           "type": "bonus",

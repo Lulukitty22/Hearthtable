@@ -21,7 +21,7 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 |---|---|---|
 | **1. Documentation and theory** | The architecture, rulesets and theory sketches; character creation; hosting and stack; milestone criteria; open-work stubs. | Accepted by the user 2026-10-22 at 11:42 am PDT (America/Los_Angeles) |
 | **2. Engine + Carol offline** | Kernel, Milestone 2 systems, the Vanilla+ ruleset, Carol hand-entered, storage adapters, sheet viewer and basic editor, all on the emulator. | Built 2026-10-23 at 12:08 am PDT (America/Los_Angeles); awaiting the user's acceptance |
-| 3. Core systems deep plan | Write a second plan for spells (casting, scrolls, scribing and mounting), inventory (lifecycle, currency, ammunition) and crafting and economy. Then build them. | Tentative |
+| 3. Core systems deep plan | Write a second plan for spells (casting, scrolls, scribing and mounting), inventory (lifecycle, currency, ammunition) and crafting and economy. Then build them. | Plan drafted 2026-10-23 for review: [Milestone 3 Plan](Milestone%203%20Plan.md) |
 | 4. Accounts and campaigns on the emulator | Sign-in, Alias, approval, folders, campaigns, membership, privacy, Rules and the Firestore schema. | Tentative |
 | 5. Gameplay loop | Specify, then build, turns, initiative, rests and conditions. Then the casting workflow: holds, approval, resolution, polls, rolls and effects on the game clock. | Tentative |
 | 6. Move to real Firebase | Only with the user's explicit approval: project, region, Blaze, deployment, first administrator. | Tentative |

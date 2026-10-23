@@ -148,6 +148,9 @@ importers:
       '@hearthtable/system-attunement':
         specifier: workspace:*
         version: link:../packages/systems/attunement
+      '@hearthtable/system-concentration':
+        specifier: workspace:*
+        version: link:../packages/systems/concentration
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../packages/systems/containers
@@ -157,6 +160,9 @@ importers:
       '@hearthtable/system-resources':
         specifier: workspace:*
         version: link:../packages/systems/resources
+      '@hearthtable/system-scroll-crafting':
+        specifier: workspace:*
+        version: link:../packages/systems/scroll-crafting
       '@hearthtable/system-spellbook-readiness':
         specifier: workspace:*
         version: link:../packages/systems/spellbook-readiness
@@ -184,6 +190,9 @@ importers:
       '@hearthtable/system-attunement':
         specifier: workspace:*
         version: link:../systems/attunement
+      '@hearthtable/system-concentration':
+        specifier: workspace:*
+        version: link:../systems/concentration
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../systems/containers
@@ -202,6 +211,9 @@ importers:
       '@hearthtable/system-resources':
         specifier: workspace:*
         version: link:../systems/resources
+      '@hearthtable/system-scroll-crafting':
+        specifier: workspace:*
+        version: link:../systems/scroll-crafting
       '@hearthtable/system-skills-and-saves':
         specifier: workspace:*
         version: link:../systems/skills-and-saves
@@ -226,6 +238,9 @@ importers:
       '@hearthtable/system-hit-points':
         specifier: workspace:*
         version: link:../../systems/hit-points
+      '@hearthtable/system-scroll-crafting':
+        specifier: workspace:*
+        version: link:../../systems/scroll-crafting
       '@hearthtable/system-skills-and-saves':
         specifier: workspace:*
         version: link:../../systems/skills-and-saves
@@ -242,6 +257,9 @@ importers:
       '@hearthtable/system-attunement':
         specifier: workspace:*
         version: link:../../systems/attunement
+      '@hearthtable/system-concentration':
+        specifier: workspace:*
+        version: link:../../systems/concentration
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../../systems/containers
@@ -329,6 +347,18 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
 
+  packages/systems/concentration:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      '@hearthtable/system-active-effects':
+        specifier: workspace:*
+        version: link:../active-effects
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
   packages/systems/containers:
     dependencies:
       '@hearthtable/kernel':
@@ -378,6 +408,15 @@ importers:
         version: 4.6.7
 
   packages/systems/resources:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/scroll-crafting:
     dependencies:
       '@hearthtable/kernel':
         specifier: workspace:*

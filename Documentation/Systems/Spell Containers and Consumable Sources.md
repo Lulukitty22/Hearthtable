@@ -145,6 +145,8 @@ Use **M = 3^((5 − A)/5)**, where A is the total Arcana modifier, not a d20 res
 
 Multiply baseline scribing materials and work time by the scribe's M. Multiply mounting/removal fees and time by the operator's M, for both leveled spells and cantrips. Specific consumed components remain full price and required reusable components remain required. Purchases, other ammunition recipes and canister refills are unaffected.
 
+Implementation status, 2026-10-23 at 12:16 am PDT (America/Los_Angeles): the `scroll-crafting` system calculates and explains the multiplier, scribing costs for every level, mounting and removal costs, and eligibility; the baseline table above is data in the D&D 2024 game module. Values keep full precision; display rounding is an open Milestone 3 question. Running a crafting job, creating the scroll item and debiting materials are not built.
+
 | Total Arcana | Multiplier | Sixth-level example: 10,000 gp / 40 days |
 |---|---:|---|
 | 0 | 3 | 30,000 gp / 120 days |

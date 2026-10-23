@@ -15,9 +15,11 @@
     "@hearthtable/engine": "workspace:*",
     "@hearthtable/ruleset-hearthtable-vanilla-plus": "workspace:*",
     "@hearthtable/system-attunement": "workspace:*",
+    "@hearthtable/system-concentration": "workspace:*",
     "@hearthtable/system-containers": "workspace:*",
     "@hearthtable/system-magazines": "workspace:*",
     "@hearthtable/system-resources": "workspace:*",
+    "@hearthtable/system-scroll-crafting": "workspace:*",
     "@hearthtable/system-spellbook-readiness": "workspace:*",
     "@hearthtable/system-spellcasting": "workspace:*"
   }

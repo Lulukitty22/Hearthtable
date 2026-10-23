@@ -17,6 +17,10 @@ import {
   SKILLS_POINT,
   type SkillDefinition,
 } from "@hearthtable/system-skills-and-saves";
+import {
+  BASELINE_POINT,
+  type ScribingBaseline,
+} from "@hearthtable/system-scroll-crafting";
 import type { CasterClass } from "@hearthtable/system-spellcasting";
 import {
   DERIVATIONS_POINT,
@@ -227,6 +231,20 @@ const derivations: Derivation[] = [
   },
 ];
 
+/** Published scroll scribing: materials and eight-hour workdays by spell level (0 = cantrip). */
+const SCRIBING: readonly ScribingBaseline[] = [
+  { level: 0, materialsGp: 15, workdays: 1 },
+  { level: 1, materialsGp: 25, workdays: 1 },
+  { level: 2, materialsGp: 100, workdays: 3 },
+  { level: 3, materialsGp: 150, workdays: 5 },
+  { level: 4, materialsGp: 1000, workdays: 10 },
+  { level: 5, materialsGp: 1500, workdays: 25 },
+  { level: 6, materialsGp: 10000, workdays: 40 },
+  { level: 7, materialsGp: 12500, workdays: 50 },
+  { level: 8, materialsGp: 15000, workdays: 60 },
+  { level: 9, materialsGp: 50000, workdays: 120 },
+];
+
 /** Starting saving throws come from the first class only. */
 const firstClassSaves: GrantSource = (ctx) => {
   const rows = ctx.get<readonly LevelRow[]>("character.levelOrder");
@@ -249,6 +267,7 @@ export const dnd5e2024: KernelModule = {
       { id: "abilities", range: "^1.0.0" },
       { id: "skills-and-saves", range: "^1.0.0" },
       { id: "armor-class", range: "^1.0.0" },
+      { id: "scroll-crafting", range: "^1.0.0" },
     ],
     extends: [
       DERIVATIONS_POINT,
@@ -256,6 +275,7 @@ export const dnd5e2024: KernelModule = {
       ABILITIES_LIST_POINT,
       SKILLS_POINT,
       DEFAULT_BASES_POINT,
+      BASELINE_POINT,
     ],
     provides: {
       recordKinds: ["character", "class"],
@@ -273,6 +293,7 @@ export const dnd5e2024: KernelModule = {
     ctx.extend(ABILITIES_LIST_POINT, ABILITIES);
     ctx.extend(SKILLS_POINT, SKILLS);
     ctx.extend(DEFAULT_BASES_POINT, [UNARMORED]);
+    ctx.extend(BASELINE_POINT, SCRIBING);
     ctx.extend(GRANT_SOURCES_POINT, firstClassSaves);
     derivations.forEach((d) => ctx.extend(DERIVATIONS_POINT, d));
   },

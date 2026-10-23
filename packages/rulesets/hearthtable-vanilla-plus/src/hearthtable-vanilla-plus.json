@@ -10,19 +10,22 @@
     "hit-points",
     "armor-class",
     "active-effects",
+    "concentration",
     "resources",
     "spellcasting",
     "spellbook-readiness",
     "containers",
     "attunement",
-    "magazines"
+    "magazines",
+    "scroll-crafting"
   ],
   "methods": {
     "abilities.pointBuy": "extended",
     "proficiency.progression": "every-four-levels",
     "hit-points.max": "fixed-average",
     "spellcasting.combination": "add-per-class",
-    "spellbook-readiness.readiness": "book-contents-ready"
+    "spellbook-readiness.readiness": "book-contents-ready",
+    "scroll-crafting.multiplier": "arcana-power"
   },
   "variables": {
     "abilities.pointBudget": 27,
@@ -32,6 +35,7 @@
     "containers.maxAccessibleDepth": 1,
     "attunement.maxSlots": 3,
     "spellbook-readiness.bookCapacity": 16,
-    "dnd5e-2024.maxLevel": "unlimited"
+    "dnd5e-2024.maxLevel": "unlimited",
+    "concentration.defaultCapacity": 1
   }
 }

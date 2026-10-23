@@ -19,12 +19,14 @@ import { abilities } from "@hearthtable/system-abilities";
 import { activeEffects } from "@hearthtable/system-active-effects";
 import { armorClass } from "@hearthtable/system-armor-class";
 import { attunement } from "@hearthtable/system-attunement";
+import { concentration } from "@hearthtable/system-concentration";
 import { containers } from "@hearthtable/system-containers";
 import { features } from "@hearthtable/system-features";
 import { hitPoints } from "@hearthtable/system-hit-points";
 import { magazines } from "@hearthtable/system-magazines";
 import { proficiency } from "@hearthtable/system-proficiency";
 import { resources } from "@hearthtable/system-resources";
+import { scrollCrafting } from "@hearthtable/system-scroll-crafting";
 import { skillsAndSaves } from "@hearthtable/system-skills-and-saves";
 import { spellbookReadiness } from "@hearthtable/system-spellbook-readiness";
 import { spellcasting } from "@hearthtable/system-spellcasting";
@@ -37,12 +39,14 @@ export const MODULES: readonly KernelModule[] = [
   hitPoints,
   armorClass,
   activeEffects,
+  concentration,
   resources,
   spellcasting,
   spellbookReadiness,
   containers,
   attunement,
   magazines,
+  scrollCrafting,
   dnd5e2024,
 ];
 
