@@ -1,6 +1,6 @@
 # Milestone 3 Plan
 
-Purpose: the working plan for Milestone 3, the core systems for spells, inventory and economy, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 12:10 am PDT (America/Los_Angeles); the user answered topics A–F on 2026-10-23 at 1:53 am PDT (America/Los_Angeles). Decisions live in the documents linked below; this plan only orders the work. The user agreed the plan and its acceptance list, and accepted Milestone 2, on 2026-10-23 at 1:54 am PDT (America/Los_Angeles). S1 and S2 are built; S3–S7 are next.
+Purpose: the working plan for Milestone 3, the core systems for spells, inventory and economy, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 12:10 am PDT (America/Los_Angeles); the user answered topics A–F on 2026-10-23 at 1:53 am PDT (America/Los_Angeles). Decisions live in the documents linked below; this plan only orders the work. The user agreed the plan and its acceptance list, and accepted Milestone 2, on 2026-10-23 at 1:54 am PDT (America/Los_Angeles). All seven slices are built (see [Build status](#build-status)), and the user accepted Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles).
 
 Selected decisions: crafting jobs and every recipe moved to Milestone 5b ([Crafting Jobs](../Systems/Crafting%20Jobs.md)), so Milestone 3 no longer runs crafting. The other answers are recorded in their owning documents and summarised under [Questions and answers](#questions-and-answers).
 
@@ -35,6 +35,22 @@ Each slice ends with tests and with its documents updated. Which slices are buil
 7. **S7 — Item lifecycle.** Marking an item lost or destroyed (weightless, kept until deleted), and an alert that asks what to do with the contents when a container holding items is moved ([Item lifecycle](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md)).
 
 Moved to Milestone 5b: crafting jobs, scribing, paid mounting and removal, Aetherlock round assembly, canister refills, magic items, replicas and elixirs.
+
+## Build status
+
+Moved here from Milestones' Current progress on 2026-10-23 at 5:37 am PDT (America/Los_Angeles), when Milestone 4 started.
+
+| Milestone 3 slice | What it adds | Status |
+|---|---|---|
+| S1 Concentration limit | Tracks maintained concentration spells against the limit and warns when over it | Built (engine only, not shown on the sheet yet) |
+| S2 Scroll costs | Scribing and mounting prices and times from the Arcana multiplier | Built (engine only, not shown on the sheet yet) |
+| S3 Spell details | Summaries, facts table, credited SRD 5.2.1 text, overflow test book | Built; effect facts reviewed by the user 2026-10-23 at 3:20 am PDT (America/Los_Angeles) |
+| S4 Scrolls as items | Scroll items holding their spell; drag into a spellbook (one entry); mounting cost shown; spent marker; 0.1 lb | Built 2026-10-23 at 3:28 am PDT (America/Los_Angeles) |
+| S5 Charge counters | Each canister's charges shown as a counter, display only | Built 2026-10-23 at 3:31 am PDT (America/Los_Angeles) |
+| S6 Coins | Five coins as inventory items, 50 per pound, wallet total, payment rounding | Built 2026-10-23 at 4:02 am PDT (America/Los_Angeles) (Carol has a labelled test purse) |
+| S7 Item lifecycle | Lost or destroyed marking; moving a container with contents asks first | Built 2026-10-23 at 4:09 am PDT (America/Los_Angeles) |
+
+Every item on Milestone 3's [acceptance list](Milestone%203%20Plan.md#acceptance-agreed-2026-10-23-at-154-am-pdt-americalos_angeles) has a unit or browser test that passes (2026-10-23 at 4:09 am PDT (America/Los_Angeles)).
 
 ## Questions and answers
 

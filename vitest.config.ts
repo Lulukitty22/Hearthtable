@@ -18,7 +18,12 @@ export default defineConfig({
       {
         test: {
           name: "emulator",
-          include: ["packages/**/src/**/*.emulator.test.ts"],
+          include: [
+            "packages/**/src/**/*.emulator.test.ts",
+            "tests/**/*.emulator.test.ts",
+          ],
+          // Every file clears the same emulator, so they run one at a time.
+          fileParallelism: false,
         },
       },
     ],

@@ -6,6 +6,7 @@
     "content/src",
     "scripts",
     "e2e",
+    "tests",
     "*.config.ts"
   ]
 }

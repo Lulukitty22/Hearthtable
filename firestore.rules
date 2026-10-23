@@ -1,13 +1,53 @@
 rules_version = '2';
 
-// Emulator-only, Milestone 2: the app reads and writes records without sign-in. There is no
-// real Firebase project. Milestone 4 replaces this with Rules that enforce authority (who may
-// read and write); until then nothing here may be deployed.
+// Emulator-only. Milestone 4 builds these Rules slice by slice (Milestone 4 Plan); until it is
+// done nothing here may be deployed. Rules check authority, never game math or privacy
+// (Architecture and Hosting, Security Rules scope).
 service cloud.firestore {
   match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // The form two Aliases share when they count as the same (packages/storage/src/accounts.ts).
+    function normalizedAlias(alias) {
+      return alias.lower().replace('-', '_');
+    }
+
+    // S1: an account holds its public Alias, approval status and administrator flag, and is
+    // readable by anyone. A signed-in user creates only their own, as pending and not an
+    // administrator, together with its Alias index entry. Nobody changes or deletes an account
+    // yet; administration (S2) adds approval.
+    match /accounts/{uid} {
+      allow read: if true;
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['alias', 'status', 'admin', 'createdAt'])
+        && request.resource.data.alias is string
+        && request.resource.data.alias.matches('[A-Za-z0-9_-]{4,32}')
+        && request.resource.data.status == 'pending'
+        && request.resource.data.admin == false
+        && request.resource.data.createdAt == request.time
+        && getAfter(/databases/$(database)/documents/accounts-by-alias/$(normalizedAlias(request.resource.data.alias))).data.uid == uid;
+    }
+
+    // The Alias index makes Aliases unique: its id is the normalized Alias, and an entry is only
+    // ever created, by the account that takes the Alias, in the same write as that account.
+    match /accounts-by-alias/{key} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid', 'alias'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.alias is string
+        && key == normalizedAlias(request.resource.data.alias)
+        && !exists(/databases/$(database)/documents/accounts/$(request.auth.uid))
+        && getAfter(/databases/$(database)/documents/accounts/$(request.auth.uid)).data.alias == request.resource.data.alias;
+    }
+
+    // Milestone 2: character records are read and written without sign-in. S3 replaces this.
     match /records/{id} {
       allow read, write: if true;
     }
+
     match /{document=**} {
       allow read, write: if false;
     }

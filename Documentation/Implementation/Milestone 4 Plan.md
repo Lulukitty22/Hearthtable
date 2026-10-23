@@ -1,10 +1,10 @@
 # Milestone 4 Plan
 
-Purpose: the working plan for Milestone 4, accounts and campaigns on the local emulator, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 5:01 am PDT (America/Los_Angeles) after the user confirmed the milestone's scope; nothing is built yet. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
+Purpose: the working plan for Milestone 4, accounts and campaigns on the local emulator, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 5:01 am PDT (America/Los_Angeles) after the user confirmed the milestone's scope. The user agreed to this plan and its acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)); slice S1 was built 2026-10-23 at 6:14 am PDT (America/Los_Angeles); S2 is next. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
 
 Selected decisions: Milestone 4 is all permissions and approvals: who may see, edit and join what, and every DM or administrator approval outside gameplay (user decision, 2026-10-23 at 5:26 am PDT (America/Los_Angeles)). Milestone 5 is the action inside a campaign: turns, time, the casting workflow and its execution-time approval. The scope (user, 2026-10-23): Google sign-in, the public Alias, administrator approval, folders, campaigns with DMs and members, invites, tab privacy, Security Rules and the Firestore schema, all on the emulator. The trade window is Milestone 5c. No real Firebase project is created (that is Milestone 6).
 
-Open questions: listed by topic under [Questions for the user](#questions-for-the-user), asked one topic at a time.
+Open questions: none; topics A–F under [Questions for the user](#questions-for-the-user) are answered. New questions found while building are asked one topic at a time.
 
 ## What is already settled
 
@@ -24,7 +24,7 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 | Rules | Rules check authority (membership, DM role, delegation, approval, admin fields), not game math or tab privacy | [Security Rules scope](Architecture%20and%20Hosting.md#security-rules-scope) |
 | Schema | One document per definition and per sheet tab; `/accounts/{uid}` plus an Alias index written in the same batch; history as separate records | [Records, storage and caching](../Systems/Modules%2C%20Systems%20and%20Rulesets.md#records-storage-and-caching), [Hosting](Architecture%20and%20Hosting.md#hosting-browser-plus-firebase) |
 
-## Proposed build slices
+## Build slices
 
 1. **S1 — Sign-in and Alias.** Google sign-in against the Auth emulator, an account document, choosing an Alias (with the uniqueness index), and the pending state; guests can still browse public content.
 2. **S2 — Site administration.** A seeded first administrator and an approval screen for pending accounts.
@@ -68,7 +68,7 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 
 1. Concurrent-editing difference review, live HTML exports, portraits, Discord linking and core-maintainer publishing: leave all for later milestones? — answered 2026-10-23 at 5:32 am PDT (America/Los_Angeles): only Discord linking and core-maintainer publishing are deferred; difference review, live exports and portraits are slices S9–S11.
 
-## Proposed acceptance (to agree with the user)
+## Acceptance (agreed 2026-10-23, recorded at 5:37 am PDT (America/Los_Angeles))
 
 - Sign in with a fake Google account, choose an Alias, wait as pending, be approved by the administrator, then create a folder, a character and a campaign.
 - A second account joins the campaign through an invite and DM approval, and its copied character is inserted only after DM approval.

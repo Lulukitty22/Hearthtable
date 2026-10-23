@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@firebase/rules-unit-testing": "6.0.0",
     "@hearthtable/content": "workspace:*",
     "@hearthtable/engine": "workspace:*",
     "@hearthtable/kernel": "workspace:*",

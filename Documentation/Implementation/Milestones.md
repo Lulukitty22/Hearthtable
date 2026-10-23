@@ -4,23 +4,18 @@ Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acce
 
 ## Current progress
 
-Updated 2026-10-23 at 4:57 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 3 Plan](Milestone%203%20Plan.md) owns the slice details.
+Updated 2026-10-23 at 5:37 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 4 Plan](Milestone%204%20Plan.md) owns the slice details.
 
-**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Milestone 4's scope is confirmed (2026-10-23 at 5:00 am PDT (America/Los_Angeles)); its [plan](Milestone%204%20Plan.md) is drafted and its questions are being asked.
+**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Milestone 4's scope is confirmed (2026-10-23 at 5:00 am PDT (America/Los_Angeles)), and the user agreed to its [plan](Milestone%204%20Plan.md) and acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)). S1 is built; S2 (site administration) is next.
 
-| Milestone 3 slice | What it adds | Status |
+| Milestone 4 slice | What it adds | Status |
 |---|---|---|
-| S1 Concentration limit | Tracks maintained concentration spells against the limit and warns when over it | Built (engine only, not shown on the sheet yet) |
-| S2 Scroll costs | Scribing and mounting prices and times from the Arcana multiplier | Built (engine only, not shown on the sheet yet) |
-| S3 Spell details | Summaries, facts table, credited SRD 5.2.1 text, overflow test book | Built; effect facts reviewed by the user 2026-10-23 at 3:20 am PDT (America/Los_Angeles) |
-| S4 Scrolls as items | Scroll items holding their spell; drag into a spellbook (one entry); mounting cost shown; spent marker; 0.1 lb | Built 2026-10-23 at 3:28 am PDT (America/Los_Angeles) |
-| S5 Charge counters | Each canister's charges shown as a counter, display only | Built 2026-10-23 at 3:31 am PDT (America/Los_Angeles) |
-| S6 Coins | Five coins as inventory items, 50 per pound, wallet total, payment rounding | Built 2026-10-23 at 4:02 am PDT (America/Los_Angeles) (Carol has a labelled test purse) |
-| S7 Item lifecycle | Lost or destroyed marking; moving a container with contents asks first | Built 2026-10-23 at 4:09 am PDT (America/Los_Angeles) |
+| S1 Sign-in and Alias | Google sign-in on the Auth emulator, account document, choosing an Alias, pending state | Built 2026-10-23 at 6:14 am PDT (America/Los_Angeles) (Rules tests and browser tests pass) |
+| S2–S12 | Administration, Rules, folders, campaigns, characters in campaigns, DM review queue, privacy, difference review, live export, portraits, moving today's data in | Not started |
 
-Every item on Milestone 3's [acceptance list](Milestone%203%20Plan.md#acceptance-agreed-2026-10-23-at-154-am-pdt-americalos_angeles) has a unit or browser test that passes (2026-10-23 at 4:09 am PDT (America/Los_Angeles)).
+Milestone 3's slices and their acceptance tests are recorded in the [Milestone 3 Plan](Milestone%203%20Plan.md).
 
-**After Milestone 3:** Milestone 4 (accounts and campaigns), Milestone 5 (gameplay loop and casting), Milestone 5b (crafting), Milestone 5c (trade window), Milestone 6 (real Firebase, only with the user's approval); see the [roadmap](#roadmap).
+**After Milestone 4:** Milestone 5 (gameplay loop and casting), Milestone 5b (crafting), Milestone 5c (trade window), Milestone 6 (real Firebase, only with the user's approval); see the [roadmap](#roadmap).
 
 **Waiting on the user:** Carol's real gold amount (she has a labelled test purse); review of the Codex chat's Hearthside UI prototypes (`prototypes/hearthside/`, checklist in `REVIEW.md`).
 
@@ -46,7 +41,7 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 | **1. Documentation and theory** | The architecture, rulesets and theory sketches; character creation; hosting and stack; milestone criteria; open-work stubs. | Accepted by the user 2026-10-22 at 11:42 am PDT (America/Los_Angeles) |
 | **2. Engine + Carol offline** | Kernel, Milestone 2 systems, the Vanilla+ ruleset, Carol hand-entered, storage adapters, sheet viewer and basic editor, all on the emulator. | Built 2026-10-23 at 12:08 am PDT; accepted by the user 2026-10-23 at 1:54 am PDT (America/Los_Angeles) |
 | 3. Core systems deep plan | Write a second plan for spells (details, scrolls as items, cost calculation), inventory (lifecycle, currency, ammunition counters) and economy rules. Then build them. Crafting jobs moved to 5b (2026-10-23 at 1:53 am PDT). | Accepted by the user 2026-10-23 at 4:57 am PDT (America/Los_Angeles). [Milestone 3 Plan](Milestone%203%20Plan.md) |
-| 4. Accounts and campaigns on the emulator | All permissions and approvals: sign-in, Alias, account approval, folders, campaigns, membership, privacy, the DM review queue for character insertion and edits and for library proposals, Rules and the Firestore schema (approvals moved here by the user, 2026-10-23 at 5:26 am PDT (America/Los_Angeles)). | Scope confirmed by the user 2026-10-23 at 5:00 am PDT (America/Los_Angeles); plan drafted: [Milestone 4 Plan](Milestone%204%20Plan.md) |
+| 4. Accounts and campaigns on the emulator | All permissions and approvals: sign-in, Alias, account approval, folders, campaigns, membership, privacy, the DM review queue for character insertion and edits and for library proposals, Rules and the Firestore schema (approvals moved here by the user, 2026-10-23 at 5:26 am PDT (America/Los_Angeles)). | Scope confirmed by the user 2026-10-23 at 5:00 am PDT (America/Los_Angeles); plan and acceptance agreed 2026-10-23 (recorded at 5:37 am PDT): [Milestone 4 Plan](Milestone%204%20Plan.md). In progress |
 | 5. Gameplay loop | The action inside a campaign. Specify, then build, turns, initiative, rests and conditions. Then the casting workflow: holds, execution-time approval, resolution, polls, rolls and effects on the game clock. | Tentative; see [Notes for Milestone 5](#notes-for-milestone-5) |
 | 5b. Crafting | Crafting jobs with paid stretches, split rates and progress: scroll scribing, mounting and removal, Aetherlock rounds, canister refills, magic items, replicas and elixirs ([Crafting Jobs](../Systems/Crafting%20Jobs.md)). Moved from Milestone 3 by the user, 2026-10-23 at 1:53 am PDT. | Tentative |
 | 5c. Trade window | Player-to-player and player-to-DM trades with barter valued in coin from library prices, and selling ([Currency and Trade](../Systems/Currency%20and%20Trade.md#open-design)). Made its own milestone by the user, 2026-10-23 at 5:00 am PDT (America/Los_Angeles); it needs campaigns (Milestone 4). | Tentative |

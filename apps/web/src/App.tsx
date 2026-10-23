@@ -7,6 +7,7 @@
 
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import type { RecordEnvelope } from "@hearthtable/kernel";
+import { AccountBar } from "./account/AccountBar";
 import { repository } from "./firebase";
 import { FeaturesTab } from "./sheet/FeaturesTab";
 import { Header } from "./sheet/Header";
@@ -118,7 +119,12 @@ function History({ entries }: { entries: readonly HistoryEntry[] }) {
 
 export function App() {
   const path = recordPathFor(window.location.pathname);
-  return path ? <Sheet characterId={path} /> : <Home />;
+  return (
+    <>
+      <AccountBar />
+      {path ? <Sheet characterId={path} /> : <Home />}
+    </>
+  );
 }
 
 function Sheet({ characterId }: { characterId: string }) {

@@ -18,7 +18,10 @@ export default defineConfig({
   ],
   webServer: {
     command: "pnpm --filter @hearthtable/web dev --port 5174 --strictPort",
-    env: { VITE_FIRESTORE_EMULATOR_PORT: "8180" },
+    env: {
+      VITE_FIRESTORE_EMULATOR_PORT: "8180",
+      VITE_AUTH_EMULATOR_PORT: "9100",
+    },
     url: "http://localhost:5174",
     reuseExistingServer: false,
   },
