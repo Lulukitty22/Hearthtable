@@ -882,3 +882,41 @@ dialog.detail {
   font-size: 0.9rem;
   color: var(--text-muted);
 }
+
+/* Difference window (Milestone 4, S9): someone else saved the sheet being edited. */
+
+.difference-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.difference-window {
+  max-width: 900px;
+  width: 100%;
+  max-height: 85vh;
+  overflow: auto;
+}
+
+.difference-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.difference-table th,
+.difference-table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.difference-table code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

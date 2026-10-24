@@ -6,7 +6,7 @@ Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acce
 
 Updated 2026-10-24 at 4:06 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 4 Plan](Milestone%204%20Plan.md) owns the slice details.
 
-**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Milestone 4's scope is confirmed (2026-10-23 at 5:00 am PDT (America/Los_Angeles)), and the user agreed to its [plan](Milestone%204%20Plan.md) and acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)). S1 and S2 are built; web addresses now name their scope (`/Accounts/…`, `/Campaigns/…`; user decision, 2026-10-24 at 3:54 am PDT (America/Los_Angeles)). A character's address now shows it read-only with an Edit button for its owner, and `/Edit` is the editor (2026-10-24 at 4:52 am PDT (America/Los_Angeles)). S1–S6 are built, and S12 changed and is done (Carol lives in the user's campaign, Riverbed of Strings). S7 (DM review queue) is built; S8 (privacy) was deferred to later (2026-10-24 at 2:49 pm PDT (America/Los_Angeles)); S9 (concurrent-edit review) is next.
+**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Milestone 4's scope is confirmed (2026-10-23 at 5:00 am PDT (America/Los_Angeles)), and the user agreed to its [plan](Milestone%204%20Plan.md) and acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)). S1 and S2 are built; web addresses now name their scope (`/Accounts/…`, `/Campaigns/…`; user decision, 2026-10-24 at 3:54 am PDT (America/Los_Angeles)). A character's address now shows it read-only with an Edit button for its owner, and `/Edit` is the editor (2026-10-24 at 4:52 am PDT (America/Los_Angeles)). S1–S6 are built, and S12 changed and is done (Carol lives in the user's campaign, Riverbed of Strings). S7 (DM review queue) is built; S8 (privacy) was deferred to later (2026-10-24 at 2:49 pm PDT (America/Los_Angeles)); S9 (concurrent-edit review) is built; S10 (live HTML export) is next.
 
 | Milestone 4 slice | What it adds | Status |
 |---|---|---|
@@ -18,7 +18,8 @@ Updated 2026-10-24 at 4:06 am PDT (America/Los_Angeles). This section is the one
 | S6 Characters in campaigns | Copy into a campaign with DM approval, DM mode, copy to account, delegated control; Carol and her items moved into Riverbed of Strings (the S12 change) | Built 2026-10-24 at 6:16 am PDT (America/Los_Angeles) |
 | S7 DM review queue | Proposed edits from owners and delegates, asking to delete or replace a campaign character, proposed and imported library entries; DMs accept or reject | Built 2026-10-24 at 6:38 am PDT (America/Los_Angeles) |
 | S8 Privacy | Deferred to a later milestone by the user 2026-10-24 at 2:49 pm PDT (America/Los_Angeles); the model is decided, its storage is open | Deferred |
-| S9–S11 | Difference review, live export, portraits | Not started |
+| S9 Concurrent-edit review | Live sheets; a difference window when someone else saves while you edit, choosing theirs or mine per item, later saves queued | Built 2026-10-24 at 3:07 pm PDT (America/Los_Angeles) |
+| S10–S11 | Live export, portraits | Not started |
 
 Milestone 3's slices and their acceptance tests are recorded in the [Milestone 3 Plan](Milestone%203%20Plan.md).
 

@@ -209,6 +209,23 @@ export function repositoryContract(
       expect(await ok(repo.get(id))).toBeUndefined();
     });
 
+    test("watchUnder reports the record and its tabs now and after each change", async () => {
+      await ok(repo.save(carolElfnein, { now: NOW }));
+      const seen: number[] = [];
+      const stop = repo.watchUnder(
+        CAROL_ID,
+        (records) => seen.push(records.length),
+        (message) => {
+          throw new Error(message);
+        },
+      );
+      await expect.poll(() => seen.at(-1)).toBe(carolElfnein.length);
+      const inventory = await ok(repo.get(`${CAROL_ID}/Inventory` as RecordId));
+      await ok(repo.delete(inventory?.id ?? ("" as RecordId), 1));
+      await expect.poll(() => seen.at(-1)).toBe(carolElfnein.length - 1);
+      stop();
+    });
+
     test("deleteAll deletes together, or nothing on any conflict", async () => {
       await ok(repo.save(carolElfnein, { now: NOW }));
       const all = carolElfnein.map((r) => ({ id: r.id, revision: 1 }));

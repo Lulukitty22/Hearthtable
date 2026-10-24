@@ -54,6 +54,15 @@ export interface Repository {
   deleteAll(
     items: readonly { readonly id: RecordId; readonly revision: number }[],
   ): Promise<StorageResult<void>>;
+  /**
+   * Calls `onChange` with the record at `path` and everything under it, now and after every
+   * saved change (S9, live updates). Returns a function that stops watching.
+   */
+  watchUnder(
+    path: string,
+    onChange: (records: readonly RecordEnvelope[]) => void,
+    onError: (message: string) => void,
+  ): () => void;
 }
 
 export function conflict(

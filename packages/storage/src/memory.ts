@@ -21,6 +21,10 @@ export function memoryRepository(
 ): Repository {
   const stored = new Map<string, Record<string, unknown>>();
   for (const r of initial) stored.set(r.id, serializeEnvelope(r));
+  const watchers = new Set<() => void>();
+  const notify = () => {
+    for (const w of watchers) w();
+  };
 
   const read = (
     raw: Record<string, unknown>,
@@ -108,11 +112,26 @@ export function memoryRepository(
         if (!r.ok) return r;
         out.push(r.value);
       }
+      notify();
       return { ok: true, value: out };
     },
 
     async delete(id: RecordId, expectedRevision: number) {
       return this.deleteAll([{ id, revision: expectedRevision }]);
+    },
+
+    watchUnder(path, onChange, onError) {
+      const send = () =>
+        void this.listUnder(path).then((r) =>
+          r.ok
+            ? onChange(r.value)
+            : onError(r.errors.map((e) => e.message).join(" ")),
+        );
+      watchers.add(send);
+      send();
+      return () => {
+        watchers.delete(send);
+      };
     },
 
     async deleteAll(items) {
@@ -123,6 +142,7 @@ export function memoryRepository(
       });
       if (conflicts.length > 0) return { ok: false, errors: conflicts };
       for (const { id } of items) stored.delete(id);
+      notify();
       return { ok: true, value: undefined };
     },
   };

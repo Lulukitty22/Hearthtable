@@ -36,6 +36,7 @@ import { parseRoute, webPathFor, type View as RouteView } from "./routes";
 import { FeaturesTab } from "./sheet/FeaturesTab";
 import { Header } from "./sheet/Header";
 import { EntryProvider } from "./sheet/entries";
+import { DifferenceWindow } from "./sheet/DifferenceWindow";
 import { Draggable } from "./sheet/Grid";
 import { InventoryTab } from "./sheet/InventoryTab";
 import { SpellsTab } from "./sheet/SpellsTab";
@@ -417,6 +418,7 @@ function Sheet({
     characterId,
     definitionPaths,
     proposer ? submit : undefined,
+    canEdit,
   );
   const [tab, setTab] = useState("stats");
   const [note, setNote] = useState("");
@@ -476,6 +478,15 @@ function Sheet({
               Sent to the DM. It is saved once a DM accepts it on the campaign
               page.
             </p>
+          )}
+          {state.comparison && (
+            <DifferenceWindow
+              key={state.comparison.at}
+              characterId={characterId}
+              comparison={state.comparison}
+              records={state.records}
+              onResolve={actions.resolve}
+            />
           )}
           <Header {...props} />
           {!editing && (

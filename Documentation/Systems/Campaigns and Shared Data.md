@@ -193,7 +193,7 @@ Compute the differences in the browser when an incoming saved character version 
 
 Selected 2026-10-19: if further saved updates arrive during an unresolved comparison, queue them separately in the browser in arrival order. Finish the displayed comparison, then show the next one. Do not combine incoming updates or refresh the comparison the editor is currently reading. This queue is temporary browser state, not a persisted diff archive. Reviewing an older incoming update does not make that version current on the server; a later save must still validate current state and permissions.
 
-Open: exact update identifier/timestamp presentation. This interface decision does not establish a lock on other editors.
+Open: exact update identifier/timestamp presentation; since 2026-10-24 at 3:07 pm PDT (America/Los_Angeles) the window shows when the save was made and its note, but not who made it, which saves do not record yet. This interface decision does not establish a lock on other editors.
 
 ## Offline behavior and server authority
 

@@ -15,6 +15,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   runTransaction,
   where,
@@ -177,6 +178,54 @@ export function firestoreRepository(db: Firestore): Repository {
 
     async delete(id: RecordId, expectedRevision: number) {
       return this.deleteAll([{ id, revision: expectedRevision }]);
+    },
+
+    // The record itself and everything listing it as an ancestor: two listeners, reported
+    // together once both have answered. One save can reach the two listeners separately, so a
+    // report waits a moment for the other half.
+    watchUnder(path, onChange, onError) {
+      let self: RecordEnvelope[] | undefined;
+      let below: RecordEnvelope[] | undefined;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const send = () => {
+        if (!self || !below) return;
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          if (self && below) onChange([...self, ...below]);
+        }, 50);
+      };
+      const parse = (data: DocumentData | undefined): RecordEnvelope[] => {
+        const r = read(data, String(data?.["path"]));
+        if (!r.ok) {
+          onError(r.errors.map((e) => e.message).join(" "));
+          return [];
+        }
+        return [r.value];
+      };
+      const stopSelf = onSnapshot(
+        ref(path),
+        (snap) => {
+          self = snap.exists() ? parse(snap.data()) : [];
+          send();
+        },
+        (error) => onError(error.message),
+      );
+      const stopBelow = onSnapshot(
+        query(
+          collection(db, COLLECTION),
+          where("ancestors", "array-contains", path),
+        ),
+        (snap) => {
+          below = snap.docs.flatMap((d) => parse(d.data()));
+          send();
+        },
+        (error) => onError(error.message),
+      );
+      return () => {
+        clearTimeout(timer);
+        stopSelf();
+        stopBelow();
+      };
     },
 
     // One transaction, so at most 500 records; larger deletes would need splitting.
