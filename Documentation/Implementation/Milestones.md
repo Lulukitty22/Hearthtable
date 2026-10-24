@@ -6,7 +6,7 @@ Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acce
 
 Updated 2026-10-24 at 4:06 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 4 Plan](Milestone%204%20Plan.md) owns the slice details.
 
-**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Milestone 4's scope is confirmed (2026-10-23 at 5:00 am PDT (America/Los_Angeles)), and the user agreed to its [plan](Milestone%204%20Plan.md) and acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)). S1 and S2 are built; web addresses now name their scope (`/Accounts/…`, `/Campaigns/…`; user decision, 2026-10-24 at 3:54 am PDT (America/Los_Angeles)). A character's address now shows it read-only with an Edit button for its owner, and `/Edit` is the editor (2026-10-24 at 4:52 am PDT (America/Los_Angeles)). S1–S6 are built, and S12 changed and is done (Carol lives in the user's campaign, Riverbed of Strings). S7 (DM review queue) is built; S8 (privacy) is next.
+**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Milestone 4's scope is confirmed (2026-10-23 at 5:00 am PDT (America/Los_Angeles)), and the user agreed to its [plan](Milestone%204%20Plan.md) and acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)). S1 and S2 are built; web addresses now name their scope (`/Accounts/…`, `/Campaigns/…`; user decision, 2026-10-24 at 3:54 am PDT (America/Los_Angeles)). A character's address now shows it read-only with an Edit button for its owner, and `/Edit` is the editor (2026-10-24 at 4:52 am PDT (America/Los_Angeles)). S1–S6 are built, and S12 changed and is done (Carol lives in the user's campaign, Riverbed of Strings). S7 (DM review queue) is built; S8 (privacy) was deferred to later (2026-10-24 at 2:49 pm PDT (America/Los_Angeles)); S9 (concurrent-edit review) is next.
 
 | Milestone 4 slice | What it adds | Status |
 |---|---|---|
@@ -17,7 +17,8 @@ Updated 2026-10-24 at 4:06 am PDT (America/Los_Angeles). This section is the one
 | S5 Campaigns and membership | New → Campaign, campaign page, one invite code per campaign, join requests and approval, leaving, removing, granting and revoking DM; seeded Moonlit Coast and Test Campaign | Built 2026-10-24 at 5:40 am PDT (America/Los_Angeles) |
 | S6 Characters in campaigns | Copy into a campaign with DM approval, DM mode, copy to account, delegated control; Carol and her items moved into Riverbed of Strings (the S12 change) | Built 2026-10-24 at 6:16 am PDT (America/Los_Angeles) |
 | S7 DM review queue | Proposed edits from owners and delegates, asking to delete or replace a campaign character, proposed and imported library entries; DMs accept or reject | Built 2026-10-24 at 6:38 am PDT (America/Los_Angeles) |
-| S8–S11 | Privacy, difference review, live export, portraits | Not started |
+| S8 Privacy | Deferred to a later milestone by the user 2026-10-24 at 2:49 pm PDT (America/Los_Angeles); the model is decided, its storage is open | Deferred |
+| S9–S11 | Difference review, live export, portraits | Not started |
 
 Milestone 3's slices and their acceptance tests are recorded in the [Milestone 3 Plan](Milestone%203%20Plan.md).
 
@@ -53,7 +54,7 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 | 5c. Trade window | Player-to-player and player-to-DM trades with barter valued in coin from library prices, and selling ([Currency and Trade](../Systems/Currency%20and%20Trade.md#open-design)). Made its own milestone by the user, 2026-10-23 at 5:00 am PDT (America/Los_Angeles); it needs campaigns (Milestone 4). | Tentative |
 | Character creator | A character creator, starting from the minimal blank-with-a-name character of Milestone 4, and more broadly creating custom entries with their game fields (items, spells, features). Added by the user 2026-10-24 at 5:11 am PDT (America/Los_Angeles); it comes after Milestone 5 (turns and campaigns), and its exact place is open. | Tentative |
 | 6. Move to real Firebase | Only with the user's explicit approval: project, region, Blaze, deployment, first administrator. | Tentative |
-| Later | NPCs and encounters, export shell, portraits, Discord bot, LLM helpers, importers, other rulesets and games. | Tentative |
+| Later | Privacy (moved from Milestone 4 S8; [model](../Systems/Campaigns%20and%20Shared%20Data.md#character-sheet-visibility)), NPCs and encounters, Discord bot, LLM helpers, importers, other rulesets and games. | Tentative |
 
 ## Notes for Milestone 5
 
