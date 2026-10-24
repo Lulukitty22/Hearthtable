@@ -2,11 +2,12 @@
 // 2026-10-24): an address names its scope first, like the record path, so
 // /Accounts/VR_Lulu/Characters/Carol_Elfnein shows account/VR_Lulu/Characters/Carol_Elfnein and
 // /Campaigns/Riverbed_of_Strings shows that campaign's overview. A last segment Edit names the
-// editor, and /Admin is the administrators' page. No address starts with an Alias, so none can
+// editor, Export the sheet-only page a live HTML export frames (S10), and /Admin is the
+// administrators' page. No address starts with an Alias, so none can
 // clash. The in-play views, /Campaigns/<name>/Table for players and …/Table/Dungeon_Master for
 // the DM (user decision, 2026-10-24), arrive with Milestone 5; their words are reserved now.
 
-export type View = "default" | "edit";
+export type View = "default" | "edit" | "export";
 
 export type Route =
   | { readonly kind: "home" }
@@ -19,7 +20,7 @@ const SCOPES: Record<string, { record: string; web: string }> = {
   campaigns: { record: "campaign", web: "Campaigns" },
 };
 
-const VIEWS: Record<string, View> = { edit: "edit" };
+const VIEWS: Record<string, View> = { edit: "edit", export: "export" };
 
 /**
  * Every word an address uses for a page, scope or view. No character, folder, campaign or custom
@@ -34,10 +35,12 @@ export const ADDRESS_WORDS: readonly string[] = [
   "DM",
   "Table",
   "Dungeon_Master",
+  "Export",
 ];
 const VIEW_SEGMENT: Record<View, string | undefined> = {
   default: undefined,
   edit: "Edit",
+  export: "Export",
 };
 
 export function parseRoute(pathname: string): Route {

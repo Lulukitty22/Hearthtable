@@ -920,3 +920,11 @@ dialog.detail {
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+/* Live HTML export (Milestone 4, S10). */
+
+.export-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 6px;
+}

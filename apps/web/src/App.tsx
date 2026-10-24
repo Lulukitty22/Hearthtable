@@ -30,6 +30,7 @@ import { useCampaign, useDelegates } from "./campaign/useCampaign";
 import { AdminPage } from "./admin/AdminPage";
 import { db, repository } from "./firebase";
 import { EntryPage } from "./home/EntryPage";
+import { downloadExport } from "./export/exportFile";
 import { FolderPage } from "./home/FolderPage";
 import { segmentFor } from "./home/names";
 import { parseRoute, webPathFor, type View as RouteView } from "./routes";
@@ -180,6 +181,9 @@ function History({ entries }: { entries: readonly HistoryEntry[] }) {
 export function App() {
   const route = parseRoute(window.location.pathname);
   const viewer = useViewer();
+  // The sheet-only page a live HTML export frames: nothing but the sheet (S10).
+  if (route.kind === "record" && route.view === "export")
+    return <Sheet characterId={route.path} view="export" viewer={viewer} />;
   return (
     <>
       <AccountBar viewer={viewer} />
@@ -398,6 +402,7 @@ function Sheet({
     (isAlias(viewer, campaignOwnerAliasOf(characterId)) ||
       delegates.includes(uid));
   const editing = view === "edit";
+  const shell = view === "export";
   const canEdit = editing && (allowed || proposer);
   const submit = useCallback<Submit>(
     (changed, note) =>
@@ -437,6 +442,17 @@ function Sheet({
       </main>
     );
   }
+  if (state.status === "missing" && shell) {
+    // An export points at the path the character had; it never follows it elsewhere.
+    return (
+      <main className="page">
+        <div className="error-box">
+          There is no character at <code>{characterId}</code> any more. If it
+          was copied somewhere else, a fresh export of the copy is needed.
+        </div>
+      </main>
+    );
+  }
   if (state.status === "missing") {
     return (
       <main className="page">
@@ -465,14 +481,39 @@ function Sheet({
     <EntryProvider props={props}>
       <Draggable.Provider value={canEdit}>
         <main className="page">
-          <ModeBar
-            characterId={characterId}
-            editing={editing}
-            allowed={allowed}
-            proposer={proposer}
-            viewer={viewer}
-            dirty={state.dirty.length > 0}
-          />
+          {!shell && !editing && (
+            <div className="export-bar">
+              <button
+                type="button"
+                className="secondary"
+                title="Download a file that shows this sheet live, view-only"
+                onClick={() =>
+                  downloadExport(
+                    characterId,
+                    String(
+                      (
+                        state.records.get(characterId)?.data as {
+                          name?: unknown;
+                        }
+                      )?.name ?? characterId,
+                    ),
+                  )
+                }
+              >
+                Export HTML
+              </button>
+            </div>
+          )}
+          {!shell && (
+            <ModeBar
+              characterId={characterId}
+              editing={editing}
+              allowed={allowed}
+              proposer={proposer}
+              viewer={viewer}
+              dirty={state.dirty.length > 0}
+            />
+          )}
           {sent && proposer && (
             <p className="panel mode-bar" role="status">
               Sent to the DM. It is saved once a DM accepts it on the campaign
@@ -489,7 +530,7 @@ function Sheet({
             />
           )}
           <Header {...props} />
-          {!editing && (
+          {!editing && !shell && (
             <CharacterTools
               characterId={characterId}
               name={String(
