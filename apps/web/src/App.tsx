@@ -1,7 +1,8 @@
 // Character sheets read from and saved to the local emulator. Addresses follow record paths
 // (routes.ts): /Accounts/VR_Lulu/Characters/Carol_Elfnein shows the record
-// account/VR_Lulu/Characters/Carol_Elfnein, and /Campaigns/<name>/… a campaign's copy. Until the
-// view-only character card exists, a character's address and its /Edit address both open the editor.
+// account/VR_Lulu/Characters/Carol_Elfnein, and /Campaigns/<name>/… a campaign's copy. A
+// character's address shows it read-only, with an Edit button for whoever may edit it; its /Edit
+// address is the editor (user decision, 2026-10-24).
 // Tabs come from the systems: each module lists the tabs it provides (`provides.uiTabs`), and
 // the app shows the tabs of the modules the ruleset enables, in a fixed order. A tab a module
 // declares but this app cannot draw is shown as unavailable rather than hidden.
@@ -9,13 +10,15 @@
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import type { RecordEnvelope } from "@hearthtable/kernel";
 import { AccountBar } from "./account/AccountBar";
-import { useViewer } from "./account/useViewer";
+import { canEditRecord, ownerAliasOf } from "./account/permissions";
+import { useViewer, type Viewer } from "./account/useViewer";
 import { AdminPage } from "./admin/AdminPage";
 import { repository } from "./firebase";
-import { parseRoute, webPathFor } from "./routes";
+import { parseRoute, webPathFor, type View as RouteView } from "./routes";
 import { FeaturesTab } from "./sheet/FeaturesTab";
 import { Header } from "./sheet/Header";
 import { EntryProvider } from "./sheet/entries";
+import { Draggable } from "./sheet/Grid";
 import { InventoryTab } from "./sheet/InventoryTab";
 import { SpellsTab } from "./sheet/SpellsTab";
 import { StatsTab } from "./sheet/StatsTab";
@@ -112,7 +115,9 @@ export function App() {
       <AccountBar viewer={viewer} />
       {route.kind === "admin" && <AdminPage viewer={viewer} />}
       {route.kind === "home" && <Home />}
-      {route.kind === "record" && <Sheet characterId={route.path} />}
+      {route.kind === "record" && (
+        <Sheet characterId={route.path} view={route.view} viewer={viewer} />
+      )}
       {route.kind === "unknown" && <NotFound />}
     </>
   );
@@ -131,7 +136,73 @@ function NotFound() {
   );
 }
 
-function Sheet({ characterId }: { characterId: string }) {
+/** Above the sheet: Edit on the view-only sheet, Done while editing, or why editing is not open. */
+function ModeBar({
+  characterId,
+  editing,
+  allowed,
+  viewer,
+  dirty,
+}: {
+  characterId: string;
+  editing: boolean;
+  allowed: boolean;
+  viewer: Viewer;
+  dirty: boolean;
+}) {
+  if (editing && allowed)
+    return (
+      <div className="mode-bar">
+        <span className="badge good">Editing</span>
+        <a
+          className="secondary button-link"
+          href={webPathFor(characterId)}
+          onClick={(e) => {
+            if (
+              dirty &&
+              !window.confirm("Leave without saving? Unsaved changes are lost.")
+            )
+              e.preventDefault();
+          }}
+        >
+          Done
+        </a>
+      </div>
+    );
+  if (allowed)
+    return (
+      <div className="mode-bar">
+        <a
+          className="primary button-link"
+          href={webPathFor(characterId, "edit")}
+        >
+          Edit
+        </a>
+      </div>
+    );
+  if (!editing || viewer.status === "loading" || viewer.status === "signed-in")
+    return null;
+  const owner = ownerAliasOf(characterId);
+  return (
+    <p className="panel mode-bar" role="note">
+      {owner
+        ? `Only ${owner} can edit this character`
+        : "Campaign characters cannot be edited yet"}
+      {owner && viewer.status === "guest" ? "; sign in to edit your own." : "."}{" "}
+      It is shown read-only.
+    </p>
+  );
+}
+
+function Sheet({
+  characterId,
+  view,
+  viewer,
+}: {
+  characterId: string;
+  view: RouteView;
+  viewer: Viewer;
+}) {
   // Definitions come from core and the owner's own Items folder.
   const definitionPaths = useMemo(() => {
     const [scope, owner] = characterId.split("/");
@@ -140,6 +211,9 @@ function Sheet({ characterId }: { characterId: string }) {
   const [state, actions] = useSheet(repository, characterId, definitionPaths);
   const [tab, setTab] = useState("stats");
   const [note, setNote] = useState("");
+  const allowed = canEditRecord(viewer, characterId);
+  const editing = view === "edit";
+  const canEdit = editing && allowed;
 
   if (state.status === "loading")
     return <main className="page muted">Loading from the emulator…</main>;
@@ -171,6 +245,7 @@ function Sheet({ characterId }: { characterId: string }) {
     resolved: state.resolved,
     records: state.records,
     edit: actions.edit,
+    canEdit,
   };
   const tabs = sheetTabs();
   const current = tabs.includes(tab) ? tab : (tabs[0] ?? "");
@@ -179,102 +254,116 @@ function Sheet({ characterId }: { characterId: string }) {
 
   return (
     <EntryProvider props={props}>
-      <main className="page">
-        <Header {...props} />
+      <Draggable.Provider value={canEdit}>
+        <main className="page">
+          <ModeBar
+            characterId={characterId}
+            editing={editing}
+            allowed={allowed}
+            viewer={viewer}
+            dirty={state.dirty.length > 0}
+          />
+          <Header {...props} />
 
-        {notes.length > 0 && (
-          <details className="notes" style={{ marginBottom: 12 }}>
-            <summary>{notes.length} note(s) about this sheet</summary>
-            <ul>
-              {notes.map((n, i) => (
-                <li key={i} className={n.severity}>
-                  {n.message}
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
-
-        <nav className="tabs" role="tablist" aria-label="Sheet sections">
-          {tabs.map((id) => (
-            <button
-              key={id}
-              type="button"
-              role="tab"
-              className="tab"
-              aria-selected={id === current}
-              onClick={() => setTab(id)}
-            >
-              {TAB_VIEWS[id]?.label ?? id}
-            </button>
-          ))}
-        </nav>
-
-        <div role="tabpanel">
-          {View ? (
-            <View {...props} />
-          ) : (
-            <p className="unresolved">
-              The "{current}" tab is not available in this version of the app.
-            </p>
+          {notes.length > 0 && (
+            <details className="notes" style={{ marginBottom: 12 }}>
+              <summary>{notes.length} note(s) about this sheet</summary>
+              <ul>
+                {notes.map((n, i) => (
+                  <li key={i} className={n.severity}>
+                    {n.message}
+                  </li>
+                ))}
+              </ul>
+            </details>
           )}
-        </div>
 
-        <History entries={state.history} />
+          <nav className="tabs" role="tablist" aria-label="Sheet sections">
+            {tabs.map((id) => (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                className="tab"
+                aria-selected={id === current}
+                onClick={() => setTab(id)}
+              >
+                {TAB_VIEWS[id]?.label ?? id}
+              </button>
+            ))}
+          </nav>
 
-        {(state.dirty.length > 0 || state.saveErrors.length > 0) && (
-          <div className="save-bar" role="region" aria-label="Unsaved changes">
-            <div className="save-bar-inner">
-              {state.saveErrors.length > 0 && (
-                <div
-                  className="error-box"
-                  style={{ flexBasis: "100%", margin: 0 }}
-                >
-                  Not saved: {state.saveErrors.map((e) => e.message).join(" ")}{" "}
-                  {state.saveErrors.some((e) => e.code === "conflict") && (
-                    <button
-                      type="button"
-                      className="secondary"
-                      onClick={actions.reload}
-                    >
-                      Load the newer version (drops these edits)
-                    </button>
-                  )}
-                </div>
-              )}
-              <span className="muted">
-                {state.dirty.length} unsaved change
-                {state.dirty.length === 1 ? "" : "s"}
-              </span>
-              <input
-                type="text"
-                placeholder="Optional note, e.g. Took 34 fire damage from the dragon"
-                aria-label="Save note"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
-              <button
-                type="button"
-                className="primary"
-                disabled={state.saving}
-                onClick={async () => {
-                  if (await actions.save(note)) setNote("");
-                }}
-              >
-                {state.saving ? "Saving…" : "Save"}
-              </button>
-              <button
-                type="button"
-                className="secondary"
-                onClick={actions.discard}
-                disabled={state.saving}
-              >
-                Discard
-              </button>
-            </div>
+          <div role="tabpanel">
+            {View ? (
+              <View {...props} />
+            ) : (
+              <p className="unresolved">
+                The "{current}" tab is not available in this version of the app.
+              </p>
+            )}
           </div>
-        )}
-      </main>
+
+          <History entries={state.history} />
+
+          {(state.dirty.length > 0 || state.saveErrors.length > 0) && (
+            <div
+              className="save-bar"
+              role="region"
+              aria-label="Unsaved changes"
+            >
+              <div className="save-bar-inner">
+                {state.saveErrors.length > 0 && (
+                  <div
+                    className="error-box"
+                    style={{ flexBasis: "100%", margin: 0 }}
+                  >
+                    Not saved:{" "}
+                    {state.saveErrors.map((e) => e.message).join(" ")}{" "}
+                    {state.saveErrors.some((e) => e.code === "conflict") && (
+                      <button
+                        type="button"
+                        className="secondary"
+                        onClick={actions.reload}
+                      >
+                        Load the newer version (drops these edits)
+                      </button>
+                    )}
+                  </div>
+                )}
+                <span className="muted">
+                  {state.dirty.length} unsaved change
+                  {state.dirty.length === 1 ? "" : "s"}
+                </span>
+                <input
+                  type="text"
+                  placeholder="Optional note, e.g. Took 34 fire damage from the dragon"
+                  aria-label="Save note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="primary"
+                  disabled={state.saving}
+                  onClick={async () => {
+                    if (await actions.save(note)) setNote("");
+                  }}
+                >
+                  {state.saving ? "Saving…" : "Save"}
+                </button>
+                <button
+                  type="button"
+                  className="secondary"
+                  onClick={actions.discard}
+                  disabled={state.saving}
+                >
+                  Discard
+                </button>
+              </div>
+            </div>
+          )}
+        </main>
+      </Draggable.Provider>
     </EntryProvider>
   );
 }

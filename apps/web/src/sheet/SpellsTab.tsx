@@ -106,47 +106,52 @@ function SpellDetail({
           <ScrollFacts
             props={props}
             scroll={scroll}
-            onToggleSpent={() =>
-              props.edit(bookRecordId, (data: Data) => ({
-                ...data,
-                entries: (data["entries"] as Entry[]).map((x) =>
-                  x.id === entry.id
-                    ? {
-                        ...x,
-                        scroll: {
-                          ...((x as { scroll?: object }).scroll ?? {}),
-                          spent: !scroll.spent,
-                        },
-                      }
-                    : x,
-                ),
-              }))
-            }
+            {...(props.canEdit
+              ? {
+                  onToggleSpent: () =>
+                    props.edit(bookRecordId, (data: Data) => ({
+                      ...data,
+                      entries: (data["entries"] as Entry[]).map((x) =>
+                        x.id === entry.id
+                          ? {
+                              ...x,
+                              scroll: {
+                                ...((x as { scroll?: object }).scroll ?? {}),
+                                spent: !scroll.spent,
+                              },
+                            }
+                          : x,
+                      ),
+                    })),
+                }
+              : {})}
           />
-          <p>
-            <button
-              type="button"
-              className="secondary"
-              onClick={() => {
-                takeOut(
-                  { props, notice: onNotice },
-                  {
-                    kind: "entry",
-                    bookRecordId,
-                    entryId: entry.id,
-                    level: entry.level ?? -1,
-                  },
-                  { kind: "root" },
-                );
-                onClose();
-              }}
-            >
-              Take the scroll out of {bookTitle}
-            </button>
-          </p>
+          {props.canEdit && (
+            <p>
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => {
+                  takeOut(
+                    { props, notice: onNotice },
+                    {
+                      kind: "entry",
+                      bookRecordId,
+                      entryId: entry.id,
+                      level: entry.level ?? -1,
+                    },
+                    { kind: "root" },
+                  );
+                  onClose();
+                }}
+              >
+                Take the scroll out of {bookTitle}
+              </button>
+            </p>
+          )}
         </>
       )}
-      {bookRecordId && !scroll && (
+      {bookRecordId && !scroll && props.canEdit && (
         <p>
           <button
             type="button"
@@ -227,10 +232,12 @@ export function SpellsTab(props: TabProps) {
           </button>
         </p>
       )}
-      <p className="muted">
-        Drag a spell onto another book to move it; it keeps its level. Drag a
-        scroll from the inventory onto a book to mount it.
-      </p>
+      {props.canEdit && (
+        <p className="muted">
+          Drag a spell onto another book to move it; it keeps its level. Drag a
+          scroll from the inventory onto a book to mount it.
+        </p>
+      )}
 
       {books.map((book) => {
         const record = recordFor(book);
@@ -310,7 +317,7 @@ export function SpellsTab(props: TabProps) {
                   </TileGrid>
                 </div>
               ))}
-            {record && (
+            {record && props.canEdit && (
               <AddSpell
                 props={props}
                 bookRecordId={record.id}

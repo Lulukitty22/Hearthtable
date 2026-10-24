@@ -12,6 +12,8 @@ export interface TabProps {
   readonly resolved: ResolvedCharacter;
   readonly records: ReadonlyMap<string, RecordEnvelope>;
   readonly edit: SheetActions["edit"];
+  /** False on the view-only sheet: edit controls show as plain text and nothing can be dragged. */
+  readonly canEdit: boolean;
 }
 
 export type Data = Record<string, unknown>;

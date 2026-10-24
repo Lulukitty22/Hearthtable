@@ -736,3 +736,23 @@ dialog.detail {
 .approval-list li button {
   margin-left: auto;
 }
+
+/* View-only sheet and editor (2026-10-24): the Edit / Done bar above the sheet. */
+
+.mode-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.button-link {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.mode-bar[role="note"] {
+  justify-content: flex-start;
+}

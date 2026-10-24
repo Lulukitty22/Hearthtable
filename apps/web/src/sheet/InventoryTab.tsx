@@ -368,24 +368,26 @@ function Attunement({
       ) : (
         <span className="badge">Not attuned</span>
       )}{" "}
-      <button
-        type="button"
-        className="secondary"
-        onClick={() =>
-          editLine(props, line.id, (l) =>
-            position >= 0
-              ? (({ attunedSlot: _slot, ...rest }) =>
-                  ({ ...rest, attunedTo: null }) as Line)(l)
-              : {
-                  ...l,
-                  attunedTo: props.characterId,
-                  attunedSlot: attunedCount + 1,
-                },
-          )
-        }
-      >
-        {position >= 0 ? "End attunement" : "Attune"}
-      </button>
+      {props.canEdit && (
+        <button
+          type="button"
+          className="secondary"
+          onClick={() =>
+            editLine(props, line.id, (l) =>
+              position >= 0
+                ? (({ attunedSlot: _slot, ...rest }) =>
+                    ({ ...rest, attunedTo: null }) as Line)(l)
+                : {
+                    ...l,
+                    attunedTo: props.characterId,
+                    attunedSlot: attunedCount + 1,
+                  },
+            )
+          }
+        >
+          {position >= 0 ? "End attunement" : "Attune"}
+        </button>
+      )}
     </span>
   );
 }
@@ -466,22 +468,28 @@ function ItemDetail({
         's copy
       </h3>
       <div className="detail-grid">
-        <label>
-          Quantity{" "}
-          <input
-            type="number"
-            min={0}
-            aria-label={`Quantity of ${title}`}
-            value={line.quantity}
-            style={{ width: "5em" }}
-            onChange={(e) => {
-              const q = Math.max(0, Math.floor(Number(e.target.value)));
-              if (Number.isFinite(q))
-                editLine(props, line.id, (l) => ({ ...l, quantity: q }));
-            }}
-          />
-        </label>
-        {holdable && (
+        {!props.canEdit && <span>Quantity {line.quantity}</span>}
+        {props.canEdit && (
+          <label>
+            Quantity{" "}
+            <input
+              type="number"
+              min={0}
+              aria-label={`Quantity of ${title}`}
+              value={line.quantity}
+              style={{ width: "5em" }}
+              onChange={(e) => {
+                const q = Math.max(0, Math.floor(Number(e.target.value)));
+                if (Number.isFinite(q))
+                  editLine(props, line.id, (l) => ({ ...l, quantity: q }));
+              }}
+            />
+          </label>
+        )}
+        {holdable && !props.canEdit && (
+          <span className="badge">{line.held ? "Held" : "Stowed"}</span>
+        )}
+        {holdable && props.canEdit && (
           <button
             type="button"
             className="chip"
@@ -521,19 +529,24 @@ function ItemDetail({
           <ScrollFacts
             props={props}
             scroll={scroll}
-            onToggleSpent={() =>
-              editLine(props, line.id, (l) => ({
-                ...l,
-                scroll: {
-                  ...(l["scroll"] as object),
-                  spent: !scroll.spent,
-                },
-              }))
-            }
+            {...(props.canEdit
+              ? {
+                  onToggleSpent: () =>
+                    editLine(props, line.id, (l) => ({
+                      ...l,
+                      scroll: {
+                        ...(l["scroll"] as object),
+                        spent: !scroll.spent,
+                      },
+                    })),
+                }
+              : {})}
           />
-          <p className="muted">
-            Drag it onto a spellbook to mount it there; it takes one entry.
-          </p>
+          {props.canEdit && (
+            <p className="muted">
+              Drag it onto a spellbook to mount it there; it takes one entry.
+            </p>
+          )}
         </>
       )}
 
@@ -573,7 +586,9 @@ function ItemDetail({
               <ItemTile key={r.line.id} sheet={sheet} row={r} />
             ))}
             {inside.length === 0 && (
-              <span className="muted">Empty. Drag items here.</span>
+              <span className="muted">
+                {props.canEdit ? "Empty. Drag items here." : "Empty."}
+              </span>
             )}
           </TileGrid>
         </>
@@ -657,15 +672,18 @@ function Lifecycle({ props, row }: { props: TabProps; row: LineRow }) {
           Kept as a record: no weight, no effects; any attunement stays until
           ended.
         </span>{" "}
-        <button
-          type="button"
-          className="secondary"
-          onClick={() => set(undefined)}
-        >
-          Restore
-        </button>
+        {props.canEdit && (
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => set(undefined)}
+          >
+            Restore
+          </button>
+        )}
       </p>
     );
+  if (!props.canEdit) return null;
   if (!canBeLost)
     return <p className="muted">This item cannot be lost or destroyed.</p>;
   return (
@@ -736,10 +754,12 @@ export function InventoryTab(props: TabProps) {
           </span>
         </p>
       )}
-      <p className="muted">
-        Drag items onto a container or into its open window to pack them;
-        Shift-drag to choose how many to take from a stack.
-      </p>
+      {props.canEdit && (
+        <p className="muted">
+          Drag items onto a container or into its open window to pack them;
+          Shift-drag to choose how many to take from a stack.
+        </p>
+      )}
       {pending && (
         <div
           className="error-box"

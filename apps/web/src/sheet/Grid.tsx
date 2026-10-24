@@ -1,10 +1,13 @@
 // Game-style grids (user decisions, 2026-10-22): every item or spell is a tile showing its name
 // until pictures are added. Hovering shows the name; clicking opens the whole entry in a window.
 // Tiles can be dragged; grids, tiles and slots can accept drops. Windows float, can be moved by
-// their title bar, and stay open until closed, so items can be dragged into them.
+// their title bar, and stay open until closed, so items can be dragged into them. On the
+// view-only sheet (`Draggable` false) nothing is dragged or dropped.
 
 import type { RecordEnvelope } from "@hearthtable/kernel";
 import {
+  createContext,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -27,6 +30,9 @@ export type Dragged =
       readonly level: number;
     };
 
+/** False on the view-only sheet: tiles do not drag and nothing accepts drops. */
+export const Draggable = createContext(true);
+
 let current: Dragged | undefined;
 export const dragged = () => current;
 
@@ -38,7 +44,8 @@ export interface DropProps {
 
 function useDrop(drop: DropProps | undefined) {
   const [state, setState] = useState<"none" | "ok" | "no">("none");
-  if (!drop) return { state, handlers: {} };
+  const allowed = useContext(Draggable);
+  if (!drop || !allowed) return { state, handlers: {} };
   return {
     state,
     handlers: {
@@ -88,6 +95,7 @@ export function Tile({
   label?: string;
 }) {
   const { state, handlers } = useDrop(drop);
+  const draggable = useContext(Draggable) && drag !== undefined;
   return (
     <button
       type="button"
@@ -95,9 +103,9 @@ export function Tile({
       title={name}
       aria-label={label ?? name}
       onClick={onOpen}
-      draggable={drag !== undefined}
+      draggable={draggable}
       onDragStart={(e) => {
-        if (!drag) return;
+        if (!drag || !draggable) return;
         current = drag;
         e.dataTransfer.effectAllowed = "move";
         e.dataTransfer.setData("text/plain", name);
@@ -134,9 +142,10 @@ export function TileGrid({
   label?: string;
 }) {
   const { state, handlers } = useDrop(drop);
+  const dropZone = useContext(Draggable) && drop !== undefined;
   return (
     <div
-      className={`tile-grid${drop ? " drop-zone" : ""}${state === "ok" ? " drop-ok" : state === "no" ? " drop-no" : ""}`}
+      className={`tile-grid${dropZone ? " drop-zone" : ""}${state === "ok" ? " drop-ok" : state === "no" ? " drop-no" : ""}`}
       aria-label={label}
       {...handlers}
     >

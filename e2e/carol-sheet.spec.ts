@@ -1,12 +1,20 @@
 // Milestone 2 acceptance: open Carol's sheet, edit HP and an inventory quantity, save, reload,
-// and see both values persist in the emulator.
+// and see both values persist in the emulator. Editing is open to Carol's owner, so every test
+// signs in as VR_Lulu and uses the editor address.
 
 import { expect, test } from "@playwright/test";
+import { signInAs, VR_LULU } from "./signIn";
+
+test.beforeEach(async ({ page }) => {
+  await page.goto("/");
+  await signInAs(page, VR_LULU);
+  await expect(page.getByTestId("account-alias")).toHaveText("VR_Lulu");
+});
 
 test("edits to HP and an inventory quantity persist after reload", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   await expect(
     page.getByRole("heading", { name: "Carol Elfnein" }),
   ).toBeVisible();
@@ -42,7 +50,7 @@ test("edits to HP and an inventory quantity persist after reload", async ({
 test("Mage Armor and Shield change AC from active state, and the Wand only spell attacks", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   await expect(page.getByTestId("armor-class")).toHaveText("13");
   await page.getByRole("button", { name: "Mage Armor" }).click();
   await expect(page.getByTestId("armor-class")).toHaveText("16");
@@ -65,7 +73,7 @@ test("Mage Armor and Shield change AC from active state, and the Wand only spell
 test("ending and restoring an attunement changes the item's bonus", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   const int = page.getByTestId("ability-int");
   await expect(int).toHaveText("22");
   await page.getByRole("tab", { name: "Inventory" }).click();
@@ -90,7 +98,7 @@ test("ending and restoring an attunement changes the item's bonus", async ({
 test("rounds drag into chambers and items into bags, and stay there after saving", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   await page.getByRole("tab", { name: "Inventory" }).click();
   await page.getByRole("button", { name: "Aetherlock" }).click();
   const topLeft = page.getByLabel("Top left: empty");
@@ -145,7 +153,7 @@ test("rounds drag into chambers and items into bags, and stay there after saving
 });
 
 test("a potion cannot be dropped into a chamber", async ({ page }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   await page.getByRole("tab", { name: "Inventory" }).click();
   await page.getByRole("button", { name: "Aetherlock" }).click();
   await page
@@ -161,7 +169,7 @@ test("a potion cannot be dropped into a chamber", async ({ page }) => {
 test("the header and every tab show the same numbers from one resolved state", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   const header = async () => ({
     ac: await page.getByTestId("armor-class").textContent(),
     attack: await page.getByTestId("spell-attack-wizard").textContent(),
@@ -190,7 +198,7 @@ test("the header and every tab show the same numbers from one resolved state", a
 test("spell panels show summary, facts and the expandable SRD text", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   await page.getByRole("tab", { name: "Spells & Books" }).click();
   await page.getByRole("button", { name: "Fireball", exact: true }).click();
   const facts = page.locator(".spell-facts");
@@ -222,7 +230,7 @@ test("spell panels show summary, facts and the expandable SRD text", async ({
 test("a scroll mounts into a spellbook and comes back out", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   await page.getByRole("tab", { name: "Inventory" }).click();
   const carried = page.getByLabel("Carried items");
   await carried.getByRole("button", { name: "Scroll: Fireball" }).click();
@@ -266,7 +274,7 @@ test("a scroll mounts into a spellbook and comes back out", async ({
 test("canister charges appear as counters on the Stats tab", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   await page.getByRole("tab", { name: "Stats" }).click();
   await expect(page.getByTestId("canister-canister-1")).toContainText(
     "in Aetherlock",
@@ -281,7 +289,7 @@ test("canister charges appear as counters on the Stats tab", async ({
 test("the wallet adds up Carol's coins, kept in her test purse", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   await page.getByRole("tab", { name: "Inventory" }).click();
   await expect(page.getByTestId("wallet")).toContainText(
     "3 pp, 25 gp, 2 ep, 14 sp, 37 cp",
@@ -302,7 +310,7 @@ test("the wallet adds up Carol's coins, kept in her test purse", async ({
 test("items can be marked lost, and moving a full container asks first", async ({
   page,
 }) => {
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein");
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
   await page.getByRole("tab", { name: "Inventory" }).click();
   const carried = page.getByLabel("Carried items");
   const weightText = async () =>

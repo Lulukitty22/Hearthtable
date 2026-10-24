@@ -23,7 +23,8 @@ export function ScrollFacts({
 }: {
   props: TabProps;
   scroll: ScrollView;
-  onToggleSpent: () => void;
+  /** Omitted on the view-only sheet. */
+  onToggleSpent?: () => void;
 }) {
   const levelNote =
     scroll.level !== undefined && scroll.castLevel > scroll.level
@@ -74,11 +75,13 @@ export function ScrollFacts({
           (not charged until crafting jobs, Milestone 5b)
         </span>
       </p>
-      <p>
-        <button type="button" className="secondary" onClick={onToggleSpent}>
-          {scroll.spent ? "Mark usable again" : "Mark spent"}
-        </button>
-      </p>
+      {onToggleSpent && (
+        <p>
+          <button type="button" className="secondary" onClick={onToggleSpent}>
+            {scroll.spent ? "Mark usable again" : "Mark spent"}
+          </button>
+        </p>
+      )}
     </div>
   );
 }

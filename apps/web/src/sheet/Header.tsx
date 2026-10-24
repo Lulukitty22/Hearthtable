@@ -97,7 +97,9 @@ export function Header(props: TabProps) {
         <div className="vital">
           <div className="vital-label">Hit points</div>
           <div className="vital-value hp-edit">
-            {hp ? (
+            {hp && !props.canEdit ? (
+              <span aria-label="Current hit points">{hp.current}</span>
+            ) : hp ? (
               <input
                 type="number"
                 aria-label="Current hit points"
@@ -113,7 +115,12 @@ export function Header(props: TabProps) {
             <span className="muted">/</span>
             <Explained value={resolved.get<number>("hit-points.max")} />
           </div>
-          {hp && (
+          {hp && !props.canEdit && hp.temporary > 0 && (
+            <span className="muted" style={{ fontSize: "0.8rem" }}>
+              Temp {hp.temporary}
+            </span>
+          )}
+          {hp && props.canEdit && (
             <label className="muted" style={{ fontSize: "0.8rem" }}>
               Temp{" "}
               <input
@@ -178,7 +185,22 @@ export function Header(props: TabProps) {
         ))}
       </div>
 
-      {switchable.length > 0 && (
+      {!props.canEdit && (
+        <div className="chips">
+          <span className="muted">Active:</span>
+          {switchable.filter((s) => activeRefs.has(s.ref)).length === 0 && (
+            <span className="muted">none</span>
+          )}
+          {switchable
+            .filter((s) => activeRefs.has(s.ref))
+            .map((s) => (
+              <span key={s.ref} className="chip">
+                {s.name}
+              </span>
+            ))}
+        </div>
+      )}
+      {props.canEdit && switchable.length > 0 && (
         <div className="chips">
           <span className="muted">Active:</span>
           {switchable.map((s) => (
