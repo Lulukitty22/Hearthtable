@@ -14,7 +14,9 @@ const PORT = Number(PORT_TEXT);
 
 const app = initializeApp({ projectId: PROJECT }, "storage-contract");
 const db = getFirestore(app);
-connectFirestoreEmulator(db, HOST, PORT);
+// These tests check storage, not Security Rules (tests/rules does), so they connect with the
+// emulator's "owner" token, which switches Rules off.
+connectFirestoreEmulator(db, HOST, PORT, { mockUserToken: "owner" });
 
 afterAll(() => deleteApp(app));
 

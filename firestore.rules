@@ -56,9 +56,53 @@ service cloud.firestore {
         && getAfter(/databases/$(database)/documents/accounts/$(request.auth.uid)).data.alias == request.resource.data.alias;
     }
 
-    // Milestone 2: character records are read and written without sign-in. S3 replaces this.
+    // S3: records (characters, their tabs and history, items and other definitions). A record's
+    // document id is its path with "/" written as "%2F" (packages/storage/src/firestore.ts), so
+    // the scope and owner come from the id itself: account%2FVR_Lulu%2F… or campaign%2F<name>%2F….
+    // Everyone may read every record, because privacy is screen-only. Writing needs an approved
+    // account that is either the owner of the account path (by Alias) or a DM of the campaign.
+    // Core records are written only by seeding. A save's `path` must name the same scope and
+    // owner as its id.
+    function isApproved() {
+      return signedIn()
+        && get(/databases/$(database)/documents/accounts/$(request.auth.uid)).data.status == 'approved';
+    }
+
+    function ownsAlias(alias) {
+      return get(/databases/$(database)/documents/accounts-by-alias/$(normalizedAlias(alias))).data.uid == request.auth.uid;
+    }
+
+    // Campaign membership lives at /campaigns/{campaign}/members/{uid} with a `role`; creating
+    // campaigns and managing members arrive with S5.
+    function isCampaignDm(campaign) {
+      return get(/databases/$(database)/documents/campaigns/$(campaign)/members/$(request.auth.uid)).data.role == 'dm';
+    }
+
+    function mayWriteRecord(id) {
+      let parts = id.split('%2F');
+      return parts.size() >= 3 && isApproved()
+        && ((parts[0] == 'account' && ownsAlias(parts[1]))
+          || (parts[0] == 'campaign' && isCampaignDm(parts[1])));
+    }
+
+    function pathMatchesId(id) {
+      let parts = id.split('%2F');
+      let path = request.resource.data.path.split('/');
+      return path.size() >= 3 && path[0] == parts[0] && path[1] == parts[1];
+    }
+
     match /records/{id} {
-      allow read, write: if true;
+      allow read: if true;
+      allow create, update: if mayWriteRecord(id)
+        && request.resource.data.path is string
+        && pathMatchesId(id);
+      allow delete: if mayWriteRecord(id);
+    }
+
+    // Member lists are public (they hold account ids and roles, nothing from Google). Who may
+    // add members or change roles is S5; until then only seeding writes them.
+    match /campaigns/{campaign}/members/{uid} {
+      allow read: if true;
     }
 
     match /{document=**} {
