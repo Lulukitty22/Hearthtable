@@ -4,8 +4,8 @@
 
 import { classRecords } from "@hearthtable/game-dnd5e-2024";
 import { parseEnvelope, type RecordEnvelope } from "@hearthtable/kernel";
-import vrluluCarol from "../account/VR_Lulu/Characters/Carol_Elfnein.json";
-import vrluluItems from "../account/VR_Lulu/Items.json";
+import riverbedCarol from "../campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein.json";
+import riverbedItems_ from "../campaign/Riverbed_of_Strings/Items.json";
 import coreFeatures from "../core/features.json";
 import coreItems from "../core/items.json";
 import coreSpells from "../core/spells.json";
@@ -30,21 +30,26 @@ export const coreContent: readonly RecordEnvelope[] = [
   ...load("core/items.json", coreItems),
 ];
 
-/** VR_Lulu's account content: the Aetherlock, its rounds and canisters, and Indomitable. */
-export const vrluluContent: readonly RecordEnvelope[] = load(
-  "account/VR_Lulu/Items.json",
-  vrluluItems,
+/**
+ * Riverbed of Strings' items (the user's campaign): the Aetherlock, its rounds and canisters, and
+ * Indomitable. They were VR_Lulu's account items until the user moved them, with Carol, into the
+ * campaign (2026-10-24).
+ */
+export const riverbedItems: readonly RecordEnvelope[] = load(
+  "campaign/Riverbed_of_Strings/Items.json",
+  riverbedItems_,
 );
 
 /** Carol's sheet: the character (stats tab), her inventory and her three spellbooks. */
 export const carolElfnein: readonly RecordEnvelope[] = load(
-  "account/VR_Lulu/Characters/Carol_Elfnein.json",
-  vrluluCarol,
+  "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein.json",
+  riverbedCarol,
 );
 
-export const CAROL_ID = "account/VR_Lulu/Characters/Carol_Elfnein";
+export const CAROL_ID =
+  "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein";
 
 /** Everything needed to resolve Carol's sheet. */
 export function carolWithDefinitions(): readonly RecordEnvelope[] {
-  return [...coreContent, ...vrluluContent, ...carolElfnein];
+  return [...coreContent, ...riverbedItems, ...carolElfnein];
 }

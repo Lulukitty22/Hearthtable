@@ -22,7 +22,7 @@ async function create(
   await expect(form).toBeHidden();
 }
 
-test("VR_Lulu makes folders, a blank character and an item, copies Carol and deletes", async ({
+test("VR_Lulu makes folders, a blank character and an item, copies and deletes", async ({
   page,
 }) => {
   const folder = `Mages ${unique()}`;
@@ -31,8 +31,10 @@ test("VR_Lulu makes folders, a blank character and an item, copies Carol and del
   await page.getByRole("link", { name: "My home" }).click();
   await expect(page).toHaveURL(/\/Accounts\/VR_Lulu$/);
   const home = contents(page, "VR_Lulu's home");
-  await expect(home.getByRole("link", { name: "Characters" })).toBeVisible();
-  await expect(home.getByRole("link", { name: "Items" })).toBeVisible();
+  // Carol and the items moved into Riverbed of Strings; the home links to it.
+  await expect(
+    home.getByRole("link", { name: "Riverbed of Strings" }),
+  ).toBeVisible();
 
   // Names: duplicates (ignoring capitals and spaces versus underscores) and address words.
   await create(page, "folder", folder);
@@ -60,32 +62,30 @@ test("VR_Lulu makes folders, a blank character and an item, copies Carol and del
   await expect(page.getByRole("heading", { name: "Blank Hero" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Edit" })).toBeVisible();
 
-  // Copy Carol into the new folder; the copy is 1:1.
-  await page.goto("/Accounts/VR_Lulu/Characters");
-  const characters = contents(page, "Characters");
-  const carolRow = characters.getByRole("listitem").filter({
-    hasText: "Carol Elfnein",
-  });
-  await carolRow.getByRole("button", { name: "Copy as…" }).click();
-  const copy = page.getByRole("form", { name: "Copy Carol Elfnein as" });
-  await copy.getByRole("textbox", { name: "New name" }).fill("Carol Copy");
+  // Copy the blank character to the home; the copy is 1:1.
+  const hero = `Hero ${unique()}`;
+  await page.goBack();
+  const heroRow = inside
+    .getByRole("listitem")
+    .filter({ hasText: "Blank Hero" });
+  await heroRow.getByRole("button", { name: "Copy as…" }).click();
+  const copy = page.getByRole("form", { name: "Copy Blank Hero as" });
+  await copy.getByRole("textbox", { name: "New name" }).fill(hero);
   await copy
     .getByRole("combobox", { name: "Destination folder" })
-    .selectOption({ label: `Home / ${folder}` });
+    .selectOption({ label: "Home" });
   await copy.getByRole("button", { name: "Copy" }).click();
   await expect(copy).toBeHidden();
-  await page.goto(`/Accounts/VR_Lulu/${folder.replace(" ", "_")}/Carol_Copy`);
-  await expect(page.getByTestId("armor-class")).toContainText("13");
-  // Its items stay attuned to the original Carol, so Indomitable's +2 INT does not apply to
-  // the copy until it attunes the item itself (Character placement: copy only).
-  await expect(page.getByTestId("ability-int")).toContainText("20");
+  await page.goto(`/Accounts/VR_Lulu/${hero.replace(" ", "_")}`);
+  // A 1:1 copy: the sheet keeps the name it had inside; the folder lists it by its new name.
+  await expect(page.getByRole("heading", { name: "Blank Hero" })).toBeVisible();
 
   // Deleting a folder with entries needs its name typed.
   await page.goto("/Accounts/VR_Lulu");
   const row = home.getByRole("listitem").filter({ hasText: folder });
   await row.getByRole("button", { name: "Delete…" }).click();
   const dialog = page.getByRole("alertdialog", { name: `Delete ${folder}` });
-  await expect(dialog).toContainText("2 characters, 1 item");
+  await expect(dialog).toContainText("1 character, 1 item");
   const confirm = dialog.getByRole("button", { name: "Delete" });
   await expect(confirm).toBeDisabled();
   await dialog
@@ -93,8 +93,8 @@ test("VR_Lulu makes folders, a blank character and an item, copies Carol and del
     .fill(folder);
   await confirm.click();
   await expect(home.getByRole("link", { name: folder })).toHaveCount(0);
-  // Carol herself is untouched.
-  await expect(home.getByRole("link", { name: "Characters" })).toBeVisible();
+  // The copy outside the folder is untouched.
+  await expect(home.getByRole("link", { name: hero })).toBeVisible();
 });
 
 test("other accounts can look at VR_Lulu's home but not change it", async ({
@@ -104,7 +104,9 @@ test("other accounts can look at VR_Lulu's home but not change it", async ({
   await signInAs(page, TEST_PLAYER);
   await page.goto("/Accounts/VR_Lulu");
   await expect(
-    contents(page, "VR_Lulu's home").getByRole("link", { name: "Characters" }),
+    contents(page, "VR_Lulu's home").getByRole("link", {
+      name: "Riverbed of Strings",
+    }),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: /^New / })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Copy as…" })).toHaveCount(0);

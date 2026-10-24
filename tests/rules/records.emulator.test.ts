@@ -78,6 +78,8 @@ beforeEach(async () => {
   });
 });
 
+// An account character for these tests (Carol herself now lives in Riverbed of Strings).
+const ACCOUNT_CAROL = "account/VR_Lulu/Characters/Carol_Elfnein";
 const carol = carolElfnein.find((r) => r.id === CAROL_ID);
 if (!carol)
   throw new Error("Carol's character record is missing from content.");
@@ -94,23 +96,25 @@ async function saveAs(db: Firestore, id: string) {
 
 describe("account records", () => {
   it("are written by their approved owner", async () => {
-    expect(await saveAs(as("lulu"), CAROL_ID)).toMatchObject({ ok: true });
+    expect(await saveAs(as("lulu"), ACCOUNT_CAROL)).toMatchObject({ ok: true });
     expect(
-      await saveAs(as("lulu"), `${CAROL_ID}/History/20261024T050000Z`),
+      await saveAs(as("lulu"), `${ACCOUNT_CAROL}/History/20261024T050000Z`),
     ).toMatchObject({ ok: true });
   });
 
   it("are refused to guests, other accounts and a pending owner", async () => {
-    expect(await saveAs(guest(), CAROL_ID)).toMatchObject({ ok: false });
-    expect(await saveAs(as("player"), CAROL_ID)).toMatchObject({ ok: false });
+    expect(await saveAs(guest(), ACCOUNT_CAROL)).toMatchObject({ ok: false });
+    expect(await saveAs(as("player"), ACCOUNT_CAROL)).toMatchObject({
+      ok: false,
+    });
     expect(
       await saveAs(as("pending"), "account/Test_Pending/Characters/Bram"),
     ).toMatchObject({ ok: false });
   });
 
   it("cannot be claimed by writing another owner into the path field", async () => {
-    await saveAs(as("lulu"), CAROL_ID);
-    const ref = doc(as("player"), "records", documentIdFor(CAROL_ID));
+    await saveAs(as("lulu"), ACCOUNT_CAROL);
+    const ref = doc(as("player"), "records", documentIdFor(ACCOUNT_CAROL));
     await assertFails(
       setDoc(ref, {
         record: {},
@@ -125,21 +129,21 @@ describe("account records", () => {
       documentIdFor("account/Test_Player/Characters/Bram"),
     );
     await assertFails(
-      setDoc(own, { record: {}, path: CAROL_ID, ancestors: [] }),
+      setDoc(own, { record: {}, path: ACCOUNT_CAROL, ancestors: [] }),
     );
   });
 
   it("are deleted only by their owner", async () => {
-    await saveAs(as("lulu"), CAROL_ID);
-    const id = documentIdFor(CAROL_ID);
+    await saveAs(as("lulu"), ACCOUNT_CAROL);
+    const id = documentIdFor(ACCOUNT_CAROL);
     await assertFails(deleteDoc(doc(as("player"), "records", id)));
     await assertSucceeds(deleteDoc(doc(as("lulu"), "records", id)));
   });
 
   it("are readable by everyone, guests included", async () => {
-    await saveAs(as("lulu"), CAROL_ID);
+    await saveAs(as("lulu"), ACCOUNT_CAROL);
     await assertSucceeds(
-      getDoc(doc(guest(), "records", documentIdFor(CAROL_ID))),
+      getDoc(doc(guest(), "records", documentIdFor(ACCOUNT_CAROL))),
     );
   });
 });

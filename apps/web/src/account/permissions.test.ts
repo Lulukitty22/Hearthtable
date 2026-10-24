@@ -27,9 +27,26 @@ describe("who may edit a record", () => {
     );
   });
 
-  it("is nobody for campaign records until campaigns exist", () => {
-    expect(
-      canEditRecord(viewer("VR_Lulu"), "campaign/Moonlit/Characters/Carol"),
-    ).toBe(false);
+  it("is a DM of the campaign for campaign records", () => {
+    const path = "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol";
+    const campaign = {
+      id: "riverbed_of_strings",
+      name: "Riverbed of Strings",
+      dms: ["dm"],
+      players: ["u"],
+    };
+    const dm: Viewer = {
+      status: "account",
+      account: {
+        uid: "dm",
+        alias: "Test_DM",
+        status: "approved",
+        admin: false,
+      },
+    };
+    expect(canEditRecord(dm, path, campaign)).toBe(true);
+    // The character's owner is a player here, so their edits wait for S7's review queue.
+    expect(canEditRecord(viewer("VR_Lulu"), path, campaign)).toBe(false);
+    expect(canEditRecord(dm, path)).toBe(false);
   });
 });

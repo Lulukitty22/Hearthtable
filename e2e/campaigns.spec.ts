@@ -17,7 +17,7 @@ async function signedIn(browser: Browser, email: string) {
   return page;
 }
 
-test("VR_Lulu opens Moonlit Coast from home and approves Test_Joiner", async ({
+test("VR_Lulu opens Riverbed of Strings from home and approves Test_Joiner", async ({
   page,
 }) => {
   await page.goto("/");
@@ -25,9 +25,9 @@ test("VR_Lulu opens Moonlit Coast from home and approves Test_Joiner", async ({
   await page.getByRole("link", { name: "My home" }).click();
   await page
     .getByRole("list", { name: "Contents of VR_Lulu's home" })
-    .getByRole("link", { name: "Moonlit Coast" })
+    .getByRole("link", { name: "Riverbed of Strings" })
     .click();
-  await expect(page).toHaveURL(/\/Campaigns\/Moonlit_Coast$/);
+  await expect(page).toHaveURL(/\/Campaigns\/Riverbed_of_Strings$/);
   await expect(member(page, "VR_Lulu")).toContainText("DM");
   await expect(member(page, "Test_DM")).toContainText("DM");
   await expect(member(page, "Test_Player")).toContainText("player");
@@ -55,6 +55,7 @@ test("a new campaign: invite, request, approval, DM roles and the last DM", asyn
   await expect(member(dm, "Test_Player")).toContainText(
     "The last DM cannot leave",
   );
+  await expect(dm.getByTestId("invite-code")).toHaveText(/^[A-Z0-9]{8}$/);
   const link = await dm.getByTestId("invite-link").innerText();
   const code = await dm.getByTestId("invite-code").innerText();
 
@@ -104,14 +105,14 @@ test("a wrong code is refused, and pending accounts cannot ask to join", async (
   browser,
 }) => {
   const player = await signedIn(browser, TEST_OTHER_DM);
-  await player.goto("/Campaigns/Moonlit_Coast?invite=WRONG123");
+  await player.goto("/Campaigns/Riverbed_of_Strings?invite=WRONG123");
   const ask = player.getByRole("form", { name: "Ask to join" });
   await ask.getByRole("button", { name: "Ask to join" }).click();
   await expect(ask).toContainText("does not work for this campaign");
   await player.context().close();
 
   const pending = await signedIn(browser, TEST_PENDING);
-  await pending.goto("/Campaigns/Moonlit_Coast");
+  await pending.goto("/Campaigns/Riverbed_of_Strings");
   await expect(
     pending.getByText("needs an administrator's approval before it can join"),
   ).toBeVisible();
@@ -120,7 +121,8 @@ test("a wrong code is refused, and pending accounts cannot ask to join", async (
 
 test("the front page finds a campaign from its code", async ({ browser }) => {
   const dm = await signedIn(browser, VR_LULU);
-  await dm.goto("/Campaigns/Moonlit_Coast");
+  await dm.goto("/Campaigns/Riverbed_of_Strings");
+  await expect(dm.getByTestId("invite-code")).toHaveText(/^[A-Z0-9]{8}$/);
   const code = await dm.getByTestId("invite-code").innerText();
   await dm.context().close();
 
@@ -128,7 +130,7 @@ test("the front page finds a campaign from its code", async ({ browser }) => {
   const join = other.getByRole("form", { name: "Join a campaign" });
   await join.getByRole("textbox", { name: "Invite code" }).fill(code);
   await join.getByRole("button", { name: "Find the campaign" }).click();
-  await expect(other).toHaveURL(/\/Campaigns\/Moonlit_Coast\?invite=/);
+  await expect(other).toHaveURL(/\/Campaigns\/Riverbed_of_Strings\?invite=/);
   await expect(
     other
       .getByRole("form", { name: "Ask to join" })

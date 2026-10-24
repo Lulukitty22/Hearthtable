@@ -135,6 +135,8 @@ test("old addresses that began with the Alias open nothing", async ({
 }) => {
   await page.goto("/VR_Lulu/Characters/Carol_Elfnein");
   await expect(page.getByText("There is no page at")).toBeVisible();
-  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
+  await page.goto(
+    "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein/Edit",
+  );
   await expect(page.getByTestId("armor-class")).toBeVisible();
 });

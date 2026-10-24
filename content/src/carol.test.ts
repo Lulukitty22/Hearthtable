@@ -352,7 +352,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
       withLines([
         {
           id: "loaded-1",
-          ref: "account/VR_Lulu/Items/Basic_Round",
+          ref: "campaign/Riverbed_of_Strings/Items/Basic_Round",
           quantity: 1,
           attunedTo: null,
           parent: "aetherlock",
@@ -379,7 +379,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
         },
         {
           id: "two-a",
-          ref: "account/VR_Lulu/Items/Basic_Round",
+          ref: "campaign/Riverbed_of_Strings/Items/Basic_Round",
           quantity: 1,
           attunedTo: null,
           parent: "aetherlock",
@@ -395,7 +395,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
         },
         {
           id: "stack",
-          ref: "account/VR_Lulu/Items/Basic_Round",
+          ref: "campaign/Riverbed_of_Strings/Items/Basic_Round",
           quantity: 3,
           attunedTo: null,
           parent: "aetherlock",

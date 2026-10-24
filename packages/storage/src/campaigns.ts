@@ -11,20 +11,29 @@
 // Security Rules check who may change what (firestore.rules); these functions only write.
 
 import {
+  parseEnvelope,
+  serializeEnvelope,
+  type RecordEnvelope,
+} from "@hearthtable/kernel";
+import {
   arrayRemove,
   arrayUnion,
   collection,
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
+  query,
   serverTimestamp,
   setDoc,
+  where,
   writeBatch,
   type DocumentData,
   type Firestore,
   type Unsubscribe,
 } from "firebase/firestore";
+import { documentIdFor } from "./firestore";
 
 export const CAMPAIGNS = "campaigns";
 export const INVITES = "invites";
@@ -265,4 +274,142 @@ export function setDm(db: Firestore, id: string, uid: string, dm: boolean) {
     );
     await batch.commit();
   });
+}
+
+// S6: characters in campaigns. A member asks to add a copy of one of their characters; the
+// request holds the copy itself (`records`, at its campaign path), so the DM approves exactly
+// what was asked, and the DM's approval writes those records (Campaigns and Shared Data,
+// Character placement: copy only). Delegated control lives at
+// `/campaigns/{id}/control/{record document id}`: the delegates the character's owner chose.
+
+export interface Insertion {
+  readonly id: string;
+  readonly by: string;
+  readonly name: string;
+  /** Where the copy goes: campaign/<campaign>/Characters/<Alias>/<name>. */
+  readonly path: string;
+  readonly records: readonly RecordEnvelope[];
+  readonly at?: string;
+}
+
+export function readInsertion(
+  id: string,
+  data: DocumentData | undefined,
+): Insertion | undefined {
+  if (typeof data?.["path"] !== "string" || typeof data["by"] !== "string")
+    return undefined;
+  const records: RecordEnvelope[] = [];
+  for (const raw of (data["records"] as unknown[] | undefined) ?? []) {
+    const parsed = parseEnvelope(raw);
+    if (!parsed.ok) return undefined;
+    records.push(parsed.value);
+  }
+  const at = (data["at"] as { toDate?: () => Date } | undefined)
+    ?.toDate?.()
+    .toISOString();
+  return {
+    id,
+    by: data["by"],
+    name: String(data["name"] ?? ""),
+    path: data["path"],
+    records,
+    ...(at ? { at } : {}),
+  };
+}
+
+/** A member asks to add `records` (already at their campaign path) to the campaign. */
+export function requestInsertion(
+  db: Firestore,
+  campaign: string,
+  uid: string,
+  name: string,
+  path: string,
+  records: readonly RecordEnvelope[],
+) {
+  return attempt(() =>
+    setDoc(doc(collection(db, CAMPAIGNS, campaign, "insertions")), {
+      by: uid,
+      name,
+      path,
+      records: records.map((r) => serializeEnvelope(r)),
+      at: serverTimestamp(),
+    }),
+  );
+}
+
+/** The insertions waiting: all of them for a DM, only your own otherwise. */
+export function watchInsertions(
+  db: Firestore,
+  campaign: string,
+  uid: string,
+  dm: boolean,
+  onChange: (insertions: readonly Insertion[]) => void,
+  onError: (message: string) => void,
+): Unsubscribe {
+  const all = collection(db, CAMPAIGNS, campaign, "insertions");
+  return onSnapshot(
+    dm ? all : query(all, where("by", "==", uid)),
+    (snap) =>
+      onChange(
+        snap.docs
+          .flatMap((d) => readInsertion(d.id, d.data()) ?? [])
+          .sort((a, b) => (a.at ?? "").localeCompare(b.at ?? "")),
+      ),
+    (error) => onError(error.message),
+  );
+}
+
+/** Withdrawing your own insertion request, or a DM declining it (after approving, too). */
+export function removeInsertion(db: Firestore, campaign: string, id: string) {
+  return attempt(() =>
+    deleteDoc(doc(db, CAMPAIGNS, campaign, "insertions", id)),
+  );
+}
+
+/** Who may control a campaign character besides its owner. */
+export function watchDelegates(
+  db: Firestore,
+  campaign: string,
+  characterPath: string,
+  onChange: (delegates: readonly string[]) => void,
+  onError: (message: string) => void,
+): Unsubscribe {
+  return onSnapshot(
+    doc(db, CAMPAIGNS, campaign, "control", documentIdFor(characterPath)),
+    (snap) => onChange(strings(snap.data()?.["delegates"])),
+    (error) => onError(error.message),
+  );
+}
+
+/** The owner grants or revokes control of their campaign character. */
+export function setDelegates(
+  db: Firestore,
+  campaign: string,
+  characterPath: string,
+  delegates: readonly string[],
+) {
+  return attempt(() =>
+    setDoc(
+      doc(db, CAMPAIGNS, campaign, "control", documentIdFor(characterPath)),
+      { delegates: [...delegates] },
+    ),
+  );
+}
+
+/** The campaigns `uid` belongs to, as DM or player, by name. */
+export async function campaignsOf(
+  db: Firestore,
+  uid: string,
+): Promise<readonly Campaign[]> {
+  const all = collection(db, CAMPAIGNS);
+  const [asDm, asPlayer] = await Promise.all([
+    getDocs(query(all, where("dms", "array-contains", uid))),
+    getDocs(query(all, where("players", "array-contains", uid))),
+  ]);
+  const found = new Map<string, Campaign>();
+  for (const d of [...asDm.docs, ...asPlayer.docs]) {
+    const c = readCampaign(d.id, d.data());
+    if (c) found.set(c.id, c);
+  }
+  return [...found.values()].sort((a, b) => a.name.localeCompare(b.name));
 }

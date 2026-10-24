@@ -854,3 +854,21 @@ dialog.detail {
 .member .error-box {
   flex-basis: 100%;
 }
+
+/* Characters in campaigns (Milestone 4, S6): owner tools and control. */
+
+.character-tools {
+  margin: 0 0 14px;
+}
+
+.control {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  margin: 8px 0 0;
+}
+
+.control-row {
+  display: block;
+  padding: 2px 0;
+}

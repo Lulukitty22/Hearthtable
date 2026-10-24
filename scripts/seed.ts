@@ -13,7 +13,7 @@
 // the emulator's Security Rules switched off, because Rules never let the app itself set an
 // account's approval or administrator flag.
 
-import { carolElfnein, coreContent, vrluluContent } from "@hearthtable/content";
+import { carolElfnein, coreContent, riverbedItems } from "@hearthtable/content";
 import { serializeEnvelope, type RecordEnvelope } from "@hearthtable/kernel";
 import { firestoreRepository } from "@hearthtable/storage";
 import { deleteApp, initializeApp } from "firebase/app";
@@ -61,7 +61,7 @@ const same = (a: RecordEnvelope, b: RecordEnvelope) =>
   stable([serializeEnvelope(a)["data"], a.source]) ===
   stable([serializeEnvelope(b)["data"], b.source]);
 
-const all = [...coreContent, ...vrluluContent, ...carolElfnein];
+const all = [...coreContent, ...riverbedItems, ...carolElfnein];
 const writes: RecordEnvelope[] = [];
 const added: string[] = [];
 const refreshed: string[] = [];

@@ -3,27 +3,33 @@
 // link, /Campaigns/<name>?invite=CODE, or typed in); a DM approves (Campaigns and Shared Data,
 // Campaign membership). Members may leave. DMs see the invite code and link, the join requests,
 // and member controls: remove a player, grant or revoke DM. A campaign always keeps one DM.
-// Characters in campaigns arrive with S6; the DM controller (/DM) with Milestone 5.
+// S6: the campaign's characters, and copies members asked to add, which a DM approves or
+// declines. The DM controller (/DM) comes with Milestone 5.
 
+import type { RecordEnvelope } from "@hearthtable/kernel";
 import {
   approveJoinRequest,
   campaignIdFor,
   cancelJoinRequest,
+  removeInsertion,
   removeMember,
   replaceInviteCode,
   requestToJoin,
   setDm,
   watchCampaign,
   watchInviteCode,
+  watchInsertions,
   watchJoinRequests,
   watchOwnRequest,
   type Campaign,
+  type Insertion,
   type JoinRequest,
 } from "@hearthtable/storage";
 import { useEffect, useState } from "react";
 import { useAliases } from "../account/useAliases";
 import type { Viewer } from "../account/useViewer";
-import { db } from "../firebase";
+import { db, repository } from "../firebase";
+import { webPathFor } from "../routes";
 
 export function CampaignPage({
   segment,
@@ -99,6 +105,14 @@ export function CampaignPage({
           ))}
         </ul>
       </section>
+
+      <Characters
+        campaign={campaign}
+        segment={segment}
+        uid={uid}
+        isDm={isDm}
+        name={name}
+      />
 
       {isDm && <DmTools campaign={campaign} />}
       {!isMember && (
@@ -379,5 +393,117 @@ function JoinBox({
       </p>
       {failure && <div className="error-box">{failure}</div>}
     </form>
+  );
+}
+
+function Characters({
+  campaign,
+  segment,
+  uid,
+  isDm,
+  name,
+}: {
+  campaign: Campaign;
+  segment: string;
+  uid: string | undefined;
+  isDm: boolean;
+  name: (uid: string) => string;
+}) {
+  const root = `campaign/${segment}/Characters`;
+  const [characters, setCharacters] = useState<readonly RecordEnvelope[]>();
+  const [waiting, setWaiting] = useState<readonly Insertion[]>([]);
+  const [failure, setFailure] = useState<string | undefined>();
+  const [generation, setGeneration] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    void repository.listUnder(root).then((r) => {
+      if (cancelled) return;
+      if (r.ok) setCharacters(r.value.filter((x) => x.kind === "character"));
+      else setFailure(r.errors.map((e) => e.message).join(" "));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [root, generation]);
+  useEffect(() => {
+    if (!uid) return;
+    return watchInsertions(db, campaign.id, uid, isDm, setWaiting, setFailure);
+  }, [campaign.id, uid, isDm]);
+  const askers = useAliases(waiting.map((w) => w.by));
+
+  const approve = async (insertion: Insertion) => {
+    const existing = await repository.get(
+      insertion.path as RecordEnvelope["id"],
+    );
+    if (existing.ok && existing.value)
+      return setFailure(
+        `${insertion.name} is already in the campaign at that name; decline this copy.`,
+      );
+    const saved = await repository.save(insertion.records);
+    if (!saved.ok)
+      return setFailure(saved.errors.map((e) => e.message).join(" "));
+    setFailure(await removeInsertion(db, campaign.id, insertion.id));
+    setGeneration((g) => g + 1);
+  };
+
+  return (
+    <section className="panel campaign-section" aria-label="Characters">
+      <h2>Characters</h2>
+      {failure && <div className="error-box">{failure}</div>}
+      {characters?.length === 0 && (
+        <p className="muted">No characters in this campaign yet.</p>
+      )}
+      <ul className="member-list" aria-label="Campaign characters">
+        {characters?.map((c) => {
+          const owner = c.id.split("/")[3] ?? "";
+          return (
+            <li key={c.id} className="member">
+              <a className="entry-link" href={webPathFor(c.id)}>
+                {String((c.data as { name?: unknown }).name ?? c.id)}
+              </a>
+              <span className="muted">{owner}'s</span>
+            </li>
+          );
+        })}
+      </ul>
+      {waiting.length > 0 && (
+        <>
+          <h3>Waiting to be added ({waiting.length})</h3>
+          <ul
+            className="member-list"
+            aria-label="Characters waiting to be added"
+          >
+            {waiting.map((w) => (
+              <li key={w.id} className="member">
+                <strong>{w.name}</strong>
+                <span className="muted">
+                  from {askers.get(w.by) ?? name(w.by)}
+                </span>
+                <span className="chips member-actions">
+                  {isDm && (
+                    <button
+                      type="button"
+                      className="primary"
+                      onClick={() => void approve(w)}
+                    >
+                      Add {w.name}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={async () =>
+                      setFailure(await removeInsertion(db, campaign.id, w.id))
+                    }
+                  >
+                    {w.by === uid ? "Withdraw" : `Decline ${w.name}`}
+                  </button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </section>
   );
 }

@@ -1,6 +1,6 @@
 # Milestone 4 Plan
 
-Purpose: the working plan for Milestone 4, accounts and campaigns on the local emulator, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 5:01 am PDT (America/Los_Angeles) after the user confirmed the milestone's scope. The user agreed to this plan and its acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)); slice S1 was built 2026-10-23 at 6:14 am PDT (America/Los_Angeles); S2 was built 2026-10-24 at 4:06 am PDT (America/Los_Angeles); S3 was built 2026-10-24 at 5:03 am PDT (America/Los_Angeles); S4 was built 2026-10-24 at 5:24 am PDT (America/Los_Angeles); S5 was built 2026-10-24 at 5:40 am PDT (America/Los_Angeles); S6 is next. The acceptance item on a revoked delegate is tested when delegation arrives in S6; S3's tests cover a pending account, a non-member, a revoked DM and an allowed DM. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
+Purpose: the working plan for Milestone 4, accounts and campaigns on the local emulator, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 5:01 am PDT (America/Los_Angeles) after the user confirmed the milestone's scope. The user agreed to this plan and its acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)); slice S1 was built 2026-10-23 at 6:14 am PDT (America/Los_Angeles); S2 was built 2026-10-24 at 4:06 am PDT (America/Los_Angeles); S3 was built 2026-10-24 at 5:03 am PDT (America/Los_Angeles); S4 was built 2026-10-24 at 5:24 am PDT (America/Los_Angeles); S5 was built 2026-10-24 at 5:40 am PDT (America/Los_Angeles); S6 was built 2026-10-24 at 6:16 am PDT (America/Los_Angeles), with S12's move done at its start; S7 is next. The acceptance item on a revoked delegate is tested when delegation arrives in S6; S3's tests cover a pending account, a non-member, a revoked DM and an allowed DM. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
 
 Selected decisions: Milestone 4 is all permissions and approvals: who may see, edit and join what, and every DM or administrator approval outside gameplay (user decision, 2026-10-23 at 5:26 am PDT (America/Los_Angeles)). Milestone 5 is the action inside a campaign: turns, time, the casting workflow and its execution-time approval. The scope (user, 2026-10-23): Google sign-in, the public Alias, administrator approval, folders, campaigns with DMs and members, invites, tab privacy, Security Rules and the Firestore schema, all on the emulator. The trade window is Milestone 5c. No real Firebase project is created (that is Milestone 6).
 
@@ -37,7 +37,7 @@ Open questions: none; topics A–F under [Questions for the user](#questions-for
 9. **S9 — Concurrent-edit review.** The side-by-side difference window when someone else saves a sheet you are editing, choosing per item, with later updates queued ([Concurrent editing](../Systems/Campaigns%20and%20Shared%20Data.md#concurrent-editing-and-difference-review)).
 10. **S10 — Live HTML sheet export.** The view-only, character-only export shell that loads current data under the viewer's permissions ([Live character-sheet exports](../Systems/Campaigns%20and%20Shared%20Data.md#live-character-sheet-exports)).
 11. **S11 — Portraits.** Uploading a character portrait to Cloud Storage, following the character's visibility; if uploads prove impractical on the free tier, a portrait is an image link instead (user decision, 2026-10-23 at 5:32 am PDT (America/Los_Angeles)).
-12. **S12 — Moving today's data in.** VR_Lulu's existing records and Carol become owned by the seeded VR_Lulu account, keeping their paths.
+12. **S12 — Moving today's data in.** Changed by the user 2026-10-24 at 5:59 am PDT (America/Los_Angeles): Carol and VR_Lulu's custom items move into the user's real campaign, **Riverbed of Strings**, at `campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein` and `campaign/Riverbed_of_Strings/Items/…`, with her references rewritten, her saved edits and history kept, and nothing left in the account. Done at the start of S6. Her feats and spells are core entries and stay where they are.
 
 ## Questions for the user
 
@@ -72,6 +72,8 @@ Open questions: none; topics A–F under [Questions for the user](#questions-for
 
 **H. Campaign membership (S5)** — answered 2026-10-24 at 5:30 am PDT (America/Los_Angeles): one invite code per campaign that any DM may replace; leaving, removing players and declining requests are in; a campaign always keeps at least one DM; deleting campaigns is deferred. Recorded in [Campaign membership](../Systems/Campaigns%20and%20Shared%20Data.md#campaign-membership).
 
+**I. Characters in campaigns (S6)** — answered 2026-10-24 at 5:59 am PDT (America/Los_Angeles): the definition gate is one-way (a campaign character sees core and its campaign; an account character also sees any campaign), recorded in [Custom content](../Systems/Campaigns%20and%20Shared%20Data.md#custom-content-disabled-placeholders-and-manual-imports). The seeded Moonlit Coast becomes the user's real campaign, Riverbed of Strings, with the same members, and Carol and VR_Lulu's items move into it (S12 above).
+
 ## Acceptance (agreed 2026-10-23, recorded at 5:37 am PDT (America/Los_Angeles))
 
 - Sign in with a fake Google account, choose an Alias, wait as pending, be approved by the administrator, then create a folder, a character and a campaign.
@@ -82,4 +84,4 @@ Open questions: none; topics A–F under [Questions for the user](#questions-for
 - Editing a sheet while another account saves it shows the difference window.
 - An exported HTML sheet shows the character's current data and hides what the viewer may not see.
 - A portrait can be uploaded (or linked) and shows on the sheet.
-- Carol and VR_Lulu's content load under the seeded account exactly as before.
+- Carol and her items load in Riverbed of Strings exactly as before (changed by the user 2026-10-24 at 5:59 am PDT (America/Los_Angeles)).

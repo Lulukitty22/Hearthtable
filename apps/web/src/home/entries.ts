@@ -36,8 +36,11 @@ const kindOf = (record: RecordEnvelope): EntryKind | "other" =>
       ? (record.kind as EntryKind)
       : "other";
 
-const nameOf = (r: RecordEnvelope | undefined, segment: string) =>
-  String((r?.data as { name?: unknown } | undefined)?.name ?? "") ||
+/**
+ * A folder lists each entry by its own name, the last segment of its path, which Copy as sets.
+ * The name inside the record is left alone by copying (a copy is 1:1), so it can differ.
+ */
+const nameOf = (_r: RecordEnvelope | undefined, segment: string) =>
   displayNameOf(segment);
 
 /** The record at `path` and everything under it. */

@@ -9,11 +9,13 @@
 
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import type { RecordEnvelope, RecordId } from "@hearthtable/kernel";
-import { lookUpInvite } from "@hearthtable/storage";
+import { lookUpInvite, type Campaign } from "@hearthtable/storage";
 import { AccountBar } from "./account/AccountBar";
 import { canEditRecord, ownerAliasOf } from "./account/permissions";
 import { useViewer, type Viewer } from "./account/useViewer";
 import { CampaignPage } from "./campaign/CampaignPage";
+import { CharacterTools } from "./campaign/CharacterTools";
+import { useCampaign } from "./campaign/useCampaign";
 import { AdminPage } from "./admin/AdminPage";
 import { db, repository } from "./firebase";
 import { EntryPage } from "./home/EntryPage";
@@ -77,9 +79,18 @@ function Home() {
   >();
   const [failure, setFailure] = useState<string | undefined>();
   useEffect(() => {
-    void repository.listUnder("account").then((r) => {
-      if (r.ok) setCharacters(r.value.filter((x) => x.kind === "character"));
-      else setFailure(r.errors.map((e) => e.message).join(" "));
+    void Promise.all([
+      repository.listUnder("account"),
+      repository.listUnder("campaign"),
+    ]).then((lists) => {
+      const failed = lists.flatMap((r) => (r.ok ? [] : r.errors));
+      if (failed.length > 0)
+        return setFailure(failed.map((e) => e.message).join(" "));
+      setCharacters(
+        lists.flatMap((r) =>
+          r.ok ? r.value.filter((x) => x.kind === "character") : [],
+        ),
+      );
     });
   }, []);
   return (
@@ -206,7 +217,7 @@ function RecordPage({
   if (!isAccountPath && segments.length === 2 && segments[1])
     return <CampaignPage segment={segments[1]} viewer={viewer} />;
   if (!isAccountPath)
-    return <Sheet characterId={path} view={view} viewer={viewer} />;
+    return <CampaignSheet path={path} view={view} viewer={viewer} />;
   if (segments.length <= 2) return <FolderPage path={path} viewer={viewer} />;
   if (failure)
     return (
@@ -232,6 +243,27 @@ function RecordPage({
   }
   // A folder record, or a path with entries below it (an ordinary folder without a record).
   return <FolderPage path={path} viewer={viewer} />;
+}
+
+/** A campaign character's sheet, with its campaign (for who are DMs and members). */
+function CampaignSheet({
+  path,
+  view,
+  viewer,
+}: {
+  path: string;
+  view: RouteView;
+  viewer: Viewer;
+}) {
+  const { campaign } = useCampaign(path.split("/")[1]);
+  return (
+    <Sheet
+      characterId={path}
+      view={view}
+      viewer={viewer}
+      campaign={campaign ?? undefined}
+    />
+  );
 }
 
 function NotFound() {
@@ -261,10 +293,13 @@ function ModeBar({
   viewer: Viewer;
   dirty: boolean;
 }) {
+  // Campaign characters are edited by DMs in DM mode, entered explicitly (Campaignless and solo
+  // authority: holding DM permission does not put anyone in DM mode by itself).
+  const inCampaign = characterId.startsWith("campaign/");
   if (editing && allowed)
     return (
       <div className="mode-bar">
-        <span className="badge good">Editing</span>
+        <span className="badge good">{inCampaign ? "DM mode" : "Editing"}</span>
         <a
           className="secondary button-link"
           href={webPathFor(characterId)}
@@ -287,7 +322,7 @@ function ModeBar({
           className="primary button-link"
           href={webPathFor(characterId, "edit")}
         >
-          Edit
+          {inCampaign ? "Edit in DM mode" : "Edit"}
         </a>
       </div>
     );
@@ -298,7 +333,7 @@ function ModeBar({
     <p className="panel mode-bar" role="note">
       {owner
         ? `Only ${owner} can edit this character`
-        : "Campaign characters cannot be edited yet"}
+        : "Only the campaign's DMs can edit its characters, in DM mode"}
       {owner && viewer.status === "guest" ? "; sign in to edit your own." : "."}{" "}
       It is shown read-only.
     </p>
@@ -309,10 +344,12 @@ function Sheet({
   characterId,
   view,
   viewer,
+  campaign,
 }: {
   characterId: string;
   view: RouteView;
   viewer: Viewer;
+  campaign?: Campaign | undefined;
 }) {
   // Definitions come from core and anywhere in the owner's account or campaign.
   const definitionPaths = useMemo(() => {
@@ -322,7 +359,7 @@ function Sheet({
   const [state, actions] = useSheet(repository, characterId, definitionPaths);
   const [tab, setTab] = useState("stats");
   const [note, setNote] = useState("");
-  const allowed = canEditRecord(viewer, characterId);
+  const allowed = canEditRecord(viewer, characterId, campaign);
   const editing = view === "edit";
   const canEdit = editing && allowed;
 
@@ -375,6 +412,17 @@ function Sheet({
             dirty={state.dirty.length > 0}
           />
           <Header {...props} />
+          {!editing && (
+            <CharacterTools
+              characterId={characterId}
+              name={String(
+                (state.records.get(characterId)?.data as { name?: unknown })
+                  ?.name ?? characterId,
+              )}
+              viewer={viewer}
+              campaign={campaign ?? undefined}
+            />
+          )}
 
           {notes.length > 0 && (
             <details className="notes" style={{ marginBottom: 12 }}>

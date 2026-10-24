@@ -21,6 +21,23 @@ export const engine = createEngine(hearthtableVanillaPlus);
  * account. Other characters there, with their tabs and history, are left out: another sheet must
  * never be resolved as this one.
  */
+/**
+ * The definition gate is one-way (Campaigns and Shared Data, Custom content; 2026-10-24): an
+ * account character may use entries from any campaign, so the campaigns its records refer to are
+ * loaded too; a campaign character uses only core and its own campaign.
+ */
+export function referencedCampaigns(
+  records: readonly RecordEnvelope[],
+  characterId: string,
+): string[] {
+  if (!characterId.startsWith("account/")) return [];
+  const found = new Set<string>();
+  for (const r of records)
+    for (const m of JSON.stringify(r.data).matchAll(/"(campaign\/[^/"]+)\//g))
+      if (m[1]) found.add(m[1]);
+  return [...found];
+}
+
 function withoutOtherCharacters(
   records: readonly RecordEnvelope[],
   characterId: string,
@@ -86,9 +103,16 @@ export function useSheet(
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const lists = await Promise.all(
-        [characterId, ...definitionPaths].map((p) => repo.listUnder(p)),
-      );
+      const own = await repo.listUnder(characterId);
+      const referenced = own.ok
+        ? referencedCampaigns(own.value, characterId)
+        : [];
+      const lists = [
+        own,
+        ...(await Promise.all(
+          [...definitionPaths, ...referenced].map((p) => repo.listUnder(p)),
+        )),
+      ];
       if (cancelled) return;
       const map = new Map<string, RecordEnvelope>();
       for (const list of lists) {

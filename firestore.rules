@@ -149,6 +149,41 @@ service cloud.firestore {
           && !(uid in get(campaignDoc(campaign)).data.players);
       }
 
+      // S6: a member asks to add a copy of their own character. The copy goes under
+      // Characters/<their Alias>/ in this campaign; the person and the DMs may read and delete
+      // the request, and a DM approving it writes the records.
+      match /insertions/{insertion} {
+        allow read, delete: if signedIn()
+          && (resource.data.by == request.auth.uid || isDmOf(campaign));
+        allow create: if isApproved()
+          && (request.auth.uid in get(campaignDoc(campaign)).data.dms
+            || request.auth.uid in get(campaignDoc(campaign)).data.players)
+          && request.resource.data.keys().hasOnly(['by', 'name', 'path', 'records', 'at'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.at == request.time
+          && request.resource.data.path is string
+          && request.resource.data.path.split('/').size() == 5
+          && request.resource.data.path.split('/')[0] == 'campaign'
+          && request.resource.data.path.split('/')[1].lower() == campaign
+          && request.resource.data.path.split('/')[2] == 'Characters'
+          && ownsAlias(request.resource.data.path.split('/')[3]);
+      }
+
+      // S6: delegated control. The character's owner (by the Alias in its path) chooses which
+      // members may control it; the document id is the character's record document id.
+      match /control/{character} {
+        allow read: if true;
+        allow write: if isApproved()
+          && character.split('%2F').size() == 5
+          && character.split('%2F')[1].lower() == campaign
+          && ownsAlias(character.split('%2F')[3])
+          && request.resource.data.keys().hasOnly(['delegates'])
+          && request.resource.data.delegates is list
+          && request.resource.data.delegates.toSet().difference(
+            get(campaignDoc(campaign)).data.dms.toSet().union(get(campaignDoc(campaign)).data.players.toSet())
+          ).size() == 0;
+      }
+
       // The current invite code, for DMs only (written with the campaign when it is created).
       match /private/{document} {
         allow read: if isDmOf(campaign);

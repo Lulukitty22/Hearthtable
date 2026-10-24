@@ -1,8 +1,9 @@
-// The emulator's seeded campaigns (Milestone 4 Plan, topic B, user decision 2026-10-23):
-// Moonlit Coast with VR_Lulu and Test_DM as DMs, Test_Player as a player and Test_Joiner's join
-// request waiting; and Test Campaign with Test_Other_DM as its DM, to show several campaigns side
-// by side. Each creator's home gets a link to it. "Test Campaign" is a placeholder name chosen by
-// the engine chat. A campaign that already exists is left exactly as it is.
+// The emulator's seeded campaigns (Milestone 4 Plan, topics B and I): the user's real campaign,
+// Riverbed of Strings (named by the user 2026-10-24, replacing the placeholder Moonlit Coast), with
+// VR_Lulu and Test_DM as DMs, Test_Player as a player and Test_Joiner's join request waiting;
+// Carol and its items are content seeded with it. Test Campaign has Test_Other_DM as its DM, to
+// show several campaigns side by side; its name is a placeholder chosen by the engine chat. Each
+// creator's home gets a link to its campaign. A campaign that already exists is left as it is.
 
 import type { RecordEnvelope, RecordId } from "@hearthtable/kernel";
 import {
@@ -39,8 +40,8 @@ interface SeededCampaign {
 
 export const SEEDED_CAMPAIGNS: readonly SeededCampaign[] = [
   {
-    name: "Moonlit Coast",
-    segment: "Moonlit_Coast",
+    name: "Riverbed of Strings",
+    segment: "Riverbed_of_Strings",
     creator: "VR_Lulu",
     dms: ["VR_Lulu", "Test_DM"],
     players: ["Test_Player"],

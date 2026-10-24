@@ -1,12 +1,12 @@
 [
   {
-    "id": "account/VR_Lulu/Characters/Carol_Elfnein",
+    "id": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
     "kind": "character",
     "moduleId": "dnd5e-2024",
     "schemaVersion": 1,
     "origin": {
-      "scope": "account",
-      "ownerId": "VR_Lulu"
+      "scope": "campaign",
+      "ownerId": "Riverbed_of_Strings"
     },
     "source": {
       "status": "homebrew"
@@ -182,13 +182,13 @@
     }
   },
   {
-    "id": "account/VR_Lulu/Characters/Carol_Elfnein/Inventory",
+    "id": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein/Inventory",
     "kind": "inventory",
     "moduleId": "containers",
     "schemaVersion": 1,
     "origin": {
-      "scope": "account",
-      "ownerId": "VR_Lulu"
+      "scope": "campaign",
+      "ownerId": "Riverbed_of_Strings"
     },
     "source": {
       "status": "homebrew"
@@ -199,9 +199,9 @@
       "lines": [
         {
           "id": "aetherlock",
-          "ref": "account/VR_Lulu/Items/Aetherlock",
+          "ref": "campaign/Riverbed_of_Strings/Items/Aetherlock",
           "quantity": 1,
-          "attunedTo": "account/VR_Lulu/Characters/Carol_Elfnein",
+          "attunedTo": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
           "magazine": {
             "canister": "canister-1"
           },
@@ -211,21 +211,21 @@
           "id": "wand",
           "ref": "core/Wand_of_the_War_Mage_+1",
           "quantity": 1,
-          "attunedTo": "account/VR_Lulu/Characters/Carol_Elfnein",
+          "attunedTo": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
           "attunedSlot": 2
         },
         {
           "id": "manifold",
           "ref": "core/Manifold_Tool",
           "quantity": 1,
-          "attunedTo": "account/VR_Lulu/Characters/Carol_Elfnein",
+          "attunedTo": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
           "attunedSlot": 3
         },
         {
           "id": "indomitable",
-          "ref": "account/VR_Lulu/Items/Indomitable_(INT)",
+          "ref": "campaign/Riverbed_of_Strings/Items/Indomitable_(INT)",
           "quantity": 1,
-          "attunedTo": "account/VR_Lulu/Characters/Carol_Elfnein",
+          "attunedTo": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
           "attunedSlot": 4
         },
         {
@@ -273,7 +273,7 @@
           "scroll": {
             "spell": "core/Fireball",
             "castLevel": 3,
-            "scribe": "account/VR_Lulu/Characters/Carol_Elfnein",
+            "scribe": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
             "snapshot": {
               "saveDc": 19,
               "attackBonus": 11
@@ -290,7 +290,7 @@
           "scroll": {
             "spell": "core/Cone_of_Cold",
             "castLevel": 6,
-            "scribe": "account/VR_Lulu/Characters/Carol_Elfnein",
+            "scribe": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
             "snapshot": {
               "saveDc": 19,
               "attackBonus": 11
@@ -307,7 +307,7 @@
           "scroll": {
             "spell": "core/Misty_Step",
             "castLevel": 2,
-            "scribe": "account/VR_Lulu/Characters/Carol_Elfnein",
+            "scribe": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
             "snapshot": {
               "saveDc": 19,
               "attackBonus": 11
@@ -365,72 +365,72 @@
         },
         {
           "id": "canister-1",
-          "ref": "account/VR_Lulu/Items/Charge_canister",
+          "ref": "campaign/Riverbed_of_Strings/Items/Charge_canister",
           "quantity": 1,
           "attunedTo": null,
           "charges": 12
         },
         {
           "id": "canister-2",
-          "ref": "account/VR_Lulu/Items/Charge_canister",
+          "ref": "campaign/Riverbed_of_Strings/Items/Charge_canister",
           "quantity": 1,
           "attunedTo": null,
           "charges": 12
         },
         {
           "id": "canister-3",
-          "ref": "account/VR_Lulu/Items/Charge_canister",
+          "ref": "campaign/Riverbed_of_Strings/Items/Charge_canister",
           "quantity": 1,
           "attunedTo": null,
           "charges": 12
         },
         {
           "id": "canister-4",
-          "ref": "account/VR_Lulu/Items/Charge_canister",
+          "ref": "campaign/Riverbed_of_Strings/Items/Charge_canister",
           "quantity": 1,
           "attunedTo": null,
           "charges": 12
         },
         {
           "id": "canister-5",
-          "ref": "account/VR_Lulu/Items/Charge_canister",
+          "ref": "campaign/Riverbed_of_Strings/Items/Charge_canister",
           "quantity": 1,
           "attunedTo": null,
           "charges": 12
         },
         {
           "id": "basic-rounds",
-          "ref": "account/VR_Lulu/Items/Basic_Round",
+          "ref": "campaign/Riverbed_of_Strings/Items/Basic_Round",
           "quantity": 18,
           "attunedTo": null
         },
         {
           "id": "arcane-rounds",
-          "ref": "account/VR_Lulu/Items/Arcane_Round",
+          "ref": "campaign/Riverbed_of_Strings/Items/Arcane_Round",
           "quantity": 6,
           "attunedTo": null
         },
         {
           "id": "cone-of-cold-spellrounds",
-          "ref": "account/VR_Lulu/Items/Spellround_(Cone_of_Cold)",
+          "ref": "campaign/Riverbed_of_Strings/Items/Spellround_(Cone_of_Cold)",
           "quantity": 3,
           "attunedTo": null
         },
         {
           "id": "he-frag-rounds",
-          "ref": "account/VR_Lulu/Items/HE-FRAG_Round",
+          "ref": "campaign/Riverbed_of_Strings/Items/HE-FRAG_Round",
           "quantity": 3,
           "attunedTo": null
         },
         {
           "id": "shield-spellrounds",
-          "ref": "account/VR_Lulu/Items/Spellround_(Shield)",
+          "ref": "campaign/Riverbed_of_Strings/Items/Spellround_(Shield)",
           "quantity": 2,
           "attunedTo": null
         },
         {
           "id": "cure-wounds-spellrounds",
-          "ref": "account/VR_Lulu/Items/Spellround_(Cure_Wounds)",
+          "ref": "campaign/Riverbed_of_Strings/Items/Spellround_(Cure_Wounds)",
           "quantity": 2,
           "attunedTo": null
         },
@@ -539,13 +539,13 @@
     }
   },
   {
-    "id": "account/VR_Lulu/Characters/Carol_Elfnein/Books/Combat",
+    "id": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein/Books/Combat",
     "kind": "spellbook",
     "moduleId": "spellbook-readiness",
     "schemaVersion": 1,
     "origin": {
-      "scope": "account",
-      "ownerId": "VR_Lulu"
+      "scope": "campaign",
+      "ownerId": "Riverbed_of_Strings"
     },
     "source": {
       "status": "homebrew"
@@ -705,13 +705,13 @@
     }
   },
   {
-    "id": "account/VR_Lulu/Characters/Carol_Elfnein/Books/Cantrips",
+    "id": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein/Books/Cantrips",
     "kind": "spellbook",
     "moduleId": "spellbook-readiness",
     "schemaVersion": 1,
     "origin": {
-      "scope": "account",
-      "ownerId": "VR_Lulu"
+      "scope": "campaign",
+      "ownerId": "Riverbed_of_Strings"
     },
     "source": {
       "status": "homebrew"
@@ -817,13 +817,13 @@
     }
   },
   {
-    "id": "account/VR_Lulu/Characters/Carol_Elfnein/Books/Workshop",
+    "id": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein/Books/Workshop",
     "kind": "spellbook",
     "moduleId": "spellbook-readiness",
     "schemaVersion": 1,
     "origin": {
-      "scope": "account",
-      "ownerId": "VR_Lulu"
+      "scope": "campaign",
+      "ownerId": "Riverbed_of_Strings"
     },
     "source": {
       "status": "homebrew"
@@ -893,13 +893,13 @@
     }
   },
   {
-    "id": "account/VR_Lulu/Characters/Carol_Elfnein/Books/Overflow",
+    "id": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein/Books/Overflow",
     "kind": "spellbook",
     "moduleId": "spellbook-readiness",
     "schemaVersion": 1,
     "origin": {
-      "scope": "account",
-      "ownerId": "VR_Lulu"
+      "scope": "campaign",
+      "ownerId": "Riverbed_of_Strings"
     },
     "source": {
       "status": "homebrew"
