@@ -1,6 +1,6 @@
 # Milestone 4 Plan
 
-Purpose: the working plan for Milestone 4, accounts and campaigns on the local emulator, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 5:01 am PDT (America/Los_Angeles) after the user confirmed the milestone's scope. The user agreed to this plan and its acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)); slice S1 was built 2026-10-23 at 6:14 am PDT (America/Los_Angeles); S2 was built 2026-10-24 at 4:06 am PDT (America/Los_Angeles); S3 was built 2026-10-24 at 5:03 am PDT (America/Los_Angeles); S4 was built 2026-10-24 at 5:24 am PDT (America/Los_Angeles); S5 was built 2026-10-24 at 5:40 am PDT (America/Los_Angeles); S6 was built 2026-10-24 at 6:16 am PDT (America/Los_Angeles), with S12's move done at its start; S7 was built 2026-10-24 at 6:38 am PDT (America/Los_Angeles); S8 (privacy) was deferred 2026-10-24 at 2:49 pm PDT (America/Los_Angeles); S9 was built 2026-10-24 at 3:07 pm PDT (America/Los_Angeles); S10 was built 2026-10-24 at 3:15 pm PDT (America/Los_Angeles); S11 was built 2026-10-24 at 4:02 pm PDT (America/Los_Angeles); the acceptance check with the user is next. The acceptance item on a revoked delegate is tested when delegation arrives in S6; S3's tests cover a pending account, a non-member, a revoked DM and an allowed DM. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
+Purpose: the working plan for Milestone 4, accounts and campaigns on the local emulator, as [Milestones](Milestones.md) defines it. Status: drafted 2026-10-23 at 5:01 am PDT (America/Los_Angeles) after the user confirmed the milestone's scope. The user agreed to this plan and its acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)); slice S1 was built 2026-10-23 at 6:14 am PDT (America/Los_Angeles); S2 was built 2026-10-24 at 4:06 am PDT (America/Los_Angeles); S3 was built 2026-10-24 at 5:03 am PDT (America/Los_Angeles); S4 was built 2026-10-24 at 5:24 am PDT (America/Los_Angeles); S5 was built 2026-10-24 at 5:40 am PDT (America/Los_Angeles); S6 was built 2026-10-24 at 6:16 am PDT (America/Los_Angeles), with S12's move done at its start; S7 was built 2026-10-24 at 6:38 am PDT (America/Los_Angeles); S8 (privacy) was deferred 2026-10-24 at 2:49 pm PDT (America/Los_Angeles); S9 was built 2026-10-24 at 3:07 pm PDT (America/Los_Angeles); S10 was built 2026-10-24 at 3:15 pm PDT (America/Los_Angeles); S11 was built 2026-10-24 at 4:02 pm PDT (America/Los_Angeles). The user accepted Milestone 4 on 2026-10-24 at 4:38 pm PDT (America/Los_Angeles). The acceptance item on a revoked delegate is tested when delegation arrives in S6; S3's tests cover a pending account, a non-member, a revoked DM and an allowed DM. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
 
 Selected decisions: Milestone 4 is all permissions and approvals: who may see, edit and join what, and every DM or administrator approval outside gameplay (user decision, 2026-10-23 at 5:26 am PDT (America/Los_Angeles)). Milestone 5 is the action inside a campaign: turns, time, the casting workflow and its execution-time approval. The scope (user, 2026-10-23): Google sign-in, the public Alias, administrator approval, folders, campaigns with DMs and members, invites, tab privacy, Security Rules and the Firestore schema, all on the emulator. The trade window is Milestone 5c. No real Firebase project is created (that is Milestone 6).
 
@@ -38,6 +38,24 @@ Open questions: none; topics A–F under [Questions for the user](#questions-for
 10. **S10 — Live HTML sheet export.** The view-only, character-only export shell that loads current data under the viewer's permissions ([Live character-sheet exports](../Systems/Campaigns%20and%20Shared%20Data.md#live-character-sheet-exports)).
 11. **S11 — Portraits.** Uploading a character portrait to Cloud Storage, following the character's visibility; if uploads prove impractical on the free tier, a portrait is an image link instead (user decision, 2026-10-23 at 5:32 am PDT (America/Los_Angeles)).
 12. **S12 — Moving today's data in.** Changed by the user 2026-10-24 at 5:59 am PDT (America/Los_Angeles): Carol and VR_Lulu's custom items move into the user's real campaign, **Riverbed of Strings**, at `campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein` and `campaign/Riverbed_of_Strings/Items/…`, with her references rewritten, her saved edits and history kept, and nothing left in the account. Done at the start of S6. Her feats and spells are core entries and stay where they are.
+
+## Build status
+
+Moved here from Milestones' Current progress on 2026-10-24 at 4:38 pm PDT (America/Los_Angeles), when Milestone 4 was accepted.
+
+| Milestone 4 slice | What it adds | Status |
+|---|---|---|
+| S1 Sign-in and Alias | Google sign-in on the Auth emulator, account document, choosing an Alias, pending state | Built 2026-10-23 at 6:14 am PDT (America/Los_Angeles) (Rules tests and browser tests pass) |
+| S2 Site administration | Seeded accounts (VR_Lulu as first administrator, five test accounts), `/Admin` approval page, approval Rule | Built 2026-10-24 at 4:06 am PDT (America/Los_Angeles) |
+| S3 Security Rules | Records written only by their approved owner or a campaign DM; everyone reads; Rules tests | Built 2026-10-24 at 5:03 am PDT (America/Los_Angeles) (delegation Rules come with S6) |
+| S4 Account home and folders | `/Accounts/<Alias>` home, ordinary folders, New (folder, blank character, custom item, spell, feature), Copy as, Delete, name rules | Built 2026-10-24 at 5:24 am PDT (America/Los_Angeles) |
+| S5 Campaigns and membership | New → Campaign, campaign page, one invite code per campaign, join requests and approval, leaving, removing, granting and revoking DM; seeded Moonlit Coast and Test Campaign | Built 2026-10-24 at 5:40 am PDT (America/Los_Angeles) |
+| S6 Characters in campaigns | Copy into a campaign with DM approval, DM mode, copy to account, delegated control; Carol and her items moved into Riverbed of Strings (the S12 change) | Built 2026-10-24 at 6:16 am PDT (America/Los_Angeles) |
+| S7 DM review queue | Proposed edits from owners and delegates, asking to delete or replace a campaign character, proposed and imported library entries; DMs accept or reject | Built 2026-10-24 at 6:38 am PDT (America/Los_Angeles) |
+| S8 Privacy | Deferred to a later milestone by the user 2026-10-24 at 2:49 pm PDT (America/Los_Angeles); the model is decided, its storage is open | Deferred |
+| S9 Concurrent-edit review | Live sheets; a difference window when someone else saves while you edit, choosing theirs or mine per item, later saves queued | Built 2026-10-24 at 3:07 pm PDT (America/Los_Angeles) |
+| S10 Live HTML export | Export HTML on every character; the file frames a live, sheet-only page | Built 2026-10-24 at 3:15 pm PDT (America/Los_Angeles) |
+| S11 Portraits | Upload (PNG, JPEG, WebP or GIF up to 2 MB, kept as is) or link a character portrait | Built 2026-10-24 at 4:02 pm PDT (America/Los_Angeles) |
 
 ## Questions for the user
 
@@ -78,7 +96,7 @@ Open questions: none; topics A–F under [Questions for the user](#questions-for
 
 **K. Privacy (S8)** — answered 2026-10-24 at 2:34 pm PDT (America/Los_Angeles): anything can be private at any level, from a whole entry to one value or only its explanation; placeholders read "Private Item", "Private Character"; seen by the owner, the campaign's DMs, granted accounts and site administrators. Recorded in [Character-sheet visibility](../Systems/Campaigns%20and%20Shared%20Data.md#character-sheet-visibility).
 
-## Acceptance (agreed 2026-10-23, recorded at 5:37 am PDT (America/Los_Angeles))
+## Acceptance (agreed 2026-10-23, recorded at 5:37 am PDT (America/Los_Angeles); accepted 2026-10-24 at 4:38 pm PDT (America/Los_Angeles))
 
 - Sign in with a fake Google account, choose an Alias, wait as pending, be approved by the administrator, then create a folder, a character and a campaign.
 - A second account joins the campaign through an invite and DM approval, and its copied character is inserted only after DM approval.
