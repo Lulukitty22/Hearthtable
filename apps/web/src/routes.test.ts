@@ -17,15 +17,10 @@ describe("web addresses", () => {
     });
   });
 
-  it("reads a last Edit or DM segment as the view", () => {
+  it("reads a last Edit segment as the view", () => {
     expect(
       parseRoute("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit"),
     ).toEqual({ kind: "record", path: CAROL, view: "edit" });
-    expect(parseRoute("/Campaigns/Moonlit/DM")).toEqual({
-      kind: "record",
-      path: "campaign/Moonlit",
-      view: "dm",
-    });
   });
 
   it("has a home page, an administrators' page and nothing else", () => {
@@ -50,6 +45,8 @@ describe("web addresses", () => {
     expect(webPathFor(CAROL)).toBe(
       "/Accounts/VR_Lulu/Characters/Carol_Elfnein",
     );
-    expect(webPathFor("campaign/Moonlit", "dm")).toBe("/Campaigns/Moonlit/DM");
+    expect(webPathFor("campaign/Moonlit", "edit")).toBe(
+      "/Campaigns/Moonlit/Edit",
+    );
   });
 });

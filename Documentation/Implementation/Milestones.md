@@ -59,6 +59,7 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 
 Topics the user asked to revisit when Milestone 5 starts, recorded 2026-10-23 at 12:58 am PDT (America/Los_Angeles). They are open, not decisions.
 
+- **Play addresses** (decided 2026-10-24 at 2:16 pm PDT (America/Los_Angeles)): the players' view of the game in progress is `/Campaigns/<name>/Table` and the DM's is `/Campaigns/<name>/Table/Dungeon_Master` ([web addresses](../Systems/Campaigns%20and%20Shared%20Data.md#account-organization-and-address-design)).
 - **Redo spellbook and spell-entry handling.** The user wants to rethink how and where spellbooks and their entries are stored and handled. Spellbooks currently double as scroll binders, and a book might become a container with its own item or weight limit, like a backpack. Discuss before building the casting workflow.
 - **Spent scrolls.** Casting from a scroll could consume the materials stored in it, including its dice and formulas, leaving a passive spent scroll. Spent scrolls could serve as receipts of the spells used in a battle or as trophies, and might later be restored to working order. Other uses are open.
 
