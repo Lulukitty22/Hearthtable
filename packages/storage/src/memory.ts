@@ -112,11 +112,17 @@ export function memoryRepository(
     },
 
     async delete(id: RecordId, expectedRevision: number) {
-      const current = stored.get(id);
-      const actual = current ? (current["revision"] as number) : undefined;
-      if (actual !== expectedRevision)
-        return { ok: false, errors: [conflict(id, expectedRevision, actual)] };
-      stored.delete(id);
+      return this.deleteAll([{ id, revision: expectedRevision }]);
+    },
+
+    async deleteAll(items) {
+      const conflicts = items.flatMap(({ id, revision }) => {
+        const current = stored.get(id);
+        const actual = current ? (current["revision"] as number) : undefined;
+        return actual === revision ? [] : [conflict(id, revision, actual)];
+      });
+      if (conflicts.length > 0) return { ok: false, errors: conflicts };
+      for (const { id } of items) stored.delete(id);
       return { ok: true, value: undefined };
     },
   };

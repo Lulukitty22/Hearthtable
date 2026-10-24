@@ -756,3 +756,70 @@ dialog.detail {
 .mode-bar[role="note"] {
   justify-content: flex-start;
 }
+
+/* Account home (Milestone 4, S4): folder contents, New, Copy as and Delete. */
+
+.breadcrumb {
+  margin: 4px 0 10px;
+  color: var(--text-muted);
+}
+
+.breadcrumb a {
+  color: var(--accent);
+}
+
+.new-menu {
+  margin: 12px 0;
+}
+
+.folder-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.folder-entry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.folder-entry .entry-actions {
+  margin-left: auto;
+}
+
+.entry-form {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.entry-form.inline {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.entry-form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px;
+  font: inherit;
+  color: inherit;
+}
+
+.primary.danger {
+  background: var(--bad);
+}
+
+.entry-description {
+  white-space: pre-wrap;
+}

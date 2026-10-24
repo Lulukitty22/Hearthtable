@@ -103,9 +103,11 @@ function levelRows(ctx: ResolveContext): Value<readonly LevelRow[]> {
     ctx,
     "character",
     "classLevels",
-    z.array(z.string()).min(1),
+    z.array(z.string()),
   )[0];
   if (!order) return unresolved("The order of class levels is not recorded.");
+  // A blank character (New → Character, Milestone 4) has no levels until the character creator.
+  if (order.value.length === 0) return unresolved("No class levels yet.");
   const rows: LevelRow[] = [];
   for (const classId of order.value) {
     const def = readDefinition(ctx, classId, "class", ClassDefinition);

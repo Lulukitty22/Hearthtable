@@ -208,5 +208,17 @@ export function repositoryContract(
       await ok(repo.delete(id, 1));
       expect(await ok(repo.get(id))).toBeUndefined();
     });
+
+    test("deleteAll deletes together, or nothing on any conflict", async () => {
+      await ok(repo.save(carolElfnein, { now: NOW }));
+      const all = carolElfnein.map((r) => ({ id: r.id, revision: 1 }));
+      const stale = all.map((x, i) => (i === 0 ? { ...x, revision: 0 } : x));
+      expect((await repo.deleteAll(stale)).ok).toBe(false);
+      expect(await ok(repo.listUnder(CAROL_ID))).toHaveLength(
+        carolElfnein.length,
+      );
+      await ok(repo.deleteAll(all));
+      expect(await ok(repo.listUnder(CAROL_ID))).toHaveLength(0);
+    });
   });
 }

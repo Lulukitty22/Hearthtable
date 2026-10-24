@@ -8,12 +8,14 @@
 // declares but this app cannot draw is shown as unavailable rather than hidden.
 
 import { useEffect, useMemo, useState, type ComponentType } from "react";
-import type { RecordEnvelope } from "@hearthtable/kernel";
+import type { RecordEnvelope, RecordId } from "@hearthtable/kernel";
 import { AccountBar } from "./account/AccountBar";
 import { canEditRecord, ownerAliasOf } from "./account/permissions";
 import { useViewer, type Viewer } from "./account/useViewer";
 import { AdminPage } from "./admin/AdminPage";
 import { repository } from "./firebase";
+import { EntryPage } from "./home/EntryPage";
+import { FolderPage } from "./home/FolderPage";
 import { parseRoute, webPathFor, type View as RouteView } from "./routes";
 import { FeaturesTab } from "./sheet/FeaturesTab";
 import { Header } from "./sheet/Header";
@@ -116,11 +118,66 @@ export function App() {
       {route.kind === "admin" && <AdminPage viewer={viewer} />}
       {route.kind === "home" && <Home />}
       {route.kind === "record" && (
-        <Sheet characterId={route.path} view={route.view} viewer={viewer} />
+        <RecordPage path={route.path} view={route.view} viewer={viewer} />
       )}
       {route.kind === "unknown" && <NotFound />}
     </>
   );
+}
+
+/**
+ * What an address shows depends on what is stored there (Milestone 4, S4): an account's home or a
+ * folder, a character sheet, or a custom entry. Campaign addresses open sheets until campaigns
+ * arrive in S5.
+ */
+function RecordPage({
+  path,
+  view,
+  viewer,
+}: {
+  path: string;
+  view: RouteView;
+  viewer: Viewer;
+}) {
+  const segments = path.split("/");
+  const isAccountPath = segments[0] === "account";
+  const [found, setFound] = useState<
+    { path: string; record: RecordEnvelope | undefined } | undefined
+  >();
+  const [failure, setFailure] = useState<string | undefined>();
+  useEffect(() => {
+    if (!isAccountPath || segments.length <= 2) return;
+    let cancelled = false;
+    void repository.get(path as RecordId).then((r) => {
+      if (cancelled) return;
+      if (r.ok) setFound({ path, record: r.value });
+      else setFailure(r.errors.map((e) => e.message).join(" "));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [path, isAccountPath, segments.length]);
+
+  if (!isAccountPath)
+    return <Sheet characterId={path} view={view} viewer={viewer} />;
+  if (segments.length <= 2) return <FolderPage path={path} viewer={viewer} />;
+  if (failure)
+    return (
+      <main className="page">
+        <div className="error-box">{failure}</div>
+      </main>
+    );
+  if (found?.path !== path) return <main className="page muted">Loading…</main>;
+  const kind = found.record?.kind;
+  if (kind === "character")
+    return <Sheet characterId={path} view={view} viewer={viewer} />;
+  if (
+    found.record &&
+    (kind === "item" || kind === "spell" || kind === "feature")
+  )
+    return <EntryPage record={found.record} />;
+  // A folder record, or a path with entries below it (an ordinary folder without a record).
+  return <FolderPage path={path} viewer={viewer} />;
 }
 
 function NotFound() {
@@ -203,10 +260,10 @@ function Sheet({
   view: RouteView;
   viewer: Viewer;
 }) {
-  // Definitions come from core and the owner's own Items folder.
+  // Definitions come from core and anywhere in the owner's account or campaign.
   const definitionPaths = useMemo(() => {
     const [scope, owner] = characterId.split("/");
-    return ["core", `${scope}/${owner}/Items`];
+    return ["core", `${scope}/${owner}`];
   }, [characterId]);
   const [state, actions] = useSheet(repository, characterId, definitionPaths);
   const [tab, setTab] = useState("stats");

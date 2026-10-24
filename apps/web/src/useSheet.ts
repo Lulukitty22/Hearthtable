@@ -16,6 +16,23 @@ import { settleDrafts } from "./saveDrafts";
 
 export const engine = createEngine(hearthtableVanillaPlus);
 
+/**
+ * Folders are ordinary (2026-10-24), so a character reads definitions from its owner's whole
+ * account. Other characters there, with their tabs and history, are left out: another sheet must
+ * never be resolved as this one.
+ */
+function withoutOtherCharacters(
+  records: readonly RecordEnvelope[],
+  characterId: string,
+): RecordEnvelope[] {
+  const others = records
+    .filter((r) => r.kind === "character" && r.id !== characterId)
+    .map((r) => r.id as string);
+  return records.filter(
+    (r) => !others.some((o) => r.id === o || r.id.startsWith(`${o}/`)),
+  );
+}
+
 type Data = Record<string, unknown>;
 
 export interface HistoryEntry {
@@ -79,7 +96,8 @@ export function useSheet(
           setFailure(list.errors.map((e) => e.message).join("\n"));
           return;
         }
-        for (const r of list.value) map.set(r.id, r);
+        for (const r of withoutOtherCharacters(list.value, characterId))
+          map.set(r.id, r);
       }
       setFailure(undefined);
       setStored(map);

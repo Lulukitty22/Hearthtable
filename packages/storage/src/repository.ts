@@ -47,6 +47,13 @@ export interface Repository {
   ): Promise<StorageResult<readonly RecordEnvelope[]>>;
   /** Deletes a record, if it is still at `expectedRevision`. */
   delete(id: RecordId, expectedRevision: number): Promise<StorageResult<void>>;
+  /**
+   * Deletes several records together, such as a character with its tabs and history, each only
+   * if still at its revision. Any conflict deletes nothing.
+   */
+  deleteAll(
+    items: readonly { readonly id: RecordId; readonly revision: number }[],
+  ): Promise<StorageResult<void>>;
 }
 
 export function conflict(

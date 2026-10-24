@@ -18,6 +18,19 @@ const SCOPES: Record<string, { record: string; web: string }> = {
 };
 
 const VIEWS: Record<string, View> = { edit: "edit", dm: "dm" };
+
+/**
+ * Every word an address uses for a page, scope or view. No character, folder, campaign or custom
+ * entry may take one as its name, ignoring capitals (user decision, 2026-10-24); a new view or
+ * page adds its word here.
+ */
+export const ADDRESS_WORDS: readonly string[] = [
+  "Accounts",
+  "Campaigns",
+  "Admin",
+  "Edit",
+  "DM",
+];
 const VIEW_SEGMENT: Record<View, string | undefined> = {
   default: undefined,
   edit: "Edit",

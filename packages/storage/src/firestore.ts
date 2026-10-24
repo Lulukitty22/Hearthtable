@@ -176,18 +176,24 @@ export function firestoreRepository(db: Firestore): Repository {
     },
 
     async delete(id: RecordId, expectedRevision: number) {
+      return this.deleteAll([{ id, revision: expectedRevision }]);
+    },
+
+    // One transaction, so at most 500 records; larger deletes would need splitting.
+    async deleteAll(items) {
       try {
         return await runTransaction(db, async (tx) => {
-          const snap = await tx.get(ref(id));
-          const actual = snap.exists()
-            ? (snap.data()["record"]?.["revision"] as number)
-            : undefined;
-          if (actual !== expectedRevision)
-            return {
-              ok: false,
-              errors: [conflict(id, expectedRevision, actual)],
-            } as const;
-          tx.delete(ref(id));
+          const snaps = await Promise.all(items.map((i) => tx.get(ref(i.id))));
+          const conflicts = items.flatMap(({ id, revision }, n) => {
+            const snap = snaps[n];
+            const actual = snap?.exists()
+              ? (snap.data()["record"]?.["revision"] as number)
+              : undefined;
+            return actual === revision ? [] : [conflict(id, revision, actual)];
+          });
+          if (conflicts.length > 0)
+            return { ok: false, errors: conflicts } as const;
+          for (const { id } of items) tx.delete(ref(id));
           return { ok: true, value: undefined } as const;
         });
       } catch (error) {

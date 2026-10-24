@@ -52,6 +52,12 @@ export function AccountBar({ viewer }: { viewer: Viewer }) {
               <strong data-testid="account-alias">
                 {viewer.account.alias}
               </strong>
+              <a
+                className="entry-link"
+                href={`/Accounts/${encodeURIComponent(viewer.account.alias)}`}
+              >
+                My home
+              </a>
               {viewer.account.admin && (
                 <>
                   <span className="badge good">administrator</span>
