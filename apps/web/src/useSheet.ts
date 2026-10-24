@@ -4,13 +4,10 @@
 // Manager). A save against a newer stored version is refused and shown, never forced.
 
 import { createEngine } from "@hearthtable/engine";
-import type {
-  RecordEnvelope,
-  RecordId,
-  ResolvedCharacter,
-} from "@hearthtable/kernel";
+import type { RecordEnvelope, ResolvedCharacter } from "@hearthtable/kernel";
 import { hearthtableVanillaPlus } from "@hearthtable/ruleset-hearthtable-vanilla-plus";
 import type { Repository, StorageError } from "@hearthtable/storage";
+import { historyRecord } from "./history";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { settleDrafts } from "./saveDrafts";
 
@@ -82,12 +79,20 @@ export interface SheetActions {
 }
 
 /** A path segment cannot contain "/" or spaces; keep the timestamp's digits and T/Z. */
-const historyKey = (iso: string) => iso.replace(/[^0-9TZ]/g, "");
+/**
+ * Sends changed records somewhere other than storage, such as a proposal to a DM (S7); returns an
+ * error message, or undefined when they were sent. The drafts are then cleared.
+ */
+export type Submit = (
+  changed: readonly RecordEnvelope[],
+  note: string,
+) => Promise<string | undefined>;
 
 export function useSheet(
   repo: Repository,
   characterId: string,
   definitionPaths: readonly string[],
+  submit?: Submit,
 ): [SheetState, SheetActions] {
   const [stored, setStored] = useState<
     ReadonlyMap<string, RecordEnvelope> | undefined
@@ -188,23 +193,29 @@ export function useSheet(
       // The drafts as sent; edits made while the save is in flight are kept (settleDrafts).
       const sent = drafts;
       setSaving(true);
+      if (submit) {
+        const failure = await submit([...sent.values()], note);
+        setSaving(false);
+        if (failure) {
+          setSaveErrors([{ code: "unavailable", message: failure }]);
+          return false;
+        }
+        // Edits made while sending stay as drafts; the rest went to the DM.
+        setDrafts(
+          (current) =>
+            new Map([...current].filter(([id, d]) => d !== sent.get(id))),
+        );
+        setSaveErrors([]);
+        return true;
+      }
       const now = new Date().toISOString();
-      const entry: RecordEnvelope = {
-        id: `${characterId}/History/${historyKey(now)}` as RecordId,
-        kind: "history",
-        moduleId: "sheet",
-        schemaVersion: 1,
-        origin: stored?.get(characterId)?.origin ?? { scope: "account" },
-        source: { status: "homebrew" },
-        revision: 0,
-        updatedAt: now,
-        data: {
-          at: now,
-          changed: [...sent.keys()],
-          ...(note.trim() ? { note: note.trim() } : {}),
-        },
-        raw: {},
-      };
+      const entry = historyRecord(
+        characterId,
+        stored?.get(characterId)?.origin ?? { scope: "account" },
+        [...sent.keys()],
+        note,
+        now,
+      );
       const result = await repo.save([...sent.values(), entry], { now });
       setSaving(false);
       if (!result.ok) {
@@ -220,7 +231,7 @@ export function useSheet(
       setSaveErrors([]);
       return true;
     },
-    [drafts, repo, characterId, stored],
+    [drafts, repo, characterId, stored, submit],
   );
 
   const actions: SheetActions = {

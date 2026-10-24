@@ -7,10 +7,12 @@
 // (Campaigns and Shared Data, Character placement: copy only).
 
 import type { RecordEnvelope } from "@hearthtable/kernel";
-import { createCampaign } from "@hearthtable/storage";
+import { createCampaign, type Campaign } from "@hearthtable/storage";
 import { useEffect, useState } from "react";
 import { canEditRecord } from "../account/permissions";
 import type { Viewer } from "../account/useViewer";
+import { useCampaign } from "../campaign/useCampaign";
+import { ProposeEntry } from "./ProposeEntry";
 import { db, repository } from "../firebase";
 import { webPathFor } from "../routes";
 import {
@@ -35,17 +37,21 @@ const KIND_LABEL: Record<FolderEntry["kind"], string> = {
   other: "Entry",
 };
 
-/** "Home / Characters / Mages" with links, for a folder path inside an account. */
+/** "Home / Characters / Mages" with links, for a folder path inside an account or campaign. */
 export function Breadcrumb({ path }: { path: string }) {
-  const [scope, alias, ...rest] = path.split("/");
-  const root = `${scope}/${alias}`;
+  const [scope, owner, ...rest] = path.split("/");
+  const root = `${scope}/${owner}`;
   const crumbs = rest.map((segment, i) => ({
     path: [root, ...rest.slice(0, i + 1)].join("/"),
     name: displayNameOf(segment),
   }));
   return (
     <nav className="breadcrumb" aria-label="Folder path">
-      <a href={webPathFor(root)}>{alias}'s home</a>
+      <a href={webPathFor(root)}>
+        {scope === "campaign"
+          ? displayNameOf(owner ?? "")
+          : `${owner ?? ""}'s home`}
+      </a>
       {crumbs.map((c) => (
         <span key={c.path}>
           {" / "}
@@ -56,15 +62,13 @@ export function Breadcrumb({ path }: { path: string }) {
   );
 }
 
-export function FolderPage({ path, viewer }: { path: string; viewer: Viewer }) {
-  const root = path.split("/").slice(0, 2).join("/");
+/** The records of an account or campaign, reloadable after a change. */
+function useScopeRecords(root: string) {
   const [records, setRecords] = useState<
     readonly RecordEnvelope[] | undefined
   >();
   const [failure, setFailure] = useState<string | undefined>();
   const [generation, setGeneration] = useState(0);
-  const reload = () => setGeneration((g) => g + 1);
-
   useEffect(() => {
     let cancelled = false;
     void repository.listUnder(root).then((r) => {
@@ -78,8 +82,14 @@ export function FolderPage({ path, viewer }: { path: string; viewer: Viewer }) {
       cancelled = true;
     };
   }, [root, generation]);
+  return { records, failure, reload: () => setGeneration((g) => g + 1) };
+}
 
-  const canEdit = canEditRecord(viewer, path);
+export function FolderPage({ path, viewer }: { path: string; viewer: Viewer }) {
+  const root = path.split("/").slice(0, 2).join("/");
+  const inCampaign = path.startsWith("campaign/");
+  const { campaign } = useCampaign(inCampaign ? path.split("/")[1] : undefined);
+  const { records, failure, reload } = useScopeRecords(root);
   const owner = root.split("/")[1] ?? "";
 
   if (failure)
@@ -113,13 +123,78 @@ export function FolderPage({ path, viewer }: { path: string; viewer: Viewer }) {
     <main className="page">
       <Breadcrumb path={path} />
       <h1>{title}</h1>
-      {canEdit && viewer.status === "account" && (
+      <FolderBody
+        path={path}
+        title={title}
+        records={records}
+        viewer={viewer}
+        campaign={campaign ?? undefined}
+        onChange={reload}
+      />
+    </main>
+  );
+}
+
+/**
+ * A folder's contents with New, Copy as and Delete for whoever may change them. In a campaign
+ * (S7) DMs create folders and entries directly, and members propose new entries or imports from
+ * their account, which a DM accepts in the review queue. `exclude` hides entries by name, such as
+ * the Characters folder on a campaign's page.
+ */
+export function FolderBody({
+  path,
+  title,
+  records,
+  viewer,
+  campaign,
+  onChange,
+  exclude = [],
+}: {
+  path: string;
+  title: string;
+  records: readonly RecordEnvelope[];
+  viewer: Viewer;
+  campaign: Campaign | undefined;
+  onChange: () => void;
+  exclude?: readonly string[];
+}) {
+  const root = path.split("/").slice(0, 2).join("/");
+  const inCampaign = path.startsWith("campaign/");
+  const canEdit = canEditRecord(viewer, path, campaign);
+  const uid = viewer.status === "account" ? viewer.account.uid : undefined;
+  const member =
+    !!campaign &&
+    !!uid &&
+    viewer.status === "account" &&
+    viewer.account.status === "approved" &&
+    (campaign.dms.includes(uid) || campaign.players.includes(uid));
+  const children = childrenOf(path, records).filter(
+    (c) => !exclude.includes(c.segment),
+  );
+  const taken = childrenOf(path, records).map((c) => c.segment);
+  return (
+    <>
+      {canEdit && uid && (
         <NewEntry
-          uid={viewer.account.uid}
+          uid={uid}
           folderPath={path}
-          owner={owner}
-          taken={children.map((c) => c.segment)}
-          onDone={reload}
+          owner={root.split("/")[1] ?? ""}
+          taken={taken}
+          kinds={
+            inCampaign
+              ? NEW_KINDS.filter((k) => k !== "character" && k !== "campaign")
+              : NEW_KINDS
+          }
+          onDone={onChange}
+        />
+      )}
+      {member && campaign && uid && viewer.status === "account" && (
+        <ProposeEntry
+          campaign={campaign}
+          uid={uid}
+          alias={viewer.account.alias}
+          folderPath={path}
+          taken={taken}
         />
       )}
       {children.length === 0 ? (
@@ -133,12 +208,12 @@ export function FolderPage({ path, viewer }: { path: string; viewer: Viewer }) {
               records={records}
               root={root}
               canEdit={canEdit}
-              onDone={reload}
+              onDone={onChange}
             />
           ))}
         </ul>
       )}
-    </main>
+    </>
   );
 }
 
@@ -147,12 +222,14 @@ function NewEntry({
   folderPath,
   owner,
   taken,
+  kinds,
   onDone,
 }: {
   uid: string;
   folderPath: string;
   owner: string;
   taken: readonly string[];
+  kinds: readonly EntryKind[];
   onDone: () => void;
 }) {
   const [kind, setKind] = useState<EntryKind | undefined>();
@@ -172,7 +249,7 @@ function NewEntry({
     return (
       <p className="chips new-menu">
         <span className="muted">New:</span>
-        {NEW_KINDS.map((k) => (
+        {kinds.map((k) => (
           <button
             key={k}
             type="button"
@@ -350,7 +427,10 @@ function CopyAs({
   const parent = entry.path.split("/").slice(0, -1).join("/");
   // A folder cannot be copied into itself.
   const destinations = foldersIn(root, records).filter(
-    (f) => f !== entry.path && !f.startsWith(`${entry.path}/`),
+    (f) =>
+      f !== entry.path &&
+      !f.startsWith(`${entry.path}/`) &&
+      !(root.startsWith("campaign/") && f.startsWith(`${root}/Characters`)),
   );
   const [name, setName] = useState(entry.name);
   const [destination, setDestination] = useState(parent);

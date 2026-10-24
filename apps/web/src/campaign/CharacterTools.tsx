@@ -5,9 +5,13 @@
 //   unchanged, so it keeps using the campaign's entries (the one-way definition gate);
 // - a campaign character's owner chooses which members may control it (Delegated character
 //   control). Control lets a delegate propose edits (S7) and act in play (Milestone 5).
+// - S7: the owner asks a DM to delete their campaign character, or, when copying into a campaign
+//   where the name is taken by their own character, to replace it.
 
 import {
+  campaignIdFor,
   campaignsOf,
+  propose,
   requestInsertion,
   setDelegates,
   watchDelegates,
@@ -60,6 +64,7 @@ export function CharacterTools({
           name={name}
           alias={viewer.account.alias}
         />
+        <AskToDelete characterId={characterId} campaign={campaign} uid={uid} />
         <Control characterId={characterId} campaign={campaign} owner={uid} />
       </section>
     );
@@ -86,6 +91,7 @@ function CopyIntoCampaign({
   const [target, setTarget] = useState("");
   const [newName, setNewName] = useState(name);
   const [message, setMessage] = useState<string | undefined>();
+  const [taken, setTaken] = useState<string | undefined>();
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     if (!open) return;
@@ -125,8 +131,9 @@ function CopyIntoCampaign({
         ]);
         if (exists.ok && exists.value) {
           setBusy(false);
+          setTaken(path);
           return setMessage(
-            `${chosen.name} already has a character of yours called ${newName.trim()}.`,
+            `${chosen.name} already has a character of yours called ${newName.trim()}. You can ask a DM to replace it with this copy.`,
           );
         }
         if (!own.ok) {
@@ -193,6 +200,36 @@ function CopyIntoCampaign({
         >
           Ask to add
         </button>
+        {taken && chosen && (
+          <button
+            type="button"
+            className="secondary"
+            onClick={async () => {
+              setBusy(true);
+              const [old, own] = await Promise.all([
+                repository.listUnder(taken),
+                repository.listUnder(characterId),
+              ]);
+              if (!old.ok || !own.ok) {
+                setBusy(false);
+                return setMessage("Could not read the characters.");
+              }
+              const failure = await propose(
+                db,
+                chosen.id,
+                replacement(old.value, own.value, characterId, taken, uid),
+              );
+              setBusy(false);
+              setTaken(undefined);
+              setMessage(
+                failure ??
+                  `Asked to replace it; a DM accepts or rejects that on ${chosen.name}'s page.`,
+              );
+            }}
+          >
+            Ask to replace it
+          </button>
+        )}
         <button
           type="button"
           className="secondary"
@@ -400,6 +437,106 @@ function DelegateNote({
       <span className="muted">
         Its owner granted you control in {campaign.name}.
       </span>
+    </p>
+  );
+}
+
+/**
+ * A replacement: the new copy overwrites records at the same paths (from their current
+ * revisions) and the old character's other records are deleted. Saving first and deleting the
+ * rest after means accepting it never leaves the character half gone.
+ */
+function replacement(
+  old: readonly RecordEnvelope[],
+  own: readonly RecordEnvelope[],
+  from: string,
+  to: string,
+  uid: string,
+) {
+  const current = new Map(old.map((r) => [r.id as string, r.revision]));
+  const writes = copiedRecords(own, from, to).map((r) => ({
+    ...r,
+    origin: old[0]?.origin ?? r.origin,
+    revision: current.get(r.id) ?? 0,
+  }));
+  const written = new Set(writes.map((r) => r.id as string));
+  return {
+    kind: "replace" as const,
+    by: uid,
+    target: to,
+    note: "",
+    writes,
+    deletes: old
+      .filter((r) => !written.has(r.id))
+      .map((r) => ({ id: r.id, revision: r.revision })),
+  };
+}
+
+function AskToDelete({
+  characterId,
+  campaign,
+  uid,
+}: {
+  characterId: string;
+  campaign: Campaign;
+  uid: string;
+}) {
+  const [confirming, setConfirming] = useState(false);
+  const [message, setMessage] = useState<string | undefined>();
+  if (!confirming)
+    return (
+      <p className="chips">
+        <button
+          type="button"
+          className="secondary"
+          onClick={() => setConfirming(true)}
+        >
+          Ask to delete…
+        </button>
+        {message && <span role="status">{message}</span>}
+      </p>
+    );
+  return (
+    <p className="chips" role="alertdialog" aria-label="Ask to delete">
+      <span>
+        Ask a DM to delete this character from {campaign.name}, with its
+        inventory, books and history?
+      </span>
+      <button
+        type="button"
+        className="primary danger"
+        onClick={async () => {
+          const own = await repository.listUnder(characterId);
+          const failure = own.ok
+            ? await propose(
+                db,
+                campaignIdFor(characterId.split("/")[1] ?? ""),
+                {
+                  kind: "delete",
+                  by: uid,
+                  target: characterId,
+                  note: "",
+                  writes: [],
+                  deletes: own.value.map((r) => ({
+                    id: r.id,
+                    revision: r.revision,
+                  })),
+                },
+              )
+            : "Could not read the character.";
+          setConfirming(false);
+          setMessage(failure ?? "Asked; a DM accepts or rejects it.");
+        }}
+      >
+        Ask to delete
+      </button>
+      <button
+        type="button"
+        className="secondary"
+        onClick={() => setConfirming(false)}
+      >
+        Cancel
+      </button>
     </p>
   );
 }

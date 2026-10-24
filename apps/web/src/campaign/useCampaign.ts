@@ -3,6 +3,7 @@
 import {
   campaignIdFor,
   watchCampaign,
+  watchDelegates,
   type Campaign,
 } from "@hearthtable/storage";
 import { useEffect, useState } from "react";
@@ -22,4 +23,17 @@ export function useCampaign(segment: string | undefined) {
     );
   }, [segment]);
   return { campaign, failure };
+}
+
+/** Who may control a campaign character besides its owner (S6), kept current. */
+export function useDelegates(
+  campaign: string | undefined,
+  characterPath: string,
+): readonly string[] {
+  const [delegates, setDelegates] = useState<readonly string[]>([]);
+  useEffect(() => {
+    if (!campaign) return;
+    return watchDelegates(db, campaign, characterPath, setDelegates, () => {});
+  }, [campaign, characterPath]);
+  return delegates;
 }

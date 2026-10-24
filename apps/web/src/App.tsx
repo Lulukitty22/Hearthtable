@@ -7,15 +7,26 @@
 // the app shows the tabs of the modules the ruleset enables, in a fixed order. A tab a module
 // declares but this app cannot draw is shown as unavailable rather than hidden.
 
-import { useEffect, useMemo, useState, type ComponentType } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ComponentType,
+} from "react";
 import type { RecordEnvelope, RecordId } from "@hearthtable/kernel";
-import { lookUpInvite, type Campaign } from "@hearthtable/storage";
+import { lookUpInvite, propose, type Campaign } from "@hearthtable/storage";
 import { AccountBar } from "./account/AccountBar";
-import { canEditRecord, ownerAliasOf } from "./account/permissions";
+import {
+  campaignOwnerAliasOf,
+  canEditRecord,
+  isAlias,
+  ownerAliasOf,
+} from "./account/permissions";
 import { useViewer, type Viewer } from "./account/useViewer";
 import { CampaignPage } from "./campaign/CampaignPage";
 import { CharacterTools } from "./campaign/CharacterTools";
-import { useCampaign } from "./campaign/useCampaign";
+import { useCampaign, useDelegates } from "./campaign/useCampaign";
 import { AdminPage } from "./admin/AdminPage";
 import { db, repository } from "./firebase";
 import { EntryPage } from "./home/EntryPage";
@@ -30,7 +41,7 @@ import { InventoryTab } from "./sheet/InventoryTab";
 import { SpellsTab } from "./sheet/SpellsTab";
 import { StatsTab } from "./sheet/StatsTab";
 import type { TabProps } from "./sheet/shared";
-import { engine, useSheet, type HistoryEntry } from "./useSheet";
+import { engine, useSheet, type HistoryEntry, type Submit } from "./useSheet";
 
 /** Joining with only a code: look up its campaign and open that page with the code filled in. */
 function JoinWithCode() {
@@ -197,12 +208,13 @@ function RecordPage({
 }) {
   const segments = path.split("/");
   const isAccountPath = segments[0] === "account";
+  const isCampaignPage = !isAccountPath && segments.length === 2;
   const [found, setFound] = useState<
     { path: string; record: RecordEnvelope | undefined } | undefined
   >();
   const [failure, setFailure] = useState<string | undefined>();
   useEffect(() => {
-    if (!isAccountPath || segments.length <= 2) return;
+    if (segments.length <= 2) return;
     let cancelled = false;
     void repository.get(path as RecordId).then((r) => {
       if (cancelled) return;
@@ -212,12 +224,10 @@ function RecordPage({
     return () => {
       cancelled = true;
     };
-  }, [path, isAccountPath, segments.length]);
+  }, [path, segments.length]);
 
-  if (!isAccountPath && segments.length === 2 && segments[1])
+  if (isCampaignPage && segments[1])
     return <CampaignPage segment={segments[1]} viewer={viewer} />;
-  if (!isAccountPath)
-    return <CampaignSheet path={path} view={view} viewer={viewer} />;
   if (segments.length <= 2) return <FolderPage path={path} viewer={viewer} />;
   if (failure)
     return (
@@ -228,7 +238,11 @@ function RecordPage({
   if (found?.path !== path) return <main className="page muted">Loading…</main>;
   const kind = found.record?.kind;
   if (kind === "character")
-    return <Sheet characterId={path} view={view} viewer={viewer} />;
+    return isAccountPath ? (
+      <Sheet characterId={path} view={view} viewer={viewer} />
+    ) : (
+      <CampaignSheet path={path} view={view} viewer={viewer} />
+    );
   if (
     found.record &&
     (kind === "item" || kind === "spell" || kind === "feature")
@@ -284,22 +298,30 @@ function ModeBar({
   characterId,
   editing,
   allowed,
+  proposer,
   viewer,
   dirty,
 }: {
   characterId: string;
   editing: boolean;
   allowed: boolean;
+  proposer: boolean;
   viewer: Viewer;
   dirty: boolean;
 }) {
   // Campaign characters are edited by DMs in DM mode, entered explicitly (Campaignless and solo
   // authority: holding DM permission does not put anyone in DM mode by itself).
   const inCampaign = characterId.startsWith("campaign/");
-  if (editing && allowed)
+  if (editing && (allowed || proposer))
     return (
       <div className="mode-bar">
-        <span className="badge good">{inCampaign ? "DM mode" : "Editing"}</span>
+        <span className="badge good">
+          {allowed
+            ? inCampaign
+              ? "DM mode"
+              : "Editing"
+            : "Proposing changes: a DM approves them"}
+        </span>
         <a
           className="secondary button-link"
           href={webPathFor(characterId)}
@@ -315,14 +337,18 @@ function ModeBar({
         </a>
       </div>
     );
-  if (allowed)
+  if (allowed || proposer)
     return (
       <div className="mode-bar">
         <a
           className="primary button-link"
           href={webPathFor(characterId, "edit")}
         >
-          {inCampaign ? "Edit in DM mode" : "Edit"}
+          {allowed
+            ? inCampaign
+              ? "Edit in DM mode"
+              : "Edit"
+            : "Propose changes"}
         </a>
       </div>
     );
@@ -356,12 +382,45 @@ function Sheet({
     const [scope, owner] = characterId.split("/");
     return ["core", `${scope}/${owner}`];
   }, [characterId]);
-  const [state, actions] = useSheet(repository, characterId, definitionPaths);
+  const allowed = canEditRecord(viewer, characterId, campaign);
+  // S7: a campaign character's owner, or someone they gave control, proposes changes instead;
+  // a DM accepts or rejects them on the campaign page.
+  const delegates = useDelegates(campaign?.id, characterId);
+  const uid = viewer.status === "account" ? viewer.account.uid : undefined;
+  const proposer =
+    !allowed &&
+    !!campaign &&
+    !!uid &&
+    viewer.status === "account" &&
+    viewer.account.status === "approved" &&
+    (campaign.dms.includes(uid) || campaign.players.includes(uid)) &&
+    (isAlias(viewer, campaignOwnerAliasOf(characterId)) ||
+      delegates.includes(uid));
+  const editing = view === "edit";
+  const canEdit = editing && (allowed || proposer);
+  const submit = useCallback<Submit>(
+    (changed, note) =>
+      campaign && uid
+        ? propose(db, campaign.id, {
+            kind: "edit",
+            by: uid,
+            target: characterId,
+            note,
+            writes: changed,
+            deletes: [],
+          })
+        : Promise.resolve("Not signed in."),
+    [campaign, uid, characterId],
+  );
+  const [state, actions] = useSheet(
+    repository,
+    characterId,
+    definitionPaths,
+    proposer ? submit : undefined,
+  );
   const [tab, setTab] = useState("stats");
   const [note, setNote] = useState("");
-  const allowed = canEditRecord(viewer, characterId, campaign);
-  const editing = view === "edit";
-  const canEdit = editing && allowed;
+  const [sent, setSent] = useState(false);
 
   if (state.status === "loading")
     return <main className="page muted">Loading from the emulator…</main>;
@@ -408,9 +467,16 @@ function Sheet({
             characterId={characterId}
             editing={editing}
             allowed={allowed}
+            proposer={proposer}
             viewer={viewer}
             dirty={state.dirty.length > 0}
           />
+          {sent && proposer && (
+            <p className="panel mode-bar" role="status">
+              Sent to the DM. It is saved once a DM accepts it on the campaign
+              page.
+            </p>
+          )}
           <Header {...props} />
           {!editing && (
             <CharacterTools
@@ -505,10 +571,17 @@ function Sheet({
                   className="primary"
                   disabled={state.saving}
                   onClick={async () => {
-                    if (await actions.save(note)) setNote("");
+                    if (await actions.save(note)) {
+                      setNote("");
+                      setSent(proposer);
+                    }
                   }}
                 >
-                  {state.saving ? "Saving…" : "Save"}
+                  {state.saving
+                    ? "Sending…"
+                    : proposer
+                      ? "Send to the DM"
+                      : "Save"}
                 </button>
                 <button
                   type="button"

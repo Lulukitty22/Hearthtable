@@ -4,7 +4,7 @@
 // Campaign membership). Members may leave. DMs see the invite code and link, the join requests,
 // and member controls: remove a player, grant or revoke DM. A campaign always keeps one DM.
 // S6: the campaign's characters, and copies members asked to add, which a DM approves or
-// declines. The DM controller (/DM) comes with Milestone 5.
+// declines. S7: the review queue for proposed changes. The DM controller comes with Milestone 5.
 
 import type { RecordEnvelope } from "@hearthtable/kernel";
 import {
@@ -30,6 +30,8 @@ import { useAliases } from "../account/useAliases";
 import type { Viewer } from "../account/useViewer";
 import { db, repository } from "../firebase";
 import { webPathFor } from "../routes";
+import { FolderBody } from "../home/FolderPage";
+import { ReviewQueue } from "./ReviewQueue";
 
 export function CampaignPage({
   segment,
@@ -41,6 +43,7 @@ export function CampaignPage({
   const id = campaignIdFor(segment);
   const [campaign, setCampaign] = useState<Campaign | null | undefined>();
   const [failure, setFailure] = useState<string | undefined>();
+  const [version, setVersion] = useState(0);
   useEffect(
     () =>
       watchCampaign(
@@ -112,7 +115,25 @@ export function CampaignPage({
         uid={uid}
         isDm={isDm}
         name={name}
+        version={version}
       />
+
+      <Library
+        campaign={campaign}
+        segment={segment}
+        viewer={viewer}
+        version={version}
+      />
+
+      {uid && isMember && viewer.status === "account" && (
+        <ReviewQueue
+          campaign={campaign}
+          uid={uid}
+          isDm={isDm}
+          dmAlias={viewer.account.alias}
+          onAccepted={() => setVersion((v) => v + 1)}
+        />
+      )}
 
       {isDm && <DmTools campaign={campaign} />}
       {!isMember && (
@@ -402,12 +423,15 @@ function Characters({
   uid,
   isDm,
   name,
+  version,
 }: {
   campaign: Campaign;
   segment: string;
   uid: string | undefined;
   isDm: boolean;
   name: (uid: string) => string;
+  /** Changes when something else (the review queue) changed the characters. */
+  version: number;
 }) {
   const root = `campaign/${segment}/Characters`;
   const [characters, setCharacters] = useState<readonly RecordEnvelope[]>();
@@ -424,7 +448,7 @@ function Characters({
     return () => {
       cancelled = true;
     };
-  }, [root, generation]);
+  }, [root, generation, version]);
   useEffect(() => {
     if (!uid) return;
     return watchInsertions(db, campaign.id, uid, isDm, setWaiting, setFailure);
@@ -503,6 +527,53 @@ function Characters({
             ))}
           </ul>
         </>
+      )}
+    </section>
+  );
+}
+
+/**
+ * The campaign's own items, spells, features and folders (S7): DMs add them directly; members
+ * propose new ones or imports, which wait in the review queue. Characters are listed above.
+ */
+function Library({
+  campaign,
+  segment,
+  viewer,
+  version,
+}: {
+  campaign: Campaign;
+  segment: string;
+  viewer: Viewer;
+  version: number;
+}) {
+  const root = `campaign/${segment}`;
+  const [records, setRecords] = useState<readonly RecordEnvelope[]>();
+  const [generation, setGeneration] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    void repository.listUnder(root).then((r) => {
+      if (!cancelled && r.ok) setRecords(r.value);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [root, generation, version]);
+  return (
+    <section className="panel campaign-section" aria-label="Library">
+      <h2>Library</h2>
+      {records ? (
+        <FolderBody
+          path={root}
+          title={`${campaign.name} library`}
+          records={records}
+          viewer={viewer}
+          campaign={campaign}
+          onChange={() => setGeneration((g) => g + 1)}
+          exclude={["Characters"]}
+        />
+      ) : (
+        <p className="muted">Loading…</p>
       )}
     </section>
   );

@@ -126,6 +126,20 @@ service cloud.firestore {
         && request.resource.data.players.toSet() == resource.data.players.toSet().difference(me);
     }
 
+    function isCharacterPath(path) {
+      return path.split('/').size() == 5 && path.split('/')[2] == 'Characters';
+    }
+
+    function proposalAllowed(campaign, p) {
+      return (p.kind == 'entry' && p.target.split('/').size() >= 3
+          && p.target.split('/')[2] != 'Characters')
+        || (p.kind == 'edit' && isCharacterPath(p.target)
+          && (ownsAlias(p.target.split('/')[3])
+            || request.auth.uid in get(/databases/$(database)/documents/campaigns/$(campaign)/control/$(p.control)).data.delegates))
+        || ((p.kind == 'delete' || p.kind == 'replace') && isCharacterPath(p.target)
+          && ownsAlias(p.target.split('/')[3]));
+    }
+
     match /campaigns/{campaign} {
       allow read: if true;
       allow create: if isApproved()
@@ -167,6 +181,28 @@ service cloud.firestore {
           && request.resource.data.path.split('/')[1].lower() == campaign
           && request.resource.data.path.split('/')[2] == 'Characters'
           && ownsAlias(request.resource.data.path.split('/')[3]);
+      }
+
+      // S7: the DM review queue. A member proposes a change; the person and the DMs may read and
+      // delete it, and a DM accepting it writes through the record Rule. An `edit` of a campaign
+      // character comes from its owner or a current delegate (a revoked delegate is refused
+      // here); `delete` and `replace` only from the owner; an `entry` (a new or imported library
+      // entry) from any member, outside Characters. `control` names the character's control
+      // document and must spell the same path as `target`.
+      match /proposals/{proposal} {
+        allow read, delete: if signedIn()
+          && (resource.data.by == request.auth.uid || isDmOf(campaign));
+        allow create: if isApproved()
+          && (request.auth.uid in get(campaignDoc(campaign)).data.dms
+            || request.auth.uid in get(campaignDoc(campaign)).data.players)
+          && request.resource.data.keys().hasOnly(['kind', 'by', 'target', 'control', 'note', 'writes', 'deletes', 'at'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.at == request.time
+          && request.resource.data.target is string
+          && request.resource.data.target.split('/')[0] == 'campaign'
+          && request.resource.data.target.split('/')[1].lower() == campaign
+          && request.resource.data.control.split('%2F') == request.resource.data.target.split('/')
+          && proposalAllowed(campaign, request.resource.data);
       }
 
       // S6: delegated control. The character's owner (by the Alias in its path) chooses which

@@ -102,7 +102,7 @@ The detailed boundary between updated definition fields and immutable paid-casti
 
 ## Publication and approval
 
-Players can propose campaign definition edits; the campaign DM approves publication. Once published, linked entries resolve the current definition through their references. There is no additional per-character acceptance gate for each library correction.
+Players can propose campaign definition edits; the campaign DM approves publication. Selected 2026-10-24 at 6:24 am PDT (America/Los_Angeles) (user decisions): a player may propose a new campaign entry made from blank, or import an entry from their own account as a copy; a DM approves each one. A proposal carries the whole entry, whatever fields it has, so it does not depend on what today's forms can fill in (in Milestone 4 only a name and a description). The player chooses where it goes: an existing campaign folder or the campaign's top level, with a name; campaign entries live in ordinary folders as in accounts, and DMs make campaign folders. Once published, linked entries resolve the current definition through their references. There is no additional per-character acceptance gate for each library correction.
 
 Only explicitly assigned core maintainers may publish global core changes. Campaign DM status alone grants no core publishing rights. Assignment/revocation of maintainers and the detailed publication process still need design.
 

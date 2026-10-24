@@ -104,15 +104,28 @@ export function foldersIn(
   return [...folders].sort();
 }
 
-/** A 1:1 copy of an entry and everything under it at a new path; nothing in the data changes. */
+/** Which account or campaign a record path belongs to, as its `origin`. */
+export function originFor(path: string): RecordEnvelope["origin"] {
+  const [scope, owner] = path.split("/");
+  return scope === "campaign"
+    ? { scope: "campaign", ...(owner ? { ownerId: owner } : {}) }
+    : { scope: "account", ...(owner ? { ownerId: owner } : {}) };
+}
+
+/**
+ * A 1:1 copy of an entry and everything under it at a new path; nothing in the data changes.
+ * Only `origin` follows the destination, so a copy in a campaign says it belongs there.
+ */
 export function copiedRecords(
   records: readonly RecordEnvelope[],
   from: string,
   to: string,
 ): RecordEnvelope[] {
+  const origin = originFor(to);
   return subtree(from, records).map((r) => ({
     ...r,
     id: `${to}${r.id.slice(from.length)}` as RecordId,
+    origin: r.origin.scope === "core" ? r.origin : origin,
     revision: 0,
   }));
 }
@@ -131,7 +144,7 @@ function envelope(
     kind,
     moduleId,
     schemaVersion: 1,
-    origin: { scope: "account", ownerId: owner },
+    origin: originFor(id),
     source: { status: "homebrew" },
     revision: 0,
     updatedAt: now(),
