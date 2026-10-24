@@ -15,25 +15,41 @@ async function warmGoogleScript(page: Page) {
   await warm.close();
 }
 
-/** Signs in through the Auth emulator's Google page as a new fake Google account. */
-async function signInAs(page: Page, email: string) {
+/**
+ * Signs in through the Auth emulator's Google page: as a seeded account (picked by its email) or,
+ * with `create`, as a new fake Google account.
+ */
+async function signInAs(page: Page, email: string, create = false) {
   await warmGoogleScript(page);
   const popupOpened = page.waitForEvent("popup");
   await page.getByRole("button", { name: "Sign in with Google" }).click();
   const popup = await popupOpened;
   await popup.waitForLoadState("load");
-  // The page can show its button before its script listens for clicks, so try again until the
-  // form opens.
-  await expect(async () => {
-    await popup.getByText("Add new account").click();
-    await expect(popup.locator("#email-input")).toBeVisible({ timeout: 1000 });
-  }).toPass({ timeout: 10000 });
-  await popup.locator("#email-input").fill(email);
-  await popup.locator("#display-name-input").fill("Private Google Name");
   const closed = popup.waitForEvent("close");
-  await popup.locator("#sign-in").click();
+  // The page can show its buttons before its script listens for clicks, so try again until the
+  // click takes effect.
+  if (create) {
+    await expect(async () => {
+      await popup.getByText("Add new account").click();
+      await expect(popup.locator("#email-input")).toBeVisible({
+        timeout: 1000,
+      });
+    }).toPass({ timeout: 10000 });
+    await popup.locator("#email-input").fill(email);
+    await popup.locator("#display-name-input").fill("Private Google Name");
+    await popup.locator("#sign-in").click();
+  } else {
+    await expect(async () => {
+      if (!popup.isClosed())
+        await popup.getByText(email).click({ timeout: 1000 });
+      await expect.poll(() => popup.isClosed(), { timeout: 1500 }).toBe(true);
+    }).toPass({ timeout: 10000 });
+  }
   await closed;
 }
+
+const VR_LULU = "vr_lulu@example.com";
+const TEST_PLAYER = "test_player@example.com";
 
 // Names unique to each run, so the tests can repeat against one emulator.
 const unique = () => Date.now().toString(36) + Math.floor(Math.random() * 1e4);
@@ -49,7 +65,7 @@ test("a guest signs in, chooses an Alias and waits for approval", async ({
   // Guests browse public content.
   await expect(page.getByRole("link", { name: "Carol Elfnein" })).toBeVisible();
 
-  await signInAs(page, `${name}@example.com`);
+  await signInAs(page, `${name}@example.com`, true);
   const form = page.getByRole("form", { name: "Choose your Alias" });
   await expect(form).toBeVisible();
 
@@ -88,7 +104,7 @@ test("an Alias already taken is refused, ignoring capitals and _ versus -", asyn
   const taken = `Taken_${unique()}`;
   const first = await (await browser.newContext()).newPage();
   await first.goto("/");
-  await signInAs(first, `${taken}.a@example.com`);
+  await signInAs(first, `${taken}.a@example.com`, true);
   await first.getByRole("textbox", { name: "Alias" }).fill(taken);
   await first.getByRole("button", { name: `Choose ${taken}` }).click();
   await expect(first.getByTestId("account-alias")).toHaveText(taken);
@@ -96,7 +112,7 @@ test("an Alias already taken is refused, ignoring capitals and _ versus -", asyn
 
   const second = await (await browser.newContext()).newPage();
   await second.goto("/");
-  await signInAs(second, `${taken}.b@example.com`);
+  await signInAs(second, `${taken}.b@example.com`, true);
   const form = second.getByRole("form", { name: "Choose your Alias" });
   await form
     .getByRole("textbox", { name: "Alias" })
@@ -113,4 +129,60 @@ test("an Alias already taken is refused, ignoring capitals and _ versus -", asyn
   await form.getByRole("button", { name: `Choose ${taken}_2` }).click();
   await expect(second.getByTestId("account-alias")).toHaveText(`${taken}_2`);
   await second.context().close();
+});
+
+test("the site administrator approves a waiting account", async ({
+  browser,
+}) => {
+  const name = `Waiting_${unique()}`;
+  const waiting = await (await browser.newContext()).newPage();
+  await waiting.goto("/");
+  await signInAs(waiting, `${name}@example.com`, true);
+  await waiting.getByRole("textbox", { name: "Alias" }).fill(name);
+  await waiting.getByRole("button", { name: `Choose ${name}` }).click();
+  await expect(account(waiting)).toContainText("awaiting approval");
+
+  const admin = await (await browser.newContext()).newPage();
+  await admin.goto("/");
+  await signInAs(admin, VR_LULU);
+  await expect(admin.getByTestId("account-alias")).toHaveText("VR_Lulu");
+  await expect(account(admin)).toContainText("administrator");
+  await account(admin).getByRole("link", { name: "Approvals" }).click();
+  await expect(admin).toHaveURL(/\/Admin$/);
+  const list = admin.getByRole("list", {
+    name: "Accounts waiting for approval",
+  });
+  await expect(list).toContainText("Test_Pending");
+  await list.getByRole("button", { name: `Approve ${name}` }).click();
+  await expect(list).not.toContainText(name);
+
+  // The waiting account sees its approval without reloading.
+  await expect(account(waiting)).toContainText("approved");
+  await expect(account(waiting)).not.toContainText("awaiting approval");
+  await expect(waiting.getByRole("status")).toHaveCount(0);
+
+  await waiting.context().close();
+  await admin.context().close();
+});
+
+test("only site administrators see approvals", async ({ page }) => {
+  await page.goto("/");
+  await signInAs(page, TEST_PLAYER);
+  await expect(page.getByTestId("account-alias")).toHaveText("Test_Player");
+  await expect(
+    account(page).getByRole("link", { name: "Approvals" }),
+  ).toHaveCount(0);
+  await page.goto("/Admin");
+  await expect(
+    page.getByText("This page is for site administrators"),
+  ).toBeVisible();
+});
+
+test("old addresses that began with the Alias open nothing", async ({
+  page,
+}) => {
+  await page.goto("/VR_Lulu/Characters/Carol_Elfnein");
+  await expect(page.getByText("There is no page at")).toBeVisible();
+  await page.goto("/Accounts/VR_Lulu/Characters/Carol_Elfnein/Edit");
+  await expect(page.getByTestId("armor-class")).toBeVisible();
 });

@@ -8,7 +8,7 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
-import { claimAlias } from "@hearthtable/storage";
+import { approveAccount, claimAlias } from "@hearthtable/storage";
 import {
   doc,
   getDoc,
@@ -153,5 +153,62 @@ describe("choosing an Alias", () => {
     await claimAlias(as("alice"), "alice", "Alice_W");
     await assertSucceeds(getDoc(doc(guest(), "accounts", "alice")));
     await assertSucceeds(getDoc(doc(guest(), "accounts-by-alias", "alice_w")));
+  });
+});
+
+describe("approving accounts", () => {
+  /** A seeded administrator, written with Rules off as the seed script does. */
+  async function seedAdmin(uid = "admin") {
+    await env.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore() as unknown as Firestore;
+      await setDoc(doc(db, "accounts", uid), {
+        alias: "The_Admin",
+        status: "approved",
+        admin: true,
+      });
+    });
+  }
+
+  it("lets a site administrator approve a pending account", async () => {
+    await seedAdmin();
+    await claimAlias(as("alice"), "alice", "Alice_W");
+    expect(await approveAccount(as("admin"), "admin", "alice")).toBeUndefined();
+    const stored = await getDoc(doc(guest(), "accounts", "alice"));
+    expect(stored.data()).toMatchObject({
+      status: "approved",
+      approvedBy: "admin",
+      admin: false,
+    });
+  });
+
+  it("refuses approval by anyone who is not an administrator", async () => {
+    await claimAlias(as("alice"), "alice", "Alice_W");
+    await claimAlias(as("bob"), "bob", "Bob_W");
+    expect(await approveAccount(as("bob"), "bob", "alice")).toBeDefined();
+    expect(await approveAccount(as("alice"), "alice", "alice")).toBeDefined();
+    expect(await approveAccount(guest(), "nobody", "alice")).toBeDefined();
+  });
+
+  it("lets an administrator change nothing but the approval", async () => {
+    await seedAdmin();
+    await claimAlias(as("alice"), "alice", "Alice_W");
+    const ref = doc(as("admin"), "accounts", "alice");
+    await assertFails(updateDoc(ref, { admin: true }));
+    await assertFails(updateDoc(ref, { alias: "Alice_X" }));
+    await assertFails(
+      updateDoc(ref, {
+        status: "approved",
+        approvedBy: "someone-else",
+        approvedAt: serverTimestamp(),
+      }),
+    );
+    await assertFails(
+      updateDoc(ref, {
+        status: "approved",
+        approvedBy: "admin",
+        approvedAt: serverTimestamp(),
+        admin: true,
+      }),
+    );
   });
 });

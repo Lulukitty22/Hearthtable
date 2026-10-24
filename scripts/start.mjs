@@ -1,5 +1,5 @@
 // `pnpm start`, also what "Hearthtable Launcher.exe" runs: one window for local development.
-// Starts the emulators, waits until Firestore answers, runs `pnpm seed --refresh`, then starts
+// Starts the emulators, waits until Firestore and Auth answer, runs `pnpm seed --refresh`, then starts
 // the web app and opens it in the browser. Ctrl+C stops everything: the console passes it to
 // every process, so the emulators save their data on the way out, and this script waits for
 // them before closing. Closing the window with its X button does not leave time to save.
@@ -8,6 +8,8 @@ import { spawn } from "node:child_process";
 import { connect } from "node:net";
 
 const FIRESTORE = { host: "127.0.0.1", port: 8080 };
+// Seeding also adds accounts, so Auth must be up as well; it can start a few seconds later.
+const AUTH = { host: "127.0.0.1", port: 9099 };
 const WEB = "http://localhost:5173/";
 const children = new Set();
 
@@ -78,7 +80,7 @@ emulators.done.then((code) => {
 });
 
 console.log("Waiting for the emulators to start...");
-if (!(await waitForPort(FIRESTORE, 180))) {
+if (!(await waitForPort(FIRESTORE, 180)) || !(await waitForPort(AUTH, 60))) {
   console.log(
     emulatorsExited
       ? "The emulators could not start; see the messages above."

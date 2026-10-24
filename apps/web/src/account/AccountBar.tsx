@@ -5,10 +5,9 @@
 import { aliasProblem, claimAlias } from "@hearthtable/storage";
 import { useState } from "react";
 import { db } from "../firebase";
-import { signInWithGoogle, signOutOfGoogle, useViewer } from "./useViewer";
+import { signInWithGoogle, signOutOfGoogle, type Viewer } from "./useViewer";
 
-export function AccountBar() {
-  const viewer = useViewer();
+export function AccountBar({ viewer }: { viewer: Viewer }) {
   const [failure, setFailure] = useState<string | undefined>();
 
   const signIn = async () => setFailure(await signInWithGoogle());
@@ -54,7 +53,12 @@ export function AccountBar() {
                 {viewer.account.alias}
               </strong>
               {viewer.account.admin && (
-                <span className="badge good">administrator</span>
+                <>
+                  <span className="badge good">administrator</span>
+                  <a className="entry-link" href="/Admin">
+                    Approvals
+                  </a>
+                </>
               )}
               {viewer.account.status === "pending" ? (
                 <span className="badge warn">awaiting approval</span>

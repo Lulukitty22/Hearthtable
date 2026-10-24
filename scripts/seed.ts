@@ -7,21 +7,28 @@
 // counts as untouched while its revision still equals `seededRevision`, which seeding writes; a
 // record seeded before that marker existed counts as untouched only at revision 1. Changed
 // records are listed and left alone.
+//
+// It also adds the seeded accounts (scripts/accounts.ts) that are missing. Seeding writes with
+// the emulator's Security Rules switched off, because Rules never let the app itself set an
+// account's approval or administrator flag.
 
 import { carolElfnein, coreContent, vrluluContent } from "@hearthtable/content";
 import { serializeEnvelope, type RecordEnvelope } from "@hearthtable/kernel";
 import { firestoreRepository } from "@hearthtable/storage";
 import { deleteApp, initializeApp } from "firebase/app";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { seedAccounts } from "./accounts";
 
 const refresh = process.argv.includes("--refresh");
-const app = initializeApp({ projectId: "demo-hearthtable" });
-const db = getFirestore(app);
-// `firebase emulators:exec` sets FIRESTORE_EMULATOR_HOST; otherwise use the local default.
+// `firebase emulators:exec` sets these; otherwise use the local defaults.
 const [host = "127.0.0.1", port = "8080"] = (
   process.env["FIRESTORE_EMULATOR_HOST"] ?? "127.0.0.1:8080"
 ).split(":");
-connectFirestoreEmulator(db, host, Number(port));
+const authHost = process.env["FIREBASE_AUTH_EMULATOR_HOST"] ?? "127.0.0.1:9099";
+const app = initializeApp({ projectId: "demo-hearthtable" });
+const db = getFirestore(app);
+// The emulator treats the "owner" token as Rules switched off; real Firebase has no such token.
+connectFirestoreEmulator(db, host, Number(port), { mockUserToken: "owner" });
 const repo = firestoreRepository(db);
 
 /** The record as seeding stores it: marked with the revision it will have once saved. */
@@ -111,4 +118,20 @@ for (const id of kept)
   console.log(
     `  ${refresh ? "kept (changed since seeding)" : "skipped"} ${id}`,
   );
+try {
+  const accounts = await seedAccounts(db, authHost);
+  console.log(
+    `Accounts: added ${accounts.added.length}, kept ${accounts.kept.length} that already exist.`,
+  );
+  for (const alias of accounts.added) console.log(`  added account ${alias}`);
+  for (const message of accounts.refused)
+    console.log(`  not added: ${message}`);
+} catch (error) {
+  console.error(
+    `Could not seed accounts. Is the Auth emulator running?
+${error instanceof Error ? error.message : String(error)}`,
+  );
+  await deleteApp(app);
+  process.exit(1);
+}
 await deleteApp(app);

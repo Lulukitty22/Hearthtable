@@ -9,10 +9,14 @@
 // display form is kept. An Alias is fixed once chosen.
 
 import {
+  collection,
   doc,
   onSnapshot,
+  query,
   runTransaction,
   serverTimestamp,
+  updateDoc,
+  where,
   type DocumentData,
   type Firestore,
   type Unsubscribe,
@@ -28,6 +32,8 @@ export interface Account {
   readonly alias: string;
   readonly status: ApprovalStatus;
   readonly admin: boolean;
+  /** When the Alias was chosen, as an ISO time, once the server has set it. */
+  readonly createdAt?: string;
 }
 
 /** Why an Alias cannot be used as typed, or undefined when its format is fine. */
@@ -53,7 +59,15 @@ export function readAccount(
   const status = data?.["status"];
   if (typeof alias !== "string") return undefined;
   if (status !== "pending" && status !== "approved") return undefined;
-  return { uid, alias, status, admin: data?.["admin"] === true };
+  const created = data?.["createdAt"] as { toDate?: () => Date } | undefined;
+  const createdAt = created?.toDate?.().toISOString();
+  return {
+    uid,
+    alias,
+    status,
+    admin: data?.["admin"] === true,
+    ...(createdAt ? { createdAt } : {}),
+  };
 }
 
 export type ClaimResult =
@@ -129,4 +143,43 @@ export function watchAccount(
     (snap) => onChange(readAccount(uid, snap.data())),
     (error) => onError(error.message),
   );
+}
+
+/** Calls `onChange` with every account waiting for approval, oldest first, now and after changes. */
+export function watchPendingAccounts(
+  db: Firestore,
+  onChange: (accounts: readonly Account[]) => void,
+  onError: (message: string) => void,
+): Unsubscribe {
+  return onSnapshot(
+    query(collection(db, ACCOUNTS), where("status", "==", "pending")),
+    (snap) =>
+      onChange(
+        snap.docs
+          .flatMap((d) => readAccount(d.id, d.data()) ?? [])
+          .sort((a, b) => (a.createdAt ?? "").localeCompare(b.createdAt ?? "")),
+      ),
+    (error) => onError(error.message),
+  );
+}
+
+/**
+ * A site administrator (`adminUid`) approves a pending account. Rules allow only this change:
+ * status to approved, with who approved it and when.
+ */
+export async function approveAccount(
+  db: Firestore,
+  adminUid: string,
+  uid: string,
+): Promise<string | undefined> {
+  try {
+    await updateDoc(doc(db, ACCOUNTS, uid), {
+      status: "approved",
+      approvedBy: adminUid,
+      approvedAt: serverTimestamp(),
+    });
+    return undefined;
+  } catch (error) {
+    return error instanceof Error ? error.message : String(error);
+  }
 }

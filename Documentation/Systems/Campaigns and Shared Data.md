@@ -57,10 +57,12 @@ Selected direction: distinguish three layers of campaign organization. A campaig
 | Layer | Purpose | User's illustrative path |
 |---|---|---|
 | Campaign storage | Keep campaign configuration and permissions in its own logical backend scope. Exact database keys/layout remain unselected. | `/campaigns/Moonlit_Coast/` |
-| Account navigation | Show a campaign link in the account folder where it was created. The link opens the campaign view; it is not another campaign save. | `website.com/[ACCOUNT]/Fantasy/Random_Subfolder` contains `Moonlit Coast.campaign.link` |
+| Account navigation | Show a campaign link in the account folder where it was created. The link opens the campaign view; it is not another campaign save. | `website.com/Accounts/[ACCOUNT]/Fantasy/Random_Subfolder` contains `Moonlit Coast.campaign.link` |
 | Campaign view | Open the campaign's shared HTML interface independently of its account-menu placement. | `website.com/Campaigns/Moonlit_Coast` |
 
-These paths illustrate the intended layers, not a finalized routing schema or a requirement for literal database files. Exact character/custom-entry routes and account-menu navigation remain open. Character export behavior after a path change is selected under [Live character-sheet exports](#live-character-sheet-exports).
+These paths illustrate the intended layers, not a requirement for literal database files. Account-menu navigation remains open.
+
+**Web addresses** — selected 2026-10-24 at 3:54 am PDT (America/Los_Angeles), replacing the 2026-10-22 addresses that began with the Alias. Every address names its scope first, matching the record path: `website.com/Accounts/VR_Lulu/Characters/Carol` shows the record `account/VR_Lulu/Characters/Carol`, and `website.com/Campaigns/Moonlit` shows `campaign/Moonlit`. Because no address starts with an Alias, no Alias can clash with a page such as `website.com/Admin`, and no words need to be reserved. A different view of the same record is a last path segment: `/Campaigns/Moonlit/DM` for the DM controller and `/Accounts/VR_Lulu/Characters/Carol/Edit` for the editor. The user considered subdomains per view or scope (`dm.`, `editor.`, `character.`, `accounts.`) and chose paths, because each subdomain keeps its own sign-in and needs a purchased domain; a subdomain may later forward to the matching path. Open: whether `Edit` and `DM` must be refused as record names, since they end view addresses. Character export behavior after a path change is selected under [Live character-sheet exports](#live-character-sheet-exports).
 
 ### Creating a campaign
 
@@ -70,7 +72,7 @@ For example, creating Moonlit Coast from Home → Fantasy → Random Subfolder a
 
 ### Copying a campaign character into an account folder
 
-From the campaign character view, choose Copy to and an account destination folder. The resulting independent character save appears in that folder; the source campaign character remains unchanged under the [copy-only placement rule](#character-placement-copy-only). For example, copying Carol to `[ACCOUNT]/Fantasy/Random_Subfolder/Mages` produces an account character at the illustrative address `website.com/[ACCOUNT]/Fantasy/Random_Subfolder/Mages/Carol.character`. Preserve the account segment so the destination is unambiguous. Unlike the campaign link above, this operation creates a new character save.
+From the campaign character view, choose Copy to and an account destination folder. The resulting independent character save appears in that folder; the source campaign character remains unchanged under the [copy-only placement rule](#character-placement-copy-only). For example, copying Carol to `[ACCOUNT]/Fantasy/Random_Subfolder/Mages` produces an account character at the illustrative address `website.com/Accounts/[ACCOUNT]/Fantasy/Random_Subfolder/Mages/Carol.character`. Preserve the account segment so the destination is unambiguous. Unlike the campaign link above, this operation creates a new character save.
 
 Selected 2026-10-18: if the requested target name/path already exists, reject creation, copying or character renaming with a clear name-already-taken/duplicate-file error. Do not overwrite the existing entry or automatically add an ID/suffix to its name/address. Thus two campaigns cannot occupy the same shared campaign path, and a character copy cannot occupy an existing character's destination path; the same character name in a different folder has a different path.
 

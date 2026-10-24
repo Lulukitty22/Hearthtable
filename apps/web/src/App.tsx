@@ -1,6 +1,7 @@
-// Character sheets read from and saved to the local emulator. The web address is the record's
-// path (user decision, 2026-10-22): /VR_Lulu/Characters/Carol_Elfnein shows the record
-// account/VR_Lulu/Characters/Carol_Elfnein, and /Campaigns/<name>/… a campaign's copy.
+// Character sheets read from and saved to the local emulator. Addresses follow record paths
+// (routes.ts): /Accounts/VR_Lulu/Characters/Carol_Elfnein shows the record
+// account/VR_Lulu/Characters/Carol_Elfnein, and /Campaigns/<name>/… a campaign's copy. Until the
+// view-only character card exists, a character's address and its /Edit address both open the editor.
 // Tabs come from the systems: each module lists the tabs it provides (`provides.uiTabs`), and
 // the app shows the tabs of the modules the ruleset enables, in a fixed order. A tab a module
 // declares but this app cannot draw is shown as unavailable rather than hidden.
@@ -8,7 +9,10 @@
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import type { RecordEnvelope } from "@hearthtable/kernel";
 import { AccountBar } from "./account/AccountBar";
+import { useViewer } from "./account/useViewer";
+import { AdminPage } from "./admin/AdminPage";
 import { repository } from "./firebase";
+import { parseRoute, webPathFor } from "./routes";
 import { FeaturesTab } from "./sheet/FeaturesTab";
 import { Header } from "./sheet/Header";
 import { EntryProvider } from "./sheet/entries";
@@ -17,23 +21,6 @@ import { SpellsTab } from "./sheet/SpellsTab";
 import { StatsTab } from "./sheet/StatsTab";
 import type { TabProps } from "./sheet/shared";
 import { engine, useSheet, type HistoryEntry } from "./useSheet";
-
-/** Record path for a web address, or undefined for the home page. */
-export function recordPathFor(pathname: string): string | undefined {
-  const segments = pathname.split("/").filter(Boolean).map(decodeURIComponent);
-  if (segments.length === 0) return undefined;
-  const [first, ...rest] = segments;
-  return first?.toLowerCase() === "campaigns"
-    ? ["campaign", ...rest].join("/")
-    : ["account", ...segments].join("/");
-}
-
-/** Web address for a record path. */
-export function webPathFor(recordPath: string): string {
-  const [scope, ...rest] = recordPath.split("/");
-  const segments = scope === "campaign" ? ["Campaigns", ...rest] : rest;
-  return "/" + segments.map(encodeURIComponent).join("/");
-}
 
 function Home() {
   const [characters, setCharacters] = useState<
@@ -118,12 +105,29 @@ function History({ entries }: { entries: readonly HistoryEntry[] }) {
 }
 
 export function App() {
-  const path = recordPathFor(window.location.pathname);
+  const route = parseRoute(window.location.pathname);
+  const viewer = useViewer();
   return (
     <>
-      <AccountBar />
-      {path ? <Sheet characterId={path} /> : <Home />}
+      <AccountBar viewer={viewer} />
+      {route.kind === "admin" && <AdminPage viewer={viewer} />}
+      {route.kind === "home" && <Home />}
+      {route.kind === "record" && <Sheet characterId={route.path} />}
+      {route.kind === "unknown" && <NotFound />}
     </>
+  );
+}
+
+function NotFound() {
+  return (
+    <main className="page">
+      <div className="error-box">
+        There is no page at <code>{window.location.pathname}</code>. Characters
+        are at addresses like{" "}
+        <code>/Accounts/VR_Lulu/Characters/Carol_Elfnein</code>; go back to the{" "}
+        <a href="/">list of characters</a>.
+      </div>
+    </main>
   );
 }
 
