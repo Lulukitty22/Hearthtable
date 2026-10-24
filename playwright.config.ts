@@ -21,6 +21,7 @@ export default defineConfig({
     env: {
       VITE_FIRESTORE_EMULATOR_PORT: "8180",
       VITE_AUTH_EMULATOR_PORT: "9100",
+      VITE_STORAGE_EMULATOR_PORT: "9299",
     },
     url: "http://localhost:5174",
     reuseExistingServer: false,

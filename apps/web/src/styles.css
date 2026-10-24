@@ -928,3 +928,63 @@ dialog.detail {
   justify-content: flex-end;
   margin: 0 0 6px;
 }
+
+/* Portraits (Milestone 4, S11): beside the header when there is one. */
+
+.sheet-header:has(> .portrait, > .portrait-edit) {
+  grid-template-columns: auto 1fr;
+}
+
+.sheet-header > .portrait,
+.sheet-header > .portrait-edit {
+  grid-row: span 3;
+}
+
+.sheet-header > :not(.portrait, .portrait-edit) {
+  grid-column: 2;
+}
+
+.portrait {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--bg-sunken);
+}
+
+.portrait-empty {
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.portrait-edit {
+  display: grid;
+  gap: 6px;
+  max-width: 260px;
+}
+
+.portrait-controls {
+  display: grid;
+  gap: 6px;
+}
+
+.portrait-controls input[type="text"] {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .sheet-header:has(> .portrait, > .portrait-edit) {
+    grid-template-columns: 1fr;
+  }
+  .sheet-header > .portrait,
+  .sheet-header > .portrait-edit {
+    grid-row: auto;
+  }
+  .sheet-header > :not(.portrait, .portrait-edit) {
+    grid-column: auto;
+  }
+}

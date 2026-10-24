@@ -4,6 +4,7 @@
 import type { ActiveEffectRow } from "@hearthtable/system-active-effects";
 import type { BookView } from "@hearthtable/system-spellbook-readiness";
 import { Explained } from "./Explained";
+import { Portrait } from "./Portrait";
 import { known, type Data, type TabProps } from "./shared";
 
 interface ClassLevel {
@@ -75,6 +76,7 @@ export function Header(props: TabProps) {
 
   return (
     <header className="sheet-header">
+      <Portrait {...props} />
       <div className="sheet-title">
         <h1>{character?.name ?? characterId}</h1>
         <span className="muted">

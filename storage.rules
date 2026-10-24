@@ -1,8 +1,41 @@
 rules_version = '2';
 
-// Emulator-only placeholder: everything is denied until portrait storage is designed.
+// Emulator-only until Milestone 6. Portraits (Milestone 4, S11; Campaigns and Shared Data,
+// Portrait uploads): files live at portraits/<the character's record path>/<file>, are readable
+// by anyone (privacy is screen-only and not built yet), and are uploaded by someone who may edit
+// that character: its owner by Alias, or for a campaign character also the campaign's DMs.
+// Uploads are PNG, JPEG, WebP or GIF up to 2 MB. Nothing else may be stored.
 service firebase.storage {
   match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function approved() {
+      return firestore.get(/databases/(default)/documents/accounts/$(request.auth.uid)).data.status == 'approved';
+    }
+
+    function ownsAlias(alias) {
+      return firestore.get(/databases/(default)/documents/accounts-by-alias/$(alias.lower().replace('-', '_'))).data.uid == request.auth.uid;
+    }
+
+    function isImage() {
+      return request.resource.size <= 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp|gif)');
+    }
+
+    match /portraits/account/{alias}/{rest=**} {
+      allow read: if true;
+      allow write: if signedIn() && approved() && ownsAlias(alias) && isImage();
+    }
+
+    match /portraits/campaign/{campaign}/Characters/{alias}/{rest=**} {
+      allow read: if true;
+      allow write: if signedIn() && approved() && isImage()
+        && (ownsAlias(alias)
+          || request.auth.uid in firestore.get(/databases/(default)/documents/campaigns/$(campaign.lower())).data.dms);
+    }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }
