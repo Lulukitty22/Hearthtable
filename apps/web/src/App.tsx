@@ -9,13 +9,16 @@
 
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import type { RecordEnvelope, RecordId } from "@hearthtable/kernel";
+import { lookUpInvite } from "@hearthtable/storage";
 import { AccountBar } from "./account/AccountBar";
 import { canEditRecord, ownerAliasOf } from "./account/permissions";
 import { useViewer, type Viewer } from "./account/useViewer";
+import { CampaignPage } from "./campaign/CampaignPage";
 import { AdminPage } from "./admin/AdminPage";
-import { repository } from "./firebase";
+import { db, repository } from "./firebase";
 import { EntryPage } from "./home/EntryPage";
 import { FolderPage } from "./home/FolderPage";
+import { segmentFor } from "./home/names";
 import { parseRoute, webPathFor, type View as RouteView } from "./routes";
 import { FeaturesTab } from "./sheet/FeaturesTab";
 import { Header } from "./sheet/Header";
@@ -26,6 +29,47 @@ import { SpellsTab } from "./sheet/SpellsTab";
 import { StatsTab } from "./sheet/StatsTab";
 import type { TabProps } from "./sheet/shared";
 import { engine, useSheet, type HistoryEntry } from "./useSheet";
+
+/** Joining with only a code: look up its campaign and open that page with the code filled in. */
+function JoinWithCode() {
+  const [code, setCode] = useState("");
+  const [failure, setFailure] = useState<string | undefined>();
+  return (
+    <form
+      className="panel entry-form"
+      aria-label="Join a campaign"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const invite = await lookUpInvite(db, code).catch(() => undefined);
+        if (!invite)
+          return setFailure(
+            "That code does not match a campaign. Sign in first, and check the code with a DM.",
+          );
+        // The campaign's address comes from its name, as when it was created.
+        const page = webPathFor(`campaign/${segmentFor(invite.name)}`);
+        const invited = encodeURIComponent(code.trim().toUpperCase());
+        window.location.assign(`${page}?invite=${invited}`);
+      }}
+    >
+      <h2>Join a campaign</h2>
+      <label>
+        Invite code{" "}
+        <input
+          type="text"
+          aria-label="Invite code"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+        />
+      </label>
+      <p>
+        <button type="submit" className="primary" disabled={!code.trim()}>
+          Find the campaign
+        </button>
+      </p>
+      {failure && <div className="error-box">{failure}</div>}
+    </form>
+  );
+}
 
 function Home() {
   const [characters, setCharacters] = useState<
@@ -41,6 +85,7 @@ function Home() {
   return (
     <main className="page">
       <h1>Hearthtable</h1>
+      <JoinWithCode />
       {failure && (
         <div className="error-box">
           Could not reach the emulator. Is <code>pnpm emulators</code> running?
@@ -127,8 +172,8 @@ export function App() {
 
 /**
  * What an address shows depends on what is stored there (Milestone 4, S4): an account's home or a
- * folder, a character sheet, or a custom entry. Campaign addresses open sheets until campaigns
- * arrive in S5.
+ * folder, a character sheet, a custom entry, or a link to a campaign. /Campaigns/<name> is the
+ * campaign's page (S5); deeper campaign addresses open sheets.
  */
 function RecordPage({
   path,
@@ -158,6 +203,8 @@ function RecordPage({
     };
   }, [path, isAccountPath, segments.length]);
 
+  if (!isAccountPath && segments.length === 2 && segments[1])
+    return <CampaignPage segment={segments[1]} viewer={viewer} />;
   if (!isAccountPath)
     return <Sheet characterId={path} view={view} viewer={viewer} />;
   if (segments.length <= 2) return <FolderPage path={path} viewer={viewer} />;
@@ -176,6 +223,13 @@ function RecordPage({
     (kind === "item" || kind === "spell" || kind === "feature")
   )
     return <EntryPage record={found.record} />;
+  if (kind === "campaign-link") {
+    const target = (found.record?.data as { campaign?: unknown }).campaign;
+    if (typeof target === "string") {
+      window.location.replace(webPathFor(target));
+      return <main className="page muted">Opening the campaign…</main>;
+    }
+  }
   // A folder record, or a path with entries below it (an ordinary folder without a record).
   return <FolderPage path={path} viewer={viewer} />;
 }

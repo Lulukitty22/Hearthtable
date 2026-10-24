@@ -54,7 +54,7 @@ const ACCOUNTS = [
   { uid: "pending", alias: "Test_Pending", status: "pending" },
 ] as const;
 
-/** Accounts, Alias index entries and a campaign's members, written with Rules off. */
+/** Accounts, Alias index entries and a campaign with its members, written with Rules off. */
 beforeEach(async () => {
   await env.clearFirestore();
   await env.withSecurityRulesDisabled(async (context) => {
@@ -70,14 +70,10 @@ beforeEach(async () => {
         alias: a.alias,
       });
     }
-    await setDoc(doc(db, "campaigns", "Moonlit_Coast", "members", "dm"), {
-      role: "dm",
-    });
-    await setDoc(doc(db, "campaigns", "Moonlit_Coast", "members", "player"), {
-      role: "player",
-    });
-    await setDoc(doc(db, "campaigns", "Moonlit_Coast", "members", "lulu"), {
-      role: "dm",
+    await setDoc(doc(db, "campaigns", "moonlit_coast"), {
+      name: "Moonlit Coast",
+      dms: ["dm", "lulu"],
+      players: ["player"],
     });
   });
 });
@@ -165,8 +161,10 @@ describe("campaign records", () => {
   it("are refused once a DM's role is revoked", async () => {
     await env.withSecurityRulesDisabled(async (context) => {
       const db = context.firestore() as unknown as Firestore;
-      await setDoc(doc(db, "campaigns", "Moonlit_Coast", "members", "dm"), {
-        role: "player",
+      await setDoc(doc(db, "campaigns", "moonlit_coast"), {
+        name: "Moonlit Coast",
+        dms: ["lulu"],
+        players: ["player", "dm"],
       });
     });
     expect(await saveAs(as("dm"), BRAM)).toMatchObject({ ok: false });

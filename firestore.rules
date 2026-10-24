@@ -72,10 +72,10 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/accounts-by-alias/$(normalizedAlias(alias))).data.uid == request.auth.uid;
     }
 
-    // Campaign membership lives at /campaigns/{campaign}/members/{uid} with a `role`; creating
-    // campaigns and managing members arrive with S5.
+    // A campaign's DMs are listed on /campaigns/{id}, where the id is the name's path segment in
+    // lower case (packages/storage/src/campaigns.ts).
     function isCampaignDm(campaign) {
-      return get(/databases/$(database)/documents/campaigns/$(campaign)/members/$(request.auth.uid)).data.role == 'dm';
+      return request.auth.uid in get(/databases/$(database)/documents/campaigns/$(campaign.lower())).data.dms;
     }
 
     function mayWriteRecord(id) {
@@ -99,10 +99,72 @@ service cloud.firestore {
       allow delete: if mayWriteRecord(id);
     }
 
-    // Member lists are public (they hold account ids and roles, nothing from Google). Who may
-    // add members or change roles is S5; until then only seeding writes them.
-    match /campaigns/{campaign}/members/{uid} {
+    // S5: campaigns. A campaign holds its name and its DM and player lists, and is readable by
+    // everyone. An approved account creates one with itself as the only DM. DMs change the lists
+    // (approving, removing, granting and revoking DM); any member may remove only themselves;
+    // a site administrator may restore DM. Every change keeps at least one DM. Nobody deletes a
+    // campaign yet. The app adds players only from join requests.
+    function campaignDoc(campaign) {
+      return /databases/$(database)/documents/campaigns/$(campaign);
+    }
+
+    function isDmOf(campaign) {
+      return signedIn() && request.auth.uid in get(campaignDoc(campaign)).data.dms;
+    }
+
+    function onlyListsChange() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['dms', 'players'])
+        && request.resource.data.dms is list && request.resource.data.players is list
+        && request.resource.data.dms.size() >= 1;
+    }
+
+    function leavesOnlySelf() {
+      let me = [request.auth.uid].toSet();
+      return signedIn()
+        && (request.auth.uid in resource.data.dms || request.auth.uid in resource.data.players)
+        && request.resource.data.dms.toSet() == resource.data.dms.toSet().difference(me)
+        && request.resource.data.players.toSet() == resource.data.players.toSet().difference(me);
+    }
+
+    match /campaigns/{campaign} {
       allow read: if true;
+      allow create: if isApproved()
+        && request.resource.data.keys().hasOnly(['name', 'dms', 'players', 'createdAt'])
+        && request.resource.data.name is string
+        && request.resource.data.dms == [request.auth.uid]
+        && request.resource.data.players == []
+        && request.resource.data.createdAt == request.time;
+      allow update: if onlyListsChange()
+        && ((isApproved() && request.auth.uid in resource.data.dms) || leavesOnlySelf() || isAdmin());
+
+      // A join request: an approved account that is not yet a member, asking with the current
+      // invite code. The person and the campaign's DMs may read and delete it.
+      match /requests/{uid} {
+        allow read, delete: if signedIn() && (request.auth.uid == uid || isDmOf(campaign));
+        allow create: if isApproved() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['code', 'at'])
+          && request.resource.data.at == request.time
+          && get(/databases/$(database)/documents/invites/$(request.resource.data.code)).data.campaign == campaign
+          && !(uid in get(campaignDoc(campaign)).data.dms)
+          && !(uid in get(campaignDoc(campaign)).data.players);
+      }
+
+      // The current invite code, for DMs only (written with the campaign when it is created).
+      match /private/{document} {
+        allow read: if isDmOf(campaign);
+        allow write: if signedIn() && request.auth.uid in getAfter(campaignDoc(campaign)).data.dms;
+      }
+    }
+
+    // Invite codes: whoever knows a code may look it up, but codes cannot be listed. A DM makes
+    // and removes the codes of their campaign.
+    match /invites/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['campaign', 'name'])
+        && request.auth.uid in getAfter(campaignDoc(request.resource.data.campaign)).data.dms;
+      allow delete: if isDmOf(resource.data.campaign);
     }
 
     match /{document=**} {

@@ -1,14 +1,17 @@
 // An account's home and its folders (Milestone 4, S4): /Accounts/<Alias> and every folder under
-// it. Anyone may look; the account's approved owner also gets New (folder, character, item,
-// spell, feature), Copy as (a new name and a destination folder) and Delete. Nothing is renamed
+// it. Anyone may look; the account's approved owner also gets New (folder, character, campaign,
+// item, spell, feature), Copy as (a new name and a destination folder) and Delete. A new campaign
+// is created in campaign storage with its creator as first DM, and a link to it is placed in the
+// folder (S5; Campaigns and Shared Data, Creating a campaign). Nothing is renamed
 // or moved: copying and then deleting the original is how something changes place
 // (Campaigns and Shared Data, Character placement: copy only).
 
 import type { RecordEnvelope } from "@hearthtable/kernel";
+import { createCampaign } from "@hearthtable/storage";
 import { useEffect, useState } from "react";
 import { canEditRecord } from "../account/permissions";
 import type { Viewer } from "../account/useViewer";
-import { repository } from "../firebase";
+import { db, repository } from "../firebase";
 import { webPathFor } from "../routes";
 import {
   childrenOf,
@@ -25,6 +28,7 @@ import { displayNameOf, nameProblem, segmentFor } from "./names";
 const KIND_LABEL: Record<FolderEntry["kind"], string> = {
   folder: "Folder",
   character: "Character",
+  campaign: "Campaign",
   item: "Item",
   spell: "Spell",
   feature: "Feature",
@@ -109,8 +113,9 @@ export function FolderPage({ path, viewer }: { path: string; viewer: Viewer }) {
     <main className="page">
       <Breadcrumb path={path} />
       <h1>{title}</h1>
-      {canEdit && (
+      {canEdit && viewer.status === "account" && (
         <NewEntry
+          uid={viewer.account.uid}
           folderPath={path}
           owner={owner}
           taken={children.map((c) => c.segment)}
@@ -138,11 +143,13 @@ export function FolderPage({ path, viewer }: { path: string; viewer: Viewer }) {
 }
 
 function NewEntry({
+  uid,
   folderPath,
   owner,
   taken,
   onDone,
 }: {
+  uid: string;
   folderPath: string;
   owner: string;
   taken: readonly string[];
@@ -187,12 +194,24 @@ function NewEntry({
         e.preventDefault();
         if (!name.trim() || problem) return;
         setBusy(true);
+        if (kind === "campaign") {
+          const segment = segmentFor(name);
+          const made = await createCampaign(db, uid, segment, name.trim());
+          if (!made.ok) {
+            setBusy(false);
+            return setFailure(made.message);
+          }
+        }
         const saved = await repository.save(
           newRecords(kind, folderPath, owner, name, description),
         );
         setBusy(false);
         if (!saved.ok)
           return setFailure(saved.errors.map((x) => x.message).join(" "));
+        if (kind === "campaign")
+          return window.location.assign(
+            webPathFor(`campaign/${segmentFor(name)}`),
+          );
         reset();
         onDone();
       }}
@@ -202,6 +221,13 @@ function NewEntry({
         <p className="muted">
           A blank sheet with only a name. Classes, species and abilities are
           filled in by the character creator, which comes in a later milestone.
+        </p>
+      )}
+      {kind === "campaign" && (
+        <p className="muted">
+          You become its first DM. The campaign lives in shared campaign storage
+          at /Campaigns/{segmentFor(name) || "Name"}; this folder gets a link to
+          it.
         </p>
       )}
       {custom && (
@@ -266,7 +292,7 @@ function EntryRow({
   return (
     <li className="panel folder-entry">
       <span className="badge">{KIND_LABEL[entry.kind]}</span>
-      <a className="entry-link" href={webPathFor(entry.path)}>
+      <a className="entry-link" href={webPathFor(entry.campaign ?? entry.path)}>
         {entry.name}
       </a>
       {canEdit && !action && (
@@ -444,7 +470,9 @@ function Delete({
           ? `Delete ${entry.name} and everything in it (${summary})? This cannot be undone.`
           : entry.kind === "character"
             ? `Delete ${entry.name}, with its inventory, books and history? This cannot be undone.`
-            : `Delete ${entry.name}? This cannot be undone.`}{" "}
+            : entry.kind === "campaign"
+              ? `Remove the link to ${entry.name} from this folder? The campaign itself stays.`
+              : `Delete ${entry.name}? This cannot be undone.`}{" "}
         Anything elsewhere that refers to it will show "Reference not found".
       </p>
       {folder && inside.length > 0 && (

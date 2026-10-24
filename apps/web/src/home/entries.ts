@@ -1,15 +1,19 @@
 // What an account folder holds, and the records that New, Copy as and Delete write (Milestone 4,
 // S4). Folders are ordinary (user decision, 2026-10-24): a folder is a `folder` record, or just a
 // path segment that has entries below it (like VR_Lulu's Characters and Items). A character's
-// tabs and history sit under its own path and are part of it, not entries of the folder.
+// tabs and history sit under its own path and are part of it, not entries of the folder. A
+// campaign in a folder is a `campaign-link` record pointing at the campaign's own storage
+// (S5); deleting or copying the link never touches the campaign.
 
 import type { RecordEnvelope, RecordId } from "@hearthtable/kernel";
 import { displayNameOf, segmentFor } from "./names";
 
-export type EntryKind = "folder" | "character" | "item" | "spell" | "feature";
+export type EntryKind =
+  "folder" | "character" | "campaign" | "item" | "spell" | "feature";
 export const NEW_KINDS: readonly EntryKind[] = [
   "folder",
   "character",
+  "campaign",
   "item",
   "spell",
   "feature",
@@ -20,9 +24,17 @@ export interface FolderEntry {
   readonly segment: string;
   readonly name: string;
   readonly kind: EntryKind | "other";
+  /** For a campaign link, the campaign's record path (campaign/<name>). */
+  readonly campaign?: string;
 }
 
 const ENTRY_KINDS = new Set<string>(NEW_KINDS);
+const kindOf = (record: RecordEnvelope): EntryKind | "other" =>
+  record.kind === "campaign-link"
+    ? "campaign"
+    : ENTRY_KINDS.has(record.kind)
+      ? (record.kind as EntryKind)
+      : "other";
 
 const nameOf = (r: RecordEnvelope | undefined, segment: string) =>
   String((r?.data as { name?: unknown } | undefined)?.name ?? "") ||
@@ -49,12 +61,16 @@ export function childrenOf(
     const path = `${folderPath}/${segment}`;
     if (children.has(path)) continue;
     const own = byId.get(path);
-    const kind = own
-      ? ENTRY_KINDS.has(own.kind)
-        ? (own.kind as EntryKind)
-        : "other"
-      : "folder";
-    children.set(path, { path, segment, name: nameOf(own, segment), kind });
+    const kind = own ? kindOf(own) : "folder";
+    const campaign = (own?.data as { campaign?: unknown } | undefined)
+      ?.campaign;
+    children.set(path, {
+      path,
+      segment,
+      name: nameOf(own, segment),
+      kind,
+      ...(typeof campaign === "string" ? { campaign } : {}),
+    });
   }
   return [...children.values()].sort(
     (a, b) =>
@@ -143,6 +159,13 @@ export function newRecords(
   const shown = name.trim();
   if (kind === "folder")
     return [envelope(path, "folder", "account", owner, { name: shown })];
+  if (kind === "campaign")
+    return [
+      envelope(path, "campaign-link", "account", owner, {
+        name: shown,
+        campaign: `campaign/${segmentFor(name)}`,
+      }),
+    ];
   if (kind === "character")
     return [
       envelope(path, "character", "dnd5e-2024", owner, {

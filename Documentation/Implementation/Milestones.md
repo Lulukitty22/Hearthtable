@@ -6,7 +6,7 @@ Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acce
 
 Updated 2026-10-24 at 4:06 am PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 4 Plan](Milestone%204%20Plan.md) owns the slice details.
 
-**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Milestone 4's scope is confirmed (2026-10-23 at 5:00 am PDT (America/Los_Angeles)), and the user agreed to its [plan](Milestone%204%20Plan.md) and acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)). S1 and S2 are built; web addresses now name their scope (`/Accounts/…`, `/Campaigns/…`; user decision, 2026-10-24 at 3:54 am PDT (America/Los_Angeles)). A character's address now shows it read-only with an Edit button for its owner, and `/Edit` is the editor (2026-10-24 at 4:52 am PDT (America/Los_Angeles)). S3 and S4 are built; S5 (campaigns and membership) is next.
+**Now:** Milestones 1–3 are accepted (Milestone 3 on 2026-10-23 at 4:57 am PDT (America/Los_Angeles): "besides that one spellbook issue it's fine, can proceed", after every book spell became a mounted scroll). Milestone 4's scope is confirmed (2026-10-23 at 5:00 am PDT (America/Los_Angeles)), and the user agreed to its [plan](Milestone%204%20Plan.md) and acceptance list on 2026-10-23 (recorded at 5:37 am PDT (America/Los_Angeles)). S1 and S2 are built; web addresses now name their scope (`/Accounts/…`, `/Campaigns/…`; user decision, 2026-10-24 at 3:54 am PDT (America/Los_Angeles)). A character's address now shows it read-only with an Edit button for its owner, and `/Edit` is the editor (2026-10-24 at 4:52 am PDT (America/Los_Angeles)). S1–S5 are built; S6 (characters in campaigns) is next.
 
 | Milestone 4 slice | What it adds | Status |
 |---|---|---|
@@ -14,7 +14,8 @@ Updated 2026-10-24 at 4:06 am PDT (America/Los_Angeles). This section is the one
 | S2 Site administration | Seeded accounts (VR_Lulu as first administrator, five test accounts), `/Admin` approval page, approval Rule | Built 2026-10-24 at 4:06 am PDT (America/Los_Angeles) |
 | S3 Security Rules | Records written only by their approved owner or a campaign DM; everyone reads; Rules tests | Built 2026-10-24 at 5:03 am PDT (America/Los_Angeles) (delegation Rules come with S6) |
 | S4 Account home and folders | `/Accounts/<Alias>` home, ordinary folders, New (folder, blank character, custom item, spell, feature), Copy as, Delete, name rules | Built 2026-10-24 at 5:24 am PDT (America/Los_Angeles) |
-| S5–S12 | Campaigns, characters in campaigns, DM review queue, privacy, difference review, live export, portraits, moving today's data in | Not started |
+| S5 Campaigns and membership | New → Campaign, campaign page, one invite code per campaign, join requests and approval, leaving, removing, granting and revoking DM; seeded Moonlit Coast and Test Campaign | Built 2026-10-24 at 5:40 am PDT (America/Los_Angeles) |
+| S6–S12 | Characters in campaigns, DM review queue, privacy, difference review, live export, portraits, moving today's data in | Not started |
 
 Milestone 3's slices and their acceptance tests are recorded in the [Milestone 3 Plan](Milestone%203%20Plan.md).
 

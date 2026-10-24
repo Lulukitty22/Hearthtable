@@ -8,7 +8,8 @@
 // record seeded before that marker existed counts as untouched only at revision 1. Changed
 // records are listed and left alone.
 //
-// It also adds the seeded accounts (scripts/accounts.ts) that are missing. Seeding writes with
+// It also adds the seeded accounts (scripts/accounts.ts) and campaigns (scripts/campaigns.ts)
+// that are missing. Seeding writes with
 // the emulator's Security Rules switched off, because Rules never let the app itself set an
 // account's approval or administrator flag.
 
@@ -18,6 +19,7 @@ import { firestoreRepository } from "@hearthtable/storage";
 import { deleteApp, initializeApp } from "firebase/app";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { seedAccounts } from "./accounts";
+import { seedCampaigns } from "./campaigns";
 
 const refresh = process.argv.includes("--refresh");
 // `firebase emulators:exec` sets these; otherwise use the local defaults.
@@ -126,9 +128,14 @@ try {
   for (const alias of accounts.added) console.log(`  added account ${alias}`);
   for (const message of accounts.refused)
     console.log(`  not added: ${message}`);
+  const campaigns = await seedCampaigns(db, repo);
+  console.log(
+    `Campaigns: added ${campaigns.added.length}, kept ${campaigns.kept.length} that already exist.`,
+  );
+  for (const name of campaigns.added) console.log(`  added campaign ${name}`);
 } catch (error) {
   console.error(
-    `Could not seed accounts. Is the Auth emulator running?
+    `Could not seed accounts or campaigns. Is the Auth emulator running?
 ${error instanceof Error ? error.message : String(error)}`,
   );
   await deleteApp(app);
