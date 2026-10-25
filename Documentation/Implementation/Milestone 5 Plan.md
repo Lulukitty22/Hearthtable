@@ -51,10 +51,23 @@ The user chose to build these together (topic A); the numbering is an order of t
 
 **E. Conditions** — answered 2026-10-24 at 6:11 pm PDT (America/Los_Angeles): all fifteen 2024 conditions as complete definitions with plug-in logic; the purely mechanical parts automated, the rest shown and applied by hand; applied by effects and the DM; ended by their source. Rules warn and the DM decides; nothing is a hard block. Recorded in [Conditions](../Systems/Turns%2C%20Encounters%20and%20Time.md#conditions).
 
-**F. The table pages.** What each view shows; how much of the Codex chat's Hearthside prototypes to adopt (their review by the user is still pending).
+**F. The table pages** — answered 2026-10-24 at 6:14 pm PDT (America/Los_Angeles): start from the Hearthside prototypes (the party board and session keeper) as inspiration, not as a specification: some pages are missing or outdated, and everything decided here wins. Appearance need not be copied one to one; the Codex chat fills in and updates the look (including carrying it back to the character sheet) and will likely do a second pass to improve and suggest things after this milestone's work.
 
-**G. Carried-over items.** The exact scroll and Spellround snapshot fields, the core folder layout, and the spellbook rethink.
+**G. Carried-over items** — core layout answered 2026-10-24 at 6:16 pm PDT (America/Los_Angeles): core entries move into kind folders (`core/Spells/…`, `core/Items/…`, `core/Features/…`, `core/Classes/…`, `core/Conditions/…`), rewriting every reference in the content and the user's saved data, in S0 with the Spellround conversion. The scroll and Spellround snapshot fields and the spellbook rethink with spent scrolls are discussed when S0 starts, as a planned pause.
 
 ## Proposed acceptance (to agree with the user)
 
-To be written after topic A, so it matches the confirmed scope.
+Drafted 2026-10-24 at 6:16 pm PDT (America/Los_Angeles) for the confirmed scope. Each item gets a unit, emulator or browser test, as in Milestones 3 and 4.
+
+- **Carried over:** Carol's Spellrounds are one Spellround item whose lines carry their scroll, in the content and in the user's saved data; every scroll keeps a scribed-formula snapshot; opening a scroll or Spellround shows the full spell; core entries live in kind folders and Carol resolves exactly as before.
+- **NPCs:** a DM makes an NPC in the campaign (from a name and HP up to a full sheet) and adds it to an encounter like any character.
+- **Encounters and turns:** the DM starts an encounter with chosen characters and NPCs; players roll or type initiative and the DM can for anyone; ties go to who entered first; the DM reorders or adds someone mid-fight; turns advance, rounds count from 1, and each round adds six seconds to the campaign clock.
+- **Action budget:** what a request uses is tracked, and over-use is shown to the player and flagged to the DM, who can still approve.
+- **Casting:** Carol casts Mage Armor through review, confirm (her slot moves into the request's hold), Next Turn and DM approval at her turn; her AC becomes 16 and the effect expires on the clock. Cancelling or rejecting another request returns its hold exactly once.
+- **Response polls:** the Shield example end to end: an attack would hit, a poll opens, Shield is submitted as Instant, the hit is rechecked against the new AC, and a fresh poll closes before damage.
+- **Rolls:** a target's player is prompted for their save; the DM can take over; configured, custom-expression and manual totals all work and are logged.
+- **Concentration:** starting a second concentration spell at full capacity asks which to replace; becoming Incapacitated ends concentration.
+- **Conditions:** all fifteen 2024 conditions exist as definitions; Hold Person applies Paralyzed and prompts the repeat save; Exhaustion's penalty applies by itself; acting while Incapacitated warns but is not blocked.
+- **Downtime:** ending an encounter starts a downtime scene; players add activities while the DM is away (a long rest, a note with a duration), chain on one another with "waits for", and see projected state; the DM sees each character's summary and ends the scene by entering the time that passed; rests restore by the 2024 rules, an unfinished rest gives nothing, and the clock moves.
+- **Items in play:** drinking a potion and firing the Aetherlock (a round and its charges) go through the same request, hold, approval and resolution.
+- **Table pages:** `/Table` and `/Table/Dungeon_Master` show the participants, turn order, current turn, round, clock and log, live; each view shows what its role needs.
