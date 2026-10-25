@@ -34,6 +34,7 @@ import { downloadExport } from "./export/exportFile";
 import { FolderPage } from "./home/FolderPage";
 import { segmentFor } from "./home/names";
 import { parseRoute, webPathFor, type View as RouteView } from "./routes";
+import { useGameNow } from "./play/gameTime";
 import { TablePage } from "./table/TablePage";
 import { FeaturesTab } from "./sheet/FeaturesTab";
 import { Header } from "./sheet/Header";
@@ -422,12 +423,17 @@ function Sheet({
         : Promise.resolve("Not signed in."),
     [campaign, uid, characterId],
   );
+  // In a campaign, the game clock decides when effects end (Milestone 5 S4).
+  const now = useGameNow(
+    characterId.startsWith("campaign/") ? characterId.split("/")[1] : undefined,
+  );
   const [state, actions] = useSheet(
     repository,
     characterId,
     definitionPaths,
     proposer ? submit : undefined,
     canEdit,
+    now,
   );
   const [tab, setTab] = useState("stats");
   const [note, setNote] = useState("");
@@ -475,6 +481,7 @@ function Sheet({
     records: state.records,
     edit: actions.edit,
     canEdit,
+    ...(now ? { now } : {}),
   };
   const tabs = sheetTabs();
   const current = tabs.includes(tab) ? tab : (tabs[0] ?? "");

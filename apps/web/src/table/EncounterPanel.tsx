@@ -15,6 +15,7 @@ import {
   rollInitiative,
   usesNow,
   type BudgetKind,
+  type Moment,
 } from "@hearthtable/play";
 import {
   addToEncounter,
@@ -25,6 +26,7 @@ import {
   enterInitiative,
   passTurn,
   setUse,
+  takeStep,
   type EncounterState,
   type ParticipantState,
 } from "@hearthtable/storage";
@@ -32,6 +34,7 @@ import type { RecordEnvelope } from "@hearthtable/kernel";
 import { useState } from "react";
 import { db, repository } from "../firebase";
 import { webPathFor } from "../routes";
+import { EffectChips } from "./Effects";
 import { deploymentsFor } from "./StartEncounter";
 import type { Participant, Template } from "./useTable";
 
@@ -54,6 +57,8 @@ export function EncounterPanel({
   sceneNpcs,
   templates,
   control,
+  now,
+  endEarly,
   onProblem,
 }: {
   id: string;
@@ -67,6 +72,10 @@ export function EncounterPanel({
   sceneNpcs: readonly string[];
   templates: readonly Template[];
   control: Control;
+  now: Moment | undefined;
+  endEarly: (
+    person: Participant,
+  ) => ((effect: { id: string; name: string }) => void) | undefined;
   onProblem: (message: string) => void;
 }) {
   const clock = encounterClock(encounter.startClock, encounter.round);
@@ -135,6 +144,10 @@ export function EncounterPanel({
                 name(p),
               ).then(report)
             }
+            now={now}
+            onEnd={
+              people.get(p) ? endEarly(people.get(p) as Participant) : undefined
+            }
             onUse={(kind, delta) => {
               const start = encounter.turnStarts[documentIdFor(p)];
               void setUse(
@@ -145,6 +158,8 @@ export function EncounterPanel({
                 kind,
                 changeUse(entryOf(p)?.used[kind], start, encounter.seq, delta),
               ).then(report);
+              // Taking an action or reaction moves the encounter's time on one step.
+              if (delta > 0) void takeStep(db, id, encounter).then(report);
             }}
             onMove={(by) => {
               if (!uid) return;
@@ -298,6 +313,8 @@ function TurnRow({
   encounter,
   mine,
   isDm,
+  now,
+  onEnd,
   onInitiative,
   onUse,
   onMove,
@@ -313,6 +330,8 @@ function TurnRow({
   encounter: EncounterState;
   mine: boolean;
   isDm: boolean;
+  now: Moment | undefined;
+  onEnd: ((effect: { id: string; name: string }) => void) | undefined;
   onInitiative: (value: number, detail: string) => void;
   onUse: (kind: BudgetKind, delta: 1 | -1) => void;
   onMove: (by: -1 | 1) => void;
@@ -349,6 +368,13 @@ function TurnRow({
           {person?.hp?.max !== undefined ? ` / ${person.hp.max}` : ""} · AC{" "}
           {person?.ac ?? "?"}
         </div>
+        {person && (
+          <EffectChips
+            person={person}
+            now={now}
+            {...(onEnd ? { onEnd } : {})}
+          />
+        )}
       </div>
       <div className="turn-initiative">
         {entry?.initiative && !changing ? (

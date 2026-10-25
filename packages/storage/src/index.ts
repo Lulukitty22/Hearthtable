@@ -9,3 +9,4 @@ export * from "./repository";
 export * from "./table";
 
 export * from "./encounters";
+export * from "./effects";

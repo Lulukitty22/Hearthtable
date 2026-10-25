@@ -203,7 +203,7 @@ service cloud.firestore {
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 2000
           && (request.resource.data.kind in ['post', 'turn', 'initiative']
-            || (request.resource.data.kind in ['scene', 'clock', 'title', 'order']
+            || (request.resource.data.kind in ['scene', 'clock', 'title', 'order', 'effect']
               && request.auth.uid in get(campaignDoc(campaign)).data.dms));
       }
 
@@ -220,18 +220,25 @@ service cloud.firestore {
       }
 
       // The turn state. DMs write anything. Whoever controls the current participant may only
-      // pass the turn on: the next turn in the same round or the first of the next round.
+      // pass the turn on: the next turn in the same round or the first of the next round. Any
+      // member may move time on one step (an action or reaction taken).
       match /encounters/{encounter} {
         allow read: if true;
         allow create: if isApproved() && isDmOf(campaign);
         allow update: if (isApproved() && isDmOf(campaign))
           || (!resource.data.ended && resource.data.round >= 1
             && request.resource.data.diff(resource.data).affectedKeys()
-              .hasOnly(['current', 'round', 'seq', 'turnStarts', 'controlOf'])
+              .hasOnly(['current', 'round', 'seq', 'step', 'turnStarts', 'controlOf'])
             && request.resource.data.seq == resource.data.seq + 1
             && (request.resource.data.round == resource.data.round
               || request.resource.data.round == resource.data.round + 1)
-            && controls(resource.data.current, request.resource.data.get('controlOf', null)));
+            && controls(resource.data.current, request.resource.data.get('controlOf', null)))
+          // Any member moves time on one step when they take an action or reaction.
+          || (!resource.data.ended && resource.data.round >= 1 && isApproved()
+            && (request.auth.uid in get(campaignDoc(campaign)).data.dms
+              || request.auth.uid in get(campaignDoc(campaign)).data.players)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['step'])
+            && request.resource.data.step == resource.data.step + 1);
 
         // One participant's initiative and budget ticks: its controller or a DM, until it ends.
         match /participants/{participant} {

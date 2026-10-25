@@ -175,3 +175,57 @@ test("the DM runs an encounter: NPCs, initiative, turns, rounds, the budget and 
     player.getByRole("region", { name: "Campaign log" }),
   ).toContainText("Day 1 Encounter 1 ended after 2 rounds.");
 });
+
+// Milestone 5, S4: an effect runs on the game clock and ends at the same step one round later.
+test("Shield cast in an encounter ends one round later and the log says so", async ({
+  browser,
+}) => {
+  const dm = await signedIn(browser, VR_LULU, `${TABLE}/Dungeon_Master`);
+  dm.on("dialog", (d) => void d.accept());
+  const start = dm.getByRole("form", { name: "Start an encounter" });
+  // Only Carol takes part. Unticking one changes the list, so take the first ticked each time.
+  const characters = start.getByRole("group", { name: "Characters" });
+  await expect(
+    characters.getByRole("checkbox", { name: "Carol Elfnein", exact: true }),
+  ).toBeVisible();
+  const ticked = characters.getByRole("checkbox", { checked: true });
+  while ((await ticked.count()) > 0) await ticked.first().uncheck();
+  await start
+    .getByRole("group", { name: "Characters" })
+    .getByRole("checkbox", { name: "Carol Elfnein", exact: true })
+    .check();
+  await start.getByRole("button", { name: "Start the encounter" }).click();
+  const order = dm.getByRole("region", { name: "Turn order" });
+  await order.getByLabel("Carol Elfnein's initiative").fill("12");
+  await order.getByLabel("Carol Elfnein's initiative").press("Enter");
+  await dm.getByRole("button", { name: "Begin round 1" }).click();
+  await expect(dm.getByTestId("round")).toHaveText(
+    "Round 1 · Carol Elfnein's turn",
+  );
+
+  const sheet = await dm.context().newPage();
+  await sheet.goto(
+    "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein/Edit",
+  );
+  await sheet.getByRole("button", { name: "Shield" }).click();
+  await sheet.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(
+    sheet.getByRole("button", { name: /Shield · 1 round/ }),
+  ).toBeVisible();
+
+  const effects = order.getByLabel("Carol Elfnein's effects");
+  await expect(effects).toContainText("Shield · 1 round");
+  await expect(order).toContainText("AC 18");
+
+  // Round 2 begins with Carol's turn: the same step as Shield began, so it ends.
+  await dm.getByRole("button", { name: "End Carol Elfnein's turn" }).click();
+  await expect(dm.getByTestId("round")).toHaveText(
+    "Round 2 · Carol Elfnein's turn",
+  );
+  await expect(order.getByLabel("Carol Elfnein's effects")).toHaveCount(0);
+  await expect(order).toContainText("AC 13");
+  await expect(dm.getByRole("region", { name: "Campaign log" })).toContainText(
+    "Shield on Carol Elfnein ended.",
+  );
+  await dm.getByRole("button", { name: "End the encounter" }).click();
+});

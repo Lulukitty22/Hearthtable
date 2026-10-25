@@ -5,6 +5,7 @@ import type {
   ResolvedCharacter,
   Value,
 } from "@hearthtable/kernel";
+import type { Moment } from "@hearthtable/play";
 import type { SheetActions } from "../useSheet";
 
 export interface TabProps {
@@ -14,6 +15,8 @@ export interface TabProps {
   readonly edit: SheetActions["edit"];
   /** False on the view-only sheet: edit controls show as plain text and nothing can be dragged. */
   readonly canEdit: boolean;
+  /** The campaign's current game moment, when the character is in a campaign whose table is open. */
+  readonly now?: Moment;
 }
 
 export type Data = Record<string, unknown>;

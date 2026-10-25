@@ -10,7 +10,8 @@
 // meanwhile queue in order; nothing is combined, and nothing is written by choosing.
 
 import { createEngine } from "@hearthtable/engine";
-import { isInScene } from "@hearthtable/play";
+import { isInScene, type Moment } from "@hearthtable/play";
+import { gameTimeRecord } from "./play/gameTime";
 import type { RecordEnvelope, ResolvedCharacter } from "@hearthtable/kernel";
 import { hearthtableVanillaPlus } from "@hearthtable/ruleset-hearthtable-vanilla-plus";
 import type { Repository, StorageError } from "@hearthtable/storage";
@@ -167,6 +168,8 @@ export function useSheet(
   definitionPaths: readonly string[],
   submit?: Submit,
   review = false,
+  /** The campaign's current game moment (Milestone 5 S4), so effects whose time is up end. */
+  gameNow?: Moment,
 ): [SheetState, SheetActions] {
   const [definitions, setDefinitions] = useState<Records | undefined>();
   // The sheet's own records as the editor last accepted them: what drafts are edits of.
@@ -292,14 +295,19 @@ export function useSheet(
   );
 
   // One resolution per change; every view renders from it.
+  const clock = gameNow?.clock;
+  const step = gameNow?.step;
   const resolved = useMemo(
     () =>
       merged
-        ? engine.resolve(
-            [...merged.values()].filter((r) => r.kind !== "history"),
-          )
+        ? engine.resolve([
+            ...[...merged.values()].filter((r) => r.kind !== "history"),
+            ...(clock !== undefined && step !== undefined
+              ? [gameTimeRecord({ clock, step })]
+              : []),
+          ])
         : undefined,
-    [merged],
+    [merged, clock, step],
   );
 
   const history = useMemo(

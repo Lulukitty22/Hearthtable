@@ -14,6 +14,7 @@ import {
   beginRound1,
   changeParticipants,
   endEncounter,
+  endEffects,
   enterInitiative,
   firestoreRepository,
   normalizeAlias,
@@ -21,11 +22,14 @@ import {
   passTurn,
   setUse,
   startEncounter,
+  takeStep,
   type EncounterState,
 } from "@hearthtable/storage";
 import {
+  collection,
   doc,
   getDoc,
+  getDocs,
   serverTimestamp,
   setDoc,
   updateDoc,
@@ -363,5 +367,61 @@ describe("ending an encounter", () => {
         "Bram",
       ),
     ).toBeDefined();
+  });
+});
+
+describe("game time and effects", () => {
+  it("any member moves time on one step; not before round 1, and only by one", async () => {
+    await started();
+    expect(await takeStep(as("player"), ID, await encounter())).toBeDefined();
+    await beginRound1(as("dm"), ID, await encounter(), [BRAM, GOBLIN_1], "dm");
+    expect(await takeStep(as("player"), ID, await encounter())).toBeUndefined();
+    expect((await encounter()).step).toBe(2);
+    await assertFails(
+      updateDoc(
+        doc(as("player"), "campaigns", ID, "encounters", "Day_1_Encounter_1"),
+        { step: 9 },
+      ),
+    );
+  });
+
+  it("an ended effect is cleared and logged once", async () => {
+    const repo = await started();
+    const goblin = await repo.get(GOBLIN_1 as RecordId);
+    if (!goblin.ok || !goblin.value) throw new Error("no goblin");
+    await repo.save([
+      {
+        ...goblin.value,
+        data: {
+          ...(goblin.value.data as object),
+          activeEffects: [
+            { id: "fx-1", ref: "core/Spells/Shield", activatedAt: "x" },
+          ],
+        },
+      },
+    ]);
+    const end = () =>
+      endEffects(
+        as("dm"),
+        repo,
+        ID,
+        GOBLIN_1,
+        "Goblin 1",
+        [{ id: "fx-1", name: "Shield" }],
+        "expired",
+        "dm",
+        3606,
+      );
+    expect(await end()).toBeUndefined();
+    expect(await end()).toBeUndefined();
+    const after = await repo.get(GOBLIN_1 as RecordId);
+    expect(
+      after.ok &&
+        (after.value?.data as { activeEffects: unknown[] }).activeEffects,
+    ).toEqual([]);
+    const ended = (
+      await getDocs(collection(as("dm"), "campaigns", ID, "log"))
+    ).docs.filter((d) => d.data()["text"] === "Shield on Goblin 1 ended.");
+    expect(ended).toHaveLength(1);
   });
 });

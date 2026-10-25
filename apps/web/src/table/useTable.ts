@@ -10,6 +10,7 @@ import {
   sceneKindOf,
   turnOrder,
   type InitiativeEntry,
+  type Moment,
   type SceneData,
 } from "@hearthtable/play";
 import {
@@ -23,7 +24,9 @@ import {
   type ParticipantState,
   type PlayState,
 } from "@hearthtable/storage";
+import type { ActiveEffectRow } from "@hearthtable/system-active-effects";
 import { useEffect, useMemo, useState } from "react";
+import { gameTimeRecord, momentOf } from "../play/gameTime";
 import { useCampaign } from "../campaign/useCampaign";
 import { db, repository } from "../firebase";
 import { readPortrait, type PortraitData } from "../sheet/Portrait";
@@ -40,6 +43,8 @@ export interface Participant {
   readonly initiativeBonus?: number;
   /** "Wizard 12 / Artificer 3", when the classes resolve. */
   readonly classes?: string;
+  /** Effects that are on, and those whose time is up but are not yet cleared. */
+  readonly effects: readonly ActiveEffectRow[];
 }
 
 /** An NPC template the DM can deploy: its records and its initiative bonus. */
@@ -61,12 +66,14 @@ function resolveCharacter(
   own: readonly RecordEnvelope[],
   path: string,
   npc: boolean,
+  now?: Moment,
 ): Participant {
   const data = own.find((r) => r.id === path)?.data as
     { name?: unknown } | undefined;
-  const resolved = engine.resolve(
-    [...definitions, ...own].filter((r) => r.kind !== "history"),
-  );
+  const resolved = engine.resolve([
+    ...[...definitions, ...own].filter((r) => r.kind !== "history"),
+    ...(now ? [gameTimeRecord(now)] : []),
+  ]);
   const value = <T>(key: string) => {
     const v = resolved.get<T>(key);
     return v.kind === "known" ? v.value : undefined;
@@ -78,7 +85,11 @@ function resolveCharacter(
   const classes =
     value<readonly { name: string; level: number }[]>("character.classes");
   const portrait = readPortrait(data);
+  const effects = (
+    value<readonly ActiveEffectRow[]>("active-effects.list") ?? []
+  ).filter((e) => e.status === "active" || e.status === "ended");
   return {
+    effects,
     path,
     name: String(data?.name ?? path.split("/").at(-1)?.replaceAll("_", " ")),
     npc,
@@ -150,10 +161,17 @@ export function useTable(segment: string) {
     () => (state ? records?.find((r) => r.id === state.scene) : undefined),
     [records, state],
   );
+  const moment = momentOf(state, encounter);
+  const nowClock = moment?.clock;
+  const nowStep = moment?.step;
 
   // Everyone who could be at the table, resolved: campaign characters and this scene's NPCs.
   const people = useMemo(() => {
     if (!records || !core || !state) return undefined;
+    const now =
+      nowClock !== undefined && nowStep !== undefined
+        ? { clock: nowClock, step: nowStep }
+        : undefined;
     const characters = records.filter(isCharacter);
     const definitions = [
       ...core.filter((r) => !r.id.startsWith("core/NPCs/")),
@@ -175,12 +193,12 @@ export function useTable(segment: string) {
     for (const c of campaignCharacters)
       map.set(
         c.id,
-        resolveCharacter(definitions, own(c.id, records), c.id, false),
+        resolveCharacter(definitions, own(c.id, records), c.id, false, now),
       );
     for (const c of sceneNpcs)
       map.set(
         c.id,
-        resolveCharacter(definitions, own(c.id, records), c.id, true),
+        resolveCharacter(definitions, own(c.id, records), c.id, true, now),
       );
 
     // Templates: campaign/<C>/NPCs/<Name> and core/NPCs/<Name>.
@@ -214,7 +232,7 @@ export function useTable(segment: string) {
       sceneNpcs: sceneNpcs.map((c) => c.id as string),
       templates,
     };
-  }, [records, core, state, campaignPath]);
+  }, [records, core, state, campaignPath, nowClock, nowStep]);
 
   const initiative = useMemo(() => {
     const m = new Map<string, InitiativeEntry & { detail: string }>();
@@ -255,6 +273,7 @@ export function useTable(segment: string) {
     entries,
     initiative,
     order,
+    now: moment,
     failure: failure ?? campaignFailure,
   };
 }

@@ -10,10 +10,12 @@ import {
   clockParts,
   encounterClock,
   formatClock,
+  type Moment,
   sceneKindOf,
   sceneLabel,
 } from "@hearthtable/play";
 import {
+  endEffects,
   LOG_TEXT_LIMIT,
   normalizeAlias,
   openTable,
@@ -28,6 +30,7 @@ import { useAliases } from "../account/useAliases";
 import type { Viewer } from "../account/useViewer";
 import { db, repository } from "../firebase";
 import { tablePathFor, webPathFor } from "../routes";
+import { EffectChips, useClearEndedEffects } from "./Effects";
 import { EncounterPanel, type Control } from "./EncounterPanel";
 import { NewNpcTemplate, StartEncounter } from "./StartEncounter";
 import { useTable, type Participant } from "./useTable";
@@ -56,6 +59,14 @@ export function TablePage({
     campaign ? [...campaign.dms, ...campaign.players] : [],
   );
   const [problem, setProblem] = useState<string | undefined>();
+  useClearEndedEffects(
+    role === "dm" && isDm,
+    table.id,
+    table.people?.map,
+    uid,
+    table.now?.clock,
+    setProblem,
+  );
 
   // The first DM to open the DM's view opens the table.
   const opening = useRef(false);
@@ -115,6 +126,21 @@ export function TablePage({
     : state.clock;
   const alias =
     viewer.status === "account" ? normalizeAlias(viewer.account.alias) : "";
+  const endEarly = (person: Participant) =>
+    isDm && uid && role === "dm"
+      ? (effect: { id: string; name: string }) =>
+          void endEffects(
+            db,
+            repository,
+            table.id,
+            person.path,
+            person.name,
+            [effect],
+            "early",
+            uid,
+            clock,
+          ).then((e) => e && setProblem(e))
+      : undefined;
   const control: Control = {
     uid,
     isDm,
@@ -229,6 +255,8 @@ export function TablePage({
               sceneNpcs={people.sceneNpcs}
               templates={people.templates}
               control={control}
+              now={table.now}
+              endEarly={endEarly}
               onProblem={setProblem}
             />
           )}
@@ -242,7 +270,12 @@ export function TablePage({
               ) : (
                 <ul className="party-list">
                   {participants.map((p) => (
-                    <ParticipantCard key={p.path} participant={p} />
+                    <ParticipantCard
+                      key={p.path}
+                      participant={p}
+                      now={table.now}
+                      onEnd={endEarly(p)}
+                    />
                   ))}
                 </ul>
               )}
@@ -264,7 +297,15 @@ export function TablePage({
   );
 }
 
-function ParticipantCard({ participant: p }: { participant: Participant }) {
+function ParticipantCard({
+  participant: p,
+  now,
+  onEnd,
+}: {
+  participant: Participant;
+  now: Moment | undefined;
+  onEnd: ((effect: { id: string; name: string }) => void) | undefined;
+}) {
   return (
     <li className="party-card">
       {p.portrait ? (
@@ -287,6 +328,7 @@ function ParticipantCard({ participant: p }: { participant: Participant }) {
           </span>
           <span>AC {p.ac ?? "?"}</span>
         </div>
+        <EffectChips person={p} now={now} {...(onEnd ? { onEnd } : {})} />
       </div>
     </li>
   );

@@ -39,7 +39,14 @@ export interface PlayState {
 }
 
 export type LogKind =
-  "post" | "scene" | "clock" | "title" | "turn" | "initiative" | "order";
+  | "post"
+  | "scene"
+  | "clock"
+  | "title"
+  | "turn"
+  | "initiative"
+  | "order"
+  | "effect";
 
 export interface LogEntry {
   readonly id: string;

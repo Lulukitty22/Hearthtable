@@ -2,7 +2,13 @@
 // Owning or knowing a spell never activates it: only an entry in the character's active effects
 // does. Each entry points at a definition whose `whileActive` grants apply, such as Mage Armor's
 // AC base or Shield's +5. Repeated activations of the same definition do not stack; the newest
-// one counts. Milestone 2 has no game clock or expiry: entries stay until removed.
+// one counts.
+//
+// Game time (Milestone 5 S4; Spell Effects and Active State, "Exact timing within a round"): an
+// entry may record the moment it began (`startedAt`) and when it ends (`endsAt`), as game
+// moments. The app supplies the campaign's current moment as a `game-time` record; once that
+// moment reaches `endsAt` the effect has ended and gives nothing, even before the entry is
+// cleared. Without a game time (a character outside any campaign) nothing ends on its own.
 
 import {
   DERIVATIONS_POINT,
@@ -17,13 +23,21 @@ import {
   type ResolveContext,
   type SourcedGrant,
 } from "@hearthtable/kernel";
+import { isOver } from "@hearthtable/play";
 import { z } from "zod";
+
+const Moment = z.object({ clock: z.number(), step: z.number() });
 
 const ActiveEntry = z.looseObject({
   id: z.string(),
   ref: z.string(),
   activatedAt: z.string(),
+  startedAt: Moment.optional(),
+  endsAt: Moment.optional(),
 });
+
+/** The campaign's current game moment, when the character is in one. */
+export const GAME_TIME_KIND = "game-time";
 
 const EffectDefinition = z.looseObject({
   name: z.string(),
@@ -35,7 +49,10 @@ export interface ActiveEffectRow {
   readonly ref: string;
   readonly name: string;
   readonly activatedAt: string;
-  readonly status: "active" | "duplicate" | "unresolved";
+  readonly startedAt?: z.infer<typeof Moment>;
+  readonly endsAt?: z.infer<typeof Moment>;
+  /** `ended`: its time is up (the entry is cleared later). */
+  readonly status: "active" | "duplicate" | "unresolved" | "ended";
   readonly reason?: string;
   readonly grants: readonly SourcedGrant[];
 }
@@ -47,14 +64,23 @@ function rows(ctx: ResolveContext): readonly ActiveEffectRow[] {
     "activeEffects",
     z.array(ActiveEntry).optional(),
   ).flatMap((f) => f.value ?? []);
+  const now = readField(ctx, GAME_TIME_KIND, "now", Moment.optional())[0]
+    ?.value;
+  const ended = (e: z.infer<typeof ActiveEntry>) => isOver(e.endsAt, now);
   const newest = new Map<string, string>();
-  for (const e of entries) {
+  for (const e of entries.filter((x) => !ended(x))) {
     const seen = newest.get(e.ref);
     if (seen === undefined || Date.parse(e.activatedAt) > Date.parse(seen))
       newest.set(e.ref, e.activatedAt);
   }
   return entries.map((e): ActiveEffectRow => {
-    const base = { id: e.id, ref: e.ref, activatedAt: e.activatedAt };
+    const base = {
+      id: e.id,
+      ref: e.ref,
+      activatedAt: e.activatedAt,
+      ...(e.startedAt ? { startedAt: e.startedAt } : {}),
+      ...(e.endsAt ? { endsAt: e.endsAt } : {}),
+    };
     // Definitions of any kind may carry `whileActive` (spells, items, features).
     const record = ctx.record(e.ref);
     const def = record
@@ -71,6 +97,14 @@ function rows(ctx: ResolveContext): readonly ActiveEffectRow[] {
       };
     }
     const name = def.value.name;
+    if (ended(e))
+      return {
+        ...base,
+        name,
+        status: "ended",
+        reason: "Its time is up.",
+        grants: [],
+      };
     if (newest.get(e.ref) !== e.activatedAt) {
       return {
         ...base,

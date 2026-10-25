@@ -24,6 +24,7 @@ import {
 import {
   collection,
   doc,
+  increment,
   onSnapshot,
   serverTimestamp,
   writeBatch,
@@ -48,6 +49,8 @@ export interface EncounterState {
   /** The order kept since round 1 began, with the DM's moves. */
   readonly order?: readonly string[];
   readonly seq: number;
+  /** Steps of 1/40 s into the current round: each turn start and each action or reaction. */
+  readonly step: number;
   /** `seq` when each participant's latest turn began, by encoded path. */
   readonly turnStarts: Readonly<Record<string, number>>;
   readonly ended: boolean;
@@ -97,6 +100,7 @@ export function watchEncounter(
         ...(typeof d["current"] === "string" ? { current: d["current"] } : {}),
         ...(Array.isArray(d["order"]) ? { order: strings(d["order"]) } : {}),
         seq: Number(d["seq"] ?? 0),
+        step: Number(d["step"] ?? 0),
         turnStarts: (d["turnStarts"] ?? {}) as Record<string, number>,
         ended: d["ended"] === true,
       });
@@ -321,6 +325,7 @@ export async function startEncounter(
       surprised: [...o.surprised, ...npcs.surprised],
       round: 0,
       seq: 0,
+      step: 0,
       turnStarts: {},
       ended: false,
     });
@@ -417,6 +422,7 @@ export function beginRound1(
     batch.update(encounterRef(db, campaign, encounter.scene), {
       round: 1,
       seq: 1,
+      step: 1,
       current: first,
       order: [...order],
       turnStarts: { [documentIdFor(first)]: 1 },
@@ -449,12 +455,28 @@ export function passTurn(
       round: next.round,
       current: next.current,
       seq,
+      // A turn starting is a step; a new round starts again from its first turn.
+      step: next.round > encounter.round ? 1 : encounter.step + 1,
       [`turnStarts.${documentIdFor(next.current)}`]: seq,
       ...(encounter.current
         ? { controlOf: documentIdFor(encounter.current) }
         : {}),
     });
     log(batch, db, campaign, "turn", uid, clock, text);
+  }, db);
+}
+
+/** An action or reaction was taken: the encounter's time moves on one step (1/40 s). */
+export function takeStep(
+  db: Firestore,
+  campaign: string,
+  encounter: EncounterState,
+) {
+  return commit((batch) => {
+    // An increment, so two quick actions both count.
+    batch.update(encounterRef(db, campaign, encounter.scene), {
+      step: increment(1),
+    });
   }, db);
 }
 
