@@ -69,6 +69,7 @@ Modern Fantasy cells are illustrative; its magic and armor are open.
 | Concern | Vanilla 5e | Hearthtable Vanilla+ | Modern Fantasy |
 |---|---|---|---|
 | Spell readiness (system `spellbook-readiness`) | method `published-preparation` | method `book-contents-ready`, variable `bookCapacity=16` | open |
+| Going down (system `hit-points`) | 2024: Unconscious at 0 HP, death saving throws; Exhaustion 6 is death | negative hit points, down at 0 or below, no death saves ([Turns, Encounters and Time](Turns%2C%20Encounters%20and%20Time.md#hit-points-damage-and-going-down)); Exhaustion 6 is down, not death | open |
 | Accessible container depth (system `containers`) | `maxAccessibleDepth=unlimited` (explicit value) | `maxAccessibleDepth=1` | `maxAccessibleDepth=1` |
 | Concentration (system `concentration`) | `defaultCapacity=1` | `defaultCapacity=1`; authored abilities may raise it | open |
 | Damage (system `damage`) | method `resistance-halving` | same | same, plus an attached `ballistics` system |

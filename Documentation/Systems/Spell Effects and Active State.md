@@ -154,6 +154,8 @@ When an effect requires a target PC's roll, prompt that PC's player. The DM may 
 | Custom dice expression | The user enters an expression such as 1d20 or 2d20; the app rolls it. Add no character bonuses unless explicitly included or selected. Advantage/keep-die UI remains open. |
 | Manual final result | Accept one numeric total from physical dice or other adjudication. Do not add bonuses again or infer individual faces, natural 20s or critical hits from a total. |
 
+**Every roll works this way** (clarified by the user 2026-10-24 at 7:56 pm PDT (America/Los_Angeles)): any dice roll, whether initiative, an attack, a save, damage or anything else, is either **prompted** to the player who controls the character or **rolled by the DM** for them, and either way the person rolling may use the app's dice or enter their own input (a custom expression or a typed total from physical dice). The DM may ask for the exact roll, prefilled with its formula and any Advantage or Disadvantage, so a new or distracted player only has to press roll; or the DM rolls that exact thing themself.
+
 Use the same action/target/result/log flow for attacks, saves, damage, healing and concentration. Record input mode, submitting actor, formula-owning character, expression and known raw/modifier/final values. A manual total need not pretend the breakdown is known. Do not silently reroll.
 
 One prompt accepts one final result. A DM takeover and player reply must not both resolve it. Area effects need the appropriate separate target prompts; wait for required inputs before applying their dependent consequences. Re-evaluate eligibility when state changes. An “evade” example does not grant universal saving throws against weapon attacks.
