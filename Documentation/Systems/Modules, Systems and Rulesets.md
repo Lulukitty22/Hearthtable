@@ -128,9 +128,9 @@ A separate game module with no levels, classes, spell slots or combat. A charact
 
 These areas are referenced by selected rules but not yet designed:
 
-- **Turns, initiative and rests,** including turn advancement, short and long rests and resource reset. The casting workflow and "replenish to maximum" depend on them.
-- **Conditions.** Incapacitated is referenced but never modelled.
-- **NPCs, monsters and encounters.**
+- **Turns, initiative and rests,** including turn advancement, short and long rests and resource reset. The casting workflow and "replenish to maximum" depend on them. Being specified for Milestone 5 in [Turns, Encounters and Time](Turns%2C%20Encounters%20and%20Time.md) (encounters, initiative, rounds and NPCs decided 2026-10-24).
+- **Conditions.** Incapacitated is referenced but never modelled; to be specified in the same document.
+- **NPCs, monsters and encounters.** NPCs are characters controlled by the DM ([Turns, Encounters and Time](Turns%2C%20Encounters%20and%20Time.md#npcs-are-characters)); monster stat blocks and imports come later.
 
 ## Feature roadmap
 

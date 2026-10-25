@@ -40,7 +40,7 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 | 5c. Trade window | Player-to-player and player-to-DM trades with barter valued in coin from library prices, and selling ([Currency and Trade](../Systems/Currency%20and%20Trade.md#open-design)). Made its own milestone by the user, 2026-10-23 at 5:00 am PDT (America/Los_Angeles); it needs campaigns (Milestone 4). | Tentative |
 | Character creator | A character creator, starting from the minimal blank-with-a-name character of Milestone 4, and more broadly creating custom entries with their game fields (items, spells, features). Added by the user 2026-10-24 at 5:11 am PDT (America/Los_Angeles); it comes after Milestone 5 (turns and campaigns), and its exact place is open. | Tentative |
 | 6. Move to real Firebase | Only with the user's explicit approval: project, region, Blaze, deployment, first administrator. | Tentative |
-| Later | Privacy (moved from Milestone 4 S8; [model](../Systems/Campaigns%20and%20Shared%20Data.md#character-sheet-visibility)), NPCs and encounters, Discord bot, LLM helpers, importers, other rulesets and games. | Tentative |
+| Later | Privacy (moved from Milestone 4 S8; [model](../Systems/Campaigns%20and%20Shared%20Data.md#character-sheet-visibility)), NPC stat blocks and monster imports (simple DM-made NPCs are in Milestone 5, user decision 2026-10-24 at 4:50 pm PDT (America/Los_Angeles)), Discord bot, LLM helpers, importers, other rulesets and games. | Tentative |
 
 ## Notes for Milestone 5
 

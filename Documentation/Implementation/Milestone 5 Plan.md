@@ -1,8 +1,8 @@
 # Milestone 5 Plan
 
-Purpose: the working plan for Milestone 5, the gameplay loop, as [Milestones](Milestones.md) defines it: the action inside a campaign. Status: drafted 2026-10-24 at 4:45 pm PDT (America/Los_Angeles), right after the user accepted Milestone 4; nothing is built, and the scope is not yet confirmed. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
+Purpose: the working plan for Milestone 5, the gameplay loop, as [Milestones](Milestones.md) defines it: the action inside a campaign. Status: drafted 2026-10-24 at 4:45 pm PDT (America/Los_Angeles), right after the user accepted Milestone 4; nothing is built. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
 
-Selected decisions: none yet for this plan. The roadmap's scope (Milestones): specify, then build, turns, initiative, rests and conditions; then the casting workflow (holds, execution-time approval, resolution, response polls, rolls and effects on the game clock). Carried into this milestone by the user: the Spellround and scroll-snapshot work, the spellbook rethink, spent scrolls and the play addresses ([Notes for Milestone 5](Milestones.md#notes-for-milestone-5)).
+Selected decisions: Milestone 5 stays **one milestone**, built together rather than in separate steps, with pauses to discuss and clarify along the way, because its parts are linked and building them apart would mean redoing earlier work (user decision, 2026-10-24 at 4:50 pm PDT (America/Los_Angeles)). **Simple NPCs** come into it: NPCs made by the campaign's DMs as ordinary characters, at any level of detail from a name and HP to a full sheet, usable in the turn order; monster stat blocks and imports stay later (user decision, 2026-10-24 at 4:50 pm PDT (America/Los_Angeles)). The roadmap's scope (Milestones): specify, then build, turns, initiative, rests and conditions; then the casting workflow (holds, execution-time approval, resolution, response polls, rolls and effects on the game clock). Carried into this milestone by the user: the Spellround and scroll-snapshot work, the spellbook rethink, spent scrolls and the play addresses ([Notes for Milestone 5](Milestones.md#notes-for-milestone-5)).
 
 Open questions: listed by topic under [Questions for the user](#questions-for-the-user), asked one topic at a time, starting with the scope.
 
@@ -25,7 +25,7 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 
 ## Proposed build slices
 
-A proposal for the user to change. S1 is documentation only, because turns, initiative, rests and conditions have no specification yet.
+The user chose to build these together (topic A); the numbering is an order of thinking, not separate deliveries. S1 is specification, because turns, initiative, rests and conditions have none yet. Simple NPCs join S2 and S3.
 
 0. **S0 — Carried over (must do).** Carol's Spellrounds become one Spellround item whose lines carry a scroll; the scribed-formula snapshot for every scroll; opening a scroll shows the full spell; the decision on core folder paths; and the spellbook rethink and spent-scroll ideas, decided before the casting workflow is built on them.
 1. **S1 — Specify turns, initiative, rounds, rests and conditions.** Written with the user, topic by topic, into the Systems documents before any code.
@@ -41,9 +41,9 @@ A proposal for the user to change. S1 is documentation only, because turns, init
 
 ## Questions for the user
 
-**A. Scope.** The roadmap's Milestone 5 is large. Keep it as one milestone in the order above, or split it (for example turns, clock, rests and conditions first; then the casting workflow)? Are NPCs, monsters and encounters (now "Later" on the roadmap) needed in it, since a turn order without enemies is thin?
+**A. Scope** — answered 2026-10-24 at 4:50 pm PDT (America/Los_Angeles): one milestone, built together with pauses to discuss; simple DM-made NPCs included (see Selected decisions).
 
-**B. Turns and the clock.** How initiative is entered or rolled and ties broken; whether rounds restart for each encounter while campaign time continues (a proposal from the prototypes); how long a round is on the game clock; what starts and ends an encounter.
+**B. Turns and the clock** — answered 2026-10-24 at 4:56 pm PDT (America/Los_Angeles): NPCs are DM-controlled characters on the same systems; whoever controls a character rolls or types its initiative (the DM may roll for absent players); ties go to who entered first, and the DM can always reorder or add participants; rounds restart per encounter and each adds six seconds to the campaign clock; the DM starts and ends encounters. Recorded in [Turns, Encounters and Time](../Systems/Turns%2C%20Encounters%20and%20Time.md).
 
 **C. Action budget.** Whether the app tracks and enforces action, bonus action, Reaction and movement per turn, or only shows them.
 
