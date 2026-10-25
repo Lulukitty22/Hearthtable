@@ -47,7 +47,7 @@ The user chose to build these together (topic A); the numbering is an order of t
 
 **C. Action budget** — answered 2026-10-24 at 5:09 pm PDT (America/Los_Angeles): actions, bonus actions and Reactions are tracked and over-use is flagged for the DM, who may still approve; Reactions refresh at the start of the character's turn; movement is left out until the new Milestone 6, Maps (real Firebase becomes Milestone 7). Recorded in [Turns, Encounters and Time](../Systems/Turns%2C%20Encounters%20and%20Time.md#action-budget).
 
-**D. Rests.** Who starts a rest and who approves it; what each rest restores in Hearthtable Vanilla+ (HP, Hit Dice, slots, resources by reset type); interrupted rests.
+**D. Rests and downtime** — partly answered 2026-10-24 at 5:28 pm PDT (America/Los_Angeles): rests restore what the published 2024 rules say. The user widened the rest of the topic into **downtime**, everything between encounters (resting, crafting, scribing and other activities), which happens at any real-life time, often without the DM present; it needs careful design on both the systems and the experience level before building: how much time passes and who knows it, how players plan several dependent activities, how requests stay current while the DM is away, and interruptions. Being discussed.
 
 **E. Conditions.** Which conditions are modelled, how they affect calculations and actions, and how they end.
 

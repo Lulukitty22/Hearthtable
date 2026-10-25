@@ -4,7 +4,7 @@ Purpose: own how play moves forward in a campaign: encounters, initiative and tu
 
 Selected decisions: the sections below, recorded with the user on 2026-10-24 (each with its time).
 
-Open questions: rests and conditions (Milestone 5 Plan topics D and E); how NPCs are stored and shown (their records and the look of a stat card).
+Open questions: downtime, the time between encounters, including how rests, crafting and other activities are planned, approved and timed while the DM may be away, how much time passes and whether players know it, and interruptions (being discussed, 2026-10-24 at 5:28 pm PDT (America/Los_Angeles)); conditions (Milestone 5 Plan topic E); how NPCs are stored and shown (their records and the look of a stat card).
 
 ## NPCs are characters
 
@@ -29,3 +29,7 @@ Each encounter counts its own rounds, starting at 1. Every round adds six second
 ## Action budget
 
 Selected 2026-10-24 at 5:09 pm PDT (America/Los_Angeles) (user decision): on a character's turn the app tracks what each request uses (an action, a bonus action, a Reaction) and shows what is left. Going over is flagged for the DM, who can still approve it, as over-budget feats only warn ([Character Creation and Advancement](Character%20Creation%20and%20Advancement.md)). A character's Reaction refreshes at the start of its own turn. Movement is not tracked: battle maps, positions and movement come with Milestone 6 ([Milestones](../Implementation/Milestones.md#roadmap)).
+
+## What rests restore
+
+Selected 2026-10-24 at 5:28 pm PDT (America/Los_Angeles) (user decision): Hearthtable Vanilla+ rests restore what the published 2024 rules say. A Short Rest lets a character spend Hit Point Dice to heal and resets short-rest resources; a Long Rest restores all hit points and all Hit Point Dice, all spell slots and long-rest resources, and lowers Exhaustion by one. Resources reset to their current maximum while queued holds stay with their requests ([capped replenishment](Spell%20Effects%20and%20Active%20State.md#casting-workflow--selected-2026-10-17)). How rests are started, timed, combined with other downtime and interrupted is open (above).
