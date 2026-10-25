@@ -1,6 +1,6 @@
 # Milestone 5 Plan
 
-Purpose: the working plan for Milestone 5, the gameplay loop, as [Milestones](Milestones.md) defines it: the action inside a campaign. Status: drafted 2026-10-24 at 4:45 pm PDT (America/Los_Angeles), right after the user accepted Milestone 4; nothing is built. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
+Purpose: the working plan for Milestone 5, the gameplay loop, as [Milestones](Milestones.md) defines it: the action inside a campaign. Status: drafted 2026-10-24 at 4:45 pm PDT (America/Los_Angeles), right after the user accepted Milestone 4. The user agreed to this plan and its acceptance list on 2026-10-24 at 6:23 pm PDT (America/Los_Angeles); S0 starts with the snapshot and spellbook discussion. Decisions live in the documents linked below; this plan orders the work and lists what still needs the user's answer.
 
 Selected decisions: Milestone 5 stays **one milestone**, built together rather than in separate steps, with pauses to discuss and clarify along the way, because its parts are linked and building them apart would mean redoing earlier work (user decision, 2026-10-24 at 4:50 pm PDT (America/Los_Angeles)). **Simple NPCs** come into it: NPCs made by the campaign's DMs as ordinary characters, at any level of detail from a name and HP to a full sheet, usable in the turn order; monster stat blocks and imports stay later (user decision, 2026-10-24 at 4:50 pm PDT (America/Los_Angeles)). The roadmap's scope (Milestones): specify, then build, turns, initiative, rests and conditions; then the casting workflow (holds, execution-time approval, resolution, response polls, rolls and effects on the game clock). Carried into this milestone by the user: the Spellround and scroll-snapshot work, the spellbook rethink, spent scrolls and the play addresses ([Notes for Milestone 5](Milestones.md#notes-for-milestone-5)).
 
@@ -23,7 +23,7 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 | Scrolls | A loose scroll uses its scribe's snapshot; a bound scroll uses the current caster; a Spellround's scroll is consumed on release | [Spell Containers](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md) |
 | Authority | DMs approve at execution; a solo owner uses DM mode with no bypass; delegates submit for a character they control; Rules check authority, not game math | [Campaigns and Shared Data](../Systems/Campaigns%20and%20Shared%20Data.md#campaign-membership) |
 
-## Proposed build slices
+## Build slices
 
 The user chose to build these together (topic A); the numbering is an order of thinking, not separate deliveries. S1 is specification, because turns, initiative, rests and conditions have none yet. Simple NPCs join S2 and S3.
 
@@ -55,7 +55,7 @@ The user chose to build these together (topic A); the numbering is an order of t
 
 **G. Carried-over items** — core layout answered 2026-10-24 at 6:16 pm PDT (America/Los_Angeles): core entries move into kind folders (`core/Spells/…`, `core/Items/…`, `core/Features/…`, `core/Classes/…`, `core/Conditions/…`), rewriting every reference in the content and the user's saved data, in S0 with the Spellround conversion. The scroll and Spellround snapshot fields and the spellbook rethink with spent scrolls are discussed when S0 starts, as a planned pause.
 
-## Proposed acceptance (to agree with the user)
+## Acceptance (agreed 2026-10-24 at 6:23 pm PDT (America/Los_Angeles))
 
 Drafted 2026-10-24 at 6:16 pm PDT (America/Los_Angeles) for the confirmed scope. Each item gets a unit, emulator or browser test, as in Milestones 3 and 4.
 
