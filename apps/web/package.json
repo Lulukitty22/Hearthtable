@@ -23,6 +23,7 @@
     "@hearthtable/system-containers": "workspace:*",
     "@hearthtable/system-currency": "workspace:*",
     "@hearthtable/system-features": "workspace:*",
+    "@hearthtable/system-hit-points": "workspace:*",
     "@hearthtable/system-magazines": "workspace:*",
     "@hearthtable/system-resources": "workspace:*",
     "@hearthtable/system-scrolls": "workspace:*",

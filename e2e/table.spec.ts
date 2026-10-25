@@ -299,3 +299,72 @@ test("the DM applies conditions; saves fail, Exhaustion stacks, and Stunned brea
   );
   await expect(card.getByLabel("Carol Elfnein's effects")).toHaveCount(0);
 });
+
+// Milestone 5, S5: downtime. Activities are planned, approved and run when the DM ends it.
+test("downtime: a Long Rest and a note run when the DM ends it; a Short Rest spends Hit Point Dice", async ({
+  browser,
+}) => {
+  const dm = await signedIn(browser, VR_LULU, `${TABLE}/Dungeon_Master`);
+  const sheet = await dm.context().newPage();
+  const hurt = async () => {
+    await sheet.goto(
+      "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein/Edit",
+    );
+    await sheet.getByLabel("Current hit points").fill("40");
+    await sheet.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(
+      sheet.getByRole("region", { name: "Unsaved changes" }),
+    ).toBeHidden();
+    await expect(dm.getByTestId("hp-Carol Elfnein")).toContainText("HP 40 /");
+  };
+  await hurt();
+
+  const panel = dm.getByRole("region", { name: "Downtime" });
+  const add = panel.getByRole("form", { name: "Add an activity" });
+  // Other tests may have added characters; the DM controls them all, so pick Carol.
+  const pickCarol = async () => {
+    const choose = add.getByLabel("Character");
+    if (await choose.count())
+      await choose.selectOption({ label: "Carol Elfnein" });
+  };
+  await pickCarol();
+  await add.getByLabel("Activity").selectOption({ label: "Long Rest (8 h)" });
+  await add.getByRole("button", { name: "Add" }).click();
+  await pickCarol();
+  await add.getByLabel("Activity").selectOption({ label: "Note" });
+  await add.getByLabel("What they do").fill("keep watch");
+  await add.getByLabel("Hours").fill("2");
+  await add.getByRole("button", { name: "Add" }).click();
+  await expect(panel.getByLabel("As planned")).toContainText(
+    "Carol Elfnein: Long Rest 8 h, Note 2 h (keep watch) → HP 95 / 95",
+  );
+
+  const list = panel.getByRole("list", { name: "Activities" });
+  for (let i = 0; i < 2; i++)
+    await list.getByRole("button", { name: "approve" }).first().click();
+  await expect(list.getByText("pending")).toHaveCount(0);
+  const end = panel.getByRole("form", { name: "End the downtime" });
+  await end.getByLabel("Hours that passed").fill("10");
+  await end.getByRole("button", { name: "End the downtime" }).click();
+  const log = dm.getByRole("region", { name: "Campaign log" });
+  await expect(log).toContainText(
+    "Carol Elfnein finished Long Rest: hit points",
+  );
+  await expect(log).toContainText("Carol Elfnein finished Note: done");
+  await expect(dm.getByTestId("hp-Carol Elfnein")).toContainText("HP 95 / 95");
+
+  // A Short Rest, then one Hit Point Die (d8 or d6).
+  await hurt();
+  await pickCarol();
+  await add.getByLabel("Activity").selectOption({ label: "Short Rest (1 h)" });
+  await add.getByRole("button", { name: "Add" }).click();
+  await list.getByRole("button", { name: "approve" }).click();
+  await end.getByLabel("Hours that passed").fill("1");
+  await end.getByRole("button", { name: "End the downtime" }).click();
+  const spend = panel.getByLabel("Carol Elfnein's Hit Point Dice");
+  await spend.getByRole("button", { name: /Roll a d8/ }).click();
+  await expect(log).toContainText("Carol Elfnein spent a Hit Point Die: d8");
+  await expect(dm.getByTestId("hp-Carol Elfnein")).not.toContainText("HP 40 /");
+  await spend.getByRole("button", { name: "Done spending" }).click();
+  await expect(spend).toHaveCount(0);
+});

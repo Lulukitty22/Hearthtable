@@ -113,6 +113,9 @@ importers:
       '@hearthtable/system-features':
         specifier: workspace:*
         version: link:../../packages/systems/features
+      '@hearthtable/system-hit-points':
+        specifier: workspace:*
+        version: link:../../packages/systems/hit-points
       '@hearthtable/system-magazines':
         specifier: workspace:*
         version: link:../../packages/systems/magazines

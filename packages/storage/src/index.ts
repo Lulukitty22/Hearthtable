@@ -11,3 +11,4 @@ export * from "./table";
 export * from "./encounters";
 export * from "./effects";
 export * from "./conditions";
+export * from "./activities";

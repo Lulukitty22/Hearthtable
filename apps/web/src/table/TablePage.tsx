@@ -36,7 +36,9 @@ import {
   removeCondition,
   type ConditionTools,
 } from "./Conditions";
+import { DowntimePanel, useActivities, useApplyRolls } from "./Downtime";
 import { EffectChips, useClearEndedEffects } from "./Effects";
+import { runActivities } from "./runDowntime";
 import { EncounterPanel, type Control } from "./EncounterPanel";
 import { NewNpcTemplate, StartEncounter } from "./StartEncounter";
 import { useTable, type Participant } from "./useTable";
@@ -66,6 +68,14 @@ export function TablePage({
     campaign ? [...campaign.dms, ...campaign.players] : [],
   );
   const [problem, setProblem] = useState<string | undefined>();
+  const activities = useActivities(table.id);
+  useApplyRolls(
+    role === "dm" && isDm,
+    table.id,
+    activities,
+    table.people?.map,
+    setProblem,
+  );
   useClearEndedEffects(
     role === "dm" && isDm,
     table.id,
@@ -260,6 +270,16 @@ export function TablePage({
                 downtime={scene}
                 characters={participants?.filter((p) => !p.npc) ?? []}
                 templates={people.templates}
+                beforeStart={(elapsed) =>
+                  runActivities(
+                    table.id,
+                    activities,
+                    people.map,
+                    uid,
+                    state.clock,
+                    elapsed,
+                  )
+                }
                 onProblem={setProblem}
               />
               <h3>New NPC template</h3>
@@ -286,6 +306,19 @@ export function TablePage({
               now={table.now}
               endEarly={endEarly}
               conditionTools={conditionTools}
+              onProblem={setProblem}
+            />
+          )}
+          {kind === "downtime" && people && (
+            <DowntimePanel
+              campaign={table.id}
+              campaignPath={table.campaignPath}
+              state={state}
+              scene={scene}
+              activities={activities}
+              people={people.map}
+              characters={people.campaignCharacters}
+              control={control}
               onProblem={setProblem}
             />
           )}

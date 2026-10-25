@@ -177,11 +177,14 @@ export function StartEncounter({
   downtime,
   characters,
   templates,
+  beforeStart,
   onProblem,
 }: {
   id: string;
   campaignPath: string;
   uid: string;
+  /** Runs the downtime's activities for the time that passed (Milestone 5 S5). */
+  beforeStart: (elapsed: number) => Promise<string | undefined>;
   state: PlayState;
   downtime: RecordEnvelope | undefined;
   characters: readonly Participant[];
@@ -218,21 +221,27 @@ export function StartEncounter({
         const deployments = deploymentsFor(templates, counts, [], (t) =>
           surprised.has(t),
         );
-        void startEncounter(db, repository, {
-          campaign: id,
-          campaignPath,
-          uid,
-          state,
-          downtime,
-          elapsed,
-          characters: characterPaths,
-          deployments,
-          surprised: characterPaths.filter((p) => surprised.has(p)),
-          names: new Map(characters.map((c) => [c.path, c.name])),
-        }).then((err) => {
-          setBusy(false);
-          if (err) onProblem(err);
-        });
+        void beforeStart(elapsed)
+          .then((err) =>
+            err
+              ? err
+              : startEncounter(db, repository, {
+                  campaign: id,
+                  campaignPath,
+                  uid,
+                  state,
+                  downtime,
+                  elapsed,
+                  characters: characterPaths,
+                  deployments,
+                  surprised: characterPaths.filter((p) => surprised.has(p)),
+                  names: new Map(characters.map((c) => [c.path, c.name])),
+                }),
+          )
+          .then((err) => {
+            setBusy(false);
+            if (err) onProblem(err);
+          });
       }}
     >
       <h3>Start an encounter</h3>

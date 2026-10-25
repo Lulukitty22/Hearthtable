@@ -202,7 +202,7 @@ service cloud.firestore {
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 2000
-          && (request.resource.data.kind in ['post', 'turn', 'initiative']
+          && (request.resource.data.kind in ['post', 'turn', 'initiative', 'activity']
             || (request.resource.data.kind in ['scene', 'clock', 'title', 'order', 'effect', 'condition']
               && request.auth.uid in get(campaignDoc(campaign)).data.dms));
       }
@@ -250,6 +250,33 @@ service cloud.firestore {
             && ((isApproved() && isDmOf(campaign))
               || controls(request.resource.data.path, request.resource.data.get('control', null)));
         }
+      }
+
+      // Milestone 5 S5: downtime activities. A character's controller (or a DM) submits one,
+      // pending; DMs approve, reject and run them. The controller may cancel their own while it
+      // is pending or approved, and roll Hit Point Dice into it while spending is open.
+      match /activities/{activity} {
+        allow read: if true;
+        allow create: if isApproved()
+          && (request.auth.uid in get(campaignDoc(campaign)).data.dms
+            || request.auth.uid in get(campaignDoc(campaign)).data.players)
+          && request.resource.data.keys().hasOnly(['character', 'type', 'seconds', 'note', 'waitsFor', 'scene', 'progress', 'status', 'by', 'control', 'at'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.at == request.time
+          && request.resource.data.status == 'pending'
+          && request.resource.data.progress == 0
+          && request.resource.data.seconds is number && request.resource.data.seconds > 0
+          && request.resource.data.character is string
+          && request.resource.data.character.split('/')[1].lower() == campaign
+          && (isDmOf(campaign)
+            || controls(request.resource.data.character, request.resource.data.get('control', null)));
+        allow update: if (isApproved() && isDmOf(campaign))
+          || (controls(resource.data.character, resource.data.get('control', null))
+            && ((request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+                && request.resource.data.status == 'cancelled'
+                && resource.data.status in ['pending', 'approved'])
+              || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rolls', 'spend'])
+                && resource.data.get('spend', null) == 'open')));
       }
 
       // S6: a member asks to add a copy of their own character. The copy goes under

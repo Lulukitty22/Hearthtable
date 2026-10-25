@@ -69,6 +69,29 @@ const derivations: Derivation[] = [
     },
   },
   {
+    // Hit Point Dice by size: one per level, less those spent (Milestone 5 S5). A Short Rest
+    // spends them; a Long Rest restores them all.
+    key: "hit-points.dice",
+    compute: (ctx) => {
+      const dice = ctx.get<readonly HitDieLevel[]>("character.hitDice");
+      if (dice.kind === "unresolved") return dice;
+      const spent =
+        readField(ctx, "character", "hitPointDice", SpentDice.optional())[0]
+          ?.value?.spent ?? {};
+      const sizes = new Map<number, number>();
+      for (const d of dice.value) sizes.set(d.die, (sizes.get(d.die) ?? 0) + 1);
+      return known(
+        [...sizes]
+          .sort(([a], [b]) => b - a)
+          .map(([die, total]): HitPointDice => {
+            const used = Math.min(total, spent[String(die)] ?? 0);
+            return { die, total, spent: used, remaining: total - used };
+          }),
+        "Hit Point Dice",
+      );
+    },
+  },
+  {
     key: "hit-points.state",
     compute: (ctx) => {
       const state = readField(ctx, "character", "hitPoints", HitPointState)[0];
@@ -80,6 +103,17 @@ const derivations: Derivation[] = [
     },
   },
 ];
+
+const SpentDice = z.looseObject({
+  spent: z.record(z.string(), z.number().int().min(0)).optional(),
+});
+
+export interface HitPointDice {
+  readonly die: number;
+  readonly total: number;
+  readonly spent: number;
+  readonly remaining: number;
+}
 
 export const hitPoints: KernelModule = {
   manifest: {

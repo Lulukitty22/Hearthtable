@@ -613,3 +613,60 @@ export async function endEncounter(
     );
   }, db);
 }
+
+/**
+ * The DM lets time pass without an encounter: the downtime scene ends after `elapsed` seconds
+ * (its activities having run) and a new downtime scene begins at the new time.
+ */
+export async function passTime(
+  db: Firestore,
+  repo: Repository,
+  options: {
+    readonly campaign: string;
+    readonly campaignPath: string;
+    readonly uid: string;
+    readonly state: PlayState;
+    readonly downtime: RecordEnvelope;
+    readonly elapsed: number;
+  },
+): Promise<string | undefined> {
+  const o = options;
+  const end = o.state.clock + Math.max(0, Math.floor(o.elapsed));
+  const existing = await repo.listUnder(`${o.campaignPath}/Downtime`);
+  if (!existing.ok) return errors(existing);
+  const next = newScenePath(
+    o.campaignPath,
+    "downtime",
+    end,
+    existing.value.map((r) => r.id),
+  );
+  const saved = await repo.save([
+    { ...o.downtime, data: { ...dataOf(o.downtime), endedAt: end } },
+    sceneRecord(next, "downtime", { startedAt: end }),
+  ]);
+  if (!saved.ok) return errors(saved);
+  return commit((batch) => {
+    batch.set(doc(db, CAMPAIGNS, o.campaign, "play", "state"), {
+      clock: end,
+      scene: next,
+    });
+    log(
+      batch,
+      db,
+      o.campaign,
+      "scene",
+      o.uid,
+      end,
+      `${sceneLabel(o.downtime.id, dataOf(o.downtime)["title"] as string | undefined)} ended after ${formatDuration(end - o.state.clock)}.`,
+    );
+    log(
+      batch,
+      db,
+      o.campaign,
+      "scene",
+      o.uid,
+      end,
+      `${sceneLabel(next)} began.`,
+    );
+  }, db);
+}

@@ -26,6 +26,8 @@ import {
 } from "@hearthtable/storage";
 import type { ActiveEffectRow } from "@hearthtable/system-active-effects";
 import type { ConditionRow } from "@hearthtable/system-conditions";
+import type { HitPointDice } from "@hearthtable/system-hit-points";
+import type { ResourcePool } from "@hearthtable/system-resources";
 import { useEffect, useMemo, useState } from "react";
 import { gameTimeRecord, momentOf } from "../play/gameTime";
 import { useCampaign } from "../campaign/useCampaign";
@@ -50,6 +52,10 @@ export interface Participant {
   readonly conditions: readonly ConditionRow[];
   /** Why the character is Incapacitated, when it is. */
   readonly incapacitated?: string;
+  /** For rests (Milestone 5 S5): Hit Point Dice, Constitution modifier and resource pools. */
+  readonly hitDice: readonly HitPointDice[];
+  readonly conModifier: number;
+  readonly pools: readonly { readonly pool: string; readonly reset: string }[];
 }
 
 /** An NPC template the DM can deploy: its records and its initiative bonus. */
@@ -94,10 +100,16 @@ function resolveCharacter(
     value<readonly ActiveEffectRow[]>("active-effects.list") ?? []
   ).filter((e) => e.status === "active" || e.status === "ended");
   const conditions = value<readonly ConditionRow[]>("conditions.list") ?? [];
+  const pools = (value<readonly ResourcePool[]>("resources.pools") ?? []).map(
+    (p) => ({ pool: p.pool, reset: p.reset }),
+  );
   const incapacitated = conditions.find((c) => c.breaksConcentration);
   return {
     effects,
     conditions,
+    hitDice: value<readonly HitPointDice[]>("hit-points.dice") ?? [],
+    conModifier: value<number>("abilities.con.modifier") ?? 0,
+    pools,
     ...(incapacitated
       ? {
           incapacitated:
