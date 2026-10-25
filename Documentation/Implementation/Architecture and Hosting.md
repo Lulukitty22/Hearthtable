@@ -8,7 +8,7 @@ Recorded with the user on 2026-10-21 between 12:10 am and 12:51 am PDT (America/
 
 - **Pure browser plus Firebase.** There is no dedicated server now. Server compute is added only where it is unavoidable. Cheating is not a concern for a friends group.
 - **Start on the local Firebase Emulator**, and learn how real Firebase deployment works alongside it, so moving over is ready whenever it is chosen. Creating the real Firebase project, choosing its region and enabling billing all wait for the user's explicit approval.
-- **Firebase Hosting serves the app's files** (selected 2026-10-22 at 11:42 am PDT (America/Los_Angeles), after the [comparison](#serving-the-app-options-compared)). It keeps one provider and console, works in the emulator and gives the simplest Google sign-in. It is free at the planned traffic; Cloudflare Pages remains the fallback if traffic ever grows far beyond it. Deployment still waits for the user's approval in Milestone 6.
+- **Firebase Hosting serves the app's files** (selected 2026-10-22 at 11:42 am PDT (America/Los_Angeles), after the [comparison](#serving-the-app-options-compared)). It keeps one provider and console, works in the emulator and gives the simplest Google sign-in. It is free at the planned traffic; Cloudflare Pages remains the fallback if traffic ever grows far beyond it. Deployment still waits for the user's approval in Milestone 7.
 - **PC-hosted sessions are for development and testing only.** Only real Firebase hosting meets the requirement that the app works while the user's PC is off.
 - **Security Rules enforce authority, not game math.** See [Security Rules scope](#security-rules-scope).
 - **Stack:** React + TypeScript + Vite in a pnpm monorepo, chosen by the agent at the user's invitation. TypeScript lets one rules engine run in the browser, in tests and in any later server code.
@@ -19,8 +19,8 @@ Recorded with the user on 2026-10-21 between 12:10 am and 12:51 am PDT (America/
 
 ## Open questions
 
-- How the first site administrator is set on real Firebase: by hand, either editing the account document in the Firebase console or placing the document directly (user direction, 2026-10-22 at 11:45 pm PDT (America/Los_Angeles)); the exact steps are written at Milestone 6.
-- Firebase region, project setup and billing: wait for the user's explicit approval (Milestone 6).
+- How the first site administrator is set on real Firebase: by hand, either editing the account document in the Firebase console or placing the document directly (user direction, 2026-10-22 at 11:45 pm PDT (America/Los_Angeles)); the exact steps are written at Milestone 7.
+- Firebase region, project setup and billing: wait for the user's explicit approval (Milestone 7).
 - Whether privacy beyond character tabs and lines is enforced by Rules; owned by [Modules, Systems and Rulesets](../Systems/Modules%2C%20Systems%20and%20Rulesets.md#open-questions).
 
 ## Hosting: browser plus Firebase
@@ -96,7 +96,7 @@ Rules check who may read and write: campaign membership, the DM role, delegation
 
 **First site administrator.** Rules stop users from setting their own administrator flag, so the first administrator must be set outside the app. On the emulator, seed data sets it. On real Firebase it is open (see above).
 
-**Exported files and sign-in.** Firebase Authentication will not run from a downloaded file's `file://` origin, while guest reads of public data can. Built in S10 (2026-10-24 at 3:15 pm PDT (America/Los_Angeles)): the downloaded file therefore only frames the app's sheet-only page for the character (`…/<character>/Export`), so the sheet runs at the app's own address. Verified by a browser test: the file opens from disk, shows the current sheet, follows later saves and says when the character is gone. A signed-in viewer inside the frame may appear as a guest, because browsers keep a framed page's storage apart; that matters only once privacy arrives. The hosted app must allow framing and be reachable; on real Firebase this is checked in Milestone 6. The export requirement is owned by [Campaigns and Shared Data](../Systems/Campaigns%20and%20Shared%20Data.md#html-and-live-state-requirements).
+**Exported files and sign-in.** Firebase Authentication will not run from a downloaded file's `file://` origin, while guest reads of public data can. Built in S10 (2026-10-24 at 3:15 pm PDT (America/Los_Angeles)): the downloaded file therefore only frames the app's sheet-only page for the character (`…/<character>/Export`), so the sheet runs at the app's own address. Verified by a browser test: the file opens from disk, shows the current sheet, follows later saves and says when the character is gone. A signed-in viewer inside the frame may appear as a guest, because browsers keep a framed page's storage apart; that matters only once privacy arrives. The hosted app must allow framing and be reachable; on real Firebase this is checked in Milestone 7. The export requirement is owned by [Campaigns and Shared Data](../Systems/Campaigns%20and%20Shared%20Data.md#html-and-live-state-requirements).
 
 ## Stack
 

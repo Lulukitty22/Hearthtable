@@ -8,7 +8,7 @@ Updated 2026-10-24 at 4:38 pm PDT (America/Los_Angeles). This section is the one
 
 **Now:** Milestones 1–4 are accepted (Milestone 4 on 2026-10-24 at 4:38 pm PDT (America/Los_Angeles): "Milestone 4 is accepted", with privacy (S8) deferred to a later milestone). Milestone 5, the gameplay loop, is being planned: [Milestone 5 Plan](Milestone%205%20Plan.md) (draft). Milestones 3 and 4 keep their slice tables and acceptance in their own plans ([Milestone 3](Milestone%203%20Plan.md), [Milestone 4](Milestone%204%20Plan.md)).
 
-**After Milestone 5:** Milestone 5b (crafting), Milestone 5c (trade window), Milestone 6 (real Firebase, only with the user's approval); see the [roadmap](#roadmap).
+**After Milestone 5:** Milestone 5b (crafting), Milestone 5c (trade window), Milestone 6 (maps), Milestone 7 (real Firebase, only with the user's approval); see the [roadmap](#roadmap).
 
 **Waiting on the user:** Carol's real gold amount (she has a labelled test purse); review of the Codex chat's Hearthside UI prototypes (`prototypes/hearthside/`, checklist in `REVIEW.md`).
 
@@ -39,7 +39,8 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 | 5b. Crafting | Crafting jobs with paid stretches, split rates and progress: scroll scribing, mounting and removal, Aetherlock rounds, canister refills, magic items, replicas and elixirs ([Crafting Jobs](../Systems/Crafting%20Jobs.md)). Moved from Milestone 3 by the user, 2026-10-23 at 1:53 am PDT. | Tentative |
 | 5c. Trade window | Player-to-player and player-to-DM trades with barter valued in coin from library prices, and selling ([Currency and Trade](../Systems/Currency%20and%20Trade.md#open-design)). Made its own milestone by the user, 2026-10-23 at 5:00 am PDT (America/Los_Angeles); it needs campaigns (Milestone 4). | Tentative |
 | Character creator | A character creator, starting from the minimal blank-with-a-name character of Milestone 4, and more broadly creating custom entries with their game fields (items, spells, features). Added by the user 2026-10-24 at 5:11 am PDT (America/Los_Angeles); it comes after Milestone 5 (turns and campaigns), and its exact place is open. | Tentative |
-| 6. Move to real Firebase | Only with the user's explicit approval: project, region, Blaze, deployment, first administrator. | Tentative |
+| 6. Maps | Battle maps with positions and movement on a turn; movement is left out of Milestone 5 until then. Added by the user 2026-10-24 at 5:09 pm PDT (America/Los_Angeles). | Tentative |
+| 7. Move to real Firebase | Only with the user's explicit approval: project, region, Blaze, deployment, first administrator. Renumbered from 6 when Maps was added (2026-10-24 at 5:09 pm PDT (America/Los_Angeles)). | Tentative |
 | Later | Privacy (moved from Milestone 4 S8; [model](../Systems/Campaigns%20and%20Shared%20Data.md#character-sheet-visibility)), NPC stat blocks and monster imports (simple DM-made NPCs are in Milestone 5, user decision 2026-10-24 at 4:50 pm PDT (America/Los_Angeles)), Discord bot, LLM helpers, importers, other rulesets and games. | Tentative |
 
 ## Notes for Milestone 5

@@ -45,7 +45,7 @@ The user chose to build these together (topic A); the numbering is an order of t
 
 **B. Turns and the clock** — answered 2026-10-24 at 4:56 pm PDT (America/Los_Angeles): NPCs are DM-controlled characters on the same systems; whoever controls a character rolls or types its initiative (the DM may roll for absent players); ties go to who entered first, and the DM can always reorder or add participants; rounds restart per encounter and each adds six seconds to the campaign clock; the DM starts and ends encounters. Recorded in [Turns, Encounters and Time](../Systems/Turns%2C%20Encounters%20and%20Time.md).
 
-**C. Action budget.** Whether the app tracks and enforces action, bonus action, Reaction and movement per turn, or only shows them.
+**C. Action budget** — answered 2026-10-24 at 5:09 pm PDT (America/Los_Angeles): actions, bonus actions and Reactions are tracked and over-use is flagged for the DM, who may still approve; Reactions refresh at the start of the character's turn; movement is left out until the new Milestone 6, Maps (real Firebase becomes Milestone 7). Recorded in [Turns, Encounters and Time](../Systems/Turns%2C%20Encounters%20and%20Time.md#action-budget).
 
 **D. Rests.** Who starts a rest and who approves it; what each rest restores in Hearthtable Vanilla+ (HP, Hit Dice, slots, resources by reset type); interrupted rests.
 
