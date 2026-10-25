@@ -38,7 +38,7 @@ The 1 gp Basic Round is the complete physical base. Crafting an enhanced round c
 |---|---|
 | Basic | Purchased unit 1 gp. Raw manufacture remains unspecified. Damage 2d10 + INT Piercing. |
 | Arcane | One Basic + 5 gp crystal dust + 5 gp runic ink; 10 minutes enchanting, no slot. Damage 2d10 + INT Piercing + 2d6 Force; mean 24 for Carol. |
-| Spellround | One actual crafted scroll mounted into one Basic Round. Pay scribing and specific consumed components once, then the selected mounting job. No additional payload slot payment. |
+| Spellround | One actual crafted scroll mounted into one Basic Round. Pay scribing and specific consumed components once, then the selected mounting job. No additional payload slot payment. Since 2026-10-24 at 6:40 pm PDT (America/Los_Angeles) (user decision) the Spellround is a casing that contains its scroll; firing spends the scroll and leaves the casing, holding the spent scroll, which can be fitted with a fresh scroll ([Spell Containers](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md#binders-and-spent-scrolls--selected-2026-10-23-at-1258-am-pdt-americalos_angeles)). |
 | HE-FRAG / HEDP | One complete 100 gp grenade + six Basic Rounds + 20 gp parts; one hour with Tinker's Tools/proficiency produces six rounds, 126 gp/batch or 21 gp each. |
 
 ### Spellrounds and snapshots
