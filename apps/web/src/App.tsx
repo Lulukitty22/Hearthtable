@@ -34,6 +34,7 @@ import { downloadExport } from "./export/exportFile";
 import { FolderPage } from "./home/FolderPage";
 import { segmentFor } from "./home/names";
 import { parseRoute, webPathFor, type View as RouteView } from "./routes";
+import { TablePage } from "./table/TablePage";
 import { FeaturesTab } from "./sheet/FeaturesTab";
 import { Header } from "./sheet/Header";
 import { EntryProvider } from "./sheet/entries";
@@ -189,6 +190,9 @@ export function App() {
       <AccountBar viewer={viewer} />
       {route.kind === "admin" && <AdminPage viewer={viewer} />}
       {route.kind === "home" && <Home />}
+      {route.kind === "table" && (
+        <TablePage segment={route.campaign} role={route.role} viewer={viewer} />
+      )}
       {route.kind === "record" && (
         <RecordPage path={route.path} view={route.view} viewer={viewer} />
       )}

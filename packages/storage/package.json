@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@hearthtable/kernel": "workspace:*",
-    "firebase": "^13.1.0"
+    "firebase": "^13.1.0",
+    "@hearthtable/play": "workspace:*"
   },
   "devDependencies": {
     "@hearthtable/content": "workspace:*"

@@ -163,6 +163,38 @@ service cloud.firestore {
           && !(uid in get(campaignDoc(campaign)).data.players);
       }
 
+      // Milestone 5 S2: the table. `play/state` holds the game clock and the current scene's
+      // record path; only DMs write it, and it is never deleted. The log is only ever added to:
+      // any member posts text (`post`), and DMs also record what happens (scenes, the clock,
+      // titles). Like everything else before privacy, both are readable by everyone.
+      match /play/{part} {
+        allow read: if true;
+        allow create, update: if part == 'state' && isApproved() && isDmOf(campaign)
+          && request.resource.data.keys().hasOnly(['clock', 'scene'])
+          && request.resource.data.clock is number
+          && request.resource.data.clock >= 0
+          && request.resource.data.scene is string
+          && request.resource.data.scene.split('/')[0] == 'campaign'
+          && request.resource.data.scene.split('/')[1].lower() == campaign;
+      }
+
+      match /log/{entry} {
+        allow read: if true;
+        allow create: if isApproved()
+          && (request.auth.uid in get(campaignDoc(campaign)).data.dms
+            || request.auth.uid in get(campaignDoc(campaign)).data.players)
+          && request.resource.data.keys().hasOnly(['kind', 'by', 'clock', 'text', 'at'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.at == request.time
+          && request.resource.data.clock is number
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 2000
+          && (request.resource.data.kind == 'post'
+            || (request.resource.data.kind in ['scene', 'clock', 'title']
+              && request.auth.uid in get(campaignDoc(campaign)).data.dms));
+      }
+
       // S6: a member asks to add a copy of their own character. The copy goes under
       // Characters/<their Alias>/ in this campaign; the person and the DMs may read and delete
       // the request, and a DM approving it writes the records.

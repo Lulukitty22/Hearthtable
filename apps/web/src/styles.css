@@ -988,3 +988,95 @@ dialog.detail {
     grid-column: auto;
   }
 }
+
+/* Milestone 5 S2: the table pages. The Codex chat refines the look. */
+.stage-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 16px;
+}
+.stage-strip h1 {
+  margin: 2px 0;
+}
+.eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.stage-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.stage-clock strong {
+  font-size: 1.3rem;
+}
+.table-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.table-main {
+  display: grid;
+  gap: 16px;
+}
+.party-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.party-card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.party-portrait {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex: none;
+}
+.party-portrait-empty {
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+  background: var(--bg-sunken);
+  color: var(--text-muted);
+}
+.table-log .log-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.log-entry {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--line);
+}
+.log-time {
+  font-size: 0.8rem;
+}
+.table-log textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+@media (max-width: 760px) {
+  .table-layout {
+    grid-template-columns: 1fr;
+  }
+  .stage-clock {
+    align-items: flex-start;
+  }
+}

@@ -12,6 +12,7 @@
   "dependencies": {
     "@hearthtable/engine": "workspace:*",
     "@hearthtable/kernel": "workspace:*",
+    "@hearthtable/play": "workspace:*",
     "@hearthtable/ruleset-hearthtable-vanilla-plus": "workspace:*",
     "@hearthtable/storage": "workspace:*",
     "@hearthtable/system-active-effects": "workspace:*",

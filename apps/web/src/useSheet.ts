@@ -10,6 +10,7 @@
 // meanwhile queue in order; nothing is combined, and nothing is written by choosing.
 
 import { createEngine } from "@hearthtable/engine";
+import { isInScene } from "@hearthtable/play";
 import type { RecordEnvelope, ResolvedCharacter } from "@hearthtable/kernel";
 import { hearthtableVanillaPlus } from "@hearthtable/ruleset-hearthtable-vanilla-plus";
 import type { Repository, StorageError } from "@hearthtable/storage";
@@ -54,8 +55,11 @@ function withoutOtherCharacters(
   const others = records
     .filter((r) => r.kind === "character" && r.id !== characterId)
     .map((r) => r.id as string);
+  // Scenes and their NPC instances are play history, not definitions (Milestone 5 S2).
   return records.filter(
-    (r) => !others.some((o) => r.id === o || r.id.startsWith(`${o}/`)),
+    (r) =>
+      !isInScene(r.id) &&
+      !others.some((o) => r.id === o || r.id.startsWith(`${o}/`)),
   );
 }
 

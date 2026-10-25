@@ -1,0 +1,10 @@
+{
+  "name": "@hearthtable/play",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pure rules of play in a campaign: the game clock, scenes and (later) turns.",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseRoute, webPathFor } from "./routes";
+import { parseRoute, tablePathFor, webPathFor } from "./routes";
 
 const CAROL = "account/VR_Lulu/Characters/Carol_Elfnein";
 
@@ -48,5 +48,23 @@ describe("web addresses", () => {
     expect(webPathFor("campaign/Moonlit", "edit")).toBe(
       "/Campaigns/Moonlit/Edit",
     );
+  });
+});
+
+describe("the table addresses", () => {
+  it("open the players' and the DM's views of a campaign's game", () => {
+    expect(parseRoute("/Campaigns/Riverbed_of_Strings/Table")).toEqual({
+      kind: "table",
+      campaign: "Riverbed_of_Strings",
+      role: "player",
+    });
+    expect(parseRoute(tablePathFor("Riverbed_of_Strings", "dm"))).toEqual({
+      kind: "table",
+      campaign: "Riverbed_of_Strings",
+      role: "dm",
+    });
+    expect(
+      parseRoute("/Campaigns/Riverbed_of_Strings/Table/Other"),
+    ).toMatchObject({ kind: "record" });
   });
 });

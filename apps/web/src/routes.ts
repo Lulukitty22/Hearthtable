@@ -4,14 +4,20 @@
 // /Campaigns/Riverbed_of_Strings shows that campaign's overview. A last segment Edit names the
 // editor, Export the sheet-only page a live HTML export frames (S10), and /Admin is the
 // administrators' page. No address starts with an Alias, so none can
-// clash. The in-play views, /Campaigns/<name>/Table for players and …/Table/Dungeon_Master for
-// the DM (user decision, 2026-10-24), arrive with Milestone 5; their words are reserved now.
+// clash. The in-play views are /Campaigns/<name>/Table for players and …/Table/Dungeon_Master for
+// the DM (user decision, 2026-10-24; built in Milestone 5 S2).
 
 export type View = "default" | "edit" | "export";
 
 export type Route =
   | { readonly kind: "home" }
   | { readonly kind: "admin" }
+  /** A campaign's game in progress: the players' view, or the DM's. */
+  | {
+      readonly kind: "table";
+      readonly campaign: string;
+      readonly role: "player" | "dm";
+    }
   | { readonly kind: "record"; readonly path: string; readonly view: View }
   | { readonly kind: "unknown" };
 
@@ -54,6 +60,18 @@ export function parseRoute(pathname: string): Route {
     return { kind: "admin" };
   const scope = SCOPES[first.toLowerCase()];
   if (!scope) return { kind: "unknown" };
+  if (
+    scope.record === "campaign" &&
+    rest.length >= 2 &&
+    rest.length <= 3 &&
+    rest[1]?.toLowerCase() === "table" &&
+    (rest.length === 2 || rest[2]?.toLowerCase() === "dungeon_master")
+  )
+    return {
+      kind: "table",
+      campaign: rest[0] as string,
+      role: rest.length === 3 ? "dm" : "player",
+    };
   const last = rest.at(-1)?.toLowerCase();
   const view = last !== undefined ? VIEWS[last] : undefined;
   const parts = view ? rest.slice(0, -1) : rest;
@@ -63,6 +81,12 @@ export function parseRoute(pathname: string): Route {
     path: [scope.record, ...parts].join("/"),
     view: view ?? "default",
   };
+}
+
+/** Web address of a campaign's table, for players or the DM. */
+export function tablePathFor(campaignSegment: string, role: "player" | "dm") {
+  const base = `/Campaigns/${encodeURIComponent(campaignSegment)}/Table`;
+  return role === "dm" ? `${base}/Dungeon_Master` : base;
 }
 
 /** Web address for a record path, optionally in a view. */

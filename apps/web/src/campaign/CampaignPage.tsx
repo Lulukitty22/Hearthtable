@@ -4,7 +4,7 @@
 // Campaign membership). Members may leave. DMs see the invite code and link, the join requests,
 // and member controls: remove a player, grant or revoke DM. A campaign always keeps one DM.
 // S6: the campaign's characters, and copies members asked to add, which a DM approves or
-// declines. S7: the review queue for proposed changes. The DM controller comes with Milestone 5.
+// declines. S7: the review queue for proposed changes. Milestone 5 S2: links to the table.
 
 import type { RecordEnvelope } from "@hearthtable/kernel";
 import {
@@ -29,7 +29,7 @@ import { useEffect, useState } from "react";
 import { useAliases } from "../account/useAliases";
 import type { Viewer } from "../account/useViewer";
 import { db, repository } from "../firebase";
-import { webPathFor } from "../routes";
+import { tablePathFor, webPathFor } from "../routes";
 import { FolderBody } from "../home/FolderPage";
 import { ReviewQueue } from "./ReviewQueue";
 
@@ -91,6 +91,12 @@ export function CampaignPage({
         Campaign · {campaign.dms.length} DM
         {campaign.dms.length === 1 ? "" : "s"}, {campaign.players.length} player
         {campaign.players.length === 1 ? "" : "s"}
+      </p>
+      <p className="chips">
+        <a href={tablePathFor(segment, "player")}>Open the table</a>
+        {isDm && (
+          <a href={tablePathFor(segment, "dm")}>Open the DM&apos;s view</a>
+        )}
       </p>
 
       <section className="panel campaign-section">
