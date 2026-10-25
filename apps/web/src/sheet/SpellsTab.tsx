@@ -1,6 +1,7 @@
 // Spell slots, then each spellbook as a grid of spell tiles grouped by level, in the owner's
 // saved book order. Clicking a tile opens the whole spell entry: readiness and why, its
-// definition and source, and removing it from the book.
+// definition and source, and taking its scroll out of the book. Every spell in a book is a scroll
+// line inside the book's line (Milestone 5 S0), so these are inventory moves.
 
 import type { ScrollView } from "@hearthtable/system-scrolls";
 import type { SlotLevel } from "@hearthtable/system-spellcasting";
@@ -14,17 +15,16 @@ import { EntryBody } from "./entries";
 import { DetailPanel, DropTarget, Tile, TileGrid } from "./Grid";
 import { bookDrop, takeOut } from "./InventoryTab";
 import { ScrollFacts } from "./ScrollFacts";
-import { known, sheetRecords, type Data, type TabProps } from "./shared";
-
-type Entry = { id: string; ref: string };
+import { snapshotFor } from "./scribe";
+import { known, sheetRecord, type Data, type TabProps } from "./shared";
 
 function AddSpell({
   props,
-  bookRecordId,
+  bookLineId,
   present,
 }: {
   props: TabProps;
-  bookRecordId: string;
+  bookLineId: string;
   present: ReadonlySet<string>;
 }) {
   const [choice, setChoice] = useState("");
@@ -55,18 +55,26 @@ function AddSpell({
         className="secondary"
         disabled={!choice}
         onClick={() => {
-          props.edit(bookRecordId, (data: Data) => ({
+          const inventory = sheetRecord(props, "inventory");
+          if (!inventory) return;
+          const castLevel = spells.find((x) => x.id === choice)?.level ?? 0;
+          // Adding a spell to a book is scribing its scroll into the book; the character is the scribe.
+          props.edit(inventory.id, (data: Data) => ({
             ...data,
-            entries: [
-              ...(data["entries"] as Entry[]),
-              // Adding a spell to a book is mounting its scroll (every book entry is a scroll).
+            lines: [
+              ...(data["lines"] as readonly unknown[]),
               {
-                id: `entry-${Date.now()}`,
-                ref: choice,
-                item: "core/Spell_Scroll",
+                id: `scroll-${Date.now().toString(36)}`,
+                ref: "core/Items/Spell_Scroll",
+                quantity: 1,
+                attunedTo: null,
+                parent: bookLineId,
                 scroll: {
                   spell: choice,
-                  castLevel: spells.find((x) => x.id === choice)?.level ?? 0,
+                  castLevel,
+                  scribe: props.characterId,
+                  snapshot: snapshotFor(props, choice, castLevel),
+                  spent: false,
                 },
               },
             ],
@@ -84,7 +92,6 @@ function SpellDetail({
   props,
   entry,
   bookTitle,
-  bookRecordId,
   scroll,
   onNotice,
   onClose,
@@ -92,7 +99,6 @@ function SpellDetail({
   props: TabProps;
   entry: EntryView;
   bookTitle: string;
-  bookRecordId?: string;
   scroll?: ScrollView;
   onNotice: (message: string) => void;
   onClose: () => void;
@@ -100,48 +106,17 @@ function SpellDetail({
   return (
     <DetailPanel title={entry.name} onClose={onClose}>
       {/* Readiness in each book is shown by the spell body below. */}
-      {scroll && bookRecordId && (
+      {scroll && (
         <>
-          <h3>Mounted scroll</h3>
-          <ScrollFacts
-            props={props}
-            scroll={scroll}
-            {...(props.canEdit
-              ? {
-                  onToggleSpent: () =>
-                    props.edit(bookRecordId, (data: Data) => ({
-                      ...data,
-                      entries: (data["entries"] as Entry[]).map((x) =>
-                        x.id === entry.id
-                          ? {
-                              ...x,
-                              scroll: {
-                                ...((x as { scroll?: object }).scroll ?? {}),
-                                spent: !scroll.spent,
-                              },
-                            }
-                          : x,
-                      ),
-                    })),
-                }
-              : {})}
-          />
+          <h3>Bound scroll</h3>
+          <ScrollFacts props={props} scroll={scroll} />
           {props.canEdit && (
             <p>
               <button
                 type="button"
                 className="secondary"
                 onClick={() => {
-                  takeOut(
-                    { props, notice: onNotice },
-                    {
-                      kind: "entry",
-                      bookRecordId,
-                      entryId: entry.id,
-                      level: entry.level ?? -1,
-                    },
-                    { kind: "root" },
-                  );
+                  takeOut({ props, notice: onNotice }, entry.id);
                   onClose();
                 }}
               >
@@ -150,25 +125,6 @@ function SpellDetail({
             </p>
           )}
         </>
-      )}
-      {bookRecordId && !scroll && props.canEdit && (
-        <p>
-          <button
-            type="button"
-            className="secondary"
-            onClick={() => {
-              props.edit(bookRecordId, (data: Data) => ({
-                ...data,
-                entries: (data["entries"] as Entry[]).filter(
-                  (x) => x.id !== entry.id,
-                ),
-              }));
-              onClose();
-            }}
-          >
-            Remove from {bookTitle}
-          </button>
-        </p>
       )}
       <EntryBody props={props} id={entry.ref} />
     </DetailPanel>
@@ -185,16 +141,7 @@ export function SpellsTab(props: TabProps) {
     known(
       props.resolved.get<readonly BookView[]>("spellbook-readiness.books"),
     ) ?? [];
-  const bookRecords = sheetRecords(props, "spellbook");
-  const recordFor = (book: BookView) =>
-    bookRecords.find(
-      (r) => (r.data as { book?: unknown }).book === book.lineId,
-    );
-  const titleOf = (book: BookView) =>
-    String(
-      (recordFor(book)?.data as { title?: unknown } | undefined)?.title ??
-        book.name,
-    );
+  const titleOf = (book: BookView) => book.name;
 
   const [message, setMessage] = useState<string | undefined>();
   const drops = { props, notice: setMessage };
@@ -240,7 +187,6 @@ export function SpellsTab(props: TabProps) {
       )}
 
       {books.map((book) => {
-        const record = recordFor(book);
         const title = titleOf(book);
         const byLevel = new Map<number, EntryView[]>();
         for (const e of book.entries)
@@ -302,13 +248,12 @@ export function SpellsTab(props: TabProps) {
                         onOpen={() =>
                           setOpen({ book: book.lineId, entry: e.id })
                         }
-                        {...(record
+                        {...(props.canEdit
                           ? {
                               drag: {
-                                kind: "entry" as const,
-                                bookRecordId: record.id,
-                                entryId: e.id,
-                                level: e.level ?? -1,
+                                kind: "line" as const,
+                                lineId: e.id,
+                                quantity: 1,
                               },
                             }
                           : {})}
@@ -317,10 +262,10 @@ export function SpellsTab(props: TabProps) {
                   </TileGrid>
                 </div>
               ))}
-            {record && props.canEdit && (
+            {props.canEdit && (
               <AddSpell
                 props={props}
-                bookRecordId={record.id}
+                bookLineId={book.lineId}
                 present={new Set(book.entries.map((e) => e.ref))}
               />
             )}
@@ -333,9 +278,6 @@ export function SpellsTab(props: TabProps) {
           props={props}
           entry={openEntry}
           bookTitle={titleOf(openBook)}
-          {...(recordFor(openBook)
-            ? { bookRecordId: (recordFor(openBook) as { id: string }).id }
-            : {})}
           {...(scrolls.find((x) => x.id === openEntry.id)
             ? {
                 scroll: scrolls.find(

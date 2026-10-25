@@ -3,6 +3,8 @@
 // sit in a hexagonal ring. Items are moved by dragging: onto a container tile or into its open
 // window, onto a chamber, or back onto the main grid. A plain drag moves one from a stack; Shift
 // asks how many. Clicking a tile opens the whole entry; several windows can stay open at once.
+// Spellbooks and Spellrounds are containers too (Milestone 5 S0): a book's spells are the scroll
+// lines inside it, so mounting, taking out and moving between books are ordinary moves.
 
 import type { LineRow, Weight } from "@hearthtable/system-containers";
 import { formatPurse, type Wallet } from "@hearthtable/system-currency";
@@ -12,15 +14,12 @@ import type { BookView } from "@hearthtable/system-spellbook-readiness";
 import { useState, type DragEvent } from "react";
 import {
   emptyContainer,
-  moveEntry,
   moveItem,
-  mountScroll,
   refusal,
-  unmountScroll,
   type ItemRules,
   type Target,
 } from "./drag";
-import { EntryBody, nameOfRecord, useOpenEntry } from "./entries";
+import { EntryBody, nameOfRecord } from "./entries";
 import { ScrollFacts } from "./ScrollFacts";
 import {
   DetailPanel,
@@ -30,13 +29,7 @@ import {
   type Dragged,
   type DropProps,
 } from "./Grid";
-import {
-  known,
-  sheetRecord,
-  sheetRecords,
-  type Data,
-  type TabProps,
-} from "./shared";
+import { known, sheetRecord, type Data, type TabProps } from "./shared";
 
 type Line = Record<string, unknown> & {
   id: string;
@@ -69,7 +62,7 @@ interface PendingMove {
 
 /** Moves a line, optionally emptying it where it stands first. */
 function applyMove(
-  sheet: Sheet,
+  sheet: Pick<Sheet, "props" | "notice">,
   move: Pick<PendingMove, "lineId" | "target" | "count">,
   emptyFirst: boolean,
 ) {
@@ -109,20 +102,27 @@ function editLine(
   }));
 }
 
-/** A book line's own record (title, order, spells), kept as its own document. */
-function bookRecordFor(props: TabProps, lineId: string) {
-  return sheetRecords(props, "spellbook").find(
-    (r) => (r.data as { book?: unknown }).book === lineId,
-  );
+/** How a container uses the scrolls inside it, from its item definition. */
+function scrollUseOf(props: TabProps, lineId: string | undefined) {
+  const holder = storedLines(props).find((l) => l.id === lineId);
+  return holder ? rulesOf(props)(holder.ref)?.container?.scrollUse : undefined;
 }
 
 export function displayName(props: TabProps, row: LineRow): string {
   const scroll = (row.line as { scroll?: { spell?: unknown } }).scroll;
   if (scroll && typeof scroll.spell === "string")
-    return "Scroll: " + nameOfRecord(props, scroll.spell);
-  const title = (
-    bookRecordFor(props, row.line.id)?.data as { title?: unknown } | undefined
-  )?.title;
+    // A spell in a book is shown as the spell; elsewhere it is a scroll.
+    return scrollUseOf(props, row.line.parent) === "bound"
+      ? nameOfRecord(props, scroll.spell)
+      : "Scroll: " + nameOfRecord(props, scroll.spell);
+  if (row.definition?.container?.scrollUse === "installed") {
+    const payload = storedLines(props).find((l) => l.parent === row.line.id)?.[
+      "scroll"
+    ] as { spell?: unknown } | undefined;
+    if (typeof payload?.spell === "string")
+      return `${row.name}: ${nameOfRecord(props, payload.spell)}`;
+  }
+  const title = (row.line as { title?: unknown }).title;
   return typeof title === "string" ? title : row.name;
 }
 
@@ -151,16 +151,9 @@ function howMany(
 function itemDrop(sheet: Sheet, target: Target): DropProps {
   const { props } = sheet;
   return {
-    accept: (d) => {
-      if (d.kind === "line")
-        return refusal(storedLines(props), d.lineId, target, rulesOf(props));
-      if (!entryOf(props, d)?.["scroll"]) return "Spells go in spellbooks.";
-      return target.kind === "slot"
-        ? "A scroll does not go in a chamber."
-        : undefined;
-    },
+    accept: (d) =>
+      refusal(storedLines(props), d.lineId, target, rulesOf(props)),
     onDrop: (d, e) => {
-      if (d.kind === "entry") return takeOut(sheet, d, target);
       const count = howMany(d, e);
       if (count === undefined) return;
       // Moving a container that holds items asks first (Item lifecycle, 2026-10-23).
@@ -181,105 +174,47 @@ function itemDrop(sheet: Sheet, target: Target): DropProps {
   };
 }
 
-type BookEntry = Record<string, unknown> & { id: string; ref: string };
-const entriesOf = (r: { data: unknown } | undefined) =>
-  ((r?.data as { entries?: BookEntry[] } | undefined)?.entries ??
-    []) as BookEntry[];
-
-function entryOf(
-  props: TabProps,
-  d: Extract<Dragged, { kind: "entry" }>,
-): BookEntry | undefined {
-  return entriesOf(props.records.get(d.bookRecordId)).find(
-    (x) => x.id === d.entryId,
-  );
-}
-
-/** Takes a mounted scroll out of its book into the inventory (the same scroll, not a copy). */
+/** Takes a scroll out of its book into the carried grid (the same scroll, not a copy). */
 export function takeOut(
   sheet: Pick<Sheet, "props" | "notice">,
-  d: Extract<Dragged, { kind: "entry" }>,
-  target: Target,
+  lineId: string,
 ) {
-  const { props } = sheet;
-  const inventory = sheetRecord(props, "inventory");
-  const book = props.records.get(d.bookRecordId);
-  if (!inventory || !book) return;
-  const result = unmountScroll(
-    entriesOf(book),
-    storedLines(props),
-    d.entryId,
-    target,
-    rulesOf(props),
-  );
-  if (!result.ok) return sheet.notice(result.reason);
-  props.edit(book.id, (data: Data) => ({ ...data, entries: result.entries }));
-  props.edit(inventory.id, (data: Data) => ({ ...data, lines: result.lines }));
+  applyMove(sheet, { lineId, target: { kind: "root" }, count: 1 }, false);
 }
 
-/** Drop handling for a spellbook: spells move between books, keeping their level. */
+/** Drop handling for a spellbook: only scrolls, and a spell keeps its level row. */
 export function bookDrop(
   sheet: Pick<Sheet, "props" | "notice">,
   bookLineId: string,
   level?: number,
 ): DropProps {
   const { props } = sheet;
-  const to = bookRecordFor(props, bookLineId);
+  const target: Target = { kind: "container", lineId: bookLineId };
   return {
     accept: (d) => {
-      if (!to) return "This book has no page record.";
-      if (d.kind === "line") {
-        const scroll = storedLines(props).find((l) => l.id === d.lineId)?.[
-          "scroll"
-        ] as { spell?: string } | undefined;
-        if (!scroll?.spell) return "Only spells and scrolls go in a spellbook.";
-        const spellLevel = (
-          props.records.get(scroll.spell)?.data as
-            { level?: unknown } | undefined
-        )?.level;
-        if (level !== undefined && spellLevel !== level)
-          return "A spell stays in its own level.";
-        return undefined;
-      }
-      if (d.bookRecordId === to.id) return "It is already in this book.";
-      if (level !== undefined && d.level !== level)
-        return "A spell stays in its own level.";
-      return undefined;
+      const why = refusal(storedLines(props), d.lineId, target, rulesOf(props));
+      if (why) return why;
+      if (level === undefined) return undefined;
+      const spell = (
+        storedLines(props).find((l) => l.id === d.lineId)?.["scroll"] as
+          { spell?: string } | undefined
+      )?.spell;
+      const spellLevel = spell
+        ? (props.records.get(spell)?.data as { level?: unknown } | undefined)
+            ?.level
+        : undefined;
+      return spellLevel === level
+        ? undefined
+        : "A spell stays in its own level.";
     },
-    onDrop: (d) => {
-      if (!to) return;
-      if (d.kind === "line") {
-        const inventory = sheetRecord(props, "inventory");
-        if (!inventory) return;
-        const mounted = mountScroll(
-          storedLines(props),
-          entriesOf(to),
-          d.lineId,
-        );
-        if (!mounted.ok) return sheet.notice(mounted.reason);
-        props.edit(inventory.id, (data: Data) => ({
-          ...data,
-          lines: mounted.lines,
-        }));
-        props.edit(to.id, (data: Data) => ({
-          ...data,
-          entries: mounted.entries,
-        }));
-        return;
-      }
-      const from = props.records.get(d.bookRecordId);
-      if (!from) return;
-      const result = moveEntry(entriesOf(from), entriesOf(to), d.entryId);
-      if (!result.ok) return sheet.notice(result.reason);
-      props.edit(from.id, (data: Data) => ({ ...data, entries: result.from }));
-      props.edit(to.id, (data: Data) => ({ ...data, entries: result.to }));
-    },
+    onDrop: (d) =>
+      applyMove(sheet, { lineId: d.lineId, target, count: 1 }, false),
   };
 }
 
 /** Where dropping onto an item's own tile sends things. */
 function tileDrop(sheet: Sheet, row: LineRow): DropProps | undefined {
-  if (bookRecordFor(sheet.props, row.line.id))
+  if (row.definition?.container?.scrollUse === "bound")
     return bookDrop(sheet, row.line.id);
   const container = (row.definition as ItemRules | undefined)?.container;
   if (!container) return undefined;
@@ -441,12 +376,10 @@ function ItemDetail({
   onClose: () => void;
 }) {
   const { props } = sheet;
-  const openEntry = useOpenEntry();
   const line = row.line as Line & { held?: boolean };
   const grantsWhen = (row.definition as { grantsWhen?: string } | undefined)
     ?.grantsWhen;
   const holdable = grantsWhen === "held" || grantsWhen === "attuned-and-held";
-  const bookRecord = bookRecordFor(props, line.id);
   const book = sheet.books.find((b) => b.lineId === line.id);
   const weapon = sheet.weapons.find((w) => w.lineId === line.id);
   const scroll = sheet.scrolls.find((x) => x.id === line.id);
@@ -529,7 +462,7 @@ function ItemDetail({
           <ScrollFacts
             props={props}
             scroll={scroll}
-            {...(props.canEdit
+            {...(props.canEdit && scroll.place.kind === "loose"
               ? {
                   onToggleSpent: () =>
                     editLine(props, line.id, (l) => ({
@@ -577,10 +510,18 @@ function ItemDetail({
 
       {container && !weapon && (
         <>
-          <h3>Contents ({inside.length})</h3>
+          <h3>
+            {book
+              ? `Contains ${book.entries.length}${book.capacity !== undefined ? ` of ${book.capacity}` : ""} spells`
+              : `Contents (${inside.length})`}
+          </h3>
           <TileGrid
-            drop={itemDrop(sheet, { kind: "container", lineId: line.id })}
-            label={`Contents of ${title}`}
+            drop={
+              book
+                ? bookDrop(sheet, line.id)
+                : itemDrop(sheet, { kind: "container", lineId: line.id })
+            }
+            label={book ? `Spells in ${title}` : `Contents of ${title}`}
           >
             {inside.map((r) => (
               <ItemTile key={r.line.id} sheet={sheet} row={r} />
@@ -594,54 +535,19 @@ function ItemDetail({
         </>
       )}
 
-      {book && bookRecord && (
-        <>
-          <h3>
-            Contains {book.entries.length}
-            {book.capacity !== undefined && ` of ${book.capacity}`} spells
-          </h3>
-          <TileGrid
-            drop={bookDrop(sheet, line.id)}
-            label={`Spells in ${title}`}
-          >
-            {book.entries.map((e) => (
-              <Tile
-                key={e.id}
-                name={e.name}
-                badges={
-                  e.scroll ? [e.scroll.spent === true ? "spent" : "scroll"] : []
-                }
-                {...(e.status === "unresolved"
-                  ? { tone: "bad" as const }
-                  : !e.ready
-                    ? { tone: "warn" as const }
-                    : {})}
-                onOpen={() => openEntry(e.ref)}
-                drag={{
-                  kind: "entry",
-                  bookRecordId: bookRecord.id,
-                  entryId: e.id,
-                  level: e.level ?? -1,
-                }}
-              />
-            ))}
-          </TileGrid>
-        </>
-      )}
-
       <details className="notes">
         <summary>This copy's own fields</summary>
-        <pre className="fields">
-          {JSON.stringify(
-            bookRecord ? { ...line, book: bookRecord.data } : line,
-            null,
-            2,
-          )}
-        </pre>
+        <pre className="fields">{JSON.stringify(line, null, 2)}</pre>
       </details>
 
       <h3>{nameOfRecord(props, line.ref)}</h3>
       <EntryBody props={props} id={line.ref} />
+      {scroll && (
+        <>
+          <h3>{scroll.name}</h3>
+          <EntryBody props={props} id={scroll.spell} />
+        </>
+      )}
     </DetailPanel>
   );
 }

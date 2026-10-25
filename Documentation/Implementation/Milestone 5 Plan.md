@@ -27,7 +27,7 @@ Open questions: listed by topic under [Questions for the user](#questions-for-th
 
 The user chose to build these together (topic A); the numbering is an order of thinking, not separate deliveries. S1 is specification, because turns, initiative, rests and conditions have none yet. Simple NPCs join S2 and S3.
 
-0. **S0 — Carried over (must do).** Carol's Spellrounds become one Spellround item whose lines carry a scroll; the scribed-formula snapshot for every scroll; opening a scroll shows the full spell; the decision on core folder paths; and the spellbook rethink and spent-scroll ideas, decided before the casting workflow is built on them.
+0. **S0 — Carried over (must do).** Carol's Spellrounds become one Spellround item whose lines carry a scroll; the scribed-formula snapshot for every scroll; opening a scroll shows the full spell; the decision on core folder paths; and the spellbook rethink and spent-scroll ideas, decided before the casting workflow is built on them. Built 2026-10-24 at 7:10 pm PDT (America/Los_Angeles): the `scrolls` system's snapshot builder, books and Spellrounds as containers, kind folders, and the user's saved data converted.
 1. **S1 — Specify turns, initiative, rounds, rests and conditions.** Written with the user, topic by topic, into the Systems documents before any code.
 2. **S2 — The table.** The players' view (`/Table`) and the DM's view (`/Table/Dungeon_Master`): who is in the scene, the turn order, whose turn it is, the round, the game clock and a campaign log.
 3. **S3 — Turns and initiative.** Starting and ending an encounter, entering or rolling initiative, the order, next turn and the round counter, and each turn's action budget.

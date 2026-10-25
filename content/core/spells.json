@@ -1,6 +1,6 @@
 [
   {
-    "id": "core/Fire_Bolt",
+    "id": "core/Spells/Fire_Bolt",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -18,7 +18,11 @@
       "name": "Fire Bolt",
       "level": 0,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
+      "classes": [
+        "core/Classes/Sorcerer",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
+      ],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -57,7 +61,7 @@
     }
   },
   {
-    "id": "core/Ray_of_Frost",
+    "id": "core/Spells/Ray_of_Frost",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -75,7 +79,11 @@
       "name": "Ray of Frost",
       "level": 0,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
+      "classes": [
+        "core/Classes/Sorcerer",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
+      ],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -114,7 +122,7 @@
     }
   },
   {
-    "id": "core/Minor_Illusion",
+    "id": "core/Spells/Minor_Illusion",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -132,7 +140,12 @@
       "name": "Minor Illusion",
       "level": 0,
       "school": "Illusion",
-      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "classes": [
+        "core/Classes/Bard",
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard"
+      ],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -162,7 +175,7 @@
     }
   },
   {
-    "id": "core/Mind_Sliver",
+    "id": "core/Spells/Mind_Sliver",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -180,7 +193,11 @@
       "name": "Mind Sliver",
       "level": 0,
       "school": "Enchantment",
-      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "classes": [
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard"
+      ],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -214,7 +231,7 @@
     }
   },
   {
-    "id": "core/Shocking_Grasp",
+    "id": "core/Spells/Shocking_Grasp",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -232,7 +249,11 @@
       "name": "Shocking Grasp",
       "level": 0,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
+      "classes": [
+        "core/Classes/Sorcerer",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
+      ],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -271,7 +292,7 @@
     }
   },
   {
-    "id": "core/Mage_Hand",
+    "id": "core/Spells/Mage_Hand",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -290,11 +311,11 @@
       "level": 0,
       "school": "Conjuration",
       "classes": [
-        "core/Bard",
-        "core/Sorcerer",
-        "core/Warlock",
-        "core/Wizard",
-        "core/Artificer"
+        "core/Classes/Bard",
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
       ],
       "concentration": false,
       "castingTime": "Action",
@@ -325,7 +346,7 @@
     }
   },
   {
-    "id": "core/Prestidigitation",
+    "id": "core/Spells/Prestidigitation",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -344,11 +365,11 @@
       "level": 0,
       "school": "Transmutation",
       "classes": [
-        "core/Bard",
-        "core/Sorcerer",
-        "core/Warlock",
-        "core/Wizard",
-        "core/Artificer"
+        "core/Classes/Bard",
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
       ],
       "concentration": false,
       "castingTime": "Action",
@@ -382,7 +403,7 @@
     }
   },
   {
-    "id": "core/Message",
+    "id": "core/Spells/Message",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -401,11 +422,11 @@
       "level": 0,
       "school": "Transmutation",
       "classes": [
-        "core/Bard",
-        "core/Druid",
-        "core/Sorcerer",
-        "core/Wizard",
-        "core/Artificer"
+        "core/Classes/Bard",
+        "core/Classes/Druid",
+        "core/Classes/Sorcerer",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
       ],
       "concentration": false,
       "castingTime": "Action",
@@ -434,7 +455,7 @@
     }
   },
   {
-    "id": "core/True_Strike",
+    "id": "core/Spells/True_Strike",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -453,11 +474,11 @@
       "level": 0,
       "school": "Divination",
       "classes": [
-        "core/Bard",
-        "core/Sorcerer",
-        "core/Warlock",
-        "core/Wizard",
-        "core/Artificer"
+        "core/Classes/Bard",
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
       ],
       "concentration": false,
       "castingTime": "Action",
@@ -498,7 +519,7 @@
     }
   },
   {
-    "id": "core/Mending",
+    "id": "core/Spells/Mending",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -517,11 +538,11 @@
       "level": 0,
       "school": "Transmutation",
       "classes": [
-        "core/Bard",
-        "core/Cleric",
-        "core/Druid",
-        "core/Sorcerer",
-        "core/Wizard"
+        "core/Classes/Bard",
+        "core/Classes/Cleric",
+        "core/Classes/Druid",
+        "core/Classes/Sorcerer",
+        "core/Classes/Wizard"
       ],
       "concentration": false,
       "castingTime": "1 minute",
@@ -550,7 +571,7 @@
     }
   },
   {
-    "id": "core/Mage_Armor",
+    "id": "core/Spells/Mage_Armor",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -568,7 +589,7 @@
       "name": "Mage Armor",
       "level": 1,
       "school": "Abjuration",
-      "classes": ["core/Sorcerer", "core/Wizard"],
+      "classes": ["core/Classes/Sorcerer", "core/Classes/Wizard"],
       "concentration": false,
       "whileActive": [
         {
@@ -606,7 +627,7 @@
     }
   },
   {
-    "id": "core/Shield",
+    "id": "core/Spells/Shield",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -624,7 +645,7 @@
       "name": "Shield",
       "level": 1,
       "school": "Abjuration",
-      "classes": ["core/Sorcerer", "core/Wizard"],
+      "classes": ["core/Classes/Sorcerer", "core/Classes/Wizard"],
       "concentration": false,
       "whileActive": [
         {
@@ -659,7 +680,7 @@
     }
   },
   {
-    "id": "core/Cure_Wounds",
+    "id": "core/Spells/Cure_Wounds",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -678,12 +699,12 @@
       "level": 1,
       "school": "Abjuration",
       "classes": [
-        "core/Bard",
-        "core/Cleric",
-        "core/Druid",
-        "core/Paladin",
-        "core/Ranger",
-        "core/Artificer"
+        "core/Classes/Bard",
+        "core/Classes/Cleric",
+        "core/Classes/Druid",
+        "core/Classes/Paladin",
+        "core/Classes/Ranger",
+        "core/Classes/Artificer"
       ],
       "concentration": false,
       "castingTime": "Action",
@@ -721,7 +742,7 @@
     }
   },
   {
-    "id": "core/Faerie_Fire",
+    "id": "core/Spells/Faerie_Fire",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -739,7 +760,11 @@
       "name": "Faerie Fire",
       "level": 1,
       "school": "Evocation",
-      "classes": ["core/Bard", "core/Druid", "core/Artificer"],
+      "classes": [
+        "core/Classes/Bard",
+        "core/Classes/Druid",
+        "core/Classes/Artificer"
+      ],
       "concentration": true,
       "castingTime": "Action",
       "ritual": false,
@@ -772,7 +797,7 @@
     }
   },
   {
-    "id": "core/Identify",
+    "id": "core/Spells/Identify",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -790,7 +815,11 @@
       "name": "Identify",
       "level": 1,
       "school": "Divination",
-      "classes": ["core/Bard", "core/Wizard", "core/Artificer"],
+      "classes": [
+        "core/Classes/Bard",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
+      ],
       "concentration": false,
       "castingTime": "1 minute",
       "ritual": true,
@@ -818,7 +847,7 @@
     }
   },
   {
-    "id": "core/Detect_Magic",
+    "id": "core/Spells/Detect_Magic",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -837,15 +866,15 @@
       "level": 1,
       "school": "Divination",
       "classes": [
-        "core/Bard",
-        "core/Cleric",
-        "core/Druid",
-        "core/Paladin",
-        "core/Ranger",
-        "core/Sorcerer",
-        "core/Warlock",
-        "core/Wizard",
-        "core/Artificer"
+        "core/Classes/Bard",
+        "core/Classes/Cleric",
+        "core/Classes/Druid",
+        "core/Classes/Paladin",
+        "core/Classes/Ranger",
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
       ],
       "concentration": true,
       "castingTime": "Action",
@@ -874,7 +903,7 @@
     }
   },
   {
-    "id": "core/Healing_Word",
+    "id": "core/Spells/Healing_Word",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -892,7 +921,11 @@
       "name": "Healing Word",
       "level": 1,
       "school": "Abjuration",
-      "classes": ["core/Bard", "core/Cleric", "core/Druid"],
+      "classes": [
+        "core/Classes/Bard",
+        "core/Classes/Cleric",
+        "core/Classes/Druid"
+      ],
       "concentration": false,
       "castingTime": "Bonus Action",
       "ritual": false,
@@ -929,7 +962,7 @@
     }
   },
   {
-    "id": "core/Ray_of_Sickness",
+    "id": "core/Spells/Ray_of_Sickness",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -947,7 +980,7 @@
       "name": "Ray of Sickness",
       "level": 1,
       "school": "Necromancy",
-      "classes": ["core/Sorcerer", "core/Wizard"],
+      "classes": ["core/Classes/Sorcerer", "core/Classes/Wizard"],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -987,7 +1020,7 @@
     }
   },
   {
-    "id": "core/Scorching_Ray",
+    "id": "core/Spells/Scorching_Ray",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1005,7 +1038,7 @@
       "name": "Scorching Ray",
       "level": 2,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard"],
+      "classes": ["core/Classes/Sorcerer", "core/Classes/Wizard"],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -1046,7 +1079,7 @@
     }
   },
   {
-    "id": "core/Mirror_Image",
+    "id": "core/Spells/Mirror_Image",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1064,7 +1097,12 @@
       "name": "Mirror Image",
       "level": 2,
       "school": "Illusion",
-      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "classes": [
+        "core/Classes/Bard",
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard"
+      ],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -1093,7 +1131,7 @@
     }
   },
   {
-    "id": "core/Misty_Step",
+    "id": "core/Spells/Misty_Step",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1111,7 +1149,11 @@
       "name": "Misty Step",
       "level": 2,
       "school": "Conjuration",
-      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "classes": [
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard"
+      ],
       "concentration": false,
       "castingTime": "Bonus Action",
       "ritual": false,
@@ -1138,7 +1180,7 @@
     }
   },
   {
-    "id": "core/Web",
+    "id": "core/Spells/Web",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1156,7 +1198,11 @@
       "name": "Web",
       "level": 2,
       "school": "Conjuration",
-      "classes": ["core/Sorcerer", "core/Wizard", "core/Artificer"],
+      "classes": [
+        "core/Classes/Sorcerer",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
+      ],
       "concentration": true,
       "castingTime": "Action",
       "ritual": false,
@@ -1192,7 +1238,7 @@
     }
   },
   {
-    "id": "core/Fireball",
+    "id": "core/Spells/Fireball",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1210,7 +1256,7 @@
       "name": "Fireball",
       "level": 3,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard"],
+      "classes": ["core/Classes/Sorcerer", "core/Classes/Wizard"],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -1255,7 +1301,7 @@
     }
   },
   {
-    "id": "core/Counterspell",
+    "id": "core/Spells/Counterspell",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1273,7 +1319,11 @@
       "name": "Counterspell",
       "level": 3,
       "school": "Abjuration",
-      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "classes": [
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard"
+      ],
       "concentration": false,
       "castingTime": "Reaction, which you take when you see a creature within 60 feet of yourself casting a spell with Verbal, Somatic, or Material components",
       "ritual": false,
@@ -1304,7 +1354,7 @@
     }
   },
   {
-    "id": "core/Dispel_Magic",
+    "id": "core/Spells/Dispel_Magic",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1323,15 +1373,15 @@
       "level": 3,
       "school": "Abjuration",
       "classes": [
-        "core/Bard",
-        "core/Cleric",
-        "core/Druid",
-        "core/Paladin",
-        "core/Ranger",
-        "core/Sorcerer",
-        "core/Warlock",
-        "core/Wizard",
-        "core/Artificer"
+        "core/Classes/Bard",
+        "core/Classes/Cleric",
+        "core/Classes/Druid",
+        "core/Classes/Paladin",
+        "core/Classes/Ranger",
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
       ],
       "concentration": false,
       "castingTime": "Action",
@@ -1364,7 +1414,7 @@
     }
   },
   {
-    "id": "core/Fabricate",
+    "id": "core/Spells/Fabricate",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1382,7 +1432,7 @@
       "name": "Fabricate",
       "level": 4,
       "school": "Transmutation",
-      "classes": ["core/Wizard", "core/Artificer"],
+      "classes": ["core/Classes/Wizard", "core/Classes/Artificer"],
       "concentration": false,
       "castingTime": "10 minutes",
       "ritual": false,
@@ -1411,7 +1461,7 @@
     }
   },
   {
-    "id": "core/Cone_of_Cold",
+    "id": "core/Spells/Cone_of_Cold",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1429,7 +1479,11 @@
       "name": "Cone of Cold",
       "level": 5,
       "school": "Evocation",
-      "classes": ["core/Druid", "core/Sorcerer", "core/Wizard"],
+      "classes": [
+        "core/Classes/Druid",
+        "core/Classes/Sorcerer",
+        "core/Classes/Wizard"
+      ],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -1473,7 +1527,7 @@
     }
   },
   {
-    "id": "core/Wall_of_Force",
+    "id": "core/Spells/Wall_of_Force",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1491,7 +1545,7 @@
       "name": "Wall of Force",
       "level": 5,
       "school": "Evocation",
-      "classes": ["core/Wizard"],
+      "classes": ["core/Classes/Wizard"],
       "concentration": true,
       "castingTime": "Action",
       "ritual": false,
@@ -1519,7 +1573,7 @@
     }
   },
   {
-    "id": "core/Animate_Objects",
+    "id": "core/Spells/Animate_Objects",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1538,10 +1592,10 @@
       "level": 5,
       "school": "Transmutation",
       "classes": [
-        "core/Bard",
-        "core/Sorcerer",
-        "core/Wizard",
-        "core/Artificer"
+        "core/Classes/Bard",
+        "core/Classes/Sorcerer",
+        "core/Classes/Wizard",
+        "core/Classes/Artificer"
       ],
       "concentration": true,
       "castingTime": "Action",
@@ -1587,7 +1641,7 @@
     }
   },
   {
-    "id": "core/Chain_Lightning",
+    "id": "core/Spells/Chain_Lightning",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1605,7 +1659,7 @@
       "name": "Chain Lightning",
       "level": 6,
       "school": "Evocation",
-      "classes": ["core/Sorcerer", "core/Wizard"],
+      "classes": ["core/Classes/Sorcerer", "core/Classes/Wizard"],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -1648,7 +1702,7 @@
     }
   },
   {
-    "id": "core/Disintegrate",
+    "id": "core/Spells/Disintegrate",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1666,7 +1720,7 @@
       "name": "Disintegrate",
       "level": 6,
       "school": "Transmutation",
-      "classes": ["core/Sorcerer", "core/Wizard"],
+      "classes": ["core/Classes/Sorcerer", "core/Classes/Wizard"],
       "concentration": false,
       "castingTime": "Action",
       "ritual": false,
@@ -1711,7 +1765,7 @@
     }
   },
   {
-    "id": "core/Tasha's_Otherworldly_Guise",
+    "id": "core/Spells/Tasha's_Otherworldly_Guise",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1730,7 +1784,11 @@
       "name": "Tasha's Otherworldly Guise",
       "level": 6,
       "school": "Transmutation",
-      "classes": ["core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "classes": [
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard"
+      ],
       "concentration": true,
       "whileActive": [
         {
@@ -1758,7 +1816,7 @@
     }
   },
   {
-    "id": "core/Alarm",
+    "id": "core/Spells/Alarm",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1776,7 +1834,7 @@
       "name": "Alarm",
       "level": 1,
       "school": "Abjuration",
-      "classes": ["core/Ranger", "core/Wizard"],
+      "classes": ["core/Classes/Ranger", "core/Classes/Wizard"],
       "castingTime": "1 minute",
       "ritual": true,
       "range": "30 feet",
@@ -1805,7 +1863,7 @@
     }
   },
   {
-    "id": "core/Find_Familiar",
+    "id": "core/Spells/Find_Familiar",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1823,7 +1881,7 @@
       "name": "Find Familiar",
       "level": 1,
       "school": "Conjuration",
-      "classes": ["core/Wizard"],
+      "classes": ["core/Classes/Wizard"],
       "castingTime": "1 hour",
       "ritual": true,
       "range": "10 feet",
@@ -1855,7 +1913,7 @@
     }
   },
   {
-    "id": "core/Arcane_Lock",
+    "id": "core/Spells/Arcane_Lock",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1873,7 +1931,7 @@
       "name": "Arcane Lock",
       "level": 2,
       "school": "Abjuration",
-      "classes": ["core/Wizard"],
+      "classes": ["core/Classes/Wizard"],
       "castingTime": "Action",
       "ritual": false,
       "range": "Touch",
@@ -1900,7 +1958,7 @@
     }
   },
   {
-    "id": "core/Tiny_Hut",
+    "id": "core/Spells/Tiny_Hut",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1918,7 +1976,7 @@
       "name": "Tiny Hut",
       "level": 3,
       "school": "Evocation",
-      "classes": ["core/Bard", "core/Wizard"],
+      "classes": ["core/Classes/Bard", "core/Classes/Wizard"],
       "castingTime": "1 minute",
       "ritual": true,
       "range": "Self",
@@ -1949,7 +2007,7 @@
     }
   },
   {
-    "id": "core/Glyph_of_Warding",
+    "id": "core/Spells/Glyph_of_Warding",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -1967,7 +2025,11 @@
       "name": "Glyph of Warding",
       "level": 3,
       "school": "Abjuration",
-      "classes": ["core/Bard", "core/Cleric", "core/Wizard"],
+      "classes": [
+        "core/Classes/Bard",
+        "core/Classes/Cleric",
+        "core/Classes/Wizard"
+      ],
       "castingTime": "1 hour",
       "ritual": false,
       "range": "Touch",
@@ -2018,7 +2080,7 @@
     }
   },
   {
-    "id": "core/Revivify",
+    "id": "core/Spells/Revivify",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -2036,7 +2098,12 @@
       "name": "Revivify",
       "level": 3,
       "school": "Necromancy",
-      "classes": ["core/Cleric", "core/Druid", "core/Paladin", "core/Ranger"],
+      "classes": [
+        "core/Classes/Cleric",
+        "core/Classes/Druid",
+        "core/Classes/Paladin",
+        "core/Classes/Ranger"
+      ],
       "castingTime": "Action",
       "ritual": false,
       "range": "Touch",
@@ -2063,7 +2130,7 @@
     }
   },
   {
-    "id": "core/Telepathic_Bond",
+    "id": "core/Spells/Telepathic_Bond",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -2081,7 +2148,7 @@
       "name": "Telepathic Bond",
       "level": 5,
       "school": "Divination",
-      "classes": ["core/Bard", "core/Wizard"],
+      "classes": ["core/Classes/Bard", "core/Classes/Wizard"],
       "castingTime": "Action",
       "ritual": true,
       "range": "30 feet",
@@ -2109,7 +2176,7 @@
     }
   },
   {
-    "id": "core/Teleportation_Circle",
+    "id": "core/Spells/Teleportation_Circle",
     "kind": "spell",
     "moduleId": "spellcasting",
     "schemaVersion": 1,
@@ -2127,7 +2194,12 @@
       "name": "Teleportation Circle",
       "level": 5,
       "school": "Conjuration",
-      "classes": ["core/Bard", "core/Sorcerer", "core/Warlock", "core/Wizard"],
+      "classes": [
+        "core/Classes/Bard",
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard"
+      ],
       "castingTime": "1 minute",
       "ritual": false,
       "range": "10 feet",

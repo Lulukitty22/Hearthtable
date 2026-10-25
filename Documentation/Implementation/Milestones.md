@@ -4,9 +4,9 @@ Purpose: the one home for Hearthtable's milestone roadmap, each milestone's acce
 
 ## Current progress
 
-Updated 2026-10-24 at 4:38 pm PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 5 Plan](Milestone%205%20Plan.md) owns the current slice details.
+Updated 2026-10-24 at 7:10 pm PDT (America/Los_Angeles). This section is the one place that says where the project stands; the roadmap below owns each milestone's scope, and the [Milestone 5 Plan](Milestone%205%20Plan.md) owns the current slice details.
 
-**Now:** Milestones 1–4 are accepted (Milestone 4 on 2026-10-24 at 4:38 pm PDT (America/Los_Angeles): "Milestone 4 is accepted", with privacy (S8) deferred to a later milestone). Milestone 5, the gameplay loop: the user agreed to its [plan](Milestone%205%20Plan.md) and acceptance list on 2026-10-24 at 6:23 pm PDT (America/Los_Angeles); S0 (carried-over scroll work) is starting. Milestones 3 and 4 keep their slice tables and acceptance in their own plans ([Milestone 3](Milestone%203%20Plan.md), [Milestone 4](Milestone%204%20Plan.md)).
+**Now:** Milestones 1–4 are accepted (Milestone 4 on 2026-10-24 at 4:38 pm PDT (America/Los_Angeles): "Milestone 4 is accepted", with privacy (S8) deferred to a later milestone). Milestone 5, the gameplay loop: the user agreed to its [plan](Milestone%205%20Plan.md) and acceptance list on 2026-10-24 at 6:23 pm PDT (America/Los_Angeles); S0 (carried-over scroll work) is built (2026-10-24 at 7:10 pm PDT (America/Los_Angeles)): books and Spellrounds are containers of scroll lines, every scroll has a scribed-formula snapshot, and core entries sit in kind folders. S1 (specifying turns, initiative, rests and conditions) is next. Milestones 3 and 4 keep their slice tables and acceptance in their own plans ([Milestone 3](Milestone%203%20Plan.md), [Milestone 4](Milestone%204%20Plan.md)).
 
 **After Milestone 5:** Milestone 5b (crafting), Milestone 5c (trade window), Milestone 6 (maps), Milestone 7 (real Firebase, only with the user's approval); see the [roadmap](#roadmap).
 
@@ -47,16 +47,9 @@ Recorded with the user on 2026-10-21 at 12:10 am PDT (America/Los_Angeles):
 
 Topics the user asked to revisit when Milestone 5 starts, recorded 2026-10-23 at 12:58 am PDT (America/Los_Angeles). They are open, not decisions.
 
-> **⚠ Must be done in Milestone 5: Spellrounds and scroll snapshots** (recorded 2026-10-24 at 2:50 pm PDT (America/Los_Angeles), user decision). Carol's Spellrounds are stored wrongly today: each is a made-up item per spell (`Spellround_(Cone_of_Cold)`, `…(Shield)`, `…(Cure_Wounds)`) with no scroll inside, which contradicts [Aetherlock Engineered Rounds](../Class%20Reference/Aetherlock%20Engineered%20Rounds.md#spellrounds-and-snapshots) (a Spellround is one real scroll mounted in a Basic Round). In Milestone 5:
->
-> 1. Replace them with one **Spellround** item, a casing that contains one scroll line exactly like a loose scroll (`spell`, `castLevel`, `scribe`, `snapshot`, `spent`), and convert Carol's three stacks into separate casings in the content and in the user's saved data (refined 2026-10-24 at 6:40 pm PDT (America/Los_Angeles): Spellrounds and books are containers).
-> 2. Design the **scribed-formula snapshot** for every scroll and Spellround: the scribe's bonuses saved as dice formulas when written (cast level and DC, applicable modifiers such as Empowered Evocation's +6 applied once, scaling and chosen options), rolled on use and never rewritten by later changes. Today a snapshot keeps only the save DC and attack bonus.
-> 3. Opening a loose scroll or a Spellround shows the full spell panel (its stats, as Mage Armor shows in a book) beside the scroll's own facts. In the data, an inventory line's `ref` names the physical item and `scroll.spell` the spell; a book entry's `ref` names the spell and `item` the physical item.
-> 4. Core entries move from flat paths (`core/Fireball`, `core/Spell_Scroll`) into kind folders (`core/Spells/…`, `core/Items/…`, `core/Features/…`, `core/Classes/…`, `core/Conditions/…`), decided by the user 2026-10-24 at 6:16 pm PDT (America/Los_Angeles); it rewrites every reference, so it is done together with the Spellround conversion.
-
+- **Spellrounds, scroll snapshots and core kind folders** were carried over from Milestone 4 and built in Milestone 5 S0 (2026-10-24 at 7:10 pm PDT (America/Los_Angeles)); the decisions live in [Spell Containers](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md#snapshot-contents-and-casting-provenance).
 - **Play addresses** (decided 2026-10-24 at 2:16 pm PDT (America/Los_Angeles)): the players' view of the game in progress is `/Campaigns/<name>/Table` and the DM's is `/Campaigns/<name>/Table/Dungeon_Master` ([web addresses](../Systems/Campaigns%20and%20Shared%20Data.md#account-organization-and-address-design)).
-- **Redo spellbook and spell-entry handling.** The user wants to rethink how and where spellbooks and their entries are stored and handled. Spellbooks currently double as scroll binders, and a book might become a container with its own item or weight limit, like a backpack. Discuss before building the casting workflow.
-- **Spent scrolls.** Casting from a scroll could consume the materials stored in it, including its dice and formulas, leaving a passive spent scroll. Spent scrolls could serve as receipts of the spells used in a battle or as trophies, and might later be restored to working order. Other uses are open.
+- **Spent scrolls.** How a spent scroll behaves was decided in S0 ([binders and spent scrolls](../Systems/Spell%20Containers%20and%20Consumable%20Sources.md#binders-and-spent-scrolls--selected-2026-10-23-at-1258-am-pdt-americalos_angeles)); the ideas below stay open. Casting from a scroll could consume the materials stored in it, including its dice and formulas, leaving a passive spent scroll. Spent scrolls could serve as receipts of the spells used in a battle or as trophies, and might later be restored to working order. Other uses are open.
 
 ## Milestone 1 acceptance (documentation and theory)
 

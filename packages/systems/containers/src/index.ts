@@ -44,6 +44,13 @@ export const ItemDefinition = z.looseObject({
   canBeLost: z.boolean().optional(),
   /** Kinds this item counts as for containers' `accepts`, e.g. `aetherlock-round`. */
   tags: z.array(z.string()).optional(),
+  /**
+   * What using it leaves behind (Milestone 5 S0; nothing when absent): `itself` (a Spellround's
+   * casing stays, holding its spent scroll) or another item, such as an empty vial.
+   */
+  leavesBehind: z
+    .union([z.literal("itself"), z.object({ ref: z.string() })])
+    .optional(),
   container: z
     .object({
       /** Fixed slots with grid positions (x right, y up); each holds one item. */
@@ -64,6 +71,11 @@ export const ItemDefinition = z.looseObject({
       maxCount: z.number().int().min(0).optional(),
       /** False for extradimensional storage such as a Bag of Holding (fixed carried weight). */
       contentsAddWeight: z.boolean(),
+      /**
+       * How scrolls inside are used (Milestone 5 S0): `bound` in a spellbook (cast by the current
+       * caster), `installed` in a Spellround (its snapshot is fired). Absent: they are just carried.
+       */
+      scrollUse: z.enum(["bound", "installed"]).optional(),
     })
     .optional(),
 });

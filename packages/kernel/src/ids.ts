@@ -1,6 +1,6 @@
 // A record's identity is its full path (user decisions, 2026-10-22): owner, folders and name,
 // keeping the chosen capitalization, such as `account/VR_Lulu/Characters/Carol_Elfnein`,
-// `account/VR_Lulu/Items/Aetherlock` or `core/Fireball`. Spaces become underscores. Two names
+// `account/VR_Lulu/Items/Aetherlock` or `core/Spells/Fireball`. Spaces become underscores. Two names
 // that differ only in capitalization or spaces versus underscores are still the same name
 // (the duplicate-name rule): compare with `sameName` or `nameKey`, never with `===` on input.
 // Renaming means duplicating under the new name and moving means copying; nothing that
@@ -8,7 +8,7 @@
 
 import { fail, issue, ok, type Result } from "./validation";
 
-/** `<scope>/…/<Name>`, e.g. `core/Fireball` or `account/VR_Lulu/Characters/Carol_Elfnein`. */
+/** `<scope>/…/<Name>`, e.g. `core/Spells/Fireball` or `account/VR_Lulu/Characters/Carol_Elfnein`. */
 export type RecordId = `${string}/${string}`;
 
 export const ID_SCOPES = ["core", "account", "campaign"] as const;
@@ -61,7 +61,8 @@ export function parseId(
   const scope = segments[0] as string;
   const bad = (why: string) =>
     fail<never>([issue("error", "id.malformed", `"${id}" ${why}.`)]);
-  if (segments.length < 2) return bad("must be a path such as core/Fireball");
+  if (segments.length < 2)
+    return bad("must be a path such as core/Spells/Fireball");
   if (!(ID_SCOPES as readonly string[]).includes(scope))
     return bad(`must start with ${ID_SCOPES.join(", ")}`);
   if (scope !== "core" && segments.length < 3)

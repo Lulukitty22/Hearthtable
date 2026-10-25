@@ -1,7 +1,9 @@
 // Physical scrolls (Spell Containers and Consumable Sources, "One physical scroll" and "Binders
-// and spent scrolls"). A scroll is one item that keeps its identity: loose in the inventory it is
-// a line carrying `scroll` state; mounted, it is a spellbook entry with the same id and state (a
-// book works as the binder and the scroll takes one entry). A used scroll stays, marked spent.
+// and spent scrolls"). A scroll is one inventory line carrying `scroll` state, whatever item it is
+// and wherever it is (Milestone 5 S0). How it is used follows from what holds it, as that
+// container's definition declares (`container.scrollUse`): `bound` in a spellbook (the current
+// caster casts it), `installed` in a Spellround (its snapshot is fired), otherwise loose (a
+// one-shot cast from the scribe's snapshot). A used scroll stays where it is, marked spent.
 //
 // This system lists every scroll the character has, wherever it is, with what mounting or
 // removing it would cost at its level (`scroll-crafting.mounting`). Paying for that, scribing new
@@ -15,7 +17,6 @@ import {
   issue,
   known,
   readDefinition,
-  readField,
   type KernelModule,
   type ResolveContext,
   type Value,
@@ -23,15 +24,16 @@ import {
 import { z } from "zod";
 
 export type ScrollPlace =
-  | { readonly kind: "inventory"; readonly lineId: string }
+  | { readonly kind: "loose"; readonly lineId: string }
+  /** In a container whose definition declares `scrollUse`, such as a spellbook or Spellround. */
   | {
-      readonly kind: "book";
-      readonly bookRecordId: string;
-      readonly bookLineId: string;
+      readonly kind: "bound" | "installed";
+      readonly lineId: string;
+      readonly holderLineId: string;
     };
 
 export interface ScrollView {
-  /** The line id while loose, the entry id while mounted: the same id either way. */
+  /** The scroll's own line id, wherever it is. */
   readonly id: string;
   readonly spell: string;
   readonly name: string;
@@ -52,13 +54,11 @@ const SpellName = z.looseObject({
   level: z.number().int().min(0).max(9),
 });
 
-const BookEntries = z.array(
-  z.looseObject({
-    id: z.string(),
-    ref: z.string(),
-    scroll: ScrollState.optional(),
-  }),
-);
+const ScrollUse = z.looseObject({
+  container: z
+    .looseObject({ scrollUse: z.enum(["bound", "installed"]).optional() })
+    .optional(),
+});
 
 function list(ctx: ResolveContext): Value<readonly ScrollView[]> {
   const lines = ctx.get<readonly LineRow[]>("containers.lines");
@@ -99,7 +99,17 @@ function list(ctx: ResolveContext): Value<readonly ScrollView[]> {
     };
   };
 
-  const loose = lines.value.flatMap((row) => {
+  const byId = new Map(lines.value.map((r) => [r.line.id, r]));
+  const placeOf = (row: LineRow): ScrollPlace => {
+    const holder = row.line.parent ? byId.get(row.line.parent) : undefined;
+    const use = holder
+      ? ScrollUse.safeParse(holder.definition).data?.container?.scrollUse
+      : undefined;
+    return holder && use
+      ? { kind: use, lineId: row.line.id, holderLineId: holder.line.id }
+      : { kind: "loose", lineId: row.line.id };
+  };
+  const all = lines.value.flatMap((row) => {
     const parsed = ScrollState.safeParse(
       (row.line as { scroll?: unknown }).scroll,
     );
@@ -115,30 +125,8 @@ function list(ctx: ResolveContext): Value<readonly ScrollView[]> {
       );
       return [];
     }
-    return [
-      view(row.line.id, parsed.data, {
-        kind: "inventory",
-        lineId: row.line.id,
-      }),
-    ];
+    return [view(row.line.id, parsed.data, placeOf(row))];
   });
-
-  const mounted = readField(ctx, "spellbook", "entries", BookEntries).flatMap(
-    ({ record, value }) =>
-      value.flatMap((e) =>
-        e.scroll
-          ? [
-              view(e.id, e.scroll, {
-                kind: "book",
-                bookRecordId: record.id,
-                bookLineId: String((record.data as { book?: unknown }).book),
-              }),
-            ]
-          : [],
-      ),
-  );
-
-  const all = [...loose, ...mounted];
   return known(all, "Scrolls", {
     note: `${all.length} scrolls, ${all.filter((s) => s.spent).length} spent`,
   });
@@ -158,3 +146,12 @@ export const scrolls: KernelModule = {
   setup: (ctx) =>
     ctx.extend(DERIVATIONS_POINT, { key: "scrolls.list", compute: list }),
 };
+
+export {
+  buildSnapshot,
+  type CasterProfile,
+  type FormulaBonus,
+  type ScrollSnapshot,
+  type SnapshotFormula,
+  type SnapshotInput,
+} from "./snapshot";

@@ -1,13 +1,5 @@
 import { describe, expect, test } from "vitest";
-import {
-  emptyContainer,
-  moveEntry,
-  moveItem,
-  mountScroll,
-  refusal,
-  unmountScroll,
-  type ItemRules,
-} from "./drag";
+import { emptyContainer, moveItem, refusal, type ItemRules } from "./drag";
 
 const RULES: Record<string, ItemRules> = {
   rifle: {
@@ -155,84 +147,95 @@ describe("dragging items", () => {
   });
 });
 
-describe("moving spells", () => {
-  test("a spell moves to another book, but not into one that already has it", () => {
-    const a = [
-      { id: "1", ref: "core/Fireball" },
-      { id: "2", ref: "core/Shield" },
-    ];
-    const r = moveEntry(a, [{ id: "9", ref: "core/Web" }], "1");
-    expect(r.ok && [r.from.map((e) => e.ref), r.to.map((e) => e.ref)]).toEqual([
-      ["core/Shield"],
-      ["core/Web", "core/Fireball"],
-    ]);
-    expect(moveEntry(a, [{ id: "9", ref: "core/Fireball" }], "1").ok).toBe(
-      false,
-    );
-  });
-});
-
-describe("scrolls keep their identity between the inventory and a book", () => {
-  const scroll = { spell: "core/Fireball", castLevel: 3, spent: false };
+describe("scrolls move in and out of books as the same line", () => {
+  const scroll = { spell: "core/Spells/Fireball", castLevel: 3, spent: false };
+  const book = {
+    container: { accepts: ["scroll"], scrollUse: "bound" as const },
+    tags: ["spellbook"],
+  };
+  const rules = (ref: string): ItemRules | undefined =>
+    ref === "core/Items/Spell_Scroll"
+      ? { tags: ["scroll"] }
+      : ref === "book"
+        ? book
+        : rulesOf(ref);
   const lines = () => [
     { id: "bag", ref: "bag", quantity: 1 },
+    { id: "book", ref: "book", quantity: 1 },
+    { id: "other-book", ref: "book", quantity: 1 },
     {
       id: "s1",
-      ref: "core/Spell_Scroll",
+      ref: "core/Items/Spell_Scroll",
       quantity: 1,
       attunedTo: null,
       scroll,
     },
+    {
+      id: "shield",
+      ref: "core/Items/Spell_Scroll",
+      quantity: 1,
+      parent: "book",
+      scroll: { spell: "core/Spells/Shield", castLevel: 1 },
+    },
   ];
-  const entries = [{ id: "e1", ref: "core/Shield" }];
-  const rules = (ref: string) =>
-    ref === "core/Spell_Scroll" ? { tags: ["scroll"] } : rulesOf(ref);
 
-  test("mounting turns the line into an entry with the same id and state", () => {
-    const r = mountScroll(lines(), entries, "s1");
-    expect(r.ok && r.lines.map((l) => l.id)).toEqual(["bag"]);
-    expect(r.ok && r.entries[1]).toEqual({
-      id: "s1",
-      ref: "core/Fireball",
-      item: "core/Spell_Scroll",
-      scroll,
-    });
-  });
-
-  test("only scrolls mount, and not a spell the book already holds", () => {
-    expect(mountScroll(lines(), entries, "bag")).toMatchObject({ ok: false });
-    expect(
-      mountScroll(lines(), [{ id: "x", ref: "core/Fireball" }], "s1"),
-    ).toEqual({ ok: false, reason: "That book already holds this spell." });
-  });
-
-  test("taking it out restores the line, at the root or in a container", () => {
-    const mounted = mountScroll(lines(), entries, "s1");
-    if (!mounted.ok) throw new Error(mounted.reason);
-    const out = unmountScroll(
-      mounted.entries,
-      mounted.lines,
+  test("mounting moves the line into the book, keeping its id and state", () => {
+    const r = moveItem(
+      lines(),
       "s1",
-      { kind: "container", lineId: "bag" },
+      { kind: "container", lineId: "book" },
+      1,
       rules,
+      newId,
     );
-    expect(out.ok && out.entries.map((e) => e.id)).toEqual(["e1"]);
-    expect(out.ok && out.lines.find((l) => l.id === "s1")).toEqual({
+    expect(r.ok && r.lines.find((l) => l.id === "s1")).toEqual({
       id: "s1",
-      ref: "core/Spell_Scroll",
+      ref: "core/Items/Spell_Scroll",
       quantity: 1,
       attunedTo: null,
       scroll,
-      parent: "bag",
+      parent: "book",
     });
   });
 
-  test("a written spell cannot be taken out as an item", () => {
+  test("a book takes only scrolls, and not a spell it already holds", () => {
     expect(
-      unmountScroll(entries, lines(), "e1", { kind: "root" }, rules),
-    ).toMatchObject({
-      ok: false,
-    });
+      refusal(lines(), "bag", { kind: "container", lineId: "book" }, rules),
+    ).toBe("It only holds scroll.");
+    const twice = moveItem(
+      lines(),
+      "s1",
+      { kind: "container", lineId: "book" },
+      1,
+      rules,
+      newId,
+    );
+    if (!twice.ok) throw new Error(twice.reason);
+    const copy = [
+      ...twice.lines,
+      { id: "s2", ref: "core/Items/Spell_Scroll", quantity: 1, scroll },
+    ];
+    expect(
+      refusal(copy, "s2", { kind: "container", lineId: "book" }, rules),
+    ).toBe("That book already holds this spell.");
+  });
+
+  test("taking a scroll out, or into another book, is the same move", () => {
+    const out = moveItem(lines(), "shield", { kind: "root" }, 1, rules, newId);
+    expect(
+      out.ok && out.lines.find((l) => l.id === "shield")?.parent,
+    ).toBeUndefined();
+    const moved = moveItem(
+      lines(),
+      "shield",
+      { kind: "container", lineId: "other-book" },
+      1,
+      rules,
+      newId,
+    );
+    expect(moved.ok && moved.lines.find((l) => l.id === "shield")?.parent).toBe(
+      "other-book",
+    );
   });
 
   test("a scroll never merges into another stack", () => {
@@ -240,7 +243,7 @@ describe("scrolls keep their identity between the inventory and a book", () => {
       ...lines(),
       {
         id: "s2",
-        ref: "core/Spell_Scroll",
+        ref: "core/Items/Spell_Scroll",
         quantity: 1,
         attunedTo: null,
         scroll,

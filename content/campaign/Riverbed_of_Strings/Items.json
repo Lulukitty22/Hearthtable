@@ -18,7 +18,7 @@
       "weight": 8,
       "attunement": {
         "required": true,
-        "requiresClass": "core/Artificer"
+        "requiresClass": "core/Classes/Artificer"
       },
       "magazine": {
         "chambers": 6
@@ -131,7 +131,7 @@
     }
   },
   {
-    "id": "campaign/Riverbed_of_Strings/Items/Spellround_(Cone_of_Cold)",
+    "id": "campaign/Riverbed_of_Strings/Items/Spellround",
     "kind": "item",
     "moduleId": "containers",
     "schemaVersion": 1,
@@ -145,8 +145,15 @@
     "revision": 0,
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
-      "name": "Spellround (Cone of Cold)",
-      "tags": ["aetherlock-round"]
+      "name": "Spellround",
+      "tags": ["aetherlock-round"],
+      "container": {
+        "accepts": ["scroll"],
+        "maxCount": 1,
+        "contentsAddWeight": true,
+        "scrollUse": "installed"
+      },
+      "leavesBehind": "itself"
     }
   },
   {
@@ -165,44 +172,6 @@
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
       "name": "HE-FRAG Round",
-      "tags": ["aetherlock-round"]
-    }
-  },
-  {
-    "id": "campaign/Riverbed_of_Strings/Items/Spellround_(Shield)",
-    "kind": "item",
-    "moduleId": "containers",
-    "schemaVersion": 1,
-    "origin": {
-      "scope": "campaign",
-      "ownerId": "Riverbed_of_Strings"
-    },
-    "source": {
-      "status": "homebrew"
-    },
-    "revision": 0,
-    "updatedAt": "2026-10-22T20:30:00.000Z",
-    "data": {
-      "name": "Spellround (Shield)",
-      "tags": ["aetherlock-round"]
-    }
-  },
-  {
-    "id": "campaign/Riverbed_of_Strings/Items/Spellround_(Cure_Wounds)",
-    "kind": "item",
-    "moduleId": "containers",
-    "schemaVersion": 1,
-    "origin": {
-      "scope": "campaign",
-      "ownerId": "Riverbed_of_Strings"
-    },
-    "source": {
-      "status": "homebrew"
-    },
-    "revision": 0,
-    "updatedAt": "2026-10-22T20:30:00.000Z",
-    "data": {
-      "name": "Spellround (Cure Wounds)",
       "tags": ["aetherlock-round"]
     }
   },

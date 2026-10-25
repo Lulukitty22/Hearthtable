@@ -267,11 +267,11 @@ test("a scroll mounts into a spellbook and comes back out", async ({
   await expect(overflow).toContainText("9 / 16 entries");
   await overflow.getByRole("button", { name: /Fireball/ }).click();
   await expect(
-    page.getByRole("heading", { name: "Mounted scroll" }),
+    page.getByRole("heading", { name: "Bound scroll" }),
   ).toBeVisible();
   await expect(page.locator(".scroll-facts")).toContainText("Removing it:");
-  await page.getByRole("button", { name: "Mark spent" }).click();
-  await expect(page.getByText(/the scroll is spent/).first()).toBeVisible();
+  // A bound scroll is cast through the book; only a loose scroll is marked spent.
+  await expect(page.getByRole("button", { name: "Mark spent" })).toHaveCount(0);
   await page
     .getByRole("button", {
       name: "Take the scroll out of Overflow (test spells)",
@@ -280,6 +280,11 @@ test("a scroll mounts into a spellbook and comes back out", async ({
   await expect(overflow).toContainText("8 / 16 entries");
 
   await page.getByRole("tab", { name: "Inventory" }).click();
+  await carried.getByRole("button", { name: "Scroll: Fireball" }).click();
+  await page.getByRole("button", { name: "Mark spent" }).click();
+  await expect(
+    page.getByRole("button", { name: "Mark usable again" }),
+  ).toBeVisible();
   await expect(
     carried.getByRole("button", { name: "Scroll: Fireball" }),
   ).toContainText("spent");

@@ -307,16 +307,7 @@ function SpellBody({
   const inBooks = books.flatMap((b) =>
     b.entries.filter((e) => e.ref === id).map((e) => ({ book: b, entry: e })),
   );
-  const titleOf = (b: BookView) =>
-    String(
-      (
-        [...props.records.values()].find(
-          (r) =>
-            r.kind === "spellbook" &&
-            (r.data as { book?: unknown }).book === b.lineId,
-        )?.data as { title?: unknown } | undefined
-      )?.title ?? b.name,
-    );
+  const titleOf = (b: BookView) => b.name;
   return (
     <>
       <p>

@@ -37,7 +37,30 @@ export type Grant =
       readonly base: number;
       /** Resolved values added to `base`, e.g. `abilities.dex.modifier`. */
       readonly add: readonly string[];
+    }
+  /**
+   * Adds to a spell's damage or healing formula when it matches `when` (Milestone 5 S0), e.g.
+   * Empowered Evocation: + INT modifier to one damage roll of a Wizard evocation spell. Scroll
+   * snapshots collect these when a scroll is scribed; `once` means one roll of the cast, not
+   * every target or ray.
+   */
+  | {
+      readonly type: "spell-formula";
+      readonly role: "damage" | "healing";
+      readonly amount: Amount;
+      readonly when?: SpellFormulaCondition;
+      readonly once?: boolean;
     };
+
+/** Which spells a spell-formula grant applies to; every given field must match. */
+export interface SpellFormulaCondition {
+  /** The spell's school, e.g. `Evocation`. */
+  readonly school?: string;
+  /** The class the spell is cast as, e.g. `core/Classes/Wizard`. */
+  readonly class?: string;
+  /** The damage type, e.g. `Fire`. A bonus limited to a type stays conditional in a snapshot. */
+  readonly damageType?: string;
+}
 
 export interface GrantSourceInfo {
   /** The record or sheet line it came from. */
@@ -126,7 +149,9 @@ export function applyChoices(
       ? { ...grant, id: fill(grant.id) }
       : grant.type === "resource"
         ? { ...grant, pool: fill(grant.pool) }
-        : { ...grant, target: fill(grant.target) };
+        : grant.type === "spell-formula"
+          ? grant
+          : { ...grant, target: fill(grant.target) };
   return missing.length > 0 ? fail(missing) : ok(filled);
 }
 
@@ -193,6 +218,35 @@ export function parseGrant(input: unknown, path: string): Result<Grant> {
             add: g["add"] as string[],
           })
         : bad("base needs target, id, label, base and add");
+    case "spell-formula": {
+      const when = g["when"];
+      const condition =
+        when === undefined
+          ? undefined
+          : typeof when === "object" &&
+              when !== null &&
+              Object.entries(when).every(
+                ([k, v]) =>
+                  ["school", "class", "damageType"].includes(k) &&
+                  typeof v === "string",
+              )
+            ? (when as SpellFormulaCondition)
+            : null;
+      return (g["role"] === "damage" || g["role"] === "healing") &&
+        isAmount(g["amount"]) &&
+        condition !== null &&
+        (g["once"] === undefined || typeof g["once"] === "boolean")
+        ? ok({
+            type: "spell-formula",
+            role: g["role"],
+            amount: g["amount"] as Amount,
+            ...(condition ? { when: condition } : {}),
+            ...(g["once"] === true ? { once: true } : {}),
+          })
+        : bad(
+            "spell-formula needs role damage or healing, an amount, and when with school, class or damageType",
+          );
+    }
     default:
       return bad(`unknown type ${JSON.stringify(g["type"])}`);
   }

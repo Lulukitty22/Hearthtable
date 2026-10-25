@@ -186,10 +186,25 @@ export const DEFINITIONS: readonly RecordEnvelope[] = [
     container: { maxWeight: 500, maxVolume: 64, contentsAddWeight: false },
   }),
   item("core/potion_of_healing", { name: "Potion of Healing", weight: 0.5 }),
-  item("core/enduring_spellbook", { name: "Enduring Spellbook", weight: 3 }),
+  // A spellbook is a container of scroll lines (Milestone 5 S0).
+  item("core/enduring_spellbook", {
+    name: "Enduring Spellbook",
+    weight: 3,
+    tags: ["spellbook"],
+    container: {
+      accepts: ["scroll"],
+      contentsAddWeight: true,
+      scrollUse: "bound",
+    },
+  }),
+  item("core/spell_scroll", {
+    name: "Spell Scroll",
+    weight: 0.1,
+    tags: ["scroll"],
+  }),
   item("campaign/test/aetherlock", {
     name: "Aetherlock",
-    attunement: { required: true, requiresClass: "core/Artificer" },
+    attunement: { required: true, requiresClass: "core/Classes/Artificer" },
     magazine: { chambers: 6 },
     container: {
       slots: ["a", "b", "c", "d", "e", "f"].map((id, i) => ({
@@ -213,7 +228,7 @@ export const DEFINITIONS: readonly RecordEnvelope[] = [
     "core/mage_armor",
     "Mage Armor",
     1,
-    ["core/Wizard"],
+    ["core/Classes/Wizard"],
     [
       {
         type: "base",
@@ -229,12 +244,12 @@ export const DEFINITIONS: readonly RecordEnvelope[] = [
     "core/shield",
     "Shield",
     1,
-    ["core/Wizard"],
+    ["core/Classes/Wizard"],
     [{ type: "bonus", target: "armor-class", amount: 5 }],
   ),
-  spell("core/fireball", "Fireball", 3, ["core/Wizard"]),
+  spell("core/fireball", "Fireball", 3, ["core/Classes/Wizard"]),
   spell("core/healing_word", "Healing Word", 1, ["core/bard"]),
-  spell("core/wish", "Wish", 9, ["core/Wizard"]),
+  spell("core/wish", "Wish", 9, ["core/Classes/Wizard"]),
 ];
 
 export interface CharacterOptions {
@@ -244,7 +259,7 @@ export interface CharacterOptions {
   wandHeld?: boolean;
   extraFeatures?: unknown[];
   extraLines?: unknown[];
-  bookEntries?: unknown[];
+  bookEntries?: { id: string; ref: string }[];
   prepared?: string[];
 }
 
@@ -252,8 +267,8 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
   const character = record("account/test/carol", "character", {
     name: "Carol Elfnein",
     classLevels: options.classLevels ?? [
-      ...Array<string>(12).fill("core/Wizard"),
-      ...Array<string>(3).fill("core/Artificer"),
+      ...Array<string>(12).fill("core/Classes/Wizard"),
+      ...Array<string>(3).fill("core/Classes/Artificer"),
     ],
     abilities: {
       base: { str: 8, dex: 15, con: 13, int: 15, wis: 10, cha: 10 },
@@ -375,24 +390,32 @@ export function carolRecords(options: CharacterOptions = {}): RecordEnvelope[] {
         quantity: 1,
         parent: "bag",
       },
+      // Each spell in a book is a scroll line inside it.
+      ...(
+        options.bookEntries ?? [
+          { id: "e1", ref: "core/mage_armor" },
+          { id: "e2", ref: "core/shield" },
+          { id: "e3", ref: "core/fireball" },
+          { id: "e4", ref: "core/healing_word" },
+          { id: "e5", ref: "core/wish" },
+        ]
+      ).map((e) => scrollIn("combat-book", e)),
+      scrollIn("deep-book", { id: "d1", ref: "core/fireball" }),
       ...(options.extraLines ?? []),
     ],
   });
-  const combatBook = record("account/test/carol.book.combat", "spellbook", {
-    book: "combat-book",
-    entries: options.bookEntries ?? [
-      { id: "e1", ref: "core/mage_armor" },
-      { id: "e2", ref: "core/shield" },
-      { id: "e3", ref: "core/fireball" },
-      { id: "e4", ref: "core/healing_word" },
-      { id: "e5", ref: "core/wish" },
-    ],
-  });
-  const deepBook = record("account/test/carol.book.deep", "spellbook", {
-    book: "deep-book",
-    entries: [{ id: "d1", ref: "core/fireball" }],
-  });
-  return [...DEFINITIONS, character, inventory, combatBook, deepBook];
+  return [...DEFINITIONS, character, inventory];
+}
+
+/** A scroll line holding `ref`, inside the book line `book`. */
+function scrollIn(book: string, e: { id: string; ref: string }) {
+  return {
+    id: e.id,
+    ref: "core/spell_scroll",
+    quantity: 1,
+    parent: book,
+    scroll: { spell: e.ref, castLevel: 1 },
+  };
 }
 
 export function resolveWith(

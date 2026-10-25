@@ -29,7 +29,7 @@ function carolWithUnknownFields(): RecordEnvelope[] {
         ...(data["lines"] as unknown[]),
         {
           id: "empty-vial",
-          ref: "core/Potion_of_Healing",
+          ref: "core/Items/Potion_of_Healing",
           quantity: 0,
           addons: { label: "kept" },
           type: "clothing",
@@ -203,7 +203,7 @@ export function repositoryContract(
 
     test("delete needs the current revision", async () => {
       await ok(repo.save(carolElfnein, { now: NOW }));
-      const id = `${CAROL_ID}/Books/Workshop` as RecordId;
+      const id = `${CAROL_ID}/Inventory` as RecordId;
       expect((await repo.delete(id, 0)).ok).toBe(false);
       await ok(repo.delete(id, 1));
       expect(await ok(repo.get(id))).toBeUndefined();

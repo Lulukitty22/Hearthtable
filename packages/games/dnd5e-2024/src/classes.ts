@@ -69,7 +69,7 @@ const byLevel = (rows: readonly number[][]) =>
 const updatedAt = "2026-10-22T00:00:00.000Z";
 
 export const wizard: RecordEnvelope<ClassData> = newEnvelope({
-  id: "core/Wizard",
+  id: "core/Classes/Wizard",
   kind: "class",
   moduleId: "dnd5e-2024",
   schemaVersion: 1,
@@ -96,7 +96,7 @@ export const wizard: RecordEnvelope<ClassData> = newEnvelope({
 });
 
 export const artificer: RecordEnvelope<ClassData> = newEnvelope({
-  id: "core/Artificer",
+  id: "core/Classes/Artificer",
   kind: "class",
   moduleId: "dnd5e-2024",
   schemaVersion: 1,

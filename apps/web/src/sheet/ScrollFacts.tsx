@@ -2,9 +2,26 @@
 // item window and in its book entry once mounted. Mounting and removal are not paid yet: the
 // crafting job system that charges for them is Milestone 5b.
 
-import type { ScrollView } from "@hearthtable/system-scrolls";
+import type {
+  ScrollSnapshot,
+  ScrollView,
+  SnapshotFormula,
+} from "@hearthtable/system-scrolls";
 import { EntryLink, nameOfRecord } from "./entries";
 import type { TabProps } from "./shared";
+
+/** One frozen roll, e.g. `10d6 Fire + 5 (Empowered Evocation, once)`. */
+export function formulaText(f: SnapshotFormula): string {
+  const bonuses = f.bonuses.map((b) => {
+    const notes = [
+      b.source,
+      ...(b.once ? ["once"] : []),
+      ...(b.when ? [`if ${b.when.damageType}`] : []),
+    ];
+    return ` ${b.value < 0 ? "−" : "+"} ${Math.abs(b.value)} (${notes.join(", ")})`;
+  });
+  return `${f.count !== undefined ? `${f.count} × ` : ""}${f.dice}${f.type ? ` ${f.type}` : ""}${bonuses.join("")}`;
+}
 
 /** A calculated cost, shown exactly (Currency and Trade, "Rounding"). */
 export function exactGp(gp: number): string {
@@ -30,8 +47,7 @@ export function ScrollFacts({
     scroll.level !== undefined && scroll.castLevel > scroll.level
       ? ` (upcast from level ${scroll.level})`
       : "";
-  const snap = scroll.snapshot as
-    { saveDc?: unknown; attackBonus?: unknown } | undefined;
+  const snap = scroll.snapshot as Partial<ScrollSnapshot> | undefined;
   return (
     <div className="scroll-facts">
       <p>
@@ -48,13 +64,24 @@ export function ScrollFacts({
         <p className="muted">
           Scribed by {nameOfRecord(props, scroll.scribe)}
           {snap &&
-            (snap.saveDc !== undefined || snap.attackBonus !== undefined) &&
-            `; frozen at save DC ${String(snap.saveDc ?? "—")}, spell attack +${String(snap.attackBonus ?? "—")}`}
+            (snap.spellSaveDC !== undefined ||
+              snap.spellAttackBonus !== undefined) &&
+            `; frozen at save DC ${String(snap.spellSaveDC ?? "—")}, spell attack +${String(snap.spellAttackBonus ?? "—")}`}
           .
         </p>
       )}
+      {snap?.formulas && snap.formulas.length > 0 && (
+        <ul className="snapshot-formulas">
+          {snap.formulas.map((f, i) => (
+            <li key={i}>
+              {f.role === "damage" ? "Damage" : "Healing"}: {formulaText(f)}
+              {f.note && <span className="muted"> ({f.note})</span>}
+            </li>
+          ))}
+        </ul>
+      )}
       <p>
-        {scroll.place.kind === "book" ? "Removing" : "Mounting"} it:{" "}
+        {scroll.place.kind === "loose" ? "Mounting" : "Removing"} it:{" "}
         {scroll.mounting.kind === "known" ? (
           <>
             {exactGp(

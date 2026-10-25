@@ -7,9 +7,10 @@
 //   books hold `bookCapacity` entries, and over-full books warn.
 // - `published-preparation`: eligible spells on the character's prepared list are ready.
 //
-// Books are listed in the owner's saved order (each book record's `order`). A book also works as a
-// scroll binder: a mounted scroll is an entry that keeps its scroll state and takes one entry
-// (user decision, 2026-10-23); a spent one stays but is not ready.
+// A spellbook is a container (Milestone 5 S0, user decision 2026-10-24): any inventory line whose
+// item is tagged `spellbook`. Its entries are the scroll lines inside it, the same lines as loose
+// scrolls; a scroll is bound by being in a book, and a spent one stays but is not ready. Books are
+// listed in the owner's saved order (the book line's `order`) and named by its `title`.
 
 import type { CasterClass } from "@hearthtable/system-spellcasting";
 import type { LineRow } from "@hearthtable/system-containers";
@@ -40,17 +41,8 @@ export const ScrollState = z.looseObject({
 });
 export type ScrollState = z.infer<typeof ScrollState>;
 
-const SpellbookData = z.looseObject({
-  entries: z.array(
-    z.looseObject({
-      id: z.string(),
-      ref: z.string(),
-      /** Set when the entry is a mounted scroll; `item` is its item definition. */
-      scroll: ScrollState.optional(),
-      item: z.string().optional(),
-    }),
-  ),
-});
+/** Lines whose item carries this tag are spellbooks. */
+export const SPELLBOOK_TAG = "spellbook";
 
 const SpellDefinition = z.looseObject({
   name: z.string(),
@@ -67,7 +59,7 @@ export interface EntryView {
   readonly name: string;
   readonly level?: number;
   readonly status: "resolved" | "unresolved";
-  /** Present when the entry is a mounted scroll rather than a written spell. */
+  /** The bound scroll's own state (every book entry is a scroll). */
   readonly scroll?: ScrollState;
   readonly ready: boolean;
   /** Why it is or is not ready. */
@@ -111,18 +103,16 @@ function eligibility(
 }
 
 /** Books follow their owner's saved `order`; books without one come last, by id. */
-function byOrder(
-  a: { record: { id: string; data: unknown } },
-  b: { record: { id: string; data: unknown } },
-): number {
-  const order = (r: { data: unknown }) => {
-    const o = (r.data as { order?: unknown }).order;
+function byOrder(a: LineRow, b: LineRow): number {
+  const order = (r: LineRow) => {
+    const o = (r.line as { order?: unknown }).order;
     return typeof o === "number" ? o : Number.POSITIVE_INFINITY;
   };
-  return (
-    order(a.record) - order(b.record) || a.record.id.localeCompare(b.record.id)
-  );
+  return order(a) - order(b) || a.line.id.localeCompare(b.line.id);
 }
+
+export const isSpellbook = (row: LineRow) =>
+  (row.definition?.tags ?? []).includes(SPELLBOOK_TAG);
 
 function books(ctx: ResolveContext): Value<readonly BookView[]> {
   const method = ctx.settings.method("spellbook-readiness.readiness");
@@ -138,37 +128,40 @@ function books(ctx: ResolveContext): Value<readonly BookView[]> {
   );
 
   return known(
-    [...readField(ctx, "spellbook", "entries", SpellbookData.shape.entries)]
+    lines.value
+      .filter(isSpellbook)
       .sort(byOrder)
-      .map(({ record, value }): BookView => {
-        const bookLine = (record.data as { book?: unknown }).book;
-        const line = lines.value.find((l) => l.line.id === bookLine);
-        if (!line) {
-          ctx.report(
-            issue(
-              "error",
-              "spellbook-readiness.missing-book",
-              `${record.id} belongs to book line ${String(bookLine)}, which is not in the inventory.`,
-              record.id,
-            ),
-          );
-        }
-        const accessible = line?.accessible ?? false;
+      .map((line): BookView => {
+        const accessible = line.accessible;
+        const inside = lines.value.filter(
+          (r) =>
+            r.line.parent === line.line.id &&
+            (r.line as { scroll?: unknown }).scroll !== undefined,
+        );
         const cap =
           method.value === "book-contents-ready" && capacity.kind === "known"
             ? capacity.value
             : undefined;
-        if (cap !== undefined && value.length > cap) {
+        if (cap !== undefined && inside.length > cap) {
           ctx.report(
             issue(
               "warning",
               "spellbook-readiness.over-capacity",
-              `${line?.name ?? record.id} holds ${value.length} of ${cap} entries.`,
-              record.id,
+              `${line.name} holds ${inside.length} of ${cap} entries.`,
+              line.line.id,
             ),
           );
         }
-        const entries = value.map((e): EntryView => {
+        const entries = inside.flatMap((row): EntryView[] => {
+          const parsed = ScrollState.safeParse(
+            (row.line as { scroll?: unknown }).scroll,
+          );
+          if (!parsed.success) return [];
+          const e = {
+            id: row.line.id,
+            ref: parsed.data.spell,
+            scroll: parsed.data,
+          };
           const def = readDefinition(ctx, e.ref, "spell", SpellDefinition);
           if (!def.ok) {
             ctx.report(
@@ -179,21 +172,23 @@ function books(ctx: ResolveContext): Value<readonly BookView[]> {
                 e.id,
               ),
             );
-            return {
-              id: e.id,
-              ref: e.ref,
-              name: e.ref,
-              status: "unresolved",
-              ready: false,
-              reasons: [def.reason],
-            };
+            return [
+              {
+                id: e.id,
+                ref: e.ref,
+                name: e.ref,
+                status: "unresolved",
+                scroll: e.scroll,
+                ready: false,
+                reasons: [def.reason],
+              },
+            ];
           }
           const spell = def.value;
           const eligible = eligibility(ctx, e.ref, spell.level, spell.classes);
           const reasons = [eligible.why];
           let ready = eligible.ok;
-          if (e.scroll) reasons.push("mounted scroll");
-          if (e.scroll?.spent === true) {
+          if (e.scroll.spent === true) {
             ready = false;
             reasons.push("the scroll is spent");
           }
@@ -206,20 +201,23 @@ function books(ctx: ResolveContext): Value<readonly BookView[]> {
             ready = false;
             reasons.push("not prepared");
           }
-          return {
-            id: e.id,
-            ref: e.ref,
-            name: spell.name,
-            level: spell.level,
-            status: "resolved",
-            ...(e.scroll ? { scroll: e.scroll } : {}),
-            ready,
-            reasons,
-          };
+          return [
+            {
+              id: e.id,
+              ref: e.ref,
+              name: spell.name,
+              level: spell.level,
+              status: "resolved",
+              scroll: e.scroll,
+              ready,
+              reasons,
+            },
+          ];
         });
+        const title = (line.line as { title?: unknown }).title;
         return {
-          lineId: String(bookLine),
-          name: line?.name ?? "Reference not found",
+          lineId: line.line.id,
+          name: typeof title === "string" ? title : line.name,
           accessible,
           ...(cap === undefined ? {} : { capacity: cap }),
           entries,
@@ -241,7 +239,6 @@ export const spellbookReadiness: KernelModule = {
     extends: [DERIVATIONS_POINT],
     provides: {
       uiTabs: ["spells"],
-      recordKinds: ["spellbook"],
       methods: [
         {
           slot: "readiness",

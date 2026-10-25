@@ -182,13 +182,13 @@ for (const name of ADD) {
   if (!s) throw new Error(`${name} is not in the SRD`);
   records.push({
     ...template,
-    id: `core/${name.replace(/ /g, "_")}`,
+    id: `core/Spells/${name.replace(/ /g, "_")}`,
     updatedAt: new Date().toISOString(),
     data: {
       name,
       level: s.level,
       school: s.school,
-      classes: s.classes.map((c) => `core/${c}`),
+      classes: s.classes.map((c) => `core/Classes/${c}`),
     },
   });
 }
@@ -205,7 +205,7 @@ for (const r of records) {
       `${r.data.name}: level/school ${String(r.data["level"])} ${String(r.data["school"])} vs SRD ${s.level} ${s.school}`,
     );
   const ours = new Set(r.data.classes ?? []);
-  const missing = s.classes.filter((c) => !ours.has(`core/${c}`));
+  const missing = s.classes.filter((c) => !ours.has(`core/Classes/${c}`));
   if (missing.length > 0)
     notes.push(`${r.data.name}: SRD class list also has ${missing.join(", ")}`);
   r.data = {

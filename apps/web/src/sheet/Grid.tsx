@@ -17,18 +17,11 @@ import {
 } from "react";
 
 /** What is being dragged right now; drag events cannot read their data until the drop. */
-export type Dragged =
-  | {
-      readonly kind: "line";
-      readonly lineId: string;
-      readonly quantity: number;
-    }
-  | {
-      readonly kind: "entry";
-      readonly bookRecordId: string;
-      readonly entryId: string;
-      readonly level: number;
-    };
+export type Dragged = {
+  readonly kind: "line";
+  readonly lineId: string;
+  readonly quantity: number;
+};
 
 /** False on the view-only sheet: tiles do not drag and nothing accepts drops. */
 export const Draggable = createContext(true);

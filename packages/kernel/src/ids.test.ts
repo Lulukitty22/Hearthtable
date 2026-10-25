@@ -45,7 +45,7 @@ test("names that cannot be stored are rejected", () => {
 });
 
 test("parseId reads scope and name, and rejects spaces", () => {
-  const parsed = parseId("core/Potion_of_Healing");
+  const parsed = parseId("core/Items/Potion_of_Healing");
   expect(parsed.ok && parsed.value).toMatchObject({
     scope: "core",
     name: "Potion_of_Healing",

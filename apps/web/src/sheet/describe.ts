@@ -63,6 +63,17 @@ export function describeGrant(
       return {
         text: `AC base ${g.base} + ${g.add.map((k) => k.replace(/^abilities\.(\w+)\.modifier$/, (_, a: string) => ability(a))).join(" + ")} (${g.label})`,
       };
+    case "spell-formula": {
+      const which = [
+        g.when?.class ? nameOf(g.when.class) : undefined,
+        g.when?.school,
+      ]
+        .filter(Boolean)
+        .join(" ");
+      return {
+        text: `${amount(g.amount)} to ${g.once ? "one " : ""}${g.role} roll${g.once ? "" : "s"} of ${which ? `${which} ` : ""}spells${g.when?.damageType ? ` dealing ${g.when.damageType} damage` : ""}`,
+      };
+    }
   }
 }
 

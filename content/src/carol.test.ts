@@ -127,8 +127,10 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
     expect(
       slots.map((s) => (s.max.kind === "known" ? s.max.value : null)),
     ).toEqual([7, 3, 3, 3, 2, 1]);
-    expect(value(r, "spellcasting.classes.core/Wizard.attack")).toBe(11);
-    expect(value(r, "spellcasting.classes.core/Wizard.dc")).toBe(19);
+    expect(value(r, "spellcasting.classes.core/Classes/Wizard.attack")).toBe(
+      11,
+    );
+    expect(value(r, "spellcasting.classes.core/Classes/Wizard.dc")).toBe(19);
   });
 
   test("spellbooks hold 16/10/6 entries, all ready, plus the overflow test book", () => {
@@ -146,21 +148,40 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
     expect(notReady).toEqual([]);
   });
 
-  test("every item is reachable; only the test purse's coins are packed", () => {
+  test("every item is reachable; only coins and the scrolls in books and Spellrounds are packed", () => {
     const lines = value<readonly LineRow[]>(carol(), "containers.lines");
     expect(lines.every((l) => l.accessible && l.status === "resolved")).toBe(
       true,
     );
-    expect(lines.filter((l) => l.depth !== 0).map((l) => l.line.id)).toEqual([
-      "coins-pp",
-      "coins-gp",
-      "coins-ep",
-      "coins-sp",
-      "coins-cp",
-    ]);
+    const packed = lines.filter((l) => l.depth !== 0);
     expect(
-      new Set(lines.filter((l) => l.depth !== 0).map((l) => l.line.parent)),
-    ).toEqual(new Set(["test-purse"]));
+      packed.filter((l) => !("scroll" in l.line)).map((l) => l.line.id),
+    ).toEqual(["coins-pp", "coins-gp", "coins-ep", "coins-sp", "coins-cp"]);
+    // Each spell in a book, and each Spellround's payload, is a scroll line inside it.
+    expect(packed.filter((l) => "scroll" in l.line)).toHaveLength(40 + 7);
+    expect(new Set(packed.map((l) => l.depth))).toEqual(new Set([1]));
+  });
+
+  test("each Spellround is a casing holding one installed scroll", () => {
+    const lines = value<readonly LineRow[]>(carol(), "containers.lines");
+    const casings = lines.filter((l) => l.name === "Spellround");
+    expect(casings).toHaveLength(7);
+    for (const casing of casings) {
+      const inside = lines.filter((l) => l.line.parent === casing.line.id);
+      expect(inside.map((l) => l.name)).toEqual(["Spell Scroll"]);
+    }
+    const installed = value<
+      readonly import("@hearthtable/system-scrolls").ScrollView[]
+    >(carol(), "scrolls.list").filter((s) => s.place.kind === "installed");
+    expect(installed.map((s) => s.name).sort()).toEqual([
+      "Cone of Cold",
+      "Cone of Cold",
+      "Cone of Cold",
+      "Cure Wounds",
+      "Cure Wounds",
+      "Shield",
+      "Shield",
+    ]);
   });
 
   test("every spell in her books is a mounted scroll at its own level", () => {
@@ -206,12 +227,12 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
   test("AC is 13 with nothing active, 16 with Mage Armor, 21 with Shield too", () => {
     const mageArmor = {
       id: "effect-1",
-      ref: "core/Mage_Armor",
+      ref: "core/Spells/Mage_Armor",
       activatedAt: "2026-10-22T21:00:00.000Z",
     };
     const shield = {
       id: "effect-2",
-      ref: "core/Shield",
+      ref: "core/Spells/Shield",
       activatedAt: "2026-10-22T21:01:00.000Z",
     };
     const ac = (activeEffects: unknown[]) =>
@@ -234,8 +255,10 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
       }),
     });
     const r = engine.resolve(hold);
-    expect(value(r, "spellcasting.classes.core/Wizard.attack")).toBe(12);
-    expect(value(r, "spellcasting.classes.core/Wizard.dc")).toBe(19);
+    expect(value(r, "spellcasting.classes.core/Classes/Wizard.attack")).toBe(
+      12,
+    );
+    expect(value(r, "spellcasting.classes.core/Classes/Wizard.dc")).toBe(19);
     const [rifle] = value<readonly WeaponView[]>(r, "magazines.weapons");
     expect(rifle?.aim).toMatchObject({ kind: "known", value: 11 });
   });
@@ -371,7 +394,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
       withLines([
         {
           id: "potion-in-gun",
-          ref: "core/Potion_of_Healing",
+          ref: "core/Items/Potion_of_Healing",
           quantity: 1,
           attunedTo: null,
           parent: "aetherlock",
@@ -426,18 +449,20 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
 
   test("a deliberately missing definition renders as unresolved, never as a usable default", () => {
     const records = carolWithDefinitions().filter(
-      (r) => r.id !== "core/Fireball",
+      (r) => r.id !== "core/Spells/Fireball",
     );
     const r = engine.resolve(records);
     const combat = value<readonly BookView[]>(
       r,
       "spellbook-readiness.books",
     )[0];
-    const fireball = combat?.entries.find((e) => e.ref === "core/Fireball");
+    const fireball = combat?.entries.find(
+      (e) => e.ref === "core/Spells/Fireball",
+    );
     expect(fireball).toMatchObject({
       status: "unresolved",
       ready: false,
-      reasons: ["Reference not found: core/Fireball"],
+      reasons: ["Reference not found: core/Spells/Fireball"],
     });
   });
 });
@@ -491,7 +516,10 @@ describe("concentration capacity", () => {
 
   test("Carol maintains one concentration; non-concentration effects do not count", () => {
     const r = engine.resolve(
-      active("core/Mage_Armor", "core/Tasha's_Otherworldly_Guise"),
+      active(
+        "core/Spells/Mage_Armor",
+        "core/Spells/Tasha's_Otherworldly_Guise",
+      ),
     );
     expect(value(r, "concentration.capacity")).toBe(1);
     const held = value<readonly { name: string; overLimit: boolean }[]>(
@@ -508,7 +536,7 @@ describe("concentration capacity", () => {
 
   test("a second concentration is over the limit and warned, newest first to go", () => {
     const r = engine.resolve(
-      active("core/Tasha's_Otherworldly_Guise", "core/Web"),
+      active("core/Spells/Tasha's_Otherworldly_Guise", "core/Spells/Web"),
     );
     const held = value<readonly { name: string; overLimit: boolean }[]>(
       r,
@@ -536,8 +564,8 @@ describe("concentration capacity", () => {
               { ref: "core/Test_Second_Concentration" },
             ],
             activeEffects: [
-              { id: "a", ref: "core/Web", activatedAt: at(0) },
-              { id: "b", ref: "core/Detect_Magic", activatedAt: at(1) },
+              { id: "a", ref: "core/Spells/Web", activatedAt: at(0) },
+              { id: "b", ref: "core/Spells/Detect_Magic", activatedAt: at(1) },
             ],
           },
         };
@@ -638,27 +666,27 @@ describe("spell details", () => {
   });
 
   test("SRD spells carry the credited text; others do not", () => {
-    expect(spell("core/Fireball").srd?.paragraphs[0]).toMatch(
+    expect(spell("core/Spells/Fireball").srd?.paragraphs[0]).toMatch(
       /^A bright streak/,
     );
-    expect(spell("core/Fireball").srd?.credit).toMatch(
+    expect(spell("core/Spells/Fireball").srd?.credit).toMatch(
       /CC-BY|Creative Commons/,
     );
-    expect(spell("core/Mind_Sliver").srd).toBeUndefined();
-    expect(spell("core/Tasha's_Otherworldly_Guise").srd).toBeUndefined();
+    expect(spell("core/Spells/Mind_Sliver").srd).toBeUndefined();
+    expect(spell("core/Spells/Tasha's_Otherworldly_Guise").srd).toBeUndefined();
   });
 
   test("rituals and costly consumed components are read from the header", () => {
-    expect(spell("core/Find_Familiar")).toMatchObject({
+    expect(spell("core/Spells/Find_Familiar")).toMatchObject({
       ritual: true,
       castingTime: "1 hour",
       components: { costGp: 10, consumed: true },
     });
-    expect(spell("core/Identify")).toMatchObject({
+    expect(spell("core/Spells/Identify")).toMatchObject({
       ritual: true,
       components: { costGp: 100, consumed: false },
     });
-    expect(spell("core/Teleportation_Circle")).toMatchObject({
+    expect(spell("core/Spells/Teleportation_Circle")).toMatchObject({
       ritual: false,
       components: { somatic: false, costGp: 50, consumed: true },
     });
@@ -682,13 +710,13 @@ describe("scrolls", () => {
     value<readonly Scroll[]>(r, "scrolls.list");
 
   test("Carol's test scrolls are listed loose, with mounting cost at their own level", () => {
-    const scrolls = list(carol()).filter((s) => s.place.kind === "inventory");
+    const scrolls = list(carol()).filter((s) => s.place.kind === "loose");
     expect(
       scrolls.map((s) => [s.name, s.castLevel, s.spent, s.place.kind]),
     ).toEqual([
-      ["Fireball", 3, false, "inventory"],
-      ["Cone of Cold", 6, false, "inventory"],
-      ["Misty Step", 2, true, "inventory"],
+      ["Fireball", 3, false, "loose"],
+      ["Cone of Cold", 6, false, "loose"],
+      ["Misty Step", 2, true, "loose"],
     ]);
     const cone = scrolls[1] as Scroll;
     expect(cone.mounting.kind === "known" && cone.mounting.value.level).toBe(6);
@@ -700,43 +728,21 @@ describe("scrolls", () => {
     );
   });
 
-  test("a mounted scroll is a book entry with the same id; spent ones are not ready", () => {
+  test("a scroll moved into a book is bound there with the same id; spent ones are not ready", () => {
     const records = carolWithDefinitions().map((r): RecordEnvelope => {
-      if (r.id === `${CAROL_ID}/Inventory`) {
-        const d = r.data as { lines: { id: string }[] };
-        return {
-          ...r,
-          data: {
-            ...d,
-            lines: d.lines.filter((l) => !l.id.startsWith("scroll-")),
-          },
-        };
-      }
-      if (r.id === `${CAROL_ID}/Books/Overflow`) {
-        const d = r.data as { entries: unknown[] };
-        return {
-          ...r,
-          data: {
-            ...d,
-            entries: [
-              ...d.entries,
-              {
-                id: "scroll-fireball",
-                ref: "core/Fireball",
-                item: "core/Spell_Scroll",
-                scroll: { spell: "core/Fireball", castLevel: 3 },
-              },
-              {
-                id: "scroll-misty-step",
-                ref: "core/Misty_Step",
-                item: "core/Spell_Scroll",
-                scroll: { spell: "core/Misty_Step", castLevel: 2, spent: true },
-              },
-            ],
-          },
-        };
-      }
-      return r;
+      if (r.id !== `${CAROL_ID}/Inventory`) return r;
+      const d = r.data as { lines: { id: string }[] };
+      return {
+        ...r,
+        data: {
+          ...d,
+          lines: d.lines.map((l) =>
+            l.id === "scroll-fireball" || l.id === "scroll-misty-step"
+              ? { ...l, parent: "overflow-book" }
+              : l,
+          ),
+        },
+      };
     });
     const r = engine.resolve(records);
     const overflow = value<readonly BookView[]>(
@@ -755,11 +761,13 @@ describe("scrolls", () => {
     );
     expect(
       list(r)
-        .filter((s) => s.id.startsWith("scroll-"))
+        .filter(
+          (s) => s.id === "scroll-fireball" || s.id === "scroll-misty-step",
+        )
         .map((s) => [s.id, s.place.kind]),
     ).toEqual([
-      ["scroll-fireball", "book"],
-      ["scroll-misty-step", "book"],
+      ["scroll-fireball", "bound"],
+      ["scroll-misty-step", "bound"],
     ]);
   });
 
@@ -844,9 +852,13 @@ describe("lost and destroyed items", () => {
 
   test("a lost Wand grants nothing but keeps its attunement slot", () => {
     const held = mark({ wand: { held: true } });
-    expect(value(held, "spellcasting.classes.core/Wizard.attack")).toBe(12);
+    expect(value(held, "spellcasting.classes.core/Classes/Wizard.attack")).toBe(
+      12,
+    );
     const lost = mark({ wand: { held: true, lost: "lost" } });
-    expect(value(lost, "spellcasting.classes.core/Wizard.attack")).toBe(11);
+    expect(value(lost, "spellcasting.classes.core/Classes/Wizard.attack")).toBe(
+      11,
+    );
     expect(value<readonly string[]>(lost, "attunement.order")).toContain(
       "wand",
     );
