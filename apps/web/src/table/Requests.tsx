@@ -1,10 +1,17 @@
 // Queued requests at the table (Milestone 5 S6; Spell Effects and Active State, "Competing
 // submissions and request revisions"): every queued request in the order submitted (a revision
 // keeps its place), with what it holds and whether it waits for its turn or is ready for the
-// DM. The DM can reject one and its controller cancel it, either way returning its holds.
-// Approving and resolving come next (S7).
+// DM. The DM can reject one and its controller cancel it, either way returning its holds. When
+// one is ready, the DM approves and resolves it (S7).
 
-import { describeHolds, isEligible, TIMING_NAMES } from "@hearthtable/play";
+import type { RecordEnvelope } from "@hearthtable/kernel";
+import {
+  describeHolds,
+  isEligible,
+  TIMING_NAMES,
+  type Moment,
+} from "@hearthtable/play";
+import { useState } from "react";
 import {
   endAction,
   type ActionRequest,
@@ -12,6 +19,7 @@ import {
 } from "@hearthtable/storage";
 import { db } from "../firebase";
 import type { Control } from "./EncounterPanel";
+import { ResolvePanel } from "./ResolvePanel";
 import type { Participant } from "./useTable";
 
 export function RequestsPanel({
@@ -21,6 +29,9 @@ export function RequestsPanel({
   encounter,
   clock,
   control,
+  now,
+  present,
+  definition,
   onProblem,
 }: {
   campaign: string;
@@ -29,8 +40,13 @@ export function RequestsPanel({
   encounter: EncounterState | undefined;
   clock: number;
   control: Control;
+  now: Moment | undefined;
+  /** Everyone in the scene, who can be targets. */
+  present: readonly Participant[];
+  definition: (id: string) => RecordEnvelope | undefined;
   onProblem: (message: string) => void;
 }) {
+  const [resolving, setResolving] = useState<string | undefined>();
   const queued = actions.filter((a) => a.status === "queued");
   const { uid, isDm } = control;
   const name = (p: string) => people.get(p)?.name ?? p.split("/").at(-1) ?? p;
@@ -69,6 +85,15 @@ export function RequestsPanel({
               {typeof a.input["note"] === "string" && (
                 <span className="muted"> ({a.input["note"]})</span>
               )}{" "}
+              {isDm && isEligible(a.timing, a.character, encounter) && (
+                <button
+                  type="button"
+                  className="link-button"
+                  onClick={() => setResolving(a.id)}
+                >
+                  resolve…
+                </button>
+              )}
               {isDm && (
                 <button
                   type="button"
@@ -86,6 +111,26 @@ export function RequestsPanel({
                 >
                   cancel
                 </button>
+              )}
+              {resolving === a.id && uid && people.get(a.character) && (
+                <ResolvePanel
+                  campaign={campaign}
+                  request={a}
+                  caster={people.get(a.character) as Participant}
+                  spell={
+                    definition(String(a.input["spell"]))?.data as
+                      Record<string, unknown> | undefined
+                  }
+                  people={people}
+                  present={present}
+                  now={now}
+                  uid={uid}
+                  clock={clock}
+                  onDone={(err) => {
+                    setResolving(undefined);
+                    if (err) onProblem(err);
+                  }}
+                />
               )}
             </li>
           ))}

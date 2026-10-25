@@ -5,7 +5,7 @@
 // character's usable resources; cancelling or rejecting it returns them, by the status change
 // alone, so it happens exactly once. A revision edits the request in place: it keeps its
 // submission time and so its place in the queue, and its holds switch over in the same write.
-// Approval and resolution come in S7.
+// Approval resolves the request in one transaction (S7, `resolveAction`).
 
 import type { BudgetKind, Holds, Timing } from "@hearthtable/play";
 import {
@@ -14,6 +14,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  runTransaction,
   serverTimestamp,
   writeBatch,
   type Firestore,
@@ -21,9 +22,15 @@ import {
   type WriteBatch,
 } from "firebase/firestore";
 import { CAMPAIGNS } from "./campaigns";
-import { documentIdFor } from "./firestore";
+import type { RecordEnvelope } from "@hearthtable/kernel";
+import {
+  documentIdFor,
+  recordRef,
+  storedRecord,
+  storedRevision,
+} from "./firestore";
 
-export type ActionStatus = "queued" | "cancelled" | "rejected";
+export type ActionStatus = "queued" | "cancelled" | "rejected" | "resolved";
 
 export interface ActionRequest {
   readonly id: string;
@@ -177,4 +184,62 @@ export function endAction(
     });
     log(batch, db, campaign, by, clock, text);
   });
+}
+
+/**
+ * The DM approves an eligible request and it resolves, all in one transaction (Milestone 5 S7;
+ * "one action identity"): the request must still be queued at the revision the DM reviewed,
+ * every changed record must still be at the revision it was read at, and then the records are
+ * written (held costs consumed, effects, conditions, damage and healing), the request becomes
+ * `resolved`, and the log entries carry the request's id. Retrying cannot apply it twice.
+ */
+export async function resolveAction(
+  db: Firestore,
+  campaign: string,
+  request: ActionRequest,
+  outcome: {
+    readonly records: readonly RecordEnvelope[];
+    readonly result: string;
+    readonly logs: readonly string[];
+  },
+  by: string,
+  clock: number,
+): Promise<string | undefined> {
+  const now = new Date().toISOString();
+  const actionRef = doc(db, CAMPAIGNS, campaign, "actions", request.id);
+  try {
+    return await runTransaction(db, async (tx) => {
+      const current = await tx.get(actionRef);
+      const d = current.data();
+      if (d?.["status"] !== "queued")
+        return "This request is no longer queued.";
+      if (d["revision"] !== request.revision)
+        return "This request was revised; review it again.";
+      const snaps = await Promise.all(
+        outcome.records.map((r) => tx.get(recordRef(db, r.id))),
+      );
+      const stale = outcome.records.filter(
+        (r, i) => storedRevision(snaps[i]?.data()) !== r.revision,
+      );
+      if (stale.length)
+        return `${stale.map((r) => r.id).join(", ")} changed meanwhile; review it again.`;
+      for (const r of outcome.records)
+        tx.set(recordRef(db, r.id), storedRecord(r, now));
+      tx.update(actionRef, { status: "resolved", result: outcome.result });
+      outcome.logs.forEach((text, n) =>
+        tx.set(doc(collection(db, CAMPAIGNS, campaign, "log")), {
+          kind: "request",
+          by,
+          clock,
+          text,
+          at: serverTimestamp(),
+          n,
+          action: request.id,
+        }),
+      );
+      return undefined;
+    });
+  } catch (error) {
+    return failed(error);
+  }
 }

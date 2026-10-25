@@ -195,7 +195,7 @@ service cloud.firestore {
         allow create: if isApproved()
           && (request.auth.uid in get(campaignDoc(campaign)).data.dms
             || request.auth.uid in get(campaignDoc(campaign)).data.players)
-          && request.resource.data.keys().hasOnly(['kind', 'by', 'clock', 'text', 'at', 'n'])
+          && request.resource.data.keys().hasOnly(['kind', 'by', 'clock', 'text', 'at', 'n', 'action'])
           && request.resource.data.by == request.auth.uid
           && request.resource.data.at == request.time
           && request.resource.data.clock is number
@@ -254,7 +254,8 @@ service cloud.firestore {
 
       // Milestone 5 S6: requests. A character's controller (or a DM) confirms one, queued, with
       // its holds. While it is queued the controller may revise it in place (same submission
-      // time, next revision) or cancel it; DMs may reject it. A request leaves the queue once,
+      // time, next revision) or cancel it; DMs may reject it or (S7) approve it, which resolves
+      // it in the same transaction as its effects. A request leaves the queue once,
       // and nothing is ever deleted.
       match /actions/{action} {
         allow read: if true;
@@ -273,8 +274,11 @@ service cloud.firestore {
             || controls(request.resource.data.character, request.resource.data.get('control', null)));
         allow update: if resource.data.status == 'queued'
           && ((isApproved() && isDmOf(campaign)
-              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
-              && request.resource.data.status == 'rejected')
+              && ((request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+                  && request.resource.data.status == 'rejected')
+                // S7: approving resolves it, once.
+                || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'result'])
+                  && request.resource.data.status == 'resolved')))
             || (controls(resource.data.character, resource.data.get('control', null))
               && ((request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
                   && request.resource.data.status == 'cancelled')

@@ -28,6 +28,8 @@ export interface SheetPlay {
   /** The encounter in progress, when there is one (Next Turn is offered only then). */
   readonly encounter?: EncounterState;
   readonly clock: number;
+  /** The current scene's record path, for who can be a target. */
+  readonly scene?: string;
   /** This character's queued requests. */
   readonly requests: readonly ActionRequest[];
 }

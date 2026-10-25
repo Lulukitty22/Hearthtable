@@ -92,6 +92,27 @@ const derivations: Derivation[] = [
     },
   },
   {
+    // Damage defenses (Milestone 5 S7): capabilities named `resistance:<type>`,
+    // `vulnerability:<type>` and `immunity:<type>`, where the type may be `all`, granted by
+    // features, items, effects and conditions (Petrified: resistance to all damage).
+    key: "hit-points.defenses",
+    compute: (ctx) => {
+      const ids = grantsOf(ctx, "capability").map((g) => g.grant.id);
+      const of = (kind: string) =>
+        ids
+          .filter((id) => id.startsWith(`${kind}:`))
+          .map((id) => id.slice(kind.length + 1));
+      return known(
+        {
+          resistances: of("resistance"),
+          vulnerabilities: of("vulnerability"),
+          immunities: of("immunity"),
+        },
+        "Damage defenses",
+      );
+    },
+  },
+  {
     key: "hit-points.state",
     compute: (ctx) => {
       const state = readField(ctx, "character", "hitPoints", HitPointState)[0];

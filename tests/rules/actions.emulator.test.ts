@@ -2,6 +2,7 @@
 // (`pnpm test:emulator`): confirming with holds, revising in place, cancelling and rejecting.
 
 import { readFileSync } from "node:fs";
+import type { RecordEnvelope, RecordId } from "@hearthtable/kernel";
 import {
   assertFails,
   initializeTestEnvironment,
@@ -9,7 +10,9 @@ import {
 } from "@firebase/rules-unit-testing";
 import {
   endAction,
+  firestoreRepository,
   normalizeAlias,
+  resolveAction,
   reviseAction,
   submitAction,
   watchActions,
@@ -225,5 +228,92 @@ describe("requests", () => {
       ),
     ).toBeUndefined();
     expect((await list(guest()))[0]?.status).toBe("rejected");
+  });
+});
+
+describe("approving and resolving", () => {
+  const sheet = (revision = 0): RecordEnvelope => ({
+    id: BRAM as RecordId,
+    kind: "character",
+    moduleId: "dnd5e-2024",
+    schemaVersion: 1,
+    origin: { scope: "campaign", ownerId: "Moonlit_Coast" },
+    source: { status: "homebrew" },
+    revision,
+    updatedAt: "2026-10-25T00:00:00.000Z",
+    data: { name: "Bram", spellcasting: { expended: {} } },
+    raw: {},
+  });
+
+  it("the DM resolves a queued request once, with its records, in one step", async () => {
+    const repo = firestoreRepository(as("dm"));
+    expect((await repo.save([sheet()])).ok).toBe(true);
+    await submitAction(
+      as("player"),
+      ID,
+      draft(BRAM),
+      "player",
+      0,
+      "Bram queues Shield.",
+    );
+    const [r] = await list(guest());
+    if (!r) throw new Error("no request");
+    const spent = {
+      ...sheet(1),
+      data: { name: "Bram", spellcasting: { expended: { "1": 1 } } },
+    };
+    const outcome = {
+      records: [spent],
+      result: "Bram cast Shield",
+      logs: ["Bram cast Shield."],
+    };
+    expect(
+      await resolveAction(as("player"), ID, r, outcome, "player", 0),
+    ).toBeDefined();
+    expect(
+      await resolveAction(as("dm"), ID, r, outcome, "dm", 0),
+    ).toBeUndefined();
+    const after = await repo.get(BRAM as RecordId);
+    expect(after.ok && after.value?.data).toMatchObject({
+      spellcasting: { expended: { "1": 1 } },
+    });
+    expect((await list(guest()))[0]?.status).toBe("resolved");
+    // Retrying cannot apply it twice.
+    expect(await resolveAction(as("dm"), ID, r, outcome, "dm", 0)).toBe(
+      "This request is no longer queued.",
+    );
+  });
+
+  it("is refused when the request was revised or a record changed meanwhile", async () => {
+    const repo = firestoreRepository(as("dm"));
+    await repo.save([sheet()]);
+    await submitAction(as("player"), ID, draft(BRAM), "player", 0, "first");
+    const [r] = await list(guest());
+    if (!r) throw new Error("no request");
+    await reviseAction(
+      as("player"),
+      ID,
+      r,
+      draft(BRAM),
+      "player",
+      0,
+      "revised",
+    );
+    const outcome = { records: [sheet(1)], result: "x", logs: [] };
+    expect(await resolveAction(as("dm"), ID, r, outcome, "dm", 0)).toBe(
+      "This request was revised; review it again.",
+    );
+    const [again] = await list(guest());
+    if (!again) throw new Error("no request");
+    expect(
+      await resolveAction(
+        as("dm"),
+        ID,
+        again,
+        { ...outcome, records: [sheet(5)] },
+        "dm",
+        0,
+      ),
+    ).toMatch(/changed meanwhile/);
   });
 });

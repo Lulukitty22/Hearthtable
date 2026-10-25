@@ -54,9 +54,19 @@ export function useClearEndedEffects(
   const clearing = useRef(new Set<string>());
   useEffect(() => {
     if (!enabled || !people || !uid || clock === undefined) return;
+    // Effects kept going by a caster's concentration end when it is no longer active: ended,
+    // broken or removed (S7).
+    const activeIds = new Set(
+      [...people.values()].flatMap((p) =>
+        p.effects.filter((e) => e.status === "active").map((e) => e.id),
+      ),
+    );
     for (const person of people.values()) {
       const ended = person.effects.filter(
-        (e) => e.status === "ended" && !clearing.current.has(e.id),
+        (e) =>
+          (e.status === "ended" ||
+            (e.linkedTo !== undefined && !activeIds.has(e.linkedTo))) &&
+          !clearing.current.has(e.id),
       );
       if (ended.length === 0) continue;
       for (const e of ended) clearing.current.add(e.id);

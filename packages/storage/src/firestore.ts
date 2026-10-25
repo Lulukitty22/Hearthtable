@@ -67,6 +67,27 @@ function unavailable(error: unknown): StorageResult<never> {
   };
 }
 
+/** The Firestore document of a record (for writes that must share a transaction, S7). */
+export const recordRef = (db: Firestore, id: string) =>
+  doc(db, COLLECTION, documentIdFor(id));
+
+/** A record's stored form at its next revision, as every save writes it. */
+export function storedRecord(r: RecordEnvelope, now: string) {
+  return {
+    record: serializeEnvelope({
+      ...r,
+      revision: r.revision + 1,
+      updatedAt: now,
+    }),
+    path: r.id,
+    ancestors: ancestorsOf(r.id),
+  };
+}
+
+/** The revision stored in a record document, or undefined when there is none. */
+export const storedRevision = (data: DocumentData | undefined) =>
+  data?.["record"]?.["revision"] as number | undefined;
+
 export function firestoreRepository(db: Firestore): Repository {
   const ref = (id: string) => doc(db, COLLECTION, documentIdFor(id));
 

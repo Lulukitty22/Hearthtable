@@ -43,9 +43,13 @@ export async function endEffects(
   const ids = new Set(effects.map((e) => e.id));
   const list = (data["activeEffects"] as { id: string }[] | undefined) ?? [];
   const keep = list.filter((e) => !ids.has(e.id));
+  // Conditions an ended effect caused go with it (Milestone 5 S7).
+  const conditions = (
+    (data["conditions"] as { source?: string }[] | undefined) ?? []
+  ).filter((c) => !c.source || !ids.has(c.source));
   if (keep.length !== list.length) {
     const saved = await repo.save([
-      { ...record, data: { ...data, activeEffects: keep } },
+      { ...record, data: { ...data, activeEffects: keep, conditions } },
     ]);
     if (!saved.ok) return saved.errors.map((e) => e.message).join("\n");
   }

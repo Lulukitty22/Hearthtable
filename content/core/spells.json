@@ -2227,5 +2227,66 @@
         "review": "reviewed"
       }
     }
+  },
+  {
+    "id": "core/Spells/Hold_Person",
+    "kind": "spell",
+    "moduleId": "spellcasting",
+    "schemaVersion": 1,
+    "origin": {
+      "scope": "core"
+    },
+    "source": {
+      "status": "published",
+      "edition": "2024",
+      "reference": "SRD 5.2.1 (CC-BY-4.0) for text and header facts; class lists from the Player's Handbook (2024), checked 2026-10-22"
+    },
+    "revision": 0,
+    "updatedAt": "2026-10-25T09:38:05.369Z",
+    "data": {
+      "name": "Hold Person",
+      "level": 2,
+      "school": "Enchantment",
+      "classes": [
+        "core/Classes/Bard",
+        "core/Classes/Cleric",
+        "core/Classes/Druid",
+        "core/Classes/Sorcerer",
+        "core/Classes/Warlock",
+        "core/Classes/Wizard"
+      ],
+      "castingTime": "Action",
+      "ritual": false,
+      "range": "60 feet",
+      "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": "a straight piece of iron",
+        "costGp": null,
+        "consumed": false
+      },
+      "duration": "Concentration, up to 1 minute",
+      "concentration": true,
+      "srd": {
+        "version": "5.2.1",
+        "credit": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.",
+        "paragraphs": [
+          "Choose a Humanoid that you can see within range. The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success.",
+          "Using a Higher-Level Spell Slot. You can target one additional Humanoid for each spell slot level above 2."
+        ]
+      },
+      "summary": "A Humanoid within 60 feet makes a Wisdom save or is Paralyzed; it repeats the save at the end of each of its turns.",
+      "effect": {
+        "save": {
+          "ability": "wis",
+          "success": "none"
+        },
+        "applies": {
+          "condition": "core/Conditions/Paralyzed",
+          "repeatSave": "end-of-turn"
+        },
+        "review": "reviewed"
+      }
+    }
   }
 ]

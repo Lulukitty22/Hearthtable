@@ -301,6 +301,10 @@
         {
           "type": "capability",
           "id": "auto-fail:saves.dex"
+        },
+        {
+          "type": "capability",
+          "id": "resistance:all"
         }
       ],
       "srd": {

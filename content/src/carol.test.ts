@@ -138,7 +138,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
       carol(),
       "spellbook-readiness.books",
     );
-    expect(all.map((b) => b.entries.length)).toEqual([16, 10, 6, 8]);
+    expect(all.map((b) => b.entries.length)).toEqual([16, 10, 6, 9]);
     const books = all.slice(0, 3); // the accepted sheet's books
     const notReady = books.flatMap((b) =>
       b.entries
@@ -158,7 +158,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
       packed.filter((l) => !("scroll" in l.line)).map((l) => l.line.id),
     ).toEqual(["coins-pp", "coins-gp", "coins-ep", "coins-sp", "coins-cp"]);
     // Each spell in a book, and each Spellround's payload, is a scroll line inside it.
-    expect(packed.filter((l) => "scroll" in l.line)).toHaveLength(40 + 7);
+    expect(packed.filter((l) => "scroll" in l.line)).toHaveLength(41 + 7);
     expect(new Set(packed.map((l) => l.depth))).toEqual(new Set([1]));
   });
 
@@ -190,7 +190,7 @@ describe("Carol Elfnein under Hearthtable Vanilla+", () => {
       "spellbook-readiness.books",
     );
     const entries = books.flatMap((b) => b.entries);
-    expect(entries.length).toBe(40);
+    expect(entries.length).toBe(41);
     expect(entries.every((e) => e.scroll?.castLevel === e.level)).toBe(true);
   });
 
@@ -651,7 +651,7 @@ describe("spell details", () => {
 
   test("every spell has a summary and its header facts", () => {
     const spells = carolWithDefinitions().filter((r) => r.kind === "spell");
-    expect(spells.length).toBe(40);
+    expect(spells.length).toBe(41);
     for (const r of spells) {
       const d = r.data as Record<string, unknown>;
       for (const k of [
@@ -749,7 +749,7 @@ describe("scrolls", () => {
       r,
       "spellbook-readiness.books",
     )[3] as BookView;
-    expect(overflow.entries.length).toBe(10);
+    expect(overflow.entries.length).toBe(11);
     const byId = new Map(overflow.entries.map((e) => [e.id, e]));
     expect(byId.get("scroll-fireball")).toMatchObject({
       ready: true,

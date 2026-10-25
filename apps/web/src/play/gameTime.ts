@@ -72,6 +72,7 @@ export function useGameNow(campaignSegment: string | undefined) {
   const now = momentOf(state, encounter);
   return {
     now,
+    scene: state?.scene,
     encounter:
       encounter && state && encounter.scene === state.scene && !encounter.ended
         ? encounter

@@ -298,6 +298,13 @@ test("the DM applies conditions; saves fail, Exhaustion stacks, and Stunned brea
     "Carol Elfnein lost concentration on Tasha's Otherworldly Guise.",
   );
   await expect(card.getByLabel("Carol Elfnein's effects")).toHaveCount(0);
+
+  // Stunned would break concentration in the tests that follow.
+  await conditions.getByText("Stunned", { exact: true }).click();
+  await card.getByRole("button", { name: "Remove Stunned" }).click();
+  await expect(card.getByLabel("Carol Elfnein's conditions")).not.toContainText(
+    "Stunned",
+  );
 });
 
 // Milestone 5, S5: downtime. Activities are planned, approved and run when the DM ends it.
@@ -428,5 +435,106 @@ test("a cast request holds its slot; revise, cancel and reject return holds once
   await expect(level(1)).toContainText("7 / 7");
   await expect(dm.getByRole("region", { name: "Campaign log" })).toContainText(
     "The DM rejected Carol Elfnein's request: Cast Mage Armor at level 1",
+  );
+});
+
+// Milestone 5, S7: approval at the eligible moment and resolution. Mage Armor (Next Turn) is
+// approved at Carol's turn: her AC becomes 16 and the effect ends on the clock. Hold Person
+// paralyzes a bandit.
+test("Mage Armor resolves at Carol's turn; Hold Person paralyzes; effects end on the clock", async ({
+  browser,
+}) => {
+  const dm = await signedIn(browser, VR_LULU, `${TABLE}/Dungeon_Master`);
+  dm.on("dialog", (d) => void d.accept());
+  const start = dm.getByRole("form", { name: "Start an encounter" });
+  const characters = start.getByRole("group", { name: "Characters" });
+  await expect(
+    characters.getByRole("checkbox", { name: "Carol Elfnein", exact: true }),
+  ).toBeVisible();
+  const ticked = characters.getByRole("checkbox", { checked: true });
+  while ((await ticked.count()) > 0) await ticked.first().uncheck();
+  await characters
+    .getByRole("checkbox", { name: "Carol Elfnein", exact: true })
+    .check();
+  await start.getByLabel("How many Bandit Scout").fill("1");
+  await start.getByRole("button", { name: "Start the encounter" }).click();
+  const order = dm.getByRole("region", { name: "Turn order" });
+  // Carol goes last (a bandit rolls at least 2).
+  await order.getByLabel("Carol Elfnein's initiative").fill("1");
+  await order.getByLabel("Carol Elfnein's initiative").press("Enter");
+  await expect(order.getByTestId("initiative-Carol Elfnein")).toHaveText(/1/);
+
+  const sheet = await dm.context().newPage();
+  await sheet.goto(
+    "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
+  );
+  await sheet.getByRole("tab", { name: "Spells & Books" }).click();
+  await sheet
+    .getByRole("button", { name: /^Mage Armor/ })
+    .first()
+    .click();
+  await sheet.getByRole("button", { name: "Cast…" }).click();
+  const review = sheet.getByRole("form", { name: "Cast Mage Armor" });
+  await expect(review.getByRole("radio", { name: "Next Turn" })).toBeChecked();
+  await expect(
+    review.getByRole("checkbox", { name: "Carol Elfnein" }),
+  ).toBeChecked();
+  await review.getByRole("button", { name: "Confirm" }).click();
+  await expect(sheet.getByTestId("slots-1")).toContainText("6 / 7");
+
+  await dm.getByRole("button", { name: "Begin round 1" }).click();
+  const requests = dm.getByRole("region", { name: "Requests" });
+  await expect(requests).toContainText("waits for its turn");
+  await expect(requests.getByRole("button", { name: "resolve…" })).toHaveCount(
+    0,
+  );
+  await dm.getByRole("button", { name: "End Bandit Scout's turn" }).click();
+  await expect(requests).toContainText("ready for the DM");
+  await requests.getByRole("button", { name: "resolve…" }).click();
+  await requests.getByRole("button", { name: "Approve and resolve" }).click();
+  await expect(
+    order.getByRole("listitem", { name: "Carol Elfnein" }),
+  ).toContainText("AC 16");
+  await expect(order.getByLabel("Carol Elfnein's effects")).toContainText(
+    "Mage Armor",
+  );
+  await expect(sheet.getByTestId("slots-1")).toContainText("6 / 7");
+  await expect(dm.getByRole("region", { name: "Campaign log" })).toContainText(
+    "The DM approved it. Carol Elfnein: cast Mage Armor at level 1",
+  );
+
+  // Hold Person, Instant, on the bandit, who fails the save.
+  await sheet.getByRole("button", { name: "Close" }).click();
+  await sheet
+    .getByRole("button", { name: /^Hold Person/ })
+    .first()
+    .click();
+  await sheet.getByRole("button", { name: "Cast…" }).click();
+  const hold = sheet.getByRole("form", { name: "Cast Hold Person" });
+  await hold.getByRole("radio", { name: "Instant" }).check();
+  await hold.getByRole("checkbox", { name: "Bandit Scout" }).check();
+  await hold.getByRole("button", { name: "Confirm" }).click();
+  await requests.getByRole("button", { name: "resolve…" }).click();
+  await expect(requests.getByLabel("Bandit Scout: result")).toHaveValue(
+    "failed",
+  );
+  await requests.getByRole("button", { name: "Approve and resolve" }).click();
+  const bandit = order.getByRole("listitem", { name: "Bandit Scout" });
+  await expect(bandit.getByLabel("Bandit Scout's conditions")).toContainText(
+    "Paralyzed",
+  );
+  await expect(bandit.getByLabel("Bandit Scout's conditions")).toContainText(
+    "Incapacitated",
+  );
+
+  // The encounter ends; nine hours of downtime end Mage Armor (8 hours) and Hold Person.
+  await dm.getByRole("button", { name: "End the encounter" }).click();
+  const end = dm.getByRole("form", { name: "End the downtime" });
+  await end.getByLabel("Hours that passed").fill("9");
+  await end.getByRole("button", { name: "End the downtime" }).click();
+  const log = dm.getByRole("region", { name: "Campaign log" });
+  await expect(log).toContainText("Mage Armor on Carol Elfnein ended.");
+  await expect(dm.getByRole("region", { name: "Present" })).toContainText(
+    "AC 13",
   );
 });

@@ -36,6 +36,10 @@ const ActiveEntry = z.looseObject({
   activatedAt: z.string(),
   startedAt: Moment.optional(),
   endsAt: Moment.optional(),
+  /** Cast by another character (Milestone 5 S7). */
+  by: z.string().optional(),
+  /** The caster's concentration this depends on: the id of the caster's own entry. */
+  linkedTo: z.string().optional(),
 });
 
 /** The campaign's current game moment, when the character is in one. */
@@ -54,6 +58,8 @@ export interface ActiveEffectRow {
   readonly activatedAt: string;
   readonly startedAt?: z.infer<typeof Moment>;
   readonly endsAt?: z.infer<typeof Moment>;
+  readonly by?: string;
+  readonly linkedTo?: string;
   /** `ended`: its time is up (the entry is cleared later). */
   readonly status: "active" | "duplicate" | "unresolved" | "ended";
   readonly reason?: string;
@@ -87,6 +93,8 @@ function rows(ctx: ResolveContext): readonly ActiveEffectRow[] {
       activatedAt: e.activatedAt,
       ...(e.startedAt ? { startedAt: e.startedAt } : {}),
       ...(e.endsAt ? { endsAt: e.endsAt } : {}),
+      ...(e.by ? { by: e.by } : {}),
+      ...(e.linkedTo ? { linkedTo: e.linkedTo } : {}),
     };
     // Definitions of any kind may carry `whileActive` (spells, items, features).
     const record = ctx.record(e.ref);

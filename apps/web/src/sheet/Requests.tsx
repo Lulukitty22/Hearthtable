@@ -20,8 +20,8 @@ import {
   type ActionRequest,
 } from "@hearthtable/storage";
 import type { SlotLevel } from "@hearthtable/system-spellcasting";
-import { useState } from "react";
-import { db } from "../firebase";
+import { useEffect, useState } from "react";
+import { db, repository } from "../firebase";
 import { known, type SheetPlay, type TabProps } from "./shared";
 
 interface Profile {
@@ -40,6 +40,41 @@ function slotsNow(props: TabProps): Record<string, number> {
       s.available.kind === "known" ? s.available.value : 0,
     ]),
   );
+}
+
+/** Who is in the current scene: the campaign's characters and the scene's NPCs. */
+function usePresent(play: SheetPlay) {
+  const [present, setPresent] = useState<
+    readonly { path: string; name: string }[]
+  >([]);
+  const campaignPath = play.scene?.split("/").slice(0, 2).join("/");
+  useEffect(() => {
+    if (!campaignPath || !play.scene) return;
+    let cancelled = false;
+    const scene = play.scene;
+    void Promise.all([
+      repository.listUnder(`${campaignPath}/Characters`),
+      repository.listUnder(scene),
+    ]).then(([chars, npcs]) => {
+      if (cancelled) return;
+      const all = [
+        ...(chars.ok ? chars.value : []).filter(
+          (r) => r.kind === "character" && r.id.split("/").length === 5,
+        ),
+        ...(npcs.ok ? npcs.value : []).filter((r) => r.kind === "character"),
+      ];
+      setPresent(
+        all.map((r) => ({
+          path: r.id as string,
+          name: String((r.data as { name?: unknown }).name ?? r.id),
+        })),
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [campaignPath, play.scene]);
+  return present;
 }
 
 const nameOf = (props: TabProps) =>
@@ -100,6 +135,33 @@ export function CastReview({
     request?.timing ?? defaultTiming,
   );
   const [note, setNote] = useState(before?.note ?? "");
+  // Targets (S7, user decision): the player picks from who is in the scene; the DM may change
+  // them at approval. Self is ticked first for Self and Touch spells.
+  const present = usePresent(play);
+  const range = String(
+    (props.records.get(spell)?.data as { range?: unknown } | undefined)
+      ?.range ?? "",
+  );
+  const [targets, setTargets] = useState<readonly string[]>(
+    (request?.input["targets"] as readonly string[] | undefined) ??
+      (/^(self|touch)/i.test(range) ? [props.characterId] : []),
+  );
+  // Starting concentration at full capacity ends one the player chooses, when casting begins.
+  const needsConcentration =
+    (props.records.get(spell)?.data as { concentration?: unknown } | undefined)
+      ?.concentration === true;
+  const maintained =
+    known(
+      props.resolved.get<readonly { effectId: string; name: string }[]>(
+        "concentration.maintained",
+      ),
+    ) ?? [];
+  const capacity =
+    known(props.resolved.get<number>("concentration.capacity")) ?? 1;
+  const mustReplace = needsConcentration && maintained.length >= capacity;
+  const [replaces, setReplaces] = useState<string>(
+    (request?.input["replaces"] as string | undefined) ?? "",
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
@@ -111,6 +173,8 @@ export function CastReview({
     castingTime,
     source: { kind: "book", title: bookTitle },
     ...(note.trim() ? { note: note.trim() } : {}),
+    targets,
+    ...(mustReplace && replaces ? { replaces } : {}),
   };
   const holds = castSpell.holds(input);
   const budget = castSpell.budget(input);
@@ -203,6 +267,44 @@ export function CastReview({
           </label>
         ))}
       </span>
+      {present.length > 0 && (
+        <fieldset>
+          <legend>Targets</legend>
+          {present.map((p) => (
+            <label key={p.path} className="chips">
+              <input
+                type="checkbox"
+                checked={targets.includes(p.path)}
+                onChange={() =>
+                  setTargets(
+                    targets.includes(p.path)
+                      ? targets.filter((t) => t !== p.path)
+                      : [...targets, p.path],
+                  )
+                }
+              />{" "}
+              {p.name}
+            </label>
+          ))}
+        </fieldset>
+      )}
+      {mustReplace && (
+        <label>
+          Already concentrating; casting it ends{" "}
+          <select
+            aria-label="Concentration to end"
+            value={replaces}
+            onChange={(e) => setReplaces(e.target.value)}
+          >
+            <option value="">choose…</option>
+            {maintained.map((m) => (
+              <option key={m.effectId} value={m.effectId}>
+                {m.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       <div>
         <input
           aria-label="Targets or notes"
@@ -223,7 +325,7 @@ export function CastReview({
         </p>
       ))}
       <div className="chips">
-        <button type="submit" disabled={busy}>
+        <button type="submit" disabled={busy || (mustReplace && !replaces)}>
           {request ? "Save the revision" : "Confirm"}
         </button>
         <button type="button" className="link-button" onClick={onDone}>

@@ -4,11 +4,13 @@
 // DM can deploy. Characters are resolved like sheets, so the table shows hit points, Armor Class
 // and initiative bonuses.
 
-import type { RecordEnvelope } from "@hearthtable/kernel";
+import type { RecordEnvelope, ResolvedCharacter } from "@hearthtable/kernel";
 import {
   isInScene,
   sceneKindOf,
   turnOrder,
+  NO_DEFENSES,
+  type Defenses,
   type Holds,
   type InitiativeEntry,
   type Moment,
@@ -58,6 +60,9 @@ export interface Participant {
   readonly hitDice: readonly HitPointDice[];
   readonly conModifier: number;
   readonly pools: readonly { readonly pool: string; readonly reset: string }[];
+  /** For resolving actions (S7): the resolved sheet and its damage defenses. */
+  readonly resolved: ResolvedCharacter;
+  readonly defenses: Defenses;
 }
 
 /** An NPC template the DM can deploy: its records and its initiative bonus. */
@@ -109,6 +114,8 @@ function resolveCharacter(
   );
   const incapacitated = conditions.find((c) => c.breaksConcentration);
   return {
+    resolved,
+    defenses: value<Defenses>("hit-points.defenses") ?? NO_DEFENSES,
     effects,
     conditions,
     hitDice: value<readonly HitPointDice[]>("hit-points.dice") ?? [],
@@ -327,6 +334,8 @@ export function useTable(segment: string) {
     campaignPath,
     conditionKinds,
     actions,
+    /** A core definition by id, such as a spell being resolved. */
+    definition: (id: string) => core?.find((r) => r.id === id),
     campaign,
     state,
     scene: scene as (RecordEnvelope & { data: SceneData }) | undefined,

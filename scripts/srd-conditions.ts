@@ -58,7 +58,11 @@ const AUTOMATED: Partial<Record<(typeof NAMES)[number], object>> = {
   },
   Petrified: {
     includes: [ref("Incapacitated")],
-    whileApplied: autoFailStrDex,
+    // Resistance to all damage (Milestone 5 S7 applies damage).
+    whileApplied: [
+      ...autoFailStrDex,
+      { type: "capability", id: "resistance:all" },
+    ],
   },
   Stunned: { includes: [ref("Incapacitated")], whileApplied: autoFailStrDex },
   Unconscious: {

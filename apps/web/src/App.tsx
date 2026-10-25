@@ -425,7 +425,7 @@ function Sheet({
     [campaign, uid, characterId],
   );
   // In a campaign, the game clock decides when effects end (Milestone 5 S4).
-  const { now, encounter } = useGameNow(
+  const { now, encounter, scene } = useGameNow(
     characterId.startsWith("campaign/") ? characterId.split("/")[1] : undefined,
   );
   // Requests (S6): this campaign's, whose holds are not usable on the sheet.
@@ -498,6 +498,7 @@ function Sheet({
             uid,
             ...(encounter ? { encounter } : {}),
             clock: now.clock,
+            ...(scene ? { scene } : {}),
             requests: requests.filter(
               (r) => r.character === characterId && r.status === "queued",
             ),

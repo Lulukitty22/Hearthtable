@@ -300,6 +300,9 @@ export function TablePage({
               encounter={encounter}
               clock={clock}
               control={control}
+              now={table.now}
+              present={participants ?? []}
+              definition={table.definition}
               onProblem={setProblem}
             />
           )}

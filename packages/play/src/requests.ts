@@ -111,6 +111,10 @@ export interface CastInput {
     | { readonly kind: "scroll"; readonly lineId: string };
   /** Targets or anything else the player wants the DM to know. */
   readonly note?: string;
+  /** Who the player picked as targets (record paths); the DM may change them (S7). */
+  readonly targets?: readonly string[];
+  /** The concentration effect this cast ends when it begins, at full capacity (S7). */
+  readonly replaces?: string;
 }
 
 export function budgetOfCastingTime(text: string): BudgetKind | undefined {

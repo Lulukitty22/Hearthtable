@@ -6,7 +6,7 @@ import {
   buildSnapshot,
   type ScrollSnapshot,
 } from "@hearthtable/system-scrolls";
-import type { SourcedGrant } from "@hearthtable/kernel";
+import type { ResolvedCharacter, SourcedGrant } from "@hearthtable/kernel";
 import { known, type TabProps } from "./shared";
 
 export function snapshotFor(
@@ -14,7 +14,23 @@ export function snapshotFor(
   spellId: string,
   castLevel: number,
 ): ScrollSnapshot {
-  const get = <T>(key: string) => known(props.resolved.get<T>(key));
+  return snapshotFrom(
+    props.resolved,
+    (props.records.get(spellId)?.data ?? {}) as Record<string, unknown>,
+    castLevel,
+  );
+}
+
+/**
+ * The same from a resolved character and the spell's data: also the caster's current numbers
+ * and formulas when a spell is cast from a book (Milestone 5 S7).
+ */
+export function snapshotFrom(
+  resolved: ResolvedCharacter,
+  spell: Readonly<Record<string, unknown>>,
+  castLevel: number,
+): ScrollSnapshot {
+  const get = <T>(key: string) => known(resolved.get<T>(key));
   const casters = (
     get<readonly CasterClass[]>("character.casterClasses") ?? []
   ).map((c) => {
@@ -29,7 +45,7 @@ export function snapshotFor(
     };
   });
   return buildSnapshot({
-    spell: (props.records.get(spellId)?.data ?? {}) as Record<string, unknown>,
+    spell,
     castLevel,
     characterLevel: get<number>("character.level") ?? 1,
     casters,

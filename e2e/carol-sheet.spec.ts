@@ -264,7 +264,7 @@ test("a scroll mounts into a spellbook and comes back out", async ({
 
   await page.getByRole("tab", { name: "Spells & Books" }).click();
   const overflow = page.getByLabel("Book Overflow (test spells)");
-  await expect(overflow).toContainText("9 / 16 entries");
+  await expect(overflow).toContainText("10 / 16 entries");
   await overflow.getByRole("button", { name: /Fireball/ }).click();
   await expect(
     page.getByRole("heading", { name: "Bound scroll" }),
@@ -277,7 +277,7 @@ test("a scroll mounts into a spellbook and comes back out", async ({
       name: "Take the scroll out of Overflow (test spells)",
     })
     .click();
-  await expect(overflow).toContainText("8 / 16 entries");
+  await expect(overflow).toContainText("9 / 16 entries");
 
   await page.getByRole("tab", { name: "Inventory" }).click();
   await carried.getByRole("button", { name: "Scroll: Fireball" }).click();

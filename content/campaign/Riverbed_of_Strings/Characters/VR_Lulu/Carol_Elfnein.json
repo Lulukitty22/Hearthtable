@@ -1664,6 +1664,24 @@
               "formulas": []
             }
           }
+        },
+        {
+          "id": "overflow-hold-person",
+          "ref": "core/Items/Spell_Scroll",
+          "quantity": 1,
+          "attunedTo": null,
+          "parent": "overflow-book",
+          "scroll": {
+            "spell": "core/Spells/Hold_Person",
+            "castLevel": 2,
+            "scribe": "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
+            "snapshot": {
+              "casterClass": "core/Classes/Wizard",
+              "spellSaveDC": 19,
+              "spellAttackBonus": 11,
+              "formulas": []
+            }
+          }
         }
       ]
     }
