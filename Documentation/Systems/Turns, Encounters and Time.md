@@ -4,7 +4,7 @@ Purpose: own how play moves forward in a campaign: encounters, initiative and tu
 
 Selected decisions: the sections below, recorded with the user on 2026-10-24 (each with its time).
 
-Open questions: conditions (Milestone 5 Plan topic E); how NPCs are stored and shown (their records and the look of a stat card).
+Open questions: how NPCs are stored and shown (their records and the look of a stat card).
 
 ## NPCs are characters
 
@@ -50,3 +50,16 @@ Selected 2026-10-24 at 5:55 pm PDT (America/Los_Angeles) (user decisions): the t
 Selected 2026-10-24 at 5:28 pm PDT (America/Los_Angeles) (user decision): Hearthtable Vanilla+ rests restore what the published 2024 rules say. A Short Rest lets a character spend Hit Point Dice to heal and resets short-rest resources; a Long Rest restores all hit points and all Hit Point Dice, all spell slots and long-rest resources, and lowers Exhaustion by one. Resources reset to their current maximum while queued holds stay with their requests ([capped replenishment](Spell%20Effects%20and%20Active%20State.md#casting-workflow--selected-2026-10-17)). How rests are started, timed and combined with other downtime is open (above).
 
 Interruptions — accepted by the user 2026-10-24 at 5:44 pm PDT (America/Los_Angeles), using the 2024 rules (to be verified against the rules text when built): a Short Rest gives nothing if the character rolls initiative, casts a spell other than a cantrip or takes damage; a Long Rest is stopped by those or by an hour of walking or other exertion, and if at least an hour of it had passed, the character still gets a Short Rest's benefits. An interrupted crafting job keeps its partial progress ([Crafting Jobs](Crafting%20Jobs.md)).
+
+## Conditions
+
+Selected 2026-10-24 at 6:11 pm PDT (America/Los_Angeles) (user decisions):
+
+- **All fifteen 2024 conditions** (Blinded, Charmed, Deafened, Exhaustion, Frightened, Grappled, Incapacitated, Invisible, Paralyzed, Petrified, Poisoned, Prone, Restrained, Stunned, Unconscious) are complete definitions, like spells, with their SRD 5.2 rules text and credit. Nothing is shortcut: each condition's whole definition is there, and its logic is its own plug-in module, following the open-and-modular principle ([Modules, Systems and Rulesets](Modules%2C%20Systems%20and%20Rulesets.md#open-work-must-be-specified-before-implementation)).
+- **What is purely mechanical is automated,** such as Exhaustion's penalty to d20 tests and Incapacitated ending concentration. The rest (Advantage and Disadvantage situations, not being able to see, and so on) shows its rules text and is applied by hand, marked as manual ([partial automation](Spell%20Effects%20and%20Active%20State.md#structured-effects-and-manual-adjudication)).
+- **Applying and removing:** a resolved spell or effect applies its condition automatically (Hold Person: Paralyzed while it lasts). The DM can apply or remove any condition directly; a player asks, like any request.
+- **Ending:** a condition ends when its source says so: when the effect causing it ends or expires on the game clock, on a successful repeat save (prompted at the right turn boundary, like any roll), or when the DM removes it.
+
+## Rules warn; the DM decides
+
+Selected 2026-10-24 at 6:11 pm PDT (America/Los_Angeles) (user decision), for conditions and generally for gameplay rules: the app warns, it does not block. An Incapacitated character can still queue a spell or use an item; the app tells them they are Incapacitated, and only doing nothing (or something the rules allow, such as trying to wake) raises no warning. Approval and the final enforcement of rules are the DM's. The action budget works the same way (above).
