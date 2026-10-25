@@ -249,6 +249,8 @@ function ItemTile({ sheet, row }: { sheet: Sheet; row: LineRow }) {
       badges={[
         ...(position >= 0 ? [`A${position + 1}`] : []),
         ...(held ? ["held"] : []),
+        // Held by a queued request (S6): not usable until it resolves or returns.
+        ...(row.held > 0 ? [`${row.held} in a request`] : []),
         ...(spent ? ["spent"] : []),
         ...(row.lost ? [row.lost] : []),
       ]}

@@ -48,7 +48,8 @@ export type LogKind =
   | "order"
   | "effect"
   | "condition"
-  | "activity";
+  | "activity"
+  | "request";
 
 export interface LogEntry {
   readonly id: string;

@@ -5,6 +5,7 @@
 export * from "./dice";
 export * from "./envelope";
 export * from "./grants";
+export * from "./holds";
 export * from "./ids";
 export * from "./read";
 export * from "./registry";

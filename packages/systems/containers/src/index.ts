@@ -12,6 +12,7 @@
 
 import {
   DERIVATIONS_POINT,
+  heldAmounts,
   issue,
   known,
   readDefinition,
@@ -92,6 +93,8 @@ export interface LineRow {
   readonly accessible: boolean;
   /** Lost or destroyed, itself or through the container it is in (which takes its contents). */
   readonly lost?: "lost" | "destroyed";
+  /** How many of the line queued requests hold (Milestone 5 S6); not usable until returned. */
+  readonly held: number;
 }
 
 export interface Weight {
@@ -156,6 +159,7 @@ function rows(ctx: ResolveContext): readonly LineRow[] {
     return depth;
   };
 
+  const held = heldAmounts(ctx, "lines");
   return all.map((line): LineRow => {
     const def = readDefinition(ctx, line.ref, "item", ItemDefinition);
     const depth = depthOf(line);
@@ -202,6 +206,7 @@ function rows(ctx: ResolveContext): readonly LineRow[] {
     const shared = {
       line,
       accessible,
+      held: Math.min(line.quantity, held[line.id] ?? 0),
       ...(typeof depth === "number" ? { depth } : {}),
       ...(lost ? { lost } : {}),
     };

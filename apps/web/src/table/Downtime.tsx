@@ -19,6 +19,7 @@ import {
   setActivityStatus,
   submitActivity,
   watchActivities,
+  type ActionRequest,
   type Activity,
   type PlayState,
 } from "@hearthtable/storage";
@@ -98,6 +99,7 @@ export function DowntimePanel({
   state,
   scene,
   activities,
+  actions,
   people,
   characters,
   control,
@@ -108,6 +110,8 @@ export function DowntimePanel({
   state: PlayState;
   scene: RecordEnvelope | undefined;
   activities: readonly Activity[];
+  /** Requests whose holds a rest keeps out of use (S6). */
+  actions: readonly ActionRequest[];
   people: ReadonlyMap<string, Participant>;
   characters: readonly string[];
   control: Control;
@@ -282,6 +286,7 @@ export function DowntimePanel({
           onPass={async (elapsed) => {
             const err = await runActivities(
               campaign,
+              actions,
               activities,
               people,
               uid,

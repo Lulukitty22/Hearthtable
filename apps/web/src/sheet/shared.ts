@@ -6,6 +6,7 @@ import type {
   Value,
 } from "@hearthtable/kernel";
 import type { Moment } from "@hearthtable/play";
+import type { ActionRequest, EncounterState } from "@hearthtable/storage";
 import type { SheetActions } from "../useSheet";
 
 export interface TabProps {
@@ -17,6 +18,18 @@ export interface TabProps {
   readonly canEdit: boolean;
   /** The campaign's current game moment, when the character is in a campaign whose table is open. */
   readonly now?: Moment;
+  /** Acting in play (Milestone 5 S6): requests, for a viewer who may act for the character. */
+  readonly play?: SheetPlay;
+}
+
+export interface SheetPlay {
+  readonly campaign: string;
+  readonly uid: string;
+  /** The encounter in progress, when there is one (Next Turn is offered only then). */
+  readonly encounter?: EncounterState;
+  readonly clock: number;
+  /** This character's queued requests. */
+  readonly requests: readonly ActionRequest[];
 }
 
 export type Data = Record<string, unknown>;

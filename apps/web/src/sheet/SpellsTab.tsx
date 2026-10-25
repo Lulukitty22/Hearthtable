@@ -14,6 +14,7 @@ import { Explained } from "./Explained";
 import { EntryBody } from "./entries";
 import { DetailPanel, DropTarget, Tile, TileGrid } from "./Grid";
 import { bookDrop, takeOut } from "./InventoryTab";
+import { CastReview, SheetRequests } from "./Requests";
 import { ScrollFacts } from "./ScrollFacts";
 import { snapshotFor } from "./scribe";
 import { known, sheetRecord, type Data, type TabProps } from "./shared";
@@ -103,8 +104,26 @@ function SpellDetail({
   onNotice: (message: string) => void;
   onClose: () => void;
 }) {
+  // Reviewing a cast (Milestone 5 S6): nothing is spent until confirmed.
+  const [reviewing, setReviewing] = useState(false);
   return (
     <DetailPanel title={entry.name} onClose={onClose}>
+      {props.play &&
+        (reviewing ? (
+          <CastReview
+            props={props}
+            play={props.play}
+            spell={entry.ref}
+            bookTitle={bookTitle}
+            onDone={() => setReviewing(false)}
+          />
+        ) : (
+          <p>
+            <button type="button" onClick={() => setReviewing(true)}>
+              Cast…
+            </button>
+          </p>
+        ))}
       {/* Readiness in each book is shown by the spell body below. */}
       {scroll && (
         <>
@@ -153,11 +172,17 @@ export function SpellsTab(props: TabProps) {
 
   return (
     <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
+      <SheetRequests props={props} />
       <section className="panel">
         <h2>Spell slots</h2>
         <div className="chips" style={{ marginTop: 8 }}>
           {slots.map((s) => (
-            <span key={s.level} className="vital" style={{ minWidth: 80 }}>
+            <span
+              key={s.level}
+              className="vital"
+              style={{ minWidth: 80 }}
+              data-testid={`slots-${s.level}`}
+            >
               <span className="vital-label">Level {s.level}</span>
               <br />
               <Explained value={s.available} /> / <Explained value={s.max} />

@@ -36,11 +36,19 @@ function resetPools(
       .filter((p) => resets.some((r) => p.reset.toLowerCase().includes(r)))
       .map((p) => p.pool),
   );
-  const used = Object.fromEntries(
-    Object.entries(resources.used ?? {}).filter(
-      ([pool]) => !resetting.has(pool),
+  const used = {
+    ...Object.fromEntries(
+      Object.entries(resources.used ?? {}).filter(
+        ([pool]) => !resetting.has(pool),
+      ),
     ),
-  );
+    // Uses held by queued requests stay out of use, below zero (see CharacterFacts.held).
+    ...Object.fromEntries(
+      Object.entries(facts.held?.pools ?? {})
+        .filter(([pool, n]) => resetting.has(pool) && n > 0)
+        .map(([pool, n]) => [pool, -n]),
+    ),
+  };
   return { ...data, resources: { ...resources, used } };
 }
 
@@ -114,7 +122,12 @@ export const longRest: ActivityType = {
         hitPointDice: { spent: {} },
         spellcasting: {
           ...((data["spellcasting"] as object | undefined) ?? {}),
-          expended: {},
+          // Slots held by queued requests stay out of use, below zero.
+          expended: Object.fromEntries(
+            Object.entries(facts.held?.slots ?? {})
+              .filter(([, n]) => n > 0)
+              .map(([level, n]) => [level, -n]),
+          ),
         },
         conditions,
         lastLongRestEnd: clock,

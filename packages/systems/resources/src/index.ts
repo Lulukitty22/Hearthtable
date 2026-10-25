@@ -7,6 +7,7 @@ import {
   DERIVATIONS_POINT,
   amountValue,
   grantsOf,
+  heldAmounts,
   issue,
   known,
   readField,
@@ -18,7 +19,8 @@ import {
 import { z } from "zod";
 
 const ResourceState = z.looseObject({
-  used: z.record(z.string(), z.number().int().min(0)).optional(),
+  // Below zero only after a rest while uses were held by requests (Milestone 5 S6).
+  used: z.record(z.string(), z.number().int()).optional(),
 });
 
 export interface ResourcePool {
@@ -33,6 +35,7 @@ function pools(ctx: ResolveContext): readonly ResourcePool[] {
   const used =
     readField(ctx, "character", "resources", ResourceState.optional())[0]?.value
       ?.used ?? {};
+  const held = heldAmounts(ctx, "pools");
   const byPool = new Map<
     string,
     ReturnType<typeof grantsOf<"resource">>[number][]
@@ -59,12 +62,18 @@ function pools(ctx: ResolveContext): readonly ResourcePool[] {
       ),
     );
     const spent = used[pool] ?? 0;
+    // Uses held by queued requests count as spent; never more than the maximum remains.
+    const hold = held[pool] ?? 0;
     const remaining: Value<number> =
       max.kind === "unresolved"
         ? max
-        : known(max.value - spent, `${pool} remaining`, {
-            note: `${spent} used of ${max.value}`,
-          });
+        : known(
+            Math.max(0, Math.min(max.value, max.value - spent - hold)),
+            `${pool} remaining`,
+            {
+              note: `${Math.max(0, spent)} used of ${max.value}${hold ? `, ${hold} held by requests` : ""}`,
+            },
+          );
     if (max.kind === "known" && spent > max.value) {
       ctx.report(
         issue(

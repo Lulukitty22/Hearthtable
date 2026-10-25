@@ -10,6 +10,7 @@ import {
   amountValue,
   d20TestBonuses,
   grantsOf,
+  heldAmounts,
   known,
   readField,
   sum,
@@ -41,7 +42,8 @@ export interface SlotLevel {
 }
 
 const SlotState = z.looseObject({
-  expended: z.record(z.string(), z.number().int().min(0)).optional(),
+  // Below zero only after a rest while slots were held (see `spellcasting.slots`).
+  expended: z.record(z.string(), z.number().int()).optional(),
 });
 
 function casters(ctx: ResolveContext): Value<readonly CasterClass[]> {
@@ -83,6 +85,10 @@ const derivations: Derivation[] = [
       const expended =
         readField(ctx, "character", "spellcasting", SlotState.optional())[0]
           ?.value?.expended ?? {};
+      // Slots held by queued requests count as used (Milestone 5 S6); a rest that restores the
+      // sheet while a hold is out may leave `expended` below zero, and what is usable never
+      // exceeds the maximum, so a hold returned later is discarded.
+      const held = heldAmounts(ctx, "slots");
       const highest = Math.max(0, ...list.value.map((c) => c.slots.length));
       const levels: SlotLevel[] = [];
       for (let level = 1; level <= highest; level++) {
@@ -93,12 +99,17 @@ const derivations: Derivation[] = [
           );
         const max = sum(`Level ${level} slots`, parts);
         const used = expended[String(level)] ?? 0;
+        const hold = held[String(level)] ?? 0;
         const available: Value<number> =
           max.kind === "unresolved"
             ? max
-            : known(Math.max(0, max.value - used), `Level ${level} available`, {
-                note: `${used} expended`,
-              });
+            : known(
+                Math.max(0, Math.min(max.value, max.value - used - hold)),
+                `Level ${level} available`,
+                {
+                  note: `${Math.max(0, used)} expended${hold ? `, ${hold} held by requests` : ""}`,
+                },
+              );
         levels.push({ level, max, expended: used, available });
       }
       return known(levels, "Spell slots", { note: "added per class" });

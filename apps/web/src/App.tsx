@@ -34,6 +34,7 @@ import { downloadExport } from "./export/exportFile";
 import { FolderPage } from "./home/FolderPage";
 import { segmentFor } from "./home/names";
 import { parseRoute, webPathFor, type View as RouteView } from "./routes";
+import { heldBy, useActions } from "./play/actions";
 import { useGameNow } from "./play/gameTime";
 import { TablePage } from "./table/TablePage";
 import { FeaturesTab } from "./sheet/FeaturesTab";
@@ -424,8 +425,14 @@ function Sheet({
     [campaign, uid, characterId],
   );
   // In a campaign, the game clock decides when effects end (Milestone 5 S4).
-  const now = useGameNow(
+  const { now, encounter } = useGameNow(
     characterId.startsWith("campaign/") ? characterId.split("/")[1] : undefined,
+  );
+  // Requests (S6): this campaign's, whose holds are not usable on the sheet.
+  const requests = useActions(campaign?.id);
+  const held = useMemo(
+    () => heldBy(requests, characterId),
+    [requests, characterId],
   );
   const [state, actions] = useSheet(
     repository,
@@ -434,6 +441,7 @@ function Sheet({
     proposer ? submit : undefined,
     canEdit,
     now,
+    held,
   );
   const [tab, setTab] = useState("stats");
   const [note, setNote] = useState("");
@@ -482,6 +490,20 @@ function Sheet({
     edit: actions.edit,
     canEdit,
     ...(now ? { now } : {}),
+    // Whoever may act for a campaign character (its owner, a delegate or a DM) makes requests.
+    ...(campaign && uid && now && (allowed || proposer)
+      ? {
+          play: {
+            campaign: campaign.id,
+            uid,
+            ...(encounter ? { encounter } : {}),
+            clock: now.clock,
+            requests: requests.filter(
+              (r) => r.character === characterId && r.status === "queued",
+            ),
+          },
+        }
+      : {}),
   };
   const tabs = sheetTabs();
   const current = tabs.includes(tab) ? tab : (tabs[0] ?? "");

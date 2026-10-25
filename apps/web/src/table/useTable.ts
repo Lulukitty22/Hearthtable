@@ -9,6 +9,7 @@ import {
   isInScene,
   sceneKindOf,
   turnOrder,
+  type Holds,
   type InitiativeEntry,
   type Moment,
   type SceneData,
@@ -29,6 +30,7 @@ import type { ConditionRow } from "@hearthtable/system-conditions";
 import type { HitPointDice } from "@hearthtable/system-hit-points";
 import type { ResourcePool } from "@hearthtable/system-resources";
 import { useEffect, useMemo, useState } from "react";
+import { heldBy, holdsRecord, useActions } from "../play/actions";
 import { gameTimeRecord, momentOf } from "../play/gameTime";
 import { useCampaign } from "../campaign/useCampaign";
 import { db, repository } from "../firebase";
@@ -78,12 +80,14 @@ function resolveCharacter(
   path: string,
   npc: boolean,
   now?: Moment,
+  holds?: Holds,
 ): Participant {
   const data = own.find((r) => r.id === path)?.data as
     { name?: unknown } | undefined;
   const resolved = engine.resolve([
     ...[...definitions, ...own].filter((r) => r.kind !== "history"),
     ...(now ? [gameTimeRecord(now)] : []),
+    ...(holds ? [holdsRecord(holds)] : []),
   ]);
   const value = <T>(key: string) => {
     const v = resolved.get<T>(key);
@@ -148,6 +152,8 @@ export function useTable(segment: string) {
   const [encounter, setEncounter] = useState<EncounterState | undefined>();
   const [entries, setEntries] = useState<readonly ParticipantState[]>([]);
   const [failure, setFailure] = useState<string | undefined>();
+  // Requests (S6): their holds are not usable, and the table lists them.
+  const actions = useActions(id);
 
   useEffect(
     () => watchPlayState(db, id, (s) => setState(s ?? null), setFailure),
@@ -221,12 +227,26 @@ export function useTable(segment: string) {
     for (const c of campaignCharacters)
       map.set(
         c.id,
-        resolveCharacter(definitions, own(c.id, records), c.id, false, now),
+        resolveCharacter(
+          definitions,
+          own(c.id, records),
+          c.id,
+          false,
+          now,
+          heldBy(actions, c.id),
+        ),
       );
     for (const c of sceneNpcs)
       map.set(
         c.id,
-        resolveCharacter(definitions, own(c.id, records), c.id, true, now),
+        resolveCharacter(
+          definitions,
+          own(c.id, records),
+          c.id,
+          true,
+          now,
+          heldBy(actions, c.id),
+        ),
       );
 
     // Templates: campaign/<C>/NPCs/<Name> and core/NPCs/<Name>.
@@ -260,7 +280,7 @@ export function useTable(segment: string) {
       sceneNpcs: sceneNpcs.map((c) => c.id as string),
       templates,
     };
-  }, [records, core, state, campaignPath, nowClock, nowStep]);
+  }, [records, core, state, campaignPath, nowClock, nowStep, actions]);
 
   const initiative = useMemo(() => {
     const m = new Map<string, InitiativeEntry & { detail: string }>();
@@ -306,6 +326,7 @@ export function useTable(segment: string) {
     id,
     campaignPath,
     conditionKinds,
+    actions,
     campaign,
     state,
     scene: scene as (RecordEnvelope & { data: SceneData }) | undefined,

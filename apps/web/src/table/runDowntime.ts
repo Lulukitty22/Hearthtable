@@ -12,7 +12,12 @@ import {
   type CharacterData,
   type QueuedActivity,
 } from "@hearthtable/play";
-import { updateActivities, type Activity } from "@hearthtable/storage";
+import {
+  updateActivities,
+  type ActionRequest,
+  type Activity,
+} from "@hearthtable/storage";
+import { heldBy } from "../play/actions";
 import { db, repository } from "../firebase";
 import type { Participant } from "./useTable";
 
@@ -22,6 +27,7 @@ const errorsOf = (r: { errors: readonly { message: string }[] }) =>
 /** Runs the queue for `elapsed` seconds starting at `clock`. Returns an error message or nothing. */
 export async function runActivities(
   campaign: string,
+  actions: readonly ActionRequest[],
   activities: readonly Activity[],
   people: ReadonlyMap<string, Participant>,
   uid: string,
@@ -71,6 +77,7 @@ export async function runActivities(
       hpCurrent: hp,
       hpMax: person.hp?.max,
       pools: person.pools,
+      held: heldBy(actions, a.character),
     };
     const at = clock + r.at;
     if (r.state === "done") {

@@ -38,6 +38,7 @@ import {
 } from "./Conditions";
 import { DowntimePanel, useActivities, useApplyRolls } from "./Downtime";
 import { EffectChips, useClearEndedEffects } from "./Effects";
+import { RequestsPanel } from "./Requests";
 import { runActivities } from "./runDowntime";
 import { EncounterPanel, type Control } from "./EncounterPanel";
 import { NewNpcTemplate, StartEncounter } from "./StartEncounter";
@@ -273,6 +274,7 @@ export function TablePage({
                 beforeStart={(elapsed) =>
                   runActivities(
                     table.id,
+                    table.actions,
                     activities,
                     people.map,
                     uid,
@@ -290,6 +292,17 @@ export function TablePage({
               />
             </section>
           )}
+          {people && (
+            <RequestsPanel
+              campaign={table.id}
+              actions={table.actions}
+              people={people.map}
+              encounter={encounter}
+              clock={clock}
+              control={control}
+              onProblem={setProblem}
+            />
+          )}
           {kind === "encounter" && encounter && order && people && (
             <EncounterPanel
               id={table.id}
@@ -306,6 +319,7 @@ export function TablePage({
               now={table.now}
               endEarly={endEarly}
               conditionTools={conditionTools}
+              actions={table.actions}
               onProblem={setProblem}
             />
           )}
@@ -316,6 +330,7 @@ export function TablePage({
               state={state}
               scene={scene}
               activities={activities}
+              actions={table.actions}
               people={people.map}
               characters={people.campaignCharacters}
               control={control}

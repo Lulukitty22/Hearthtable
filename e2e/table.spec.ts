@@ -368,3 +368,65 @@ test("downtime: a Long Rest and a note run when the DM ends it; a Short Rest spe
   await spend.getByRole("button", { name: "Done spending" }).click();
   await expect(spend).toHaveCount(0);
 });
+
+// Milestone 5, S6: requests hold their costs; revising keeps the place; cancelling and
+// rejecting return the holds.
+test("a cast request holds its slot; revise, cancel and reject return holds once", async ({
+  browser,
+}) => {
+  const dm = await signedIn(browser, VR_LULU, `${TABLE}/Dungeon_Master`);
+  const sheet = await dm.context().newPage();
+  await sheet.goto(
+    "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
+  );
+  await sheet.getByRole("tab", { name: "Spells & Books" }).click();
+  const level = (n: number) => sheet.getByTestId(`slots-${n}`);
+  await expect(level(1)).toContainText("7 / 7");
+  await expect(level(2)).toContainText("3 / 3");
+
+  const cast = async () => {
+    await sheet
+      .getByRole("button", { name: /^Mage Armor/ })
+      .first()
+      .click();
+    await sheet.getByRole("button", { name: "Cast…" }).click();
+    const review = sheet.getByRole("form", { name: "Cast Mage Armor" });
+    await expect(review).toContainText(
+      "Holds one level-1 spell slot; uses Action",
+    );
+    await review.getByRole("button", { name: "Confirm" }).click();
+  };
+  await cast();
+  await expect(level(1)).toContainText("6 / 7");
+  const requests = sheet.getByRole("region", { name: "Requests" });
+  await expect(requests).toContainText("Cast Mage Armor at level 1 from");
+  await expect(requests).toContainText("ready for the DM");
+  await expect(dm.getByRole("region", { name: "Requests" })).toContainText(
+    "Carol Elfnein: Cast Mage Armor at level 1",
+  );
+
+  // Revise to level 2: the level-1 slot comes back and a level-2 slot is held instead.
+  await requests.getByRole("button", { name: "revise" }).click();
+  await requests.getByLabel("Cast level").selectOption("2");
+  await requests.getByRole("button", { name: "Save the revision" }).click();
+  await expect(requests).toContainText("revision 2");
+  await expect(level(1)).toContainText("7 / 7");
+  await expect(level(2)).toContainText("2 / 3");
+
+  await requests.getByRole("button", { name: "cancel" }).click();
+  await expect(level(2)).toContainText("3 / 3");
+  await expect(requests).toHaveCount(0);
+
+  // The DM rejects the next one; the slot returns once.
+  await sheet.getByRole("button", { name: "Close" }).click();
+  await cast();
+  await expect(level(1)).toContainText("6 / 7");
+  await dm
+    .getByRole("region", { name: "Requests" })
+    .getByRole("button", { name: "reject" })
+    .click();
+  await expect(level(1)).toContainText("7 / 7");
+  await expect(dm.getByRole("region", { name: "Campaign log" })).toContainText(
+    "The DM rejected Carol Elfnein's request: Cast Mage Armor at level 1",
+  );
+});

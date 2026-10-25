@@ -43,7 +43,10 @@ export function momentOf(
   );
 }
 
-/** The current moment in a campaign, or undefined outside one (or before its table opens). */
+/**
+ * The current moment in a campaign, or undefined outside one (or before its table opens), with
+ * the encounter in progress, if any.
+ */
 export function useGameNow(campaignSegment: string | undefined) {
   const [state, setState] = useState<PlayState | null | undefined>();
   const [encounter, setEncounter] = useState<EncounterState | undefined>();
@@ -66,5 +69,12 @@ export function useGameNow(campaignSegment: string | undefined) {
       setEncounter(undefined);
     };
   }, [id, scene]);
-  return momentOf(state, encounter);
+  const now = momentOf(state, encounter);
+  return {
+    now,
+    encounter:
+      encounter && state && encounter.scene === state.scene && !encounter.ended
+        ? encounter
+        : undefined,
+  };
 }

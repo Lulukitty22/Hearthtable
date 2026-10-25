@@ -202,7 +202,7 @@ service cloud.firestore {
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 2000
-          && (request.resource.data.kind in ['post', 'turn', 'initiative', 'activity']
+          && (request.resource.data.kind in ['post', 'turn', 'initiative', 'activity', 'request']
             || (request.resource.data.kind in ['scene', 'clock', 'title', 'order', 'effect', 'condition']
               && request.auth.uid in get(campaignDoc(campaign)).data.dms));
       }
@@ -250,6 +250,38 @@ service cloud.firestore {
             && ((isApproved() && isDmOf(campaign))
               || controls(request.resource.data.path, request.resource.data.get('control', null)));
         }
+      }
+
+      // Milestone 5 S6: requests. A character's controller (or a DM) confirms one, queued, with
+      // its holds. While it is queued the controller may revise it in place (same submission
+      // time, next revision) or cancel it; DMs may reject it. A request leaves the queue once,
+      // and nothing is ever deleted.
+      match /actions/{action} {
+        allow read: if true;
+        allow create: if isApproved()
+          && (request.auth.uid in get(campaignDoc(campaign)).data.dms
+            || request.auth.uid in get(campaignDoc(campaign)).data.players)
+          && request.resource.data.keys().hasOnly(['kind', 'character', 'timing', 'input', 'holds', 'budget', 'summary', 'by', 'control', 'revision', 'status', 'at'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.at == request.time
+          && request.resource.data.status == 'queued'
+          && request.resource.data.revision == 1
+          && request.resource.data.timing in ['instant', 'next-turn']
+          && request.resource.data.character is string
+          && request.resource.data.character.split('/')[1].lower() == campaign
+          && (isDmOf(campaign)
+            || controls(request.resource.data.character, request.resource.data.get('control', null)));
+        allow update: if resource.data.status == 'queued'
+          && ((isApproved() && isDmOf(campaign)
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+              && request.resource.data.status == 'rejected')
+            || (controls(resource.data.character, resource.data.get('control', null))
+              && ((request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+                  && request.resource.data.status == 'cancelled')
+                || (request.resource.data.diff(resource.data).affectedKeys()
+                    .hasOnly(['timing', 'input', 'holds', 'budget', 'summary', 'revision'])
+                  && request.resource.data.revision == resource.data.revision + 1
+                  && request.resource.data.timing in ['instant', 'next-turn']))));
       }
 
       // Milestone 5 S5: downtime activities. A character's controller (or a DM) submits one,

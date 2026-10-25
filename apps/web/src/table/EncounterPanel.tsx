@@ -27,9 +27,22 @@ import {
   passTurn,
   setUse,
   takeStep,
+  type ActionRequest,
   type EncounterState,
   type ParticipantState,
 } from "@hearthtable/storage";
+
+/** The budget a participant's queued requests hold, by kind. */
+function heldBudget(
+  actions: readonly ActionRequest[],
+  path: string,
+): Partial<Record<BudgetKind, number>> {
+  const out: Partial<Record<BudgetKind, number>> = {};
+  for (const a of actions)
+    if (a.status === "queued" && a.character === path && a.budget)
+      out[a.budget] = (out[a.budget] ?? 0) + 1;
+  return out;
+}
 import type { RecordEnvelope } from "@hearthtable/kernel";
 import { useState } from "react";
 import { db, repository } from "../firebase";
@@ -66,6 +79,7 @@ export function EncounterPanel({
   now,
   endEarly,
   conditionTools,
+  actions,
   onProblem,
 }: {
   id: string;
@@ -84,6 +98,8 @@ export function EncounterPanel({
     person: Participant,
   ) => ((effect: { id: string; name: string }) => void) | undefined;
   conditionTools: (person: Participant) => ConditionTools | undefined;
+  /** Queued requests: the budget they hold shows with each participant (S6). */
+  actions: readonly ActionRequest[];
   onProblem: (message: string) => void;
 }) {
   const clock = encounterClock(encounter.startClock, encounter.round);
@@ -140,6 +156,7 @@ export function EncounterPanel({
             last={i === order.length - 1}
             person={people.get(p)}
             entry={entryOf(p)}
+            held={heldBudget(actions, p)}
             current={encounter.current === p}
             surprised={encounter.surprised.includes(p)}
             encounter={encounter}
@@ -328,6 +345,7 @@ function TurnRow({
   last,
   person,
   entry,
+  held,
   current,
   surprised,
   encounter,
@@ -346,6 +364,7 @@ function TurnRow({
   last: boolean;
   person: Participant | undefined;
   entry: ParticipantState | undefined;
+  held: Partial<Record<BudgetKind, number>>;
   current: boolean;
   surprised: boolean;
   encounter: EncounterState;
@@ -368,7 +387,7 @@ function TurnRow({
   );
   const warnings = [
     ...uses.flatMap(([k, n]) => {
-      const w = overBudget(k, n, name);
+      const w = overBudget(k, n + (held[k] ?? 0), name);
       return w ? [w] : [];
     }),
     // Rules warn; the DM decides.
@@ -484,6 +503,7 @@ function TurnRow({
                 />{" "}
                 {BUDGET_NAMES[k]}
                 {n > 1 ? ` ×${n}` : ""}
+                {held[k] ? ` (+${held[k]} held)` : ""}
               </label>
               {mine && n > 0 && (
                 <button

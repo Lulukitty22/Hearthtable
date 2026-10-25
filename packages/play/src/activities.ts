@@ -18,6 +18,14 @@ export interface CharacterFacts {
   readonly hpMax: number | undefined;
   /** Resource pools and how they reset ("short rest", "long rest"). */
   readonly pools: readonly { readonly pool: string; readonly reset: string }[];
+  /**
+   * What queued requests hold (Milestone 5 S6). A rest restores the sheet in full; recording
+   * the held amounts below zero keeps them out of use while held, and discards them if returned.
+   */
+  readonly held?: {
+    readonly slots: Readonly<Record<string, number>>;
+    readonly pools: Readonly<Record<string, number>>;
+  };
 }
 
 export type CharacterData = Readonly<Record<string, unknown>>;

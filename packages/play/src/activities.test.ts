@@ -123,3 +123,24 @@ describe("rests", () => {
     expect(activityType("note")?.duration({ seconds: 600 })).toBe(600);
   });
 });
+
+test("a Long Rest keeps held slots and uses out of use, below zero", () => {
+  const out = longRest.finish(
+    {
+      name: "Carol",
+      hpCurrent: 10,
+      hpMax: 95,
+      pools: [{ pool: "arcane-recovery", reset: "long rest" }],
+      held: { slots: { "1": 1 }, pools: { "arcane-recovery": 1 } },
+    },
+    {
+      resources: { used: { "arcane-recovery": 1 } },
+      spellcasting: { expended: { "1": 3 } },
+    },
+    0,
+  );
+  expect(out.data).toMatchObject({
+    spellcasting: { expended: { "1": -1 } },
+    resources: { used: { "arcane-recovery": -1 } },
+  });
+});
