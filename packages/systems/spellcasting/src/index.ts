@@ -8,6 +8,7 @@
 import {
   DERIVATIONS_POINT,
   amountValue,
+  d20TestBonuses,
   grantsOf,
   known,
   readField,
@@ -66,6 +67,8 @@ function profile(
   for (const g of grantsOf(ctx, "bonus", `spellcasting.${what}`)) {
     parts.push(amountValue(ctx, g.grant.amount, g.source.label, g.source.note));
   }
+  // A spell attack is a D20 Test; a save DC is not.
+  if (what === "attack") parts.push(...d20TestBonuses(ctx));
   return sum(`${c.name} spell ${what === "dc" ? "save DC" : "attack"}`, parts);
 }
 

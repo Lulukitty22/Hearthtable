@@ -11,6 +11,7 @@
     "armor-class",
     "active-effects",
     "concentration",
+    "conditions",
     "resources",
     "spellcasting",
     "spellbook-readiness",
@@ -27,7 +28,8 @@
     "hit-points.max": "fixed-average",
     "spellcasting.combination": "add-per-class",
     "spellbook-readiness.readiness": "book-contents-ready",
-    "scroll-crafting.multiplier": "arcana-power"
+    "scroll-crafting.multiplier": "arcana-power",
+    "conditions.goingDown": "negative-hit-points"
   },
   "variables": {
     "abilities.pointBudget": 27,

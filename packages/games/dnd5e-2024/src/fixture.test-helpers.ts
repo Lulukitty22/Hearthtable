@@ -7,6 +7,7 @@ import { activeEffects } from "@hearthtable/system-active-effects";
 import { armorClass } from "@hearthtable/system-armor-class";
 import { attunement } from "@hearthtable/system-attunement";
 import { concentration } from "@hearthtable/system-concentration";
+import { conditions } from "@hearthtable/system-conditions";
 import { containers } from "@hearthtable/system-containers";
 import { currency } from "@hearthtable/system-currency";
 import { features } from "@hearthtable/system-features";
@@ -40,6 +41,7 @@ export const MODULES = [
   armorClass,
   activeEffects,
   concentration,
+  conditions,
   resources,
   spellcasting,
   spellbookReadiness,
@@ -66,6 +68,7 @@ export const TEST_RULESET: Ruleset = {
     "spellcasting.combination": "add-per-class",
     "spellbook-readiness.readiness": "book-contents-ready",
     "scroll-crafting.multiplier": "arcana-power",
+    "conditions.goingDown": "negative-hit-points",
   },
   variables: {
     "abilities.pointBudget": 27,

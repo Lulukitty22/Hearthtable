@@ -25,6 +25,7 @@ import {
   type PlayState,
 } from "@hearthtable/storage";
 import type { ActiveEffectRow } from "@hearthtable/system-active-effects";
+import type { ConditionRow } from "@hearthtable/system-conditions";
 import { useEffect, useMemo, useState } from "react";
 import { gameTimeRecord, momentOf } from "../play/gameTime";
 import { useCampaign } from "../campaign/useCampaign";
@@ -45,6 +46,10 @@ export interface Participant {
   readonly classes?: string;
   /** Effects that are on, and those whose time is up but are not yet cleared. */
   readonly effects: readonly ActiveEffectRow[];
+  /** Conditions in force, including those another includes and going down. */
+  readonly conditions: readonly ConditionRow[];
+  /** Why the character is Incapacitated, when it is. */
+  readonly incapacitated?: string;
 }
 
 /** An NPC template the DM can deploy: its records and its initiative bonus. */
@@ -88,8 +93,19 @@ function resolveCharacter(
   const effects = (
     value<readonly ActiveEffectRow[]>("active-effects.list") ?? []
   ).filter((e) => e.status === "active" || e.status === "ended");
+  const conditions = value<readonly ConditionRow[]>("conditions.list") ?? [];
+  const incapacitated = conditions.find((c) => c.breaksConcentration);
   return {
     effects,
+    conditions,
+    ...(incapacitated
+      ? {
+          incapacitated:
+            incapacitated.origin === "included"
+              ? (incapacitated.because ?? incapacitated.name)
+              : incapacitated.name,
+        }
+      : {}),
     path,
     name: String(data?.name ?? path.split("/").at(-1)?.replaceAll("_", " ")),
     npc,
@@ -260,9 +276,24 @@ export function useTable(segment: string) {
     });
   }, [people, state, order]);
 
+  // The conditions a DM can apply, from core.
+  const conditionKinds = useMemo(
+    () =>
+      (core ?? [])
+        .filter((r) => r.kind === "condition")
+        .map((r) => ({
+          ref: r.id as string,
+          name: String((r.data as { name?: unknown }).name ?? r.id),
+          levels: (r.data as { levels?: unknown }).levels === true,
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [core],
+  );
+
   return {
     id,
     campaignPath,
+    conditionKinds,
     campaign,
     state,
     scene: scene as (RecordEnvelope & { data: SceneData }) | undefined,

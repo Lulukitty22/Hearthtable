@@ -21,7 +21,8 @@ export interface EndedEffect {
 
 /**
  * Removes `effects` from the character's active effects and logs each ending, `why` being
- * "expired" (its time was up) or "early" (the DM ended it).
+ * "expired" (its time was up), "early" (the DM ended it) or "concentration" (a condition such as
+ * Incapacitated broke it).
  */
 export async function endEffects(
   db: Firestore,
@@ -30,7 +31,7 @@ export async function endEffects(
   characterPath: string,
   characterName: string,
   effects: readonly EndedEffect[],
-  why: "expired" | "early",
+  why: "expired" | "early" | "concentration",
   by: string,
   clock: number,
 ): Promise<string | undefined> {
@@ -57,7 +58,9 @@ export async function endEffects(
         text:
           why === "expired"
             ? `${e.name} on ${characterName} ended.`
-            : `The DM ended ${e.name} on ${characterName} early.`,
+            : why === "concentration"
+              ? `${characterName} lost concentration on ${e.name}.`
+              : `The DM ended ${e.name} on ${characterName} early.`,
         at: serverTimestamp(),
       });
     } catch {

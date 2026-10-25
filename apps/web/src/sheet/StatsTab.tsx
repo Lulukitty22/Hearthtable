@@ -26,6 +26,8 @@ interface SaveRow {
   readonly label: string;
   readonly proficient: boolean;
   readonly total: Value<number>;
+  /** A condition makes it fail automatically (Milestone 5 S5). */
+  readonly autoFail?: boolean;
 }
 
 const MARKS = ["", "●", "●●"];
@@ -92,6 +94,9 @@ export function StatsTab(props: TabProps) {
                   {s.label}
                   {s.proficient && (
                     <span className="badge good">proficient</span>
+                  )}
+                  {s.autoFail && (
+                    <span className="badge warn">fails automatically</span>
                   )}
                 </td>
                 <td className="num">

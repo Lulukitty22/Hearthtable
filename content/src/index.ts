@@ -6,6 +6,7 @@ import { classRecords } from "@hearthtable/game-dnd5e-2024";
 import { parseEnvelope, type RecordEnvelope } from "@hearthtable/kernel";
 import riverbedCarol from "../campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein.json";
 import riverbedItems_ from "../campaign/Riverbed_of_Strings/Items.json";
+import coreConditions from "../core/conditions.json";
 import coreFeatures from "../core/features.json";
 import coreItems from "../core/items.json";
 import coreSpells from "../core/spells.json";
@@ -22,12 +23,13 @@ function load(file: string, records: readonly unknown[]): RecordEnvelope[] {
   });
 }
 
-/** Published definitions: classes (from the game module), features, spells and items. */
+/** Published definitions: classes (from the game module), features, spells, items and conditions. */
 export const coreContent: readonly RecordEnvelope[] = [
   ...classRecords,
   ...load("core/features.json", coreFeatures),
   ...load("core/spells.json", coreSpells),
   ...load("core/items.json", coreItems),
+  ...load("core/conditions.json", coreConditions),
 ];
 
 /**
@@ -40,7 +42,7 @@ export const riverbedItems: readonly RecordEnvelope[] = load(
   riverbedItems_,
 );
 
-/** Carol's sheet: the character (stats tab), her inventory and her three spellbooks. */
+/** Carol's sheet: the character (stats tab) and her inventory, books included. */
 export const carolElfnein: readonly RecordEnvelope[] = load(
   "campaign/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein.json",
   riverbedCarol,

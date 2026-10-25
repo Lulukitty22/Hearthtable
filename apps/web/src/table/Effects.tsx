@@ -60,6 +60,7 @@ export function useClearEndedEffects(
       );
       if (ended.length === 0) continue;
       for (const e of ended) clearing.current.add(e.id);
+      const broken = ended.some((e) => e.reason?.startsWith("Concentration"));
       void endEffects(
         db,
         repository,
@@ -67,7 +68,7 @@ export function useClearEndedEffects(
         person.path,
         person.name,
         ended.map((e) => ({ id: e.id, name: e.name })),
-        "expired",
+        broken ? "concentration" : "expired",
         uid,
         clock,
       ).then((err) => {

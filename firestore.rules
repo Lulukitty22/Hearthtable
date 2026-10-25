@@ -203,7 +203,7 @@ service cloud.firestore {
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 2000
           && (request.resource.data.kind in ['post', 'turn', 'initiative']
-            || (request.resource.data.kind in ['scene', 'clock', 'title', 'order', 'effect']
+            || (request.resource.data.kind in ['scene', 'clock', 'title', 'order', 'effect', 'condition']
               && request.auth.uid in get(campaignDoc(campaign)).data.dms));
       }
 

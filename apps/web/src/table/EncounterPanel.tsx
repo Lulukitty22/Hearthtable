@@ -34,7 +34,13 @@ import type { RecordEnvelope } from "@hearthtable/kernel";
 import { useState } from "react";
 import { db, repository } from "../firebase";
 import { webPathFor } from "../routes";
+import {
+  ConditionChips,
+  saveReminder,
+  type ConditionTools,
+} from "./Conditions";
 import { EffectChips } from "./Effects";
+
 import { deploymentsFor } from "./StartEncounter";
 import type { Participant, Template } from "./useTable";
 
@@ -59,6 +65,7 @@ export function EncounterPanel({
   control,
   now,
   endEarly,
+  conditionTools,
   onProblem,
 }: {
   id: string;
@@ -76,6 +83,7 @@ export function EncounterPanel({
   endEarly: (
     person: Participant,
   ) => ((effect: { id: string; name: string }) => void) | undefined;
+  conditionTools: (person: Participant) => ConditionTools | undefined;
   onProblem: (message: string) => void;
 }) {
   const clock = encounterClock(encounter.startClock, encounter.round);
@@ -93,7 +101,14 @@ export function EncounterPanel({
       current: encounter.current,
     });
     if (!next) return;
-    const text = `${name(encounter.current)}'s turn ended. ${next.round > encounter.round ? `Round ${next.round} began. ` : ""}${name(next.current)}'s turn.`;
+    // Repeat saves come at the end of the character's turn: remind about them in the log.
+    const saves = (people.get(encounter.current)?.conditions ?? []).flatMap(
+      (c) => {
+        const r = saveReminder(c);
+        return r ? [r] : [];
+      },
+    );
+    const text = `${name(encounter.current)}'s turn ended.${saves.length ? ` Repeat save${saves.length > 1 ? "s" : ""} due: ${saves.join("; ")}.` : ""} ${next.round > encounter.round ? `Round ${next.round} began. ` : ""}${name(next.current)}'s turn.`;
     void passTurn(
       db,
       id,
@@ -147,6 +162,11 @@ export function EncounterPanel({
             now={now}
             onEnd={
               people.get(p) ? endEarly(people.get(p) as Participant) : undefined
+            }
+            tools={
+              people.get(p)
+                ? conditionTools(people.get(p) as Participant)
+                : undefined
             }
             onUse={(kind, delta) => {
               const start = encounter.turnStarts[documentIdFor(p)];
@@ -315,6 +335,7 @@ function TurnRow({
   isDm,
   now,
   onEnd,
+  tools,
   onInitiative,
   onUse,
   onMove,
@@ -332,6 +353,7 @@ function TurnRow({
   isDm: boolean;
   now: Moment | undefined;
   onEnd: ((effect: { id: string; name: string }) => void) | undefined;
+  tools: ConditionTools | undefined;
   onInitiative: (value: number, detail: string) => void;
   onUse: (kind: BudgetKind, delta: 1 | -1) => void;
   onMove: (by: -1 | 1) => void;
@@ -344,10 +366,18 @@ function TurnRow({
   const uses = BUDGET_KINDS.map(
     (k) => [k, usesNow(entry?.used[k], start)] as const,
   );
-  const warnings = uses.flatMap(([k, n]) => {
-    const w = overBudget(k, n, name);
-    return w ? [w] : [];
-  });
+  const warnings = [
+    ...uses.flatMap(([k, n]) => {
+      const w = overBudget(k, n, name);
+      return w ? [w] : [];
+    }),
+    // Rules warn; the DM decides.
+    ...(person?.incapacitated && uses.some(([, n]) => n > 0)
+      ? [
+          `${name} is Incapacitated (${person.incapacitated}): the rules allow no action, Bonus Action or Reaction. The DM decides.`,
+        ]
+      : []),
+  ];
   const showEntry = mine && (!entry?.initiative || changing);
 
   return (
@@ -375,6 +405,13 @@ function TurnRow({
             {...(onEnd ? { onEnd } : {})}
           />
         )}
+        {person && (
+          <ConditionChips
+            person={person}
+            {...(tools ? { onRemove: tools.onRemove } : {})}
+          />
+        )}
+        {tools?.add}
       </div>
       <div className="turn-initiative">
         {entry?.initiative && !changing ? (

@@ -9,6 +9,8 @@
 // moments. The app supplies the campaign's current moment as a `game-time` record; once that
 // moment reaches `endsAt` the effect has ended and gives nothing, even before the entry is
 // cleared. Without a game time (a character outside any campaign) nothing ends on its own.
+// A condition that breaks Concentration (Incapacitated, or one that includes it) ends every
+// effect that needs concentration at once (Milestone 5 S5); the DM's view then clears them.
 
 import {
   DERIVATIONS_POINT,
@@ -42,6 +44,7 @@ export const GAME_TIME_KIND = "game-time";
 const EffectDefinition = z.looseObject({
   name: z.string(),
   whileActive: z.unknown().optional(),
+  concentration: z.boolean().optional(),
 });
 
 export interface ActiveEffectRow {
@@ -67,6 +70,10 @@ function rows(ctx: ResolveContext): readonly ActiveEffectRow[] {
   const now = readField(ctx, GAME_TIME_KIND, "now", Moment.optional())[0]
     ?.value;
   const ended = (e: z.infer<typeof ActiveEntry>) => isOver(e.endsAt, now);
+  // Read only when the conditions system is there; it never reads active effects back.
+  const broken = ctx.get<boolean>("conditions.incapacitated");
+  const concentrationBroken =
+    broken.kind === "known" && broken.value ? broken.explain.label : undefined;
   const newest = new Map<string, string>();
   for (const e of entries.filter((x) => !ended(x))) {
     const seen = newest.get(e.ref);
@@ -103,6 +110,14 @@ function rows(ctx: ResolveContext): readonly ActiveEffectRow[] {
         name,
         status: "ended",
         reason: "Its time is up.",
+        grants: [],
+      };
+    if (concentrationBroken && def.value.concentration === true)
+      return {
+        ...base,
+        name,
+        status: "ended",
+        reason: `Concentration broken (${concentrationBroken}).`,
         grants: [],
       };
     if (newest.get(e.ref) !== e.activatedAt) {

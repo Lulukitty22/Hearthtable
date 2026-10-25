@@ -12,6 +12,7 @@ import { useState } from "react";
 import type { BookView } from "@hearthtable/system-spellbook-readiness";
 import { Explained } from "./Explained";
 import { Portrait } from "./Portrait";
+import { SheetConditions } from "./SheetConditions";
 import { known, type Data, type TabProps } from "./shared";
 
 interface ClassLevel {
@@ -270,6 +271,7 @@ export function Header(props: TabProps) {
           ))}
         </div>
       )}
+      <SheetConditions {...props} />
       {replacing && (
         <div
           className="panel concentration-choice"

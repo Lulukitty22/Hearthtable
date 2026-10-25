@@ -12,6 +12,7 @@ import type { LineRow } from "@hearthtable/system-containers";
 import {
   DERIVATIONS_POINT,
   amountValue,
+  d20TestBonuses,
   grantsOf,
   issue,
   known,
@@ -194,6 +195,7 @@ function weapons(ctx: ResolveContext): readonly WeaponView[] {
         ...grantsOf(ctx, "bonus", "weapons.aim").map((g) =>
           amountValue(ctx, g.grant.amount, g.source.label, g.source.note),
         ),
+        ...d20TestBonuses(ctx),
       ]);
     out.push({
       lineId: row.line.id,

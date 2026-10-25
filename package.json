@@ -21,6 +21,7 @@
     "peek": "tsx scripts/peek.ts",
     "seed": "tsx scripts/seed.ts",
     "start": "node scripts/start.mjs",
+    "srd:conditions": "tsx scripts/srd-conditions.ts",
     "srd:spells": "tsx scripts/srd-spells.ts"
   },
   "devDependencies": {

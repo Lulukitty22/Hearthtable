@@ -101,6 +101,20 @@ export function grantsOf<T extends Grant["type"]>(
   );
 }
 
+/**
+ * The grant target for every D20 Test: ability checks, saving throws, attack rolls and
+ * initiative (Milestone 5 S5, for Exhaustion's penalty). Systems that compute a D20 Test's
+ * bonus add these alongside their own target.
+ */
+export const D20_TESTS = "d20-tests";
+
+/** Bonuses aimed at every D20 Test, as explained values. */
+export function d20TestBonuses(ctx: ResolveContext): Value<number>[] {
+  return grantsOf(ctx, "bonus", D20_TESTS).map((g) =>
+    amountValue(ctx, g.grant.amount, g.source.label, g.source.note),
+  );
+}
+
 export function hasCapability(ctx: ResolveContext, id: string): boolean {
   return grantsOf(ctx, "capability").some((g) => g.grant.id === id);
 }

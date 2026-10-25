@@ -1135,3 +1135,25 @@ dialog.detail {
     grid-column: 2 / -1;
   }
 }
+
+/* Milestone 5 S5: conditions. */
+.condition {
+  display: inline-block;
+}
+.condition > summary {
+  cursor: pointer;
+  list-style: none;
+}
+.condition[open] .condition-text {
+  position: absolute;
+  z-index: 5;
+  max-width: 420px;
+  margin-top: 4px;
+  padding: 8px 12px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.condition-text p {
+  margin: 4px 0;
+}

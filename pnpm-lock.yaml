@@ -101,6 +101,9 @@ importers:
       '@hearthtable/system-concentration':
         specifier: workspace:*
         version: link:../../packages/systems/concentration
+      '@hearthtable/system-conditions':
+        specifier: workspace:*
+        version: link:../../packages/systems/conditions
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../../packages/systems/containers
@@ -217,6 +220,9 @@ importers:
       '@hearthtable/system-concentration':
         specifier: workspace:*
         version: link:../systems/concentration
+      '@hearthtable/system-conditions':
+        specifier: workspace:*
+        version: link:../systems/conditions
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../systems/containers
@@ -297,6 +303,9 @@ importers:
       '@hearthtable/system-concentration':
         specifier: workspace:*
         version: link:../../systems/concentration
+      '@hearthtable/system-conditions':
+        specifier: workspace:*
+        version: link:../../systems/conditions
       '@hearthtable/system-containers':
         specifier: workspace:*
         version: link:../../systems/containers
@@ -410,6 +419,18 @@ importers:
       '@hearthtable/system-active-effects':
         specifier: workspace:*
         version: link:../active-effects
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
+  packages/systems/conditions:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../../kernel
+      '@hearthtable/play':
+        specifier: workspace:*
+        version: link:../../play
       zod:
         specifier: ^4.6.7
         version: 4.6.7

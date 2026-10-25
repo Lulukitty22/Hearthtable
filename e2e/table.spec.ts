@@ -229,3 +229,73 @@ test("Shield cast in an encounter ends one round later and the log says so", asy
   );
   await dm.getByRole("button", { name: "End the encounter" }).click();
 });
+
+// Milestone 5, S5: conditions applied at the table, their automated parts and concentration.
+test("the DM applies conditions; saves fail, Exhaustion stacks, and Stunned breaks concentration", async ({
+  browser,
+}) => {
+  const dm = await signedIn(browser, VR_LULU, `${TABLE}/Dungeon_Master`);
+  const card = dm
+    .getByRole("region", { name: "Present" })
+    .getByRole("listitem")
+    .filter({ hasText: "Carol Elfnein" });
+  const add = card.getByRole("form", {
+    name: "Add a condition to Carol Elfnein",
+  });
+  await add
+    .getByLabel("Condition for Carol Elfnein")
+    .selectOption({ label: "Paralyzed" });
+  await add.getByLabel("Repeat save").selectOption("wis");
+  await add.getByLabel("Save DC").fill("15");
+  await add.getByRole("button", { name: "Apply" }).click();
+  const conditions = card.getByLabel("Carol Elfnein's conditions");
+  await expect(conditions).toContainText("Paralyzed");
+  await expect(conditions).toContainText("Incapacitated");
+  await expect(dm.getByRole("region", { name: "Campaign log" })).toContainText(
+    "The DM gave Carol Elfnein Paralyzed (Wisdom save DC 15 to end it).",
+  );
+
+  const sheet = await dm.context().newPage();
+  await sheet.goto(
+    "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
+  );
+  const saves = sheet.getByRole("table").filter({ hasText: "DEX" }).first();
+  await expect(sheet.getByText("fails automatically").first()).toBeVisible();
+  await expect(saves).toBeVisible();
+
+  // Remove Paralyzed; two levels of Exhaustion lower initiative by 4.
+  await conditions.getByText("Paralyzed", { exact: true }).click();
+  await card.getByRole("button", { name: "Remove Paralyzed" }).click();
+  await expect(conditions).toHaveCount(0);
+  for (let i = 0; i < 2; i++) {
+    await add
+      .getByLabel("Condition for Carol Elfnein")
+      .selectOption({ label: "Exhaustion (+1 level)" });
+    await add.getByRole("button", { name: "Apply" }).click();
+    await expect(card.getByLabel("Carol Elfnein's conditions")).toContainText(
+      `Exhaustion ${i + 1}`,
+    );
+  }
+  await sheet.reload();
+  await expect(
+    sheet.locator(".vital").filter({ hasText: "Initiative" }),
+  ).toContainText("+4");
+
+  // Concentration: Tasha's Otherworldly Guise is broken by Stunned.
+  await sheet.goto(
+    "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein/Edit",
+  );
+  await sheet.getByRole("button", { name: /Otherworldly Guise/ }).click();
+  await sheet.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(card.getByLabel("Carol Elfnein's effects")).toContainText(
+    "Guise",
+  );
+  await add
+    .getByLabel("Condition for Carol Elfnein")
+    .selectOption({ label: "Stunned" });
+  await add.getByRole("button", { name: "Apply" }).click();
+  await expect(dm.getByRole("region", { name: "Campaign log" })).toContainText(
+    "Carol Elfnein lost concentration on Tasha's Otherworldly Guise.",
+  );
+  await expect(card.getByLabel("Carol Elfnein's effects")).toHaveCount(0);
+});

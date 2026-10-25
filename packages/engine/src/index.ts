@@ -20,6 +20,7 @@ import { activeEffects } from "@hearthtable/system-active-effects";
 import { armorClass } from "@hearthtable/system-armor-class";
 import { attunement } from "@hearthtable/system-attunement";
 import { concentration } from "@hearthtable/system-concentration";
+import { conditions } from "@hearthtable/system-conditions";
 import { containers } from "@hearthtable/system-containers";
 import { currency } from "@hearthtable/system-currency";
 import { features } from "@hearthtable/system-features";
@@ -42,6 +43,7 @@ export const MODULES: readonly KernelModule[] = [
   armorClass,
   activeEffects,
   concentration,
+  conditions,
   resources,
   spellcasting,
   spellbookReadiness,

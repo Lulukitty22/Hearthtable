@@ -15,6 +15,7 @@
     "@hearthtable/system-armor-class": "workspace:*",
     "@hearthtable/system-attunement": "workspace:*",
     "@hearthtable/system-concentration": "workspace:*",
+    "@hearthtable/system-conditions": "workspace:*",
     "@hearthtable/system-containers": "workspace:*",
     "@hearthtable/system-currency": "workspace:*",
     "@hearthtable/system-features": "workspace:*",

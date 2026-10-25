@@ -10,7 +10,9 @@ import {
 import {
   DERIVATIONS_POINT,
   amountValue,
+  d20TestBonuses,
   grantsOf,
+  hasCapability,
   known,
   sum,
   unresolved,
@@ -78,6 +80,7 @@ function check(
   for (const g of grantsOf(ctx, "bonus", target)) {
     parts.push(amountValue(ctx, g.grant.amount, g.source.label, g.source.note));
   }
+  parts.push(...d20TestBonuses(ctx));
   return sum(label, parts);
 }
 
@@ -104,6 +107,15 @@ const derivations: Derivation[] = [
     },
   },
   {
+    // A condition such as Paralyzed makes some saves fail automatically (Milestone 5 S5).
+    key: "saves.*.autoFail",
+    compute: (ctx, [id]) =>
+      known(
+        hasCapability(ctx, `auto-fail:saves.${id as string}`),
+        "Fails automatically",
+      ),
+  },
+  {
     key: "skills.all",
     compute: (ctx) =>
       known(
@@ -123,6 +135,7 @@ const derivations: Derivation[] = [
           ...a,
           proficient: proficiencyFor(ctx, `saves.${a.id}`).level > 0,
           total: ctx.get<number>(`saves.${a.id}.total`),
+          autoFail: hasCapability(ctx, `auto-fail:saves.${a.id}`),
         })),
         "Saving throws",
       ),
@@ -157,6 +170,7 @@ const derivations: Derivation[] = [
           amountValue(ctx, g.grant.amount, g.source.label, g.source.note),
         );
       }
+      parts.push(...d20TestBonuses(ctx));
       return sum("Initiative", parts);
     },
   },

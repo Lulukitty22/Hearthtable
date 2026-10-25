@@ -30,10 +30,17 @@ import { useAliases } from "../account/useAliases";
 import type { Viewer } from "../account/useViewer";
 import { db, repository } from "../firebase";
 import { tablePathFor, webPathFor } from "../routes";
+import {
+  AddCondition,
+  ConditionChips,
+  removeCondition,
+  type ConditionTools,
+} from "./Conditions";
 import { EffectChips, useClearEndedEffects } from "./Effects";
 import { EncounterPanel, type Control } from "./EncounterPanel";
 import { NewNpcTemplate, StartEncounter } from "./StartEncounter";
 import { useTable, type Participant } from "./useTable";
+import type { ConditionRow } from "@hearthtable/system-conditions";
 
 export function TablePage({
   segment,
@@ -140,6 +147,27 @@ export function TablePage({
             uid,
             clock,
           ).then((e) => e && setProblem(e))
+      : undefined;
+  // The DM's condition controls for one participant, or nothing for others.
+  const conditionTools = (person: Participant) =>
+    isDm && uid && role === "dm"
+      ? {
+          onRemove: (c: ConditionRow) =>
+            void removeCondition(table.id, person, c, uid, clock).then(
+              (e) => e && setProblem(e),
+            ),
+          add: (
+            <AddCondition
+              person={person}
+              kinds={table.conditionKinds}
+              now={table.now}
+              campaign={table.id}
+              uid={uid}
+              clock={clock}
+              onProblem={setProblem}
+            />
+          ),
+        }
       : undefined;
   const control: Control = {
     uid,
@@ -257,6 +285,7 @@ export function TablePage({
               control={control}
               now={table.now}
               endEarly={endEarly}
+              conditionTools={conditionTools}
               onProblem={setProblem}
             />
           )}
@@ -275,6 +304,7 @@ export function TablePage({
                       participant={p}
                       now={table.now}
                       onEnd={endEarly(p)}
+                      tools={conditionTools(p)}
                     />
                   ))}
                 </ul>
@@ -301,10 +331,12 @@ function ParticipantCard({
   participant: p,
   now,
   onEnd,
+  tools,
 }: {
   participant: Participant;
   now: Moment | undefined;
   onEnd: ((effect: { id: string; name: string }) => void) | undefined;
+  tools: ConditionTools | undefined;
 }) {
   return (
     <li className="party-card">
@@ -329,6 +361,11 @@ function ParticipantCard({
           <span>AC {p.ac ?? "?"}</span>
         </div>
         <EffectChips person={p} now={now} {...(onEnd ? { onEnd } : {})} />
+        <ConditionChips
+          person={p}
+          {...(tools ? { onRemove: tools.onRemove } : {})}
+        />
+        {tools?.add}
       </div>
     </li>
   );
