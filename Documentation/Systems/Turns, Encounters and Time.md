@@ -4,7 +4,7 @@ Purpose: own how play moves forward in a campaign: encounters, initiative and tu
 
 Selected decisions: the sections below, recorded with the user on 2026-10-24 (each with its time).
 
-Open questions: downtime, the time between encounters, including how rests, crafting and other activities are planned, approved and timed while the DM may be away, how much time passes and whether players know it, and interruptions (being discussed, 2026-10-24 at 5:28 pm PDT (America/Los_Angeles)); conditions (Milestone 5 Plan topic E); how NPCs are stored and shown (their records and the look of a stat card).
+Open questions: how turns and reactions work inside a downtime scene, and whether one starts automatically when an encounter ends (below); conditions (Milestone 5 Plan topic E); how NPCs are stored and shown (their records and the look of a stat card).
 
 ## NPCs are characters
 
@@ -18,7 +18,7 @@ The DM starts an encounter by choosing who takes part: characters and NPCs. The 
 
 ## Initiative and turn order
 
-Whoever controls a character enters its initiative: they roll it in the app (d20 plus the character's initiative bonus) or type a physical roll, the same way as any other roll ([roll ownership](Spell%20Effects%20and%20Active%20State.md#roll-ownership-and-input-modes)). The DM controls NPCs, so the DM rolls for them, and may roll for a player who is not there, as with any roll the DM takes over.
+Whoever controls a character enters its initiative: they roll it in the app (d20 plus the character's initiative bonus) or type a physical roll, the same way as any other roll ([roll ownership](Spell%20Effects%20and%20Active%20State.md#roll-ownership-and-input-modes)). The DM controls NPCs, so the DM rolls for them. The DM may also roll or type initiative for any player's character, as with any roll the DM takes over (clarified by the user 2026-10-24 at 5:44 pm PDT (America/Los_Angeles)).
 
 Ties go to whoever entered their initiative first. The DM can always open the turn order and drag, change or edit it, including adding participants partway through an encounter, such as monsters joining a fight or a player arriving late.
 
@@ -28,8 +28,20 @@ Each encounter counts its own rounds, starting at 1. Every round adds six second
 
 ## Action budget
 
-Selected 2026-10-24 at 5:09 pm PDT (America/Los_Angeles) (user decision): on a character's turn the app tracks what each request uses (an action, a bonus action, a Reaction) and shows what is left. Going over is flagged for the DM, who can still approve it, as over-budget feats only warn ([Character Creation and Advancement](Character%20Creation%20and%20Advancement.md)). A character's Reaction refreshes at the start of its own turn. Movement is not tracked: battle maps, positions and movement come with Milestone 6 ([Milestones](../Implementation/Milestones.md#roadmap)).
+Selected 2026-10-24 at 5:09 pm PDT (America/Los_Angeles) (user decision): on a character's turn the app tracks what each request uses (an action, a bonus action, a Reaction) and shows what is left. Going over is shown to the player before they submit and flagged for the DM, who can still approve it (shown to the player too: clarified 2026-10-24 at 5:44 pm PDT (America/Los_Angeles)), as over-budget feats only warn ([Character Creation and Advancement](Character%20Creation%20and%20Advancement.md)). A character's Reaction refreshes at the start of its own turn. Movement is not tracked: battle maps, positions and movement come with Milestone 6 ([Milestones](../Implementation/Milestones.md#roadmap)).
+
+## Downtime
+
+Selected 2026-10-24 at 5:55 pm PDT (America/Los_Angeles) (user decisions): the time between encounters is a **downtime scene**, built on the same machinery as an encounter but with nothing to fight and some restrictions lifted. It stays open, across real days if need be, until the DM ends it. Because it stays open, a DM can start it and leave, and a player who joins late can still take part.
+
+- **Activities** (resting, crafting, scribing, anything else) are submitted one at a time like reactions in a log: each is visible in order and approved on its own. The DM also sees a **summary per character**, in order ("Carol: craft X 2 h, scribe 6 h, short rest 1 h, craft Y 5 h"), where each item opens that activity in the log.
+- **Activities are jobs that can be split,** as crafting is ([Crafting Jobs](Crafting%20Jobs.md)): twenty minutes here and forty there. Rests cannot: an unfinished Long Rest or Short Rest gives no benefit and does not carry over (with the interruption rule below).
+- **Activities without rules of their own** (keeping watch, scouting, shopping) are a short note to the DM with a duration. They use the character's time, are approved and logged, and change nothing automatically; the DM handles any outcome.
+- **Ending it:** the DM ends the downtime scene by entering how much time actually passed, which can be the same step as starting the next encounter. The game clock moves by that amount, and each character's approved activities run in order for that long: finished ones take effect at their time, the one in progress keeps its progress and continues in the next downtime, and ones not started wait for the next downtime. A player can cancel any activity of their own. An encounter in between pauses activities; it does not clear them.
+- **Players do not see the length in the app.** Since the DM sets the time only when ending the scene, players plan without knowing it; the DM may tell them anything in the story. The clock never moves on its own.
 
 ## What rests restore
 
-Selected 2026-10-24 at 5:28 pm PDT (America/Los_Angeles) (user decision): Hearthtable Vanilla+ rests restore what the published 2024 rules say. A Short Rest lets a character spend Hit Point Dice to heal and resets short-rest resources; a Long Rest restores all hit points and all Hit Point Dice, all spell slots and long-rest resources, and lowers Exhaustion by one. Resources reset to their current maximum while queued holds stay with their requests ([capped replenishment](Spell%20Effects%20and%20Active%20State.md#casting-workflow--selected-2026-10-17)). How rests are started, timed, combined with other downtime and interrupted is open (above).
+Selected 2026-10-24 at 5:28 pm PDT (America/Los_Angeles) (user decision): Hearthtable Vanilla+ rests restore what the published 2024 rules say. A Short Rest lets a character spend Hit Point Dice to heal and resets short-rest resources; a Long Rest restores all hit points and all Hit Point Dice, all spell slots and long-rest resources, and lowers Exhaustion by one. Resources reset to their current maximum while queued holds stay with their requests ([capped replenishment](Spell%20Effects%20and%20Active%20State.md#casting-workflow--selected-2026-10-17)). How rests are started, timed and combined with other downtime is open (above).
+
+Interruptions — accepted by the user 2026-10-24 at 5:44 pm PDT (America/Los_Angeles), using the 2024 rules (to be verified against the rules text when built): a Short Rest gives nothing if the character rolls initiative, casts a spell other than a cantrip or takes damage; a Long Rest is stopped by those or by an hour of walking or other exertion, and if at least an hour of it had passed, the character still gets a Short Rest's benefits. An interrupted crafting job keeps its partial progress ([Crafting Jobs](Crafting%20Jobs.md)).
