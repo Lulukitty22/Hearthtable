@@ -53,3 +53,18 @@ describe("scenes", () => {
     expect(isInScene(`${C}/Items/Aetherlock`)).toBe(false);
   });
 });
+
+test("NPC instance names", async () => {
+  const { instanceNames } = await import("./index");
+  expect(instanceNames("Goblin", 1, [])).toEqual(["Goblin"]);
+  expect(instanceNames("Goblin", 3, [])).toEqual([
+    "Goblin 1",
+    "Goblin 2",
+    "Goblin 3",
+  ]);
+  expect(instanceNames("Goblin", 2, ["Goblin 1", "Goblin 2"])).toEqual([
+    "Goblin 3",
+    "Goblin 4",
+  ]);
+  expect(instanceNames("Goblin", 1, ["Goblin"])).toEqual(["Goblin 2"]);
+});

@@ -1,18 +1,21 @@
 // /Campaigns/<name>/Table and …/Table/Dungeon_Master: the game in progress (Milestone 5 S2;
 // Turns, Encounters and Time, "Scenes"). Both show the current scene, the game clock, who is
-// present and the campaign log, live. Nothing is hidden from players yet. The DM's view adds the
-// controls: setting the clock and titling the scene. A campaign's table opens the first time one
-// of its DMs visits the DM's view, in a downtime scene at Day 1.
+// present and the campaign log, live; during an encounter (S3), the turn order. Nothing is
+// hidden from players yet. The DM's view adds the controls: setting the clock, titling the
+// scene, making NPC templates, and starting and running encounters. A campaign's table opens
+// the first time one of its DMs visits the DM's view, in a downtime scene at Day 1.
 
 import {
   clockFrom,
   clockParts,
+  encounterClock,
   formatClock,
   sceneKindOf,
   sceneLabel,
 } from "@hearthtable/play";
 import {
   LOG_TEXT_LIMIT,
+  normalizeAlias,
   openTable,
   postToLog,
   setClock,
@@ -25,6 +28,8 @@ import { useAliases } from "../account/useAliases";
 import type { Viewer } from "../account/useViewer";
 import { db, repository } from "../firebase";
 import { tablePathFor, webPathFor } from "../routes";
+import { EncounterPanel, type Control } from "./EncounterPanel";
+import { NewNpcTemplate, StartEncounter } from "./StartEncounter";
 import { useTable, type Participant } from "./useTable";
 
 export function TablePage({
@@ -103,6 +108,27 @@ export function TablePage({
 
   const kind = sceneKindOf(state.scene);
   const name = (u: string) => aliases.get(u) ?? "…";
+  const { encounter, people, order } = table;
+  // During an encounter the clock runs with its rounds (six seconds each).
+  const clock = encounter
+    ? encounterClock(encounter.startClock, encounter.round)
+    : state.clock;
+  const alias =
+    viewer.status === "account" ? normalizeAlias(viewer.account.alias) : "";
+  const control: Control = {
+    uid,
+    isDm,
+    // Its owner (the Alias folder it sits in) or a DM; delegates are honoured by the Rules.
+    controls: (path) => {
+      const parts = path.split("/");
+      return (
+        isDm ||
+        (approved &&
+          parts[2] === "Characters" &&
+          normalizeAlias(parts[3] ?? "") === alias)
+      );
+    },
+  };
 
   return (
     <main className="page table-page">
@@ -118,7 +144,7 @@ export function TablePage({
         </div>
         <div className="stage-clock">
           <span className="vital-label">Game clock</span>
-          <strong data-testid="game-clock">{formatClock(state.clock)}</strong>
+          <strong data-testid="game-clock">{formatClock(clock)}</strong>
         </div>
         <nav className="chips">
           <a href={webPathFor(table.campaignPath)}>Campaign</a>
@@ -152,6 +178,7 @@ export function TablePage({
               id={table.id}
               uid={uid}
               state={state}
+              inEncounter={kind === "encounter"}
               title={scene?.data.title ?? ""}
               onTitle={(title) =>
                 scene &&
@@ -168,20 +195,59 @@ export function TablePage({
               onProblem={setProblem}
             />
           )}
-          <section className="panel" aria-label="Present">
-            <h2>{kind === "downtime" ? "At the table" : "In the encounter"}</h2>
-            {!participants ? (
-              <p className="muted">Loading characters…</p>
-            ) : participants.length === 0 ? (
-              <p className="muted">Nobody is here yet.</p>
-            ) : (
-              <ul className="party-list">
-                {participants.map((p) => (
-                  <ParticipantCard key={p.path} participant={p} />
-                ))}
-              </ul>
-            )}
-          </section>
+          {role === "dm" && uid && kind === "downtime" && people && (
+            <section className="panel" aria-label="Encounters and NPCs">
+              <StartEncounter
+                key={state.scene}
+                id={table.id}
+                campaignPath={table.campaignPath}
+                uid={uid}
+                state={state}
+                downtime={scene}
+                characters={participants?.filter((p) => !p.npc) ?? []}
+                templates={people.templates}
+                onProblem={setProblem}
+              />
+              <h3>New NPC template</h3>
+              <NewNpcTemplate
+                campaignPath={table.campaignPath}
+                templates={people.templates}
+                onProblem={setProblem}
+              />
+            </section>
+          )}
+          {kind === "encounter" && encounter && order && people && (
+            <EncounterPanel
+              id={table.id}
+              campaignPath={table.campaignPath}
+              encounter={encounter}
+              record={scene}
+              order={order}
+              people={people.map}
+              entries={table.entries}
+              campaignCharacters={people.campaignCharacters}
+              sceneNpcs={people.sceneNpcs}
+              templates={people.templates}
+              control={control}
+              onProblem={setProblem}
+            />
+          )}
+          {kind === "downtime" && (
+            <section className="panel" aria-label="Present">
+              <h2>At the table</h2>
+              {!participants ? (
+                <p className="muted">Loading characters…</p>
+              ) : participants.length === 0 ? (
+                <p className="muted">Nobody is here yet.</p>
+              ) : (
+                <ul className="party-list">
+                  {participants.map((p) => (
+                    <ParticipantCard key={p.path} participant={p} />
+                  ))}
+                </ul>
+              )}
+            </section>
+          )}
         </div>
         <Log
           entries={log}
@@ -189,7 +255,7 @@ export function TablePage({
           canPost={isMember}
           onPost={(text) =>
             uid
-              ? postToLog(db, table.id, uid, state.clock, text)
+              ? postToLog(db, table.id, uid, clock, text)
               : Promise.resolve("Not signed in.")
           }
         />
@@ -230,6 +296,7 @@ function DmControls({
   id,
   uid,
   state,
+  inEncounter,
   title,
   onTitle,
   onProblem,
@@ -237,6 +304,7 @@ function DmControls({
   id: string;
   uid: string;
   state: PlayState;
+  inEncounter: boolean;
   title: string;
   onTitle: (title: string) => void;
   onProblem: (message: string) => void;
@@ -253,44 +321,50 @@ function DmControls({
   return (
     <section className="panel" aria-label="DM controls">
       <h2>Session controls</h2>
-      <form
-        className="chips"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (next === undefined) return;
-          void setClock(db, id, uid, state, next).then(
-            (err) => err && onProblem(err),
-          );
-        }}
-      >
-        <label>
-          Day{" "}
-          <input
-            type="number"
-            min={1}
-            value={day}
-            onChange={(e) => setDay(e.target.value)}
-            aria-label="Day"
-            style={{ width: 70 }}
-          />
-        </label>
-        <label>
-          Time{" "}
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            aria-label="Time of day"
-          />
-        </label>
-        <button
-          type="submit"
-          className="secondary"
-          disabled={next === undefined || next === state.clock}
+      {inEncounter ? (
+        <p className="muted">
+          During an encounter the clock moves six seconds a round.
+        </p>
+      ) : (
+        <form
+          className="chips"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (next === undefined) return;
+            void setClock(db, id, uid, state, next).then(
+              (err) => err && onProblem(err),
+            );
+          }}
         >
-          Set the clock
-        </button>
-      </form>
+          <label>
+            Day{" "}
+            <input
+              type="number"
+              min={1}
+              value={day}
+              onChange={(e) => setDay(e.target.value)}
+              aria-label="Day"
+              style={{ width: 70 }}
+            />
+          </label>
+          <label>
+            Time{" "}
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              aria-label="Time of day"
+            />
+          </label>
+          <button
+            type="submit"
+            className="secondary"
+            disabled={next === undefined || next === state.clock}
+          >
+            Set the clock
+          </button>
+        </form>
+      )}
       <form
         className="chips"
         style={{ marginTop: 8 }}
@@ -316,9 +390,6 @@ function DmControls({
           Save title
         </button>
       </form>
-      <p className="muted">
-        Starting encounters and turns come next (Milestone 5 S3).
-      </p>
     </section>
   );
 }

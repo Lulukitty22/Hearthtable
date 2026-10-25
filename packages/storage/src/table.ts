@@ -38,7 +38,8 @@ export interface PlayState {
   readonly scene: string;
 }
 
-export type LogKind = "post" | "scene" | "clock" | "title";
+export type LogKind =
+  "post" | "scene" | "clock" | "title" | "turn" | "initiative" | "order";
 
 export interface LogEntry {
   readonly id: string;
@@ -93,17 +94,25 @@ export function watchLog(
     ),
     (snap) =>
       onEntries(
-        snap.docs.map((d) => {
-          const x = d.data({ serverTimestamps: "estimate" });
-          return {
-            id: d.id,
-            kind: x["kind"] as LogKind,
-            by: String(x["by"] ?? ""),
-            clock: Number(x["clock"] ?? 0),
-            text: String(x["text"] ?? ""),
-            ...(x["at"]?.toDate ? { at: x["at"].toDate() as Date } : {}),
-          };
-        }),
+        snap.docs
+          .map((d) => {
+            const x = d.data({ serverTimestamps: "estimate" });
+            return {
+              id: d.id,
+              kind: x["kind"] as LogKind,
+              by: String(x["by"] ?? ""),
+              clock: Number(x["clock"] ?? 0),
+              text: String(x["text"] ?? ""),
+              n: Number(x["n"] ?? 0),
+              ...(x["at"]?.toDate ? { at: x["at"].toDate() as Date } : {}),
+            };
+          })
+          // Entries written together share a time; `n` keeps the order they were written in.
+          .sort(
+            (a, b) =>
+              (a.at?.getTime() ?? 0) - (b.at?.getTime() ?? 0) || a.n - b.n,
+          )
+          .map(({ n: _n, ...entry }) => entry),
       ),
     (e) => onError(failed(e)),
   );

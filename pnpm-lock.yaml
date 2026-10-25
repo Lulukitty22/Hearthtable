@@ -250,6 +250,13 @@ importers:
       '@hearthtable/system-spellcasting':
         specifier: workspace:*
         version: link:../systems/spellcasting
+    devDependencies:
+      '@hearthtable/content':
+        specifier: workspace:*
+        version: link:../../content
+      '@hearthtable/ruleset-hearthtable-vanilla-plus':
+        specifier: workspace:*
+        version: link:../rulesets/hearthtable-vanilla-plus
 
   packages/games/dnd5e-2024:
     dependencies:
@@ -318,7 +325,11 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
 
-  packages/play: {}
+  packages/play:
+    dependencies:
+      '@hearthtable/kernel':
+        specifier: workspace:*
+        version: link:../kernel
 
   packages/rulesets/hearthtable-vanilla-plus:
     dependencies:

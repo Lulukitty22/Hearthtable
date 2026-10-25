@@ -7,3 +7,5 @@ export * from "./firestore";
 export * from "./memory";
 export * from "./repository";
 export * from "./table";
+
+export * from "./encounters";

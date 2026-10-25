@@ -27,5 +27,9 @@
     "@hearthtable/system-skills-and-saves": "workspace:*",
     "@hearthtable/system-spellbook-readiness": "workspace:*",
     "@hearthtable/system-spellcasting": "workspace:*"
+  },
+  "devDependencies": {
+    "@hearthtable/content": "workspace:*",
+    "@hearthtable/ruleset-hearthtable-vanilla-plus": "workspace:*"
   }
 }

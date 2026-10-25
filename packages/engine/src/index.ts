@@ -54,6 +54,35 @@ export const MODULES: readonly KernelModule[] = [
   dnd5e2024,
 ];
 
+/** Readable names for the values a quick NPC template types in (Milestone 5 S3). */
+const AUTHORED_LABELS: Readonly<Record<string, string>> = {
+  "hit-points.max": "HP maximum",
+  "armor-class.total": "Armor Class",
+  "initiative.total": "Initiative bonus",
+};
+
+/**
+ * Values typed in on the character record itself (`data.authored`, keyed like derivations), such
+ * as a quick NPC template's HP, AC and initiative (Turns, Encounters and Time, "Templates and
+ * instances"). They replace what the systems would calculate, and say so in the explanation.
+ */
+export function authoredFrom(
+  records: readonly RecordEnvelope[],
+): ReadonlyMap<string, AuthoredValue> {
+  const character = records.find((r) => r.kind === "character");
+  const typed = (character?.data as { authored?: unknown } | undefined)
+    ?.authored;
+  const out = new Map<string, AuthoredValue>();
+  if (typed && typeof typed === "object")
+    for (const [key, value] of Object.entries(typed))
+      if (typeof value === "number" && Number.isFinite(value))
+        out.set(key, {
+          value,
+          label: `Typed in: ${AUTHORED_LABELS[key] ?? key}`,
+        });
+  return out;
+}
+
 export interface Engine {
   readonly registry: Registry;
   readonly settings: Settings;
@@ -83,7 +112,7 @@ export function createEngine(ruleset: Ruleset): Engine {
         records,
         settings,
         registry: registry.value,
-        ...(authored ? { authored } : {}),
+        authored: authored ?? authoredFrom(records),
       }),
   };
 }

@@ -91,12 +91,24 @@ service cloud.firestore {
       return path.size() >= 3 && path[0] == parts[0] && path[1] == parts[1];
     }
 
+    // Milestone 5 S3: an ended scene (encounter or downtime) is read-only history, and so is
+    // everything under it, such as its NPC instances.
+    function sceneEnded(id) {
+      let parts = id.split('%2F');
+      let scene = /databases/$(database)/documents/records/$(parts[0] + '%2F' + parts[1] + '%2F' + parts[2] + '%2F' + parts[3]);
+      return parts.size() >= 4 && parts[0] == 'campaign'
+        && (parts[2] == 'Encounters' || parts[2] == 'Downtime')
+        && exists(scene)
+        && get(scene).data.record.data.get('endedAt', null) != null;
+    }
+
     match /records/{id} {
       allow read: if true;
       allow create, update: if mayWriteRecord(id)
         && request.resource.data.path is string
-        && pathMatchesId(id);
-      allow delete: if mayWriteRecord(id);
+        && pathMatchesId(id)
+        && !sceneEnded(id);
+      allow delete: if mayWriteRecord(id) && !sceneEnded(id);
     }
 
     // S5: campaigns. A campaign holds its name and its DM and player lists, and is readable by
@@ -183,16 +195,54 @@ service cloud.firestore {
         allow create: if isApproved()
           && (request.auth.uid in get(campaignDoc(campaign)).data.dms
             || request.auth.uid in get(campaignDoc(campaign)).data.players)
-          && request.resource.data.keys().hasOnly(['kind', 'by', 'clock', 'text', 'at'])
+          && request.resource.data.keys().hasOnly(['kind', 'by', 'clock', 'text', 'at', 'n'])
           && request.resource.data.by == request.auth.uid
           && request.resource.data.at == request.time
           && request.resource.data.clock is number
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 2000
-          && (request.resource.data.kind == 'post'
-            || (request.resource.data.kind in ['scene', 'clock', 'title']
+          && (request.resource.data.kind in ['post', 'turn', 'initiative']
+            || (request.resource.data.kind in ['scene', 'clock', 'title', 'order']
               && request.auth.uid in get(campaignDoc(campaign)).data.dms));
+      }
+
+      // Milestone 5 S3: encounters. Who controls a campaign character: its owner (the Alias
+      // folder it sits in) or someone the owner gave control (the control document, which must
+      // name the same path). NPC instances are controlled by DMs only.
+      function controls(path, control) {
+        return isApproved()
+          && ((path.split('/').size() == 5 && path.split('/')[2] == 'Characters'
+              && ownsAlias(path.split('/')[3]))
+            || (control is string && control == path.replace('/', '%2F')
+              && exists(/databases/$(database)/documents/campaigns/$(campaign)/control/$(control))
+              && request.auth.uid in get(/databases/$(database)/documents/campaigns/$(campaign)/control/$(control)).data.delegates));
+      }
+
+      // The turn state. DMs write anything. Whoever controls the current participant may only
+      // pass the turn on: the next turn in the same round or the first of the next round.
+      match /encounters/{encounter} {
+        allow read: if true;
+        allow create: if isApproved() && isDmOf(campaign);
+        allow update: if (isApproved() && isDmOf(campaign))
+          || (!resource.data.ended && resource.data.round >= 1
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['current', 'round', 'seq', 'turnStarts', 'controlOf'])
+            && request.resource.data.seq == resource.data.seq + 1
+            && (request.resource.data.round == resource.data.round
+              || request.resource.data.round == resource.data.round + 1)
+            && controls(resource.data.current, request.resource.data.get('controlOf', null)));
+
+        // One participant's initiative and budget ticks: its controller or a DM, until it ends.
+        match /participants/{participant} {
+          allow read: if true;
+          allow create, update: if participant == request.resource.data.path.replace('/', '%2F')
+            && request.resource.data.path.split('/')[1].lower() == campaign
+            && request.resource.data.keys().hasOnly(['path', 'initiative', 'used', 'control'])
+            && !getAfter(/databases/$(database)/documents/campaigns/$(campaign)/encounters/$(encounter)).data.ended
+            && ((isApproved() && isDmOf(campaign))
+              || controls(request.resource.data.path, request.resource.data.get('control', null)));
+        }
       }
 
       // S6: a member asks to add a copy of their own character. The copy goes under

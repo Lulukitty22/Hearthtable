@@ -63,3 +63,31 @@ export function isInScene(path: string): boolean {
     (folder === "Encounters" || folder === "Downtime")
   );
 }
+
+/**
+ * Names for `count` new instances of an NPC: "Goblin" for a single one, otherwise numbered
+ * ("Goblin 1", "Goblin 2"), continuing after any already in the scene.
+ */
+export function instanceNames(
+  base: string,
+  count: number,
+  taken: readonly string[],
+): string[] {
+  const used = new Set(taken.map((t) => t.toLowerCase()));
+  if (
+    count === 1 &&
+    !used.has(base.toLowerCase()) &&
+    ![...used].some((t) => t.startsWith(`${base.toLowerCase()} `))
+  )
+    return [base];
+  const names: string[] = [];
+  for (let n = 1; names.length < count; n++) {
+    const name = `${base} ${n}`;
+    if (
+      !used.has(name.toLowerCase()) &&
+      !(n === 1 && used.has(base.toLowerCase()))
+    )
+      names.push(name);
+  }
+  return names;
+}
