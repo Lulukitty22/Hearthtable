@@ -124,6 +124,8 @@ A separate game module with no levels, classes, spell slots or combat. A charact
 - **Kernel use:** records, slots and modifiers only. A slot system with typed slots and per-slot capacity would be a new system any game could reuse.
 - **Idea, unverified:** fetch an item's name from its catalog ID in the browser. Roblox's web APIs may refuse browser requests from other sites (CORS); if so, this needs a small server function or manual entry. Check before relying on it.
 
+**Open and modular everywhere** — the user's design principle, 2026-10-24 at 6:07 pm PDT (America/Los_Angeles): wherever there are kinds of things (downtime activities, and similar families elsewhere), keep the core generic and let each kind come from its own module with its own logic, so a new kind is added as a module without changing the core. The first application is downtime activities ([Turns, Encounters and Time](Turns%2C%20Encounters%20and%20Time.md#downtime)).
+
 ## Open work: must be specified before implementation
 
 These areas are referenced by selected rules but not yet designed:

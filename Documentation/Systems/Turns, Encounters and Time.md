@@ -4,7 +4,7 @@ Purpose: own how play moves forward in a campaign: encounters, initiative and tu
 
 Selected decisions: the sections below, recorded with the user on 2026-10-24 (each with its time).
 
-Open questions: whether trading between characters is built in Milestone 5 or waits for the trade window (Milestone 5c); conditions (Milestone 5 Plan topic E); how NPCs are stored and shown (their records and the look of a stat card).
+Open questions: conditions (Milestone 5 Plan topic E); how NPCs are stored and shown (their records and the look of a stat card).
 
 ## NPCs are characters
 
@@ -42,6 +42,7 @@ Selected 2026-10-24 at 5:55 pm PDT (America/Los_Angeles) (user decisions): the t
 - **Responding** (selected 2026-10-24 at 6:03 pm PDT (America/Los_Angeles)): everyone sees each submitted activity as it arrives, even before the DM approves it, and responds by adding or changing their own ("Bram keeps watch, so I'll sleep"). The open floor is the response window; it closes when the DM ends the scene.
 - **Planning ahead on each other** (selected 2026-10-24 at 6:03 pm PDT (America/Los_Angeles)): the app shows each character's state as if every pending activity will be approved, so players can chain off one another. An activity can **wait for** another character's activity: when time runs, it starts only after that one finishes, and if that one is rejected, cancelled or does not finish in time, the waiting activity stays queued and is flagged to its owner and the DM. Crafting and trading stay separate activities, so a hand-over is its own step: Bram crafts an arrow; Carol offers a trade; Bram accepts and gives the arrow; Carol's craft waits for that trade.
 - **Starting** (selected 2026-10-24 at 6:03 pm PDT (America/Los_Angeles)): a downtime scene starts by itself the moment an encounter ends, so a DM who leaves at once blocks nobody, and the DM is reminded to account for time when ending it.
+- **Activity types are modules** (user decision, 2026-10-24 at 6:07 pm PDT (America/Los_Angeles)). The downtime machinery knows nothing about any particular activity. Each activity type (sleeping, resting, crafting, scribing, trading, a note with a duration) comes from its own module, which supplies its own logic: how long it takes, whether it can be split, what it checks, how it changes the state shown ahead of approval, and what happens when it finishes. Adding an activity type later means adding a module, with no change to the machinery, the same way systems declare what they provide ([Modules, Systems and Rulesets](Modules%2C%20Systems%20and%20Rulesets.md)). Milestone 5 builds the machinery and the activity types whose rules exist: Short Rest, Long Rest and the note with a duration; crafting and scribing arrive as modules with Milestone 5b, and trading with Milestone 5c.
 - **Players do not see the length in the app.** Since the DM sets the time only when ending the scene, players plan without knowing it; the DM may tell them anything in the story. The clock never moves on its own.
 
 ## What rests restore
