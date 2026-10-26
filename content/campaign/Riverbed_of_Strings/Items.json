@@ -68,6 +68,59 @@
       "aim": {
         "ability": "int",
         "proficient": true
+      },
+      "attacks": [
+        {
+          "id": "burst-1",
+          "name": "1 round",
+          "rounds": 1,
+          "allows": ["standard"]
+        },
+        {
+          "id": "burst-2",
+          "name": "2 rounds",
+          "rounds": 2,
+          "allows": ["standard"]
+        },
+        {
+          "id": "burst-3",
+          "name": "3 rounds",
+          "rounds": 3,
+          "allows": ["standard"]
+        },
+        {
+          "id": "special",
+          "name": "Spellround or HE-FRAG",
+          "rounds": 1,
+          "allows": ["special"]
+        },
+        {
+          "id": "precision-1",
+          "name": "1 precise round",
+          "rounds": 1,
+          "allows": ["standard"],
+          "precision": true
+        },
+        {
+          "id": "precision-2",
+          "name": "2 precise rounds",
+          "rounds": 2,
+          "allows": ["standard"],
+          "precision": true
+        },
+        {
+          "id": "precision-3",
+          "name": "3 precise rounds",
+          "rounds": 3,
+          "allows": ["standard"],
+          "precision": true
+        }
+      ],
+      "weapon": {
+        "category": "martial",
+        "kind": "ranged",
+        "range": "80/240",
+        "precisionCharges": 4
       }
     }
   },
@@ -108,7 +161,18 @@
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
       "name": "Basic Round",
-      "tags": ["aetherlock-round"]
+      "tags": ["aetherlock-round"],
+      "round": {
+        "class": "standard",
+        "charges": 1,
+        "damage": [
+          {
+            "dice": "2d10",
+            "type": "Piercing",
+            "addsAim": true
+          }
+        ]
+      }
     }
   },
   {
@@ -127,7 +191,22 @@
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
       "name": "Arcane Round",
-      "tags": ["aetherlock-round"]
+      "tags": ["aetherlock-round"],
+      "round": {
+        "class": "standard",
+        "charges": 1,
+        "damage": [
+          {
+            "dice": "2d10",
+            "type": "Piercing",
+            "addsAim": true
+          },
+          {
+            "dice": "2d6",
+            "type": "Force"
+          }
+        ]
+      }
     }
   },
   {
@@ -153,7 +232,12 @@
         "contentsAddWeight": true,
         "scrollUse": "installed"
       },
-      "leavesBehind": "itself"
+      "leavesBehind": "itself",
+      "round": {
+        "class": "special",
+        "charges": 2,
+        "payload": "scroll"
+      }
     }
   },
   {
@@ -172,7 +256,23 @@
     "updatedAt": "2026-10-22T20:30:00.000Z",
     "data": {
       "name": "HE-FRAG Round",
-      "tags": ["aetherlock-round"]
+      "tags": ["aetherlock-round"],
+      "round": {
+        "class": "special",
+        "charges": 2,
+        "area": "20-foot-radius Sphere",
+        "save": {
+          "ability": "dex",
+          "dc": 15,
+          "success": "half"
+        },
+        "damage": [
+          {
+            "dice": "5d6",
+            "type": "Piercing"
+          }
+        ]
+      }
     }
   },
   {

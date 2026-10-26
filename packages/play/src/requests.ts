@@ -23,6 +23,8 @@ export interface Holds {
   readonly lines?: Readonly<Record<string, number>>;
   /** Limited-use resource pools by name. */
   readonly pools?: Readonly<Record<string, number>>;
+  /** Charges in a canister, by its line id (S10). */
+  readonly charges?: Readonly<Record<string, number>>;
 }
 
 export type Timing = "instant" | "next-turn";
@@ -64,13 +66,14 @@ export function requestKind(id: string): RequestKind | undefined {
 
 /** Adds holds together, e.g. every open request of one character. */
 export function addHolds(list: readonly Holds[]): Required<Holds> {
-  const out = { slots: {}, lines: {}, pools: {} } as {
+  const out = { slots: {}, lines: {}, pools: {}, charges: {} } as {
     slots: Record<string, number>;
     lines: Record<string, number>;
     pools: Record<string, number>;
+    charges: Record<string, number>;
   };
   for (const h of list)
-    for (const part of ["slots", "lines", "pools"] as const)
+    for (const part of ["slots", "lines", "pools", "charges"] as const)
       for (const [k, n] of Object.entries(h[part] ?? {}))
         out[part][k] = (out[part][k] ?? 0) + n;
   return out;
@@ -88,6 +91,9 @@ export function describeHolds(
     ),
     ...Object.entries(h.lines ?? {}).map(
       ([id, n]) => `${n === 1 ? "" : `${n} × `}${lineName(id)}`,
+    ),
+    ...Object.entries(h.charges ?? {}).map(
+      ([id, n]) => `${n} charge${n === 1 ? "" : "s"} from ${lineName(id)}`,
     ),
     ...Object.entries(h.pools ?? {}).map(
       ([pool, n]) => `${n} ${pool.replaceAll("-", " ")}`,
@@ -202,3 +208,102 @@ export function everyoneSkipped(
 ): boolean {
   return players.every((uid) => skips[uid] === round);
 }
+
+/**
+ * Using an item (Milestone 5 S10), such as drinking a Potion of Healing (a Bonus Action, drunk or
+ * given to someone within 5 feet): it holds the item, which resolution uses up.
+ */
+export interface UseItemInput {
+  readonly line: string;
+  readonly name: string;
+  /** Hit points it restores, as dice, e.g. "2d4+2". */
+  readonly healing?: string;
+  readonly targets?: readonly string[];
+  readonly note?: string;
+  /** The Action, Bonus Action or Reaction it takes; nothing for some items. */
+  readonly budget?: BudgetKind;
+}
+
+export const useItem: RequestKind<UseItemInput> = {
+  id: "use-item",
+  holds: (i) => ({ lines: { [i.line]: 1 } }),
+  budget: (i) => i.budget,
+  describe: (i) => `Use ${i.name}`,
+  warnings: (i, facts) =>
+    (facts.lines[i.line] ?? 0) < 1
+      ? [`${i.name} is not available: it is already held by another request.`]
+      : [],
+};
+
+registerRequestKind(useItem);
+
+/**
+ * One round of a weapon attack (Aetherlock Engineered Rounds, "Firing, loading and clearing in
+ * play"): load a round into a chamber or slot first, fire a chamber, and clear one afterwards.
+ * A melee attack has a single shot with nothing to fire.
+ */
+export interface Shot {
+  readonly load?: { readonly slot: string; readonly line: string };
+  /** The chamber or slot fired; absent for a melee attack. */
+  readonly fire?: string;
+  readonly clear?: string;
+  /** The creature this shot is aimed at. */
+  readonly target?: string;
+  /** The round it fires, by item id, as worked out at review. */
+  readonly round?: string;
+  /** Its damage on a hit, with any ability modifier already added. */
+  readonly damage?: readonly {
+    readonly dice: string;
+    readonly type?: string;
+  }[];
+  /** An area round's save instead of an attack roll (HE-FRAG). */
+  readonly save?: {
+    readonly ability: string;
+    readonly dc: number;
+    readonly success: string;
+  };
+  /** A Spellround's scroll line: the payload is cast from its stored snapshot. */
+  readonly payload?: string;
+}
+
+/**
+ * Attacking with a weapon (S10): the Aetherlock's modes, a bow's or crossbow's shot, a melee
+ * swing, or an NPC's stat-block attack. What it holds is worked out when the attack is reviewed:
+ * the rounds it loads or fires and the canister charges it spends.
+ */
+export interface WeaponAttackInput {
+  /** "Aetherlock: 2 rounds", "Skeleton: Shortbow". */
+  readonly name: string;
+  /** The weapon's line, when it is an item in the inventory. */
+  readonly weapon?: string;
+  /** Which of the weapon's attacks, e.g. `burst-2`. */
+  readonly mode?: string;
+  readonly precision?: boolean;
+  readonly shots: readonly Shot[];
+  /** The attack roll's bonus. */
+  readonly bonus: number;
+  /** Damage when it does not come from the round fired (a bow's, a sword's, a monster's). */
+  readonly damage?: readonly {
+    readonly dice: string;
+    readonly type?: string;
+  }[];
+  /** What the shots hold: the rounds loaded or fired, and the charges spent. */
+  readonly consumes: Holds;
+  readonly targets?: readonly string[];
+  readonly note?: string;
+}
+
+export const weaponAttack: RequestKind<WeaponAttackInput> = {
+  id: "weapon-attack",
+  holds: (i) => i.consumes,
+  budget: () => "action",
+  describe: (i) => `Attack: ${i.name}`,
+  warnings: (i, facts) =>
+    Object.entries(i.consumes.lines ?? {}).flatMap(([line, n]) =>
+      (facts.lines[line] ?? 0) < n
+        ? [`A round it needs is not available: it is held by another request.`]
+        : [],
+    ),
+};
+
+registerRequestKind(weaponAttack);

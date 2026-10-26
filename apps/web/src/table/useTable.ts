@@ -29,6 +29,7 @@ import {
 } from "@hearthtable/storage";
 import type { ActiveEffectRow } from "@hearthtable/system-active-effects";
 import type { ConditionRow } from "@hearthtable/system-conditions";
+import type { LineRow } from "@hearthtable/system-containers";
 import type { HitPointDice } from "@hearthtable/system-hit-points";
 import type { ResourcePool } from "@hearthtable/system-resources";
 import { useEffect, useMemo, useState } from "react";
@@ -63,6 +64,24 @@ export interface Participant {
   /** For resolving actions (S7): the resolved sheet and its damage defenses. */
   readonly resolved: ResolvedCharacter;
   readonly defenses: Defenses;
+  /** For weapon attacks (S10): inventory lines, with how many queued requests hold. */
+  readonly lines: readonly LineRow[];
+  /** An NPC's stat-block attacks. */
+  readonly statActions: readonly StatAction[];
+}
+
+/** An attack from a stat block (SRD monsters), naming the weapon line whose ammunition it uses. */
+export interface StatAction {
+  readonly id: string;
+  readonly name: string;
+  readonly kind?: string;
+  readonly bonus: number;
+  readonly damage?: readonly {
+    readonly dice: string;
+    readonly type?: string;
+  }[];
+  readonly weapon?: string;
+  readonly rider?: string;
 }
 
 /** An NPC template the DM can deploy: its records and its initiative bonus. */
@@ -88,7 +107,7 @@ function resolveCharacter(
   holds?: Holds,
 ): Participant {
   const data = own.find((r) => r.id === path)?.data as
-    { name?: unknown } | undefined;
+    { name?: unknown; actions?: unknown } | undefined;
   const resolved = engine.resolve([
     ...[...definitions, ...own].filter((r) => r.kind !== "history"),
     ...(now ? [gameTimeRecord(now)] : []),
@@ -115,6 +134,12 @@ function resolveCharacter(
   const incapacitated = conditions.find((c) => c.breaksConcentration);
   return {
     resolved,
+    lines: value<readonly LineRow[]>("containers.lines") ?? [],
+    statActions: Array.isArray(data?.actions)
+      ? (data.actions as StatAction[]).filter(
+          (a) => typeof a.bonus === "number",
+        )
+      : [],
     defenses: value<Defenses>("hit-points.defenses") ?? NO_DEFENSES,
     effects,
     conditions,
@@ -334,8 +359,9 @@ export function useTable(segment: string) {
     campaignPath,
     conditionKinds,
     actions,
-    /** A core definition by id, such as a spell being resolved. */
-    definition: (id: string) => core?.find((r) => r.id === id),
+    /** A definition by id, core or the campaign's own, such as a spell or a round. */
+    definition: (id: string) =>
+      core?.find((r) => r.id === id) ?? records?.find((r) => r.id === id),
     campaign,
     state,
     scene: scene as (RecordEnvelope & { data: SceneData }) | undefined,

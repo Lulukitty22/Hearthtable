@@ -80,6 +80,72 @@ export function spellShape(spell: SpellData | undefined) {
   };
 }
 
+/**
+ * The records one resolution changes, each loaded once and written together with the request.
+ * Damage and healing go through it so every kind of action applies them the same way.
+ */
+export class Ledger {
+  readonly records = new Map<string, RecordEnvelope>();
+  /** Who took damage, and how much, for concentration checks (S8). */
+  readonly damaged: { path: string; amount: number }[] = [];
+
+  async load(path: string): Promise<RecordEnvelope> {
+    const known = this.records.get(path);
+    if (known) return known;
+    const got = await repository.get(path as RecordId);
+    if (!got.ok) throw new Error(got.errors.map((e) => e.message).join("\n"));
+    if (!got.value) throw new Error(`${path} is no longer there.`);
+    this.records.set(path, got.value);
+    return got.value;
+  }
+
+  async change(path: string, f: (d: Data) => Data): Promise<void> {
+    const r = await this.load(path);
+    this.records.set(path, { ...r, data: f(r.data as Data) });
+  }
+
+  /** Damage with the 2024 arithmetic and the table's going-down rule; says how it went. */
+  async damage(p: Participant, amount: number, type?: string): Promise<string> {
+    const taken = damageTaken(amount, type, p.defenses);
+    const r = await this.load(p.path);
+    const hp =
+      ((r.data as Data)["hitPoints"] as {
+        current?: number;
+        temporary?: number;
+      }) ?? {};
+    // The 2024 rules stop at 0; Vanilla+ goes below.
+    const method = engine.settings.method("conditions.goingDown");
+    const floor = method.kind === "known" && method.value === "death-saves";
+    const out = applyDamage(
+      { current: hp.current ?? 0, temporary: hp.temporary ?? 0 },
+      taken.amount,
+      floor,
+    );
+    await this.change(p.path, (d) => ({
+      ...d,
+      hitPoints: {
+        ...(d["hitPoints"] as Data),
+        current: out.current,
+        temporary: out.temporary,
+      },
+    }));
+    this.damaged.push({ path: p.path, amount: taken.amount });
+    const steps = [...taken.steps, ...out.steps];
+    return `${taken.amount} ${type ?? ""} damage${steps.length ? ` (${steps.join("; ")})` : ""}, HP ${out.current}`;
+  }
+
+  async heal(p: Participant, amount: number): Promise<string> {
+    const r = await this.load(p.path);
+    const hp = ((r.data as Data)["hitPoints"] as { current?: number }) ?? {};
+    const next = applyHealing(hp.current ?? 0, p.hp?.max, amount);
+    await this.change(p.path, (d) => ({
+      ...d,
+      hitPoints: { ...(d["hitPoints"] as Data), current: next },
+    }));
+    return `healed ${amount}, HP ${next}`;
+  }
+}
+
 export interface Plan {
   readonly records: RecordEnvelope[];
   readonly result: string;
@@ -99,37 +165,31 @@ export async function planCast(options: {
   readonly amount: number;
   readonly now: Moment | undefined;
   readonly people: ReadonlyMap<string, Participant>;
+  /** Changes already made by the same resolution, such as firing the round that carries it. */
+  readonly ledger?: Ledger;
+  /** False when something else has already consumed what the request holds. */
+  readonly consume?: boolean;
+  /** The spell cast, when the request is not itself a cast (a Spellround's payload). */
+  readonly as?: { readonly spell: string; readonly name: string };
 }): Promise<Plan | string> {
   const o = options;
-  const input = o.request.input as unknown as CastInput & { replaces?: string };
+  const input = {
+    ...(o.request.input as unknown as CastInput & { replaces?: string }),
+    ...o.as,
+  };
   const shape = spellShape(o.spell);
   const duration = spellDuration(
     o.spell.duration,
     o.spell.concentration === true,
   );
-  const records = new Map<string, RecordEnvelope>();
-  const load = async (path: string) => {
-    const known = records.get(path);
-    if (known) return known;
-    const got = await repository.get(path as RecordId);
-    if (!got.ok) throw new Error(got.errors.map((e) => e.message).join("\n"));
-    if (!got.value) throw new Error(`${path} is no longer there.`);
-    records.set(path, got.value);
-    return got.value;
-  };
-  const change = async (path: string, f: (d: Data) => Data) => {
-    const r = await load(path);
-    records.set(path, { ...r, data: f(r.data as Data) });
-  };
+  const ledger = o.ledger ?? new Ledger();
+  const change = ledger.change.bind(ledger);
   const logs: string[] = [];
-  const damaged: { path: string; amount: number }[] = [];
   const casterName = o.caster.name;
-  const method = engine.settings.method("conditions.goingDown");
-  const goingDown = method.kind === "known" ? method.value : undefined;
 
   try {
     // 1. Consume what the request holds.
-    const held = o.request.holds;
+    const held = o.consume === false ? {} : o.request.holds;
     if (held.slots && Object.keys(held.slots).length)
       await change(o.caster.path, (d) => {
         const sc =
@@ -266,46 +326,11 @@ export async function planCast(options: {
                 ? Math.floor(o.amount / 2)
                 : 0
               : o.amount;
-        if (base > 0) {
-          const taken = damageTaken(base, shape.damageType, p.defenses);
-          const r = await load(p.path);
-          const hp =
-            ((r.data as Data)["hitPoints"] as {
-              current?: number;
-              temporary?: number;
-            }) ?? {};
-          // The 2024 rules stop at 0; Vanilla+ goes below.
-          const floor = goingDown === "death-saves";
-          const out = applyDamage(
-            { current: hp.current ?? 0, temporary: hp.temporary ?? 0 },
-            taken.amount,
-            floor,
-          );
-          await change(p.path, (d) => ({
-            ...d,
-            hitPoints: {
-              ...(d["hitPoints"] as Data),
-              current: out.current,
-              temporary: out.temporary,
-            },
-          }));
-          parts.push(
-            `${taken.amount} ${shape.damageType ?? ""} damage${[...taken.steps, ...out.steps].length ? ` (${[...taken.steps, ...out.steps].join("; ")})` : ""}, HP ${out.current}`,
-          );
-          damaged.push({ path: p.path, amount: taken.amount });
-        } else parts.push("no damage");
+        if (base > 0)
+          parts.push(await ledger.damage(p, base, shape.damageType));
+        else parts.push("no damage");
       }
-      if (shape.heals && affected) {
-        const r = await load(p.path);
-        const hp =
-          ((r.data as Data)["hitPoints"] as { current?: number }) ?? {};
-        const next = applyHealing(hp.current ?? 0, p.hp?.max, o.amount);
-        await change(p.path, (d) => ({
-          ...d,
-          hitPoints: { ...(d["hitPoints"] as Data), current: next },
-        }));
-        parts.push(`healed ${o.amount}, HP ${next}`);
-      }
+      if (shape.heals && affected) parts.push(await ledger.heal(p, o.amount));
       const how =
         t.result === "saved"
           ? `saved (${ABILITY[shape.save?.ability ?? ""] ?? "save"})`
@@ -336,12 +361,12 @@ export async function planCast(options: {
         ],
       }));
 
-    const summary = `${casterName}: ${o.request.summary.replace(/^Cast/, "cast")} on ${o.targets.map((t) => t.person.name).join(", ") || "nobody"}`;
+    const summary = `${casterName}: ${o.request.summary.replace(/^(Cast|Use|Attack)/, (w) => w.toLowerCase())} on ${o.targets.map((t) => t.person.name).join(", ") || "nobody"}`;
     return {
-      records: [...records.values()],
+      records: [...ledger.records.values()],
       result: summary,
       logs: [`The DM approved it. ${summary}.`, ...logs],
-      damaged,
+      damaged: ledger.damaged,
     };
   } catch (error) {
     return error instanceof Error ? error.message : String(error);

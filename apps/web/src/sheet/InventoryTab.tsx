@@ -29,7 +29,15 @@ import {
   type Dragged,
   type DropProps,
 } from "./Grid";
-import { known, sheetRecord, type Data, type TabProps } from "./shared";
+import { AttackReview, UseReview, type ItemUse } from "./ItemRequests";
+import { CastReview } from "./Requests";
+import {
+  known,
+  sheetRecord,
+  type Data,
+  type SheetPlay,
+  type TabProps,
+} from "./shared";
 
 type Line = Record<string, unknown> & {
   id: string;
@@ -457,6 +465,7 @@ function ItemDetail({
         />
       </div>
       <Lifecycle props={props} row={row} />
+      {props.play && <ItemActions sheet={sheet} row={row} play={props.play} />}
 
       {scroll && (
         <>
@@ -551,6 +560,81 @@ function ItemDetail({
         </>
       )}
     </DetailPanel>
+  );
+}
+
+/**
+ * What a character can do with an item in play (Milestone 5 S10): use it (a potion), cast from
+ * it (a loose scroll) or attack with it (a weapon with attack actions). Each opens a review.
+ */
+function ItemActions({
+  sheet,
+  row,
+  play,
+}: {
+  sheet: Sheet;
+  row: LineRow;
+  play: SheetPlay;
+}) {
+  const { props } = sheet;
+  // Requests come from play, like casting: no edit mode is needed.
+  const [open, setOpen] = useState<"use" | "cast" | "attack" | undefined>();
+  const definition = row.definition as
+    { use?: ItemUse; attacks?: readonly unknown[] } | undefined;
+  const scroll = sheet.scrolls.find(
+    (x) => x.id === row.line.id && x.place.kind === "loose" && !x.spent,
+  );
+  const usable = definition?.use && row.line.quantity - row.held > 0;
+  const armed = (definition?.attacks?.length ?? 0) > 0;
+  if (!usable && !scroll && !armed) return null;
+  if (open === "use" && definition?.use)
+    return (
+      <UseReview
+        props={props}
+        play={play}
+        row={row}
+        use={definition.use}
+        onDone={() => setOpen(undefined)}
+      />
+    );
+  if (open === "cast" && scroll)
+    return (
+      <CastReview
+        props={props}
+        play={play}
+        spell={scroll.spell}
+        bookTitle=""
+        scroll={scroll}
+        onDone={() => setOpen(undefined)}
+      />
+    );
+  if (open === "attack")
+    return (
+      <AttackReview
+        props={props}
+        play={play}
+        row={row}
+        onDone={() => setOpen(undefined)}
+      />
+    );
+  return (
+    <p className="chips">
+      {usable && (
+        <button type="button" onClick={() => setOpen("use")}>
+          Use…
+        </button>
+      )}
+      {scroll && (
+        <button type="button" onClick={() => setOpen("cast")}>
+          Cast from this scroll…
+        </button>
+      )}
+      {armed && (
+        <button type="button" onClick={() => setOpen("attack")}>
+          Attack…
+        </button>
+      )}
+    </p>
   );
 }
 

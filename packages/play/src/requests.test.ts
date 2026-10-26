@@ -52,6 +52,7 @@ test("holds add up and read plainly", () => {
     slots: { "1": 2, "3": 1 },
     lines: { s: 1 },
     pools: {},
+    charges: {},
   });
   expect(
     describeHolds({ slots: { "3": 1 }, lines: { s: 1 } }, () => "the scroll"),

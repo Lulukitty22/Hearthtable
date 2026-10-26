@@ -19,6 +19,8 @@ import {
   submitAction,
   type ActionRequest,
 } from "@hearthtable/storage";
+import type { LineRow } from "@hearthtable/system-containers";
+import type { ScrollView } from "@hearthtable/system-scrolls";
 import type { SlotLevel } from "@hearthtable/system-spellcasting";
 import { useEffect, useState } from "react";
 import { db, repository } from "../firebase";
@@ -43,7 +45,7 @@ function slotsNow(props: TabProps): Record<string, number> {
 }
 
 /** Who is in the current scene: the campaign's characters and the scene's NPCs. */
-function usePresent(play: SheetPlay) {
+export function usePresent(play: SheetPlay) {
   const [present, setPresent] = useState<
     readonly { path: string; name: string }[]
   >([]);
@@ -77,7 +79,13 @@ function usePresent(play: SheetPlay) {
   return present;
 }
 
-const nameOf = (props: TabProps) =>
+/** An inventory line's item name, for what a request holds. */
+export const lineNameOf = (props: TabProps) => (id: string) =>
+  (
+    known(props.resolved.get<readonly LineRow[]>("containers.lines")) ?? []
+  ).find((r) => r.line.id === id)?.name ?? id;
+
+export const nameOf = (props: TabProps) =>
   String(
     (props.records.get(props.characterId)?.data as { name?: unknown })?.name ??
       "",
@@ -88,6 +96,7 @@ export function CastReview({
   play,
   spell,
   bookTitle,
+  scroll,
   request,
   onDone,
 }: {
@@ -95,6 +104,8 @@ export function CastReview({
   play: SheetPlay;
   spell: string;
   bookTitle: string;
+  /** Casting from this loose scroll (S10): its level and stored numbers, and it is held. */
+  scroll?: ScrollView;
   /** Revising this queued request instead of making a new one. */
   request?: ActionRequest;
   onDone: () => void;
@@ -128,9 +139,10 @@ export function CastReview({
     play.encounter && !castingTime.toLowerCase().startsWith("reaction")
       ? "next-turn"
       : "instant";
-  const [castLevel, setCastLevel] = useState(
+  const [chosenLevel, setCastLevel] = useState(
     before?.castLevel ?? (level === 0 ? 0 : (levels[0] ?? level)),
   );
+  const castLevel = scroll ? scroll.castLevel : chosenLevel;
   const [timing, setTiming] = useState<Timing>(
     request?.timing ?? defaultTiming,
   );
@@ -177,7 +189,9 @@ export function CastReview({
     level,
     castLevel,
     castingTime,
-    source: { kind: "book", title: bookTitle },
+    source: scroll
+      ? { kind: "scroll", lineId: scroll.id }
+      : { kind: "book", title: bookTitle },
     ...(note.trim() ? { note: note.trim() } : {}),
     targets,
     ...(mustReplace && replaces ? { replaces } : {}),
@@ -185,10 +199,17 @@ export function CastReview({
   const holds = castSpell.holds(input);
   const budget = castSpell.budget(input);
   const who = nameOf(props);
+  const scrollRow = scroll
+    ? (
+        known(props.resolved.get<readonly LineRow[]>("containers.lines")) ?? []
+      ).find((r) => r.line.id === scroll.id)
+    : undefined;
   const warnings = castSpell.warnings(input, {
     name: who,
     slots: usable,
-    lines: {},
+    lines: scrollRow
+      ? { [scrollRow.line.id]: scrollRow.line.quantity - scrollRow.held }
+      : {},
   });
   const profiles =
     known(props.resolved.get<readonly Profile[]>("spellcasting.profiles")) ??
@@ -238,11 +259,14 @@ export function CastReview({
     >
       <h3>{request ? "Revise the request" : "Review"}</h3>
       <p>
-        {input.name} from {bookTitle}
+        {input.name} from{" "}
+        {scroll ? `a scroll (level ${scroll.castLevel})` : bookTitle}
+        {scroll && " · uses the numbers stored on the scroll"}
         {caster &&
+          !scroll &&
           ` · ${caster.name}: spell save DC ${caster.dc.value ?? "?"}, attack +${caster.attack.value ?? "?"} (current numbers)`}
       </p>
-      {level > 0 && (
+      {level > 0 && !scroll && (
         <label>
           Cast at level{" "}
           <select
@@ -332,7 +356,7 @@ export function CastReview({
         />
       </div>
       <p className="muted">
-        Holds {describeHolds(holds)}
+        Holds {describeHolds(holds, lineNameOf(props))}
         {budget ? `; uses ${BUDGET_NAMES[budget]}` : ""}. Nothing is spent until
         the DM approves it.
       </p>
@@ -370,21 +394,23 @@ export function SheetRequests({ props }: { props: TabProps }) {
             <li key={r.id}>
               {r.summary} · {TIMING_NAMES[r.timing]}
               {r.revision > 1 && ` · revision ${r.revision}`} · holds{" "}
-              {describeHolds(r.holds)}{" "}
+              {describeHolds(r.holds, lineNameOf(props))}{" "}
               <span className="badge">
                 {isEligible(r.timing, r.character, play.encounter)
                   ? "ready for the DM"
                   : "waits for its turn"}
               </span>{" "}
-              {r.kind === castSpell.id && input.spell && (
-                <button
-                  type="button"
-                  className="link-button"
-                  onClick={() => setRevising(r.id)}
-                >
-                  revise
-                </button>
-              )}
+              {r.kind === castSpell.id &&
+                input.spell &&
+                input.source?.kind === "book" && (
+                  <button
+                    type="button"
+                    className="link-button"
+                    onClick={() => setRevising(r.id)}
+                  >
+                    revise
+                  </button>
+                )}
               <button
                 type="button"
                 className="link-button"

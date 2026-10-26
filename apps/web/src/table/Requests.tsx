@@ -8,10 +8,12 @@ import type { RecordEnvelope } from "@hearthtable/kernel";
 import {
   attack,
   describeHolds,
+  weaponAttack,
   isEligible,
   TIMING_NAMES,
   type AttackInput,
   type Moment,
+  type WeaponAttackInput,
 } from "@hearthtable/play";
 import { useState } from "react";
 import {
@@ -25,7 +27,17 @@ import {
 import { db } from "../firebase";
 import type { Control } from "./EncounterPanel";
 import { ResolvePanel } from "./ResolvePanel";
+import { WeaponPanel } from "./WeaponPanel";
+import { prepareAttack, type WeaponRules } from "../play/firing";
+import type { Line } from "../sheet/drag";
 import type { Participant } from "./useTable";
+
+/** A weapon attack's ordinary shots resolve one by one; a special round like a spell. */
+const shotByShot = (a: ActionRequest) => {
+  if (a.kind !== "weapon-attack") return false;
+  const first = (a.input as unknown as WeaponAttackInput).shots[0];
+  return !first?.save && !first?.payload;
+};
 
 export function RequestsPanel({
   campaign,
@@ -96,7 +108,12 @@ export function RequestsPanel({
               )}{" "}
               · {TIMING_NAMES[a.timing]}
               {a.revision > 1 && ` · revision ${a.revision}`} · holds{" "}
-              {describeHolds(a.holds)}{" "}
+              {describeHolds(
+                a.holds,
+                (id) =>
+                  people.get(a.character)?.lines.find((r) => r.line.id === id)
+                    ?.name ?? id,
+              )}{" "}
               <span className="badge">
                 {isEligible(a.timing, a.character, encounter)
                   ? "ready for the DM"
@@ -132,33 +149,66 @@ export function RequestsPanel({
                   cancel
                 </button>
               )}
-              {resolving === a.id && uid && people.get(a.character) && (
-                <ResolvePanel
-                  campaign={campaign}
-                  request={a}
-                  caster={people.get(a.character) as Participant}
-                  spell={
-                    definition(String(a.input["spell"]))?.data as
-                      Record<string, unknown> | undefined
-                  }
-                  people={people}
-                  present={present}
-                  rolls={rolls}
-                  polls={polls}
-                  actions={actions}
-                  players={players}
-                  now={now}
-                  uid={uid}
-                  clock={clock}
-                  onDone={(err) => {
-                    setResolving(undefined);
-                    if (err) onProblem(err);
-                  }}
-                />
-              )}
+              {resolving === a.id &&
+                uid &&
+                people.get(a.character) &&
+                shotByShot(a) && (
+                  <WeaponPanel
+                    campaign={campaign}
+                    request={a}
+                    attacker={people.get(a.character) as Participant}
+                    definition={definition}
+                    people={people}
+                    present={present}
+                    rolls={rolls}
+                    polls={polls}
+                    actions={actions}
+                    players={players}
+                    uid={uid}
+                    clock={clock}
+                    onDone={(err) => {
+                      setResolving(undefined);
+                      if (err) onProblem(err);
+                    }}
+                  />
+                )}
+              {resolving === a.id &&
+                uid &&
+                people.get(a.character) &&
+                !shotByShot(a) && (
+                  <ResolvePanel
+                    campaign={campaign}
+                    request={a}
+                    caster={people.get(a.character) as Participant}
+                    definition={definition}
+                    people={people}
+                    present={present}
+                    rolls={rolls}
+                    polls={polls}
+                    actions={actions}
+                    players={players}
+                    now={now}
+                    uid={uid}
+                    clock={clock}
+                    onDone={(err) => {
+                      setResolving(undefined);
+                      if (err) onProblem(err);
+                    }}
+                  />
+                )}
             </li>
           ))}
         </ol>
+      )}
+      {isDm && uid && present.some((p) => p.statActions.length > 0) && (
+        <StatBlockAttack
+          campaign={campaign}
+          present={present}
+          definition={definition}
+          uid={uid}
+          clock={clock}
+          onProblem={onProblem}
+        />
       )}
       {isDm && uid && (
         <MakeAttack
@@ -170,6 +220,141 @@ export function RequestsPanel({
         />
       )}
     </section>
+  );
+}
+
+/**
+ * The DM queues an NPC's stat-block attack (S10). An attack naming a weapon line uses that weapon
+ * like a player's: a bow loads an arrow from the NPC's inventory as part of the shot. With nothing
+ * to fire it only warns, and the DM may go ahead.
+ */
+function StatBlockAttack({
+  campaign,
+  present,
+  definition,
+  uid,
+  clock,
+  onProblem,
+}: {
+  campaign: string;
+  present: readonly Participant[];
+  definition: (id: string) => RecordEnvelope | undefined;
+  uid: string;
+  clock: number;
+  onProblem: (message: string) => void;
+}) {
+  const npcs = present.filter((p) => p.statActions.length > 0);
+  const [attacker, setAttacker] = useState(npcs[0]?.path ?? "");
+  const who = npcs.find((p) => p.path === attacker) ?? npcs[0];
+  const [actionId, setActionId] = useState("");
+  const act =
+    who?.statActions.find((a) => a.id === actionId) ?? who?.statActions[0];
+  const [target, setTarget] = useState(present.find((p) => !p.npc)?.path ?? "");
+  if (!who || !act) return null;
+  const rulesOf = (ref: string) =>
+    definition(ref)?.data as WeaponRules | undefined;
+  const weaponRow = act.weapon
+    ? who.lines.find((r) => r.line.id === act.weapon)
+    : undefined;
+  const mode = weaponRow
+    ? rulesOf(weaponRow.line.ref)?.attacks?.[0]
+    : undefined;
+  const prepared = prepareAttack({
+    lines: who.lines.map((r) => r.line as unknown as Line),
+    held: Object.fromEntries(who.lines.map((r) => [r.line.id, r.held])),
+    ...(weaponRow ? { weaponId: weaponRow.line.id } : {}),
+    ...(mode ? { mode } : {}),
+    rulesOf,
+    target,
+    fallback: act.damage ?? [],
+    aimModifier: 0,
+  });
+  return (
+    <form
+      aria-label="Stat block attack"
+      className="chips"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!target) return;
+        const input: WeaponAttackInput = {
+          name: `${who.name}: ${act.name}`,
+          ...(weaponRow ? { weapon: weaponRow.line.id } : {}),
+          ...(mode ? { mode: mode.id } : {}),
+          shots: prepared.shots,
+          bonus: act.bonus,
+          consumes: prepared.holds,
+          targets: [target],
+          ...(act.rider ? { note: `on a hit, ${act.rider}` } : {}),
+        };
+        void submitAction(
+          db,
+          campaign,
+          {
+            kind: weaponAttack.id,
+            character: who.path,
+            timing: "instant",
+            input: { ...input },
+            holds: weaponAttack.holds(input),
+            budget: "action",
+            summary: weaponAttack.describe(input),
+          },
+          uid,
+          clock,
+          `The DM queued ${weaponAttack.describe(input)}.`,
+        ).then((err) => err && onProblem(err));
+      }}
+    >
+      <span>Stat block:</span>
+      <select
+        aria-label="NPC"
+        value={who.path}
+        onChange={(e) => {
+          setAttacker(e.target.value);
+          setActionId("");
+        }}
+      >
+        {npcs.map((p) => (
+          <option key={p.path} value={p.path}>
+            {p.name}
+          </option>
+        ))}
+      </select>
+      <select
+        aria-label="NPC attack"
+        value={act.id}
+        onChange={(e) => setActionId(e.target.value)}
+      >
+        {who.statActions.map((a) => (
+          <option key={a.id} value={a.id}>
+            {a.name} (+{a.bonus},{" "}
+            {(a.damage ?? [])
+              .map((d) => `${d.dice} ${d.type ?? ""}`)
+              .join(" + ")}
+            )
+          </option>
+        ))}
+      </select>
+      <span>at</span>
+      <select
+        aria-label="NPC target"
+        value={target}
+        onChange={(e) => setTarget(e.target.value)}
+      >
+        {present.map((p) => (
+          <option key={p.path} value={p.path}>
+            {p.name}
+          </option>
+        ))}
+      </select>
+      <button type="submit" className="secondary">
+        Queue {act.name}
+      </button>
+      {prepared.warnings.map((w) => (
+        <span key={w} className="warn-text" role="status">
+          {w}
+        </span>
+      ))}
+    </form>
   );
 }
 

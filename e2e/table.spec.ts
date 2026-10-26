@@ -790,3 +790,199 @@ test("Shield as a response turns a hit into a miss before damage", async ({
   await expect(log).toContainText("Carol Elfnein missed: no damage.");
   await dm.getByRole("button", { name: "End the encounter" }).click();
 });
+
+// Milestone 5, S10: items and weapons go through the same request, hold, poll and resolution.
+// Carol drinks a potion and fires a two-round burst from the Aetherlock (rounds and charges are
+// held, then used up); a Skeleton shoots back with its shortbow, nocking an arrow as it fires.
+test("a potion, the Aetherlock and a Skeleton's shortbow resolve like any action", async ({
+  browser,
+}) => {
+  test.setTimeout(150_000);
+  const dm = await signedIn(browser, VR_LULU, `${TABLE}/Dungeon_Master`);
+  dm.on("dialog", (d) => void d.accept());
+  const start = dm.getByRole("form", { name: "Start an encounter" });
+  const characters = start.getByRole("group", { name: "Characters" });
+  await expect(
+    characters.getByRole("checkbox", { name: "Carol Elfnein", exact: true }),
+  ).toBeVisible();
+  const ticked = characters.getByRole("checkbox", { checked: true });
+  while ((await ticked.count()) > 0) await ticked.first().uncheck();
+  await characters
+    .getByRole("checkbox", { name: "Carol Elfnein", exact: true })
+    .check();
+  await start.getByLabel("How many Skeleton").fill("1");
+  await start.getByRole("button", { name: "Start the encounter" }).click();
+  await expect(dm.getByRole("region", { name: "Turn order" })).toContainText(
+    "AC 14",
+  );
+  const requests = dm.getByRole("region", { name: "Requests" });
+  const log = dm.getByRole("region", { name: "Campaign log" });
+
+  // A potion: held while queued, then drunk.
+  const sheet = await dm.context().newPage();
+  await sheet.goto(
+    "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
+  );
+  await sheet.getByRole("tab", { name: "Inventory" }).click();
+  const potions = sheet
+    .getByLabel("Carried items")
+    .getByRole("button", { name: "Potion of Healing" });
+  const before = Number(
+    (await potions.textContent())?.match(/×(\d+)/)?.[1] ?? 1,
+  );
+  await potions.click();
+  await sheet.getByRole("button", { name: "Use…" }).click();
+  const use = sheet.getByRole("form", { name: "Use Potion of Healing" });
+  await use.getByRole("radio", { name: "Instant" }).check();
+  await expect(use).toContainText("uses Bonus Action");
+  await use.getByRole("button", { name: "Confirm" }).click();
+  await expect(potions).toContainText("1 in a request");
+  await requests
+    .getByRole("listitem")
+    .filter({ hasText: "Use Potion of Healing" })
+    .getByRole("button", { name: "resolve…" })
+    .click();
+  await requests
+    .getByRole("button", { name: "Ask for the healing roll" })
+    .click();
+  const healing = dm.getByRole("form", {
+    name: "Roll: Carol Elfnein, Potion of Healing healing",
+  });
+  await healing.getByLabel("How to roll").selectOption("manual");
+  await healing.getByLabel("Total").fill("7");
+  await healing.getByRole("button", { name: "Roll" }).click();
+  await expect(requests.getByLabel("Total")).toHaveValue("7");
+  await everyonePasses(requests, dm);
+  await requests.getByRole("button", { name: "Approve and resolve" }).click();
+  await expect(log).toContainText(/Carol Elfnein: healed 7, HP \d+\./);
+  // A single item shows no count.
+  if (before > 2) await expect(potions).toContainText(`×${before - 1}`);
+  else await expect(potions).not.toContainText("×");
+
+  // The Aetherlock: a two-round burst at the Skeleton.
+  await sheet.getByRole("button", { name: "Close" }).click();
+  await sheet
+    .getByLabel("Carried items")
+    .getByRole("button", { name: "Aetherlock" })
+    .click();
+  await expect(sheet.getByText(/Canister: 12\/12 charges/)).toBeVisible();
+  // Earlier tests may leave Exhaustion, so read the aim the rifle shows now.
+  const aim = (await sheet.getByText(/^Aim: \+\d+/).textContent())?.match(
+    /\+(\d+)/,
+  )?.[1];
+  await sheet.getByRole("button", { name: "Attack…" }).click();
+  const attack = sheet.getByRole("form", { name: "Attack with Aetherlock" });
+  await attack.getByLabel("Attack action").selectOption({ label: "2 rounds" });
+  await attack.getByLabel("Target").selectOption({ label: "Skeleton" });
+  await expect(attack.getByLabel("Attack bonus")).toHaveValue(aim ?? "");
+  await expect(attack.getByRole("list", { name: "Rounds" })).toContainText(
+    "2d10+6 Piercing",
+  );
+  await expect(attack).toContainText("2 charges from Charge canister");
+  await attack.getByRole("radio", { name: "Instant" }).check();
+  await attack.getByRole("button", { name: "Confirm" }).click();
+  await expect(sheet.getByText(/Canister: 10\/12 charges/)).toBeVisible();
+  const burst = requests
+    .getByRole("listitem")
+    .filter({ hasText: "Attack: Aetherlock: 2 rounds" });
+  await burst.getByRole("button", { name: "resolve…" }).click();
+  await requests
+    .getByRole("button", { name: "Ask for the attack rolls" })
+    .click();
+  for (const [shot, total] of [
+    [1, "20"],
+    [2, "5"],
+  ] as const) {
+    const roll = dm.getByRole("form", {
+      name: `Roll: Carol Elfnein, Aetherlock: 2 rounds, shot ${shot} against Skeleton`,
+    });
+    await roll.getByLabel("How to roll").selectOption("manual");
+    await roll.getByLabel("Total").fill(total);
+    await roll.getByRole("button", { name: "Roll" }).click();
+  }
+  await expect(requests.getByLabel("Shot 1: result")).toHaveValue("hit");
+  await expect(requests.getByLabel("Shot 2: result")).toHaveValue("miss");
+  await requests
+    .getByRole("button", { name: "Ask for the damage rolls" })
+    .click();
+  const damage = dm.getByRole("form", {
+    name: "Roll: Carol Elfnein, Aetherlock: 2 rounds, shot 1: Piercing damage",
+  });
+  await damage.getByLabel("How to roll").selectOption("manual");
+  await damage.getByLabel("Total").fill("12");
+  await damage.getByRole("button", { name: "Roll" }).click();
+  await expect(requests.getByLabel("Shot 1: Piercing total")).toHaveValue("12");
+  await everyonePasses(requests, dm);
+  await requests.getByRole("button", { name: "Approve and resolve" }).click();
+  await expect(log).toContainText(
+    "Carol Elfnein fired Basic Round, Basic Round, spending 2 charges.",
+  );
+  await expect(log).toContainText(
+    "Shot 1 at Skeleton hit: 12 Piercing damage, HP 1.",
+  );
+  await expect(log).toContainText("Shot 2 at Skeleton missed: no damage.");
+  await expect(sheet.getByText(/Canister: 10\/12 charges/)).toBeVisible();
+
+  // The Skeleton's shortbow from its stat block: an arrow is nocked and fired.
+  const statBlock = requests.getByRole("form", { name: "Stat block attack" });
+  await statBlock.getByLabel("NPC attack").selectOption({ index: 1 });
+  await statBlock
+    .getByLabel("NPC target")
+    .selectOption({ label: "Carol Elfnein" });
+  await statBlock.getByRole("button", { name: "Queue Shortbow" }).click();
+  const shot = requests
+    .getByRole("listitem")
+    .filter({ hasText: "Attack: Skeleton: Shortbow" });
+  await expect(shot).toContainText("holds Arrow");
+  await shot.getByRole("button", { name: "resolve…" }).click();
+  await requests
+    .getByRole("button", { name: "Ask for the attack rolls" })
+    .click();
+  const bow = dm.getByRole("form", {
+    name: "Roll: Skeleton, Skeleton: Shortbow against Carol Elfnein",
+  });
+  await bow.getByLabel("How to roll").selectOption("manual");
+  await bow.getByLabel("Total").fill("25");
+  await bow.getByRole("button", { name: "Roll" }).click();
+  await requests
+    .getByRole("button", { name: "Ask for the damage rolls" })
+    .click();
+  const arrow = dm.getByRole("form", {
+    name: "Roll: Skeleton, Skeleton: Shortbow: Piercing damage",
+  });
+  await arrow.getByLabel("How to roll").selectOption("manual");
+  await arrow.getByLabel("Total").fill("6");
+  await arrow.getByRole("button", { name: "Roll" }).click();
+  await everyonePasses(requests, dm);
+  await requests.getByRole("button", { name: "Approve and resolve" }).click();
+  await expect(log).toContainText("Skeleton fired Arrow.");
+  await expect(log).toContainText(/Carol Elfnein hit: 6 Piercing damage/);
+
+  // Casting from a loose scroll uses the numbers stored on it, and spends it.
+  await sheet.getByRole("button", { name: "Close" }).click();
+  await sheet
+    .getByLabel("Carried items")
+    .getByRole("button", { name: "Scroll: Fireball" })
+    .click();
+  await sheet.getByRole("button", { name: "Cast from this scroll…" }).click();
+  const cast = sheet.getByRole("form", { name: "Cast Fireball" });
+  await expect(cast).toContainText("uses the numbers stored on the scroll");
+  await cast.getByRole("checkbox", { name: "Skeleton" }).check();
+  await cast.getByRole("radio", { name: "Instant" }).check();
+  await cast.getByRole("button", { name: "Confirm" }).click();
+  await requests
+    .getByRole("listitem")
+    .filter({ hasText: "Cast Fireball at level 3 from a scroll" })
+    .getByRole("button", { name: "resolve…" })
+    .click();
+  await expect(requests).toContainText("Save DC 19 (stored on the scroll)");
+  await requests.getByLabel("Skeleton: result").selectOption("failed");
+  await requests.getByLabel("Total").fill("20");
+  await everyonePasses(requests, dm);
+  await requests.getByRole("button", { name: "Approve and resolve" }).click();
+  await expect(log).toContainText("Skeleton failed the save: 20 Fire damage");
+  await expect(
+    sheet.getByRole("button", { name: "Cast from this scroll…" }),
+  ).toHaveCount(0);
+  await dm.getByRole("button", { name: "End the encounter" }).click();
+});

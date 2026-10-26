@@ -14,6 +14,7 @@ import {
   amountValue,
   d20TestBonuses,
   grantsOf,
+  heldAmounts,
   issue,
   known,
   parseWith,
@@ -95,6 +96,8 @@ export interface CanisterView {
 /** Every canister the character carries, as counters (Aetherlock Engineered Rounds, S5).
  * Display only: spending charges belongs to the Milestone 5 casting workflow. */
 function canisters(ctx: ResolveContext): readonly CanisterView[] {
+  // Charges held by queued requests are not usable (Milestone 5 S10).
+  const held = heldAmounts(ctx, "charges");
   const all = ctx.get<readonly LineRow[]>("containers.lines");
   if (all.kind === "unresolved") return [];
   const installed = new Map<string, { lineId: string; name: string }>();
@@ -107,7 +110,11 @@ function canisters(ctx: ResolveContext): readonly CanisterView[] {
     const rules = parseWith(WeaponRules, row.definition ?? {}, row.line.ref);
     if (!rules.ok || !rules.value.canister) return [];
     const state = parseWith(LineState, row.line, row.line.id);
-    const charges = state.ok ? state.value.charges : undefined;
+    const stored = state.ok ? state.value.charges : undefined;
+    const charges =
+      stored === undefined
+        ? undefined
+        : Math.max(0, stored - (held[row.line.id] ?? 0));
     const where = installed.get(row.line.id);
     return [
       {
@@ -123,6 +130,7 @@ function canisters(ctx: ResolveContext): readonly CanisterView[] {
 }
 
 function weapons(ctx: ResolveContext): readonly WeaponView[] {
+  const heldCharges = heldAmounts(ctx, "charges");
   const all = ctx.get<readonly LineRow[]>("containers.lines");
   if (all.kind === "unresolved") return [];
   const byId = new Map(all.value.map((r) => [r.line.id, r]));
@@ -167,7 +175,11 @@ function weapons(ctx: ResolveContext): readonly WeaponView[] {
           ),
         );
       } else {
-        const charges = cState?.ok ? cState.value.charges : undefined;
+        const stored = cState?.ok ? cState.value.charges : undefined;
+        const charges =
+          stored === undefined
+            ? undefined
+            : Math.max(0, stored - (heldCharges[c.line.id] ?? 0));
         if (charges === undefined) {
           ctx.report(
             issue(

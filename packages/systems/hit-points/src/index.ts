@@ -98,15 +98,21 @@ const derivations: Derivation[] = [
     key: "hit-points.defenses",
     compute: (ctx) => {
       const ids = grantsOf(ctx, "capability").map((g) => g.grant.id);
-      const of = (kind: string) =>
-        ids
+      // A creature's own, such as a monster's stat block (S10).
+      const own =
+        readField(ctx, "character", "defenses", Defenses.optional())[0]
+          ?.value ?? {};
+      const of = (kind: string, list: readonly string[] = []) => [
+        ...ids
           .filter((id) => id.startsWith(`${kind}:`))
-          .map((id) => id.slice(kind.length + 1));
+          .map((id) => id.slice(kind.length + 1)),
+        ...list,
+      ];
       return known(
         {
-          resistances: of("resistance"),
-          vulnerabilities: of("vulnerability"),
-          immunities: of("immunity"),
+          resistances: of("resistance", own.resistances),
+          vulnerabilities: of("vulnerability", own.vulnerabilities),
+          immunities: of("immunity", own.immunities),
         },
         "Damage defenses",
       );
@@ -124,6 +130,12 @@ const derivations: Derivation[] = [
     },
   },
 ];
+
+const Defenses = z.looseObject({
+  resistances: z.array(z.string()).optional(),
+  vulnerabilities: z.array(z.string()).optional(),
+  immunities: z.array(z.string()).optional(),
+});
 
 const SpentDice = z.looseObject({
   spent: z.record(z.string(), z.number().int().min(0)).optional(),

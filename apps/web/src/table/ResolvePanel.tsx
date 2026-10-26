@@ -13,12 +13,21 @@
 // fresh round opens, and only when the poll closes can the action resolve. Hits are rechecked
 // against each target's current Armor Class, so a Shield that came in between counts. A response
 // itself does not poll; resolving it reopens its action's poll.
+//
+// The same panel resolves using an item (S10: a potion's healing, rolled by its user's player),
+// casting from a loose scroll (its stored snapshot, not the caster's current numbers), and a
+// weapon's single special round: HE-FRAG's area save against its fixed DC, or a Spellround's
+// payload cast from its scroll with the weapon's aim. Firing the round and spending its charges
+// happen in the same transaction. Ordinary shots resolve in the weapon panel.
 
+import type { RecordEnvelope } from "@hearthtable/kernel";
 import type {
   AttackInput,
   CastInput,
   Moment,
   RollSpec,
+  UseItemInput,
+  WeaponAttackInput,
 } from "@hearthtable/play";
 import { criticalDice } from "@hearthtable/play";
 import {
@@ -32,10 +41,19 @@ import {
   type RollAsk,
   type RollPrompt,
 } from "@hearthtable/storage";
+import type { ScrollSnapshot, ScrollView } from "@hearthtable/system-scrolls";
 import { useState } from "react";
 import { db } from "../firebase";
+import type { WeaponRules } from "../play/firing";
 import { snapshotFrom } from "../sheet/scribe";
-import { planCast, spellShape, type TargetResult } from "./resolveSpell";
+import {
+  Ledger,
+  planCast,
+  spellShape,
+  type Plan,
+  type TargetResult,
+} from "./resolveSpell";
+import { planWeaponAttack } from "./resolveWeapon";
 import type { Participant } from "./useTable";
 
 const ABILITY: Record<string, string> = {
@@ -85,11 +103,148 @@ export function concentrationCheck(
   };
 }
 
+/**
+ * Writes an approved plan with its request, then asks anyone damaged while concentrating for
+ * their check, and reopens the poll of the action a response answered.
+ */
+export async function commitPlan(o: {
+  campaign: string;
+  request: ActionRequest;
+  plan: Plan;
+  actor: Participant;
+  people: ReadonlyMap<string, Participant>;
+  polls: readonly Poll[];
+  uid: string;
+  clock: number;
+}): Promise<string | undefined> {
+  const err = await resolveAction(
+    db,
+    o.campaign,
+    o.request,
+    o.plan,
+    o.uid,
+    o.clock,
+  );
+  if (err) return err;
+  const checks = o.plan.damaged.flatMap((d) => {
+    const p = o.people.get(d.path);
+    const held = p && known<readonly unknown[]>(p, "concentration.maintained");
+    return p && held?.length ? [concentrationCheck(p, d.amount)] : [];
+  });
+  const asked = checks.length
+    ? await askRolls(
+        db,
+        o.campaign,
+        checks,
+        o.uid,
+        o.clock,
+        "The DM asked for concentration checks.",
+      )
+    : undefined;
+  // A resolved response reopens the poll of the action it answered.
+  const parentPoll = o.request.respondsTo
+    ? o.polls.find((p) => p.action === o.request.respondsTo)
+    : undefined;
+  const again =
+    parentPoll && parentPoll.status === "open"
+      ? await repoll(
+          db,
+          o.campaign,
+          parentPoll,
+          `${parentPoll.event.split(" (after")[0]} (after ${o.actor.name}: ${o.request.summary})`,
+          o.uid,
+          o.clock,
+        )
+      : undefined;
+  return asked ?? again;
+}
+
+/** Opening an action's response poll, its state while open, and force-skipping it (S9). */
+export function PollControls({
+  campaign,
+  request,
+  polls,
+  actions,
+  players,
+  event,
+  busy,
+  uid,
+  clock,
+  onProblem,
+}: {
+  campaign: string;
+  request: ActionRequest;
+  polls: readonly Poll[];
+  actions: readonly ActionRequest[];
+  players: readonly string[];
+  /** What the poll asks responses to, worked out when it opens. */
+  event: () => string;
+  busy: boolean;
+  uid: string;
+  clock: number;
+  onProblem: (message: string) => void;
+}) {
+  const poll = polls.find((p) => p.action === request.id);
+  if (request.respondsTo) return null;
+  if (!poll)
+    return (
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() =>
+          void openPoll(
+            db,
+            campaign,
+            request.id,
+            event(),
+            players,
+            uid,
+            clock,
+          ).then((e) => e && onProblem(e))
+        }
+      >
+        Ask for responses
+      </button>
+    );
+  if (poll.status !== "open") return null;
+  return (
+    <>
+      <span className="muted" data-testid="poll-state">
+        Waiting for responses (round {poll.round})
+      </span>
+      <button
+        type="button"
+        className="secondary"
+        onClick={() =>
+          void closePoll(
+            db,
+            campaign,
+            poll,
+            true,
+            actions.filter(
+              (a) => a.status === "queued" && a.respondsTo === request.id,
+            ),
+            uid,
+            clock,
+          ).then((e) => e && onProblem(e))
+        }
+      >
+        Force-skip
+      </button>
+    </>
+  );
+}
+
+/** Whether an action may resolve: a response at once, anything else once its poll closed. */
+export const pollDone = (request: ActionRequest, polls: readonly Poll[]) =>
+  !!request.respondsTo ||
+  polls.find((p) => p.action === request.id)?.status === "closed";
+
 export function ResolvePanel({
   campaign,
   request,
   caster,
-  spell,
+  definition,
   people,
   present,
   rolls,
@@ -104,7 +259,8 @@ export function ResolvePanel({
   campaign: string;
   request: ActionRequest;
   caster: Participant;
-  spell: Record<string, unknown> | undefined;
+  /** Definitions by id: the spell cast, the item used or the round fired. */
+  definition: (id: string) => RecordEnvelope | undefined;
   people: ReadonlyMap<string, Participant>;
   /** Who can be a target: everyone in the scene. */
   present: readonly Participant[];
@@ -129,6 +285,31 @@ export function ResolvePanel({
     request.kind === "attack"
       ? (request.input as unknown as AttackInput)
       : undefined;
+  const itemInput =
+    request.kind === "use-item"
+      ? (request.input as unknown as UseItemInput)
+      : undefined;
+  // A weapon's special round: HE-FRAG's save, or a Spellround's payload (S10).
+  const weaponInput =
+    request.kind === "weapon-attack"
+      ? (request.input as unknown as WeaponAttackInput)
+      : undefined;
+  const special = weaponInput?.shots[0];
+  const scrollOf = (lineId: string | undefined) =>
+    lineId === undefined
+      ? undefined
+      : known<readonly ScrollView[]>(caster, "scrolls.list")?.find(
+          (x) => x.id === lineId,
+        );
+  const scroll =
+    scrollOf(special?.payload) ??
+    (input.source?.kind === "scroll"
+      ? scrollOf(input.source.lineId)
+      : undefined);
+  const spellRef = weaponInput ? scroll?.spell : input.spell;
+  const spell = spellRef
+    ? (definition(spellRef)?.data as Record<string, unknown> | undefined)
+    : undefined;
   const effectData: Record<string, unknown> | undefined = attackInput
     ? {
         name: attackInput.name,
@@ -144,23 +325,51 @@ export function ResolvePanel({
           ],
         },
       }
-    : spell;
+    : itemInput
+      ? { name: itemInput.name, effect: { healing: itemInput.healing } }
+      : special?.save
+        ? {
+            name: weaponInput?.name,
+            effect: {
+              save: special.save,
+              damage: (special.damage ?? []).map((d) => ({ type: d.type })),
+            },
+          }
+        : spell;
   const shape = spellShape(effectData as Parameters<typeof spellShape>[0]);
-  const snapshot =
-    spell && !attackInput
+  // A scroll carries its scribe's numbers; a book cast uses the caster's current ones.
+  const snapshot = scroll?.snapshot
+    ? (scroll.snapshot as unknown as ScrollSnapshot)
+    : spell && !attackInput && !itemInput
       ? snapshotFrom(caster.resolved, spell, input.castLevel)
       : undefined;
+  const fixed = (dice: string | undefined) =>
+    dice
+      ? { dice, bonuses: [] as { value: number; when?: unknown }[] }
+      : undefined;
   const formula = attackInput
-    ? {
-        dice: attackInput.dice,
-        bonuses: [] as { value: number; when?: unknown }[],
-      }
-    : snapshot?.formulas[0];
-  const what = attackInput ? attackInput.name : input.name;
-  const poll = polls.find((p) => p.action === request.id);
-  const parentPoll = request.respondsTo
-    ? polls.find((p) => p.action === request.respondsTo)
-    : undefined;
+    ? fixed(attackInput.dice)
+    : itemInput
+      ? fixed(itemInput.healing)
+      : special?.save
+        ? fixed(special.damage?.[0]?.dice)
+        : snapshot?.formulas[0];
+  const saveDC = special?.save?.dc ?? snapshot?.spellSaveDC;
+  // A Spellround's attack uses the weapon's aim, not the scribe's spell attack.
+  const attackBonus = attackInput
+    ? attackInput.bonus
+    : weaponInput
+      ? weaponInput.bonus
+      : snapshot?.spellAttackBonus;
+  const what = attackInput
+    ? attackInput.name
+    : itemInput
+      ? itemInput.name
+      : weaponInput
+        ? `${weaponInput.name}${spell ? ` (${String(spell["name"])})` : ""}`
+        : input.name;
+  const rulesOf = (ref: string) =>
+    definition(ref)?.data as WeaponRules | undefined;
   const [targets, setTargets] = useState<readonly string[]>(
     input.targets?.length ? input.targets : [caster.path],
   );
@@ -227,12 +436,21 @@ export function ResolvePanel({
         {caster.name}: {request.summary}
         {input.note && <span className="muted"> ({input.note})</span>}
       </p>
-      {snapshot?.spellSaveDC !== undefined && (shape.save || shape.attack) && (
-        <p className="muted">
-          Spell save DC {snapshot.spellSaveDC}, attack +
-          {snapshot.spellAttackBonus ?? "?"} (current numbers)
-        </p>
-      )}
+      {(saveDC !== undefined || attackBonus !== undefined) &&
+        (shape.save || shape.attack) && (
+          <p className="muted">
+            {shape.save
+              ? `Save DC ${saveDC ?? "?"}`
+              : `Attack +${attackBonus ?? "?"}`}{" "}
+            (
+            {scroll
+              ? "stored on the scroll"
+              : special?.save
+                ? "the round's"
+                : "current numbers"}
+            )
+          </p>
+        )}
       <fieldset>
         <legend>Targets</legend>
         {present.map((p) => {
@@ -291,86 +509,81 @@ export function ResolvePanel({
         })}
       </fieldset>
       <div className="chips">
-        {shape.save &&
-          unasked.length > 0 &&
-          snapshot?.spellSaveDC !== undefined && (
-            <button
-              type="button"
-              className="secondary"
-              onClick={() => {
-                const ability = shape.save?.ability ?? "dex";
-                const dc = snapshot.spellSaveDC as number;
-                ask(
-                  unasked.flatMap((t) => {
-                    const p = people.get(t);
-                    if (!p) return [];
-                    const spec: RollSpec = {
-                      kind: "save",
-                      key: `saves.${ability}.total`,
-                      bonus: known<number>(p, `saves.${ability}.total`) ?? 0,
-                      target: dc,
-                      ...(known<boolean>(p, `saves.${ability}.autoFail`)
-                        ? { autoFail: true }
-                        : {}),
-                    };
-                    return [
-                      {
-                        character: t,
-                        purpose: `${ABILITY[ability]} save against ${input.name}`,
-                        spec,
-                        action: request.id,
-                        target: t,
-                      },
-                    ];
-                  }),
-                  `The DM asked for ${ABILITY[ability]} saves against ${input.name} (DC ${dc}).`,
-                );
-              }}
-            >
-              Ask for saves
-            </button>
-          )}
-        {shape.attack &&
-          unasked.length > 0 &&
-          (snapshot?.casterClass || attackInput) && (
-            <button
-              type="button"
-              className="secondary"
-              onClick={() =>
-                ask(
-                  unasked.flatMap((t) => {
-                    const p = people.get(t);
-                    if (!p) return [];
-                    return [
-                      {
-                        character: caster.path,
-                        purpose: attackInput
-                          ? `${attackInput.name} against ${p.name}`
+        {shape.save && unasked.length > 0 && saveDC !== undefined && (
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => {
+              const ability = shape.save?.ability ?? "dex";
+              const dc = saveDC;
+              ask(
+                unasked.flatMap((t) => {
+                  const p = people.get(t);
+                  if (!p) return [];
+                  const spec: RollSpec = {
+                    kind: "save",
+                    key: `saves.${ability}.total`,
+                    bonus: known<number>(p, `saves.${ability}.total`) ?? 0,
+                    target: dc,
+                    ...(known<boolean>(p, `saves.${ability}.autoFail`)
+                      ? { autoFail: true }
+                      : {}),
+                  };
+                  return [
+                    {
+                      character: t,
+                      purpose: `${ABILITY[ability]} save against ${what}`,
+                      spec,
+                      action: request.id,
+                      target: t,
+                    },
+                  ];
+                }),
+                `The DM asked for ${ABILITY[ability]} saves against ${what} (DC ${dc}).`,
+              );
+            }}
+          >
+            Ask for saves
+          </button>
+        )}
+        {shape.attack && unasked.length > 0 && attackBonus !== undefined && (
+          <button
+            type="button"
+            className="secondary"
+            onClick={() =>
+              ask(
+                unasked.flatMap((t) => {
+                  const p = people.get(t);
+                  if (!p) return [];
+                  return [
+                    {
+                      character: caster.path,
+                      purpose:
+                        attackInput || weaponInput
+                          ? `${what} against ${p.name}`
                           : `Spell attack with ${input.name} against ${p.name}`,
-                        spec: {
-                          kind: "attack",
-                          ...(snapshot?.casterClass
-                            ? {
-                                key: `spellcasting.classes.${snapshot.casterClass}.attack`,
-                              }
-                            : {}),
-                          bonus: attackInput
-                            ? attackInput.bonus
-                            : (snapshot?.spellAttackBonus ?? 0),
-                          ...(p.ac !== undefined ? { target: p.ac } : {}),
-                        },
-                        action: request.id,
-                        target: t,
+                      spec: {
+                        kind: "attack",
+                        ...(snapshot?.casterClass && !scroll && !weaponInput
+                          ? {
+                              key: `spellcasting.classes.${snapshot.casterClass}.attack`,
+                            }
+                          : {}),
+                        bonus: attackBonus,
+                        ...(p.ac !== undefined ? { target: p.ac } : {}),
                       },
-                    ];
-                  }),
-                  `The DM asked ${caster.name} for an attack roll: ${what}.`,
-                )
-              }
-            >
-              Ask for the attack roll
-            </button>
-          )}
+                      action: request.id,
+                      target: t,
+                    },
+                  ];
+                }),
+                `The DM asked ${caster.name} for an attack roll: ${what}.`,
+              )
+            }
+          >
+            Ask for the attack roll
+          </button>
+        )}
         {(shape.damages || shape.heals) && damageDice && !damageRoll && (
           <button
             type="button"
@@ -419,124 +632,83 @@ export function ResolvePanel({
           disabled={busy}
           onClick={() => {
             setBusy(true);
-            void planCast({
-              request,
-              caster,
-              spell: (effectData ?? {}) as Parameters<
-                typeof planCast
-              >[0]["spell"],
-              spellSaveDC: snapshot?.spellSaveDC,
-              targets: targets.flatMap((t) => {
-                const person = people.get(t);
-                return person ? [{ person, result: resultOf(t) }] : [];
-              }),
-              amount: Number(amount) || 0,
-              now,
-              people,
-            }).then(async (plan) => {
-              if (typeof plan === "string") {
-                setBusy(false);
-                return onDone(plan);
-              }
-              const err = await resolveAction(
-                db,
+            void (async () => {
+              // Firing the round and spending its charges come first, in the same ledger.
+              const ledger = new Ledger();
+              const fired = weaponInput
+                ? await planWeaponAttack({
+                    request,
+                    attacker: caster,
+                    rulesOf,
+                    results: [],
+                    ledger,
+                  })
+                : undefined;
+              if (typeof fired === "string") return fired;
+              const plan = await planCast({
+                request,
+                caster,
+                spell: (effectData ?? {}) as Parameters<
+                  typeof planCast
+                >[0]["spell"],
+                spellSaveDC: saveDC,
+                targets: targets.flatMap((t) => {
+                  const person = people.get(t);
+                  return person ? [{ person, result: resultOf(t) }] : [];
+                }),
+                amount: Number(amount) || 0,
+                now,
+                people,
+                ledger,
+                consume: !weaponInput,
+                ...(weaponInput
+                  ? {
+                      as: {
+                        spell: spellRef ?? special?.round ?? "",
+                        name: what,
+                      },
+                    }
+                  : {}),
+              });
+              if (typeof plan === "string") return plan;
+              return commitPlan({
                 campaign,
                 request,
-                plan,
+                plan: fired
+                  ? { ...plan, logs: [...plan.logs, ...fired.logs.slice(1)] }
+                  : plan,
+                actor: caster,
+                people,
+                polls,
                 uid,
                 clock,
-              );
-              // Concentration checks for anyone damaged while concentrating.
-              const checks = err
-                ? []
-                : plan.damaged.flatMap((d) => {
-                    const p = people.get(d.path);
-                    const held =
-                      p &&
-                      known<readonly unknown[]>(p, "concentration.maintained");
-                    return p && held?.length
-                      ? [concentrationCheck(p, d.amount)]
-                      : [];
-                  });
-              const asked = checks.length
-                ? await askRolls(
-                    db,
-                    campaign,
-                    checks,
-                    uid,
-                    clock,
-                    "The DM asked for concentration checks.",
-                  )
-                : undefined;
-              // A resolved response reopens the poll of the action it answered.
-              const again =
-                !err && parentPoll && parentPoll.status === "open"
-                  ? await repoll(
-                      db,
-                      campaign,
-                      parentPoll,
-                      `${parentPoll.event.split(" (after")[0]} (after ${caster.name}: ${request.summary})`,
-                      uid,
-                      clock,
-                    )
-                  : undefined;
+              });
+            })().then((err) => {
               setBusy(false);
-              onDone(err ?? asked ?? again);
+              onDone(err);
             });
           }}
-          hidden={!request.respondsTo && poll?.status !== "closed"}
+          hidden={!pollDone(request, polls)}
         >
           Approve and resolve
         </button>
-        {!request.respondsTo && !poll && (
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => {
-              const hits = targets.filter((t) => resultOf(t) !== "miss");
-              const event = shape.attack
-                ? `${what} would hit ${hits.map((t) => people.get(t)?.name ?? t).join(", ") || "nobody"}`
-                : `${caster.name}: ${request.summary}`;
-              void openPoll(
-                db,
-                campaign,
-                request.id,
-                event,
-                players,
-                uid,
-                clock,
-              ).then((e) => e && setProblem(e));
-            }}
-          >
-            Ask for responses
-          </button>
-        )}
-        {!request.respondsTo && poll?.status === "open" && (
-          <>
-            <span className="muted" data-testid="poll-state">
-              Waiting for responses (round {poll.round})
-            </span>
-            <button
-              type="button"
-              className="secondary"
-              onClick={() =>
-                void closePoll(
-                  db,
-                  campaign,
-                  poll,
-                  true,
-                  actions.filter(
-                    (a) => a.status === "queued" && a.respondsTo === request.id,
-                  ),
-                  uid,
-                  clock,
-                ).then((e) => e && setProblem(e))
-              }
-            >
-              Force-skip
-            </button>
-          </>
-        )}
+        <PollControls
+          campaign={campaign}
+          request={request}
+          polls={polls}
+          actions={actions}
+          players={players}
+          busy={busy}
+          uid={uid}
+          clock={clock}
+          onProblem={setProblem}
+          event={() => {
+            const hits = targets.filter((t) => resultOf(t) !== "miss");
+            return shape.attack
+              ? `${what} would hit ${hits.map((t) => people.get(t)?.name ?? t).join(", ") || "nobody"}`
+              : `${caster.name}: ${request.summary}`;
+          }}
+        />
         <button type="button" className="link-button" onClick={() => onDone()}>
           Back
         </button>

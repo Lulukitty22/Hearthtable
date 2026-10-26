@@ -145,8 +145,20 @@ function list(ctx: ResolveContext): readonly ConditionRow[] {
       add(inner, "included", { id: `${extra.id}:${inner}`, because: def.name });
   };
 
+  // Conditions the creature is immune to never apply (a Skeleton and Poisoned, S10).
+  const immune = new Set(
+    readField(
+      ctx,
+      "character",
+      "conditionImmunities",
+      z.array(z.string()).optional(),
+    )[0]?.value ?? [],
+  );
   const live = entries.filter(
-    (e) => !isOver(e.endsAt, now) && (!e.source || effects.has(e.source)),
+    (e) =>
+      !immune.has(e.ref) &&
+      !isOver(e.endsAt, now) &&
+      (!e.source || effects.has(e.source)),
   );
   // Exhaustion levels add up across entries.
   const exhaustion = live

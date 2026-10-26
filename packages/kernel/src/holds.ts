@@ -13,7 +13,7 @@ const Amounts = z.record(z.string(), z.number()).optional();
 /** Held amounts of one kind of resource: spell slots by level, lines by id, pools by name. */
 export function heldAmounts(
   ctx: ResolveContext,
-  part: "slots" | "lines" | "pools",
+  part: "slots" | "lines" | "pools" | "charges",
 ): Readonly<Record<string, number>> {
   return readField(ctx, HOLDS_KIND, part, Amounts)[0]?.value ?? {};
 }

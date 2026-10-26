@@ -10,7 +10,7 @@
 // scroll line inside it, so mounting, taking out and moving between books are ordinary moves of
 // that line. A book refuses a second scroll of a spell it already holds.
 
-type Line = Record<string, unknown> & {
+export type Line = Record<string, unknown> & {
   id: string;
   ref: string;
   quantity: number;
