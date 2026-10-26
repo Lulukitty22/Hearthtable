@@ -38,6 +38,8 @@ import {
 } from "./Conditions";
 import { DowntimePanel, useActivities, useApplyRolls } from "./Downtime";
 import { EffectChips, useClearEndedEffects } from "./Effects";
+import { usePolls } from "../play/actions";
+import { PollsPanel, useClosePolls } from "./Polls";
 import { RequestsPanel } from "./Requests";
 import { RollsPanel, useApplyRollConsequences, useRolls } from "./Rolls";
 import { runActivities } from "./runDowntime";
@@ -72,6 +74,15 @@ export function TablePage({
   const [problem, setProblem] = useState<string | undefined>();
   const activities = useActivities(table.id);
   const rolls = useRolls(table.id);
+  const polls = usePolls(table.id);
+  useClosePolls(
+    role === "dm" && isDm,
+    table.id,
+    polls,
+    uid,
+    table.now?.clock ?? 0,
+    setProblem,
+  );
   useApplyRollConsequences(
     role === "dm" && isDm,
     table.id,
@@ -200,6 +211,19 @@ export function TablePage({
       normalizeAlias(parts[3] ?? "") === alias
     );
   };
+  // Who must answer a response poll: whoever controls a character in the scene (S9).
+  const playersInScene = [
+    ...new Set(
+      (participants ?? []).flatMap((p) => {
+        const owner = p.path.split("/")[3];
+        if (p.npc || !owner) return [];
+        const found = [...aliases].find(
+          ([, a]) => normalizeAlias(a) === normalizeAlias(owner),
+        );
+        return found ? [found[0]] : [];
+      }),
+    ),
+  ];
   const control: Control = {
     uid,
     isDm,
@@ -305,6 +329,13 @@ export function TablePage({
               />
             </section>
           )}
+          <PollsPanel
+            campaign={table.id}
+            polls={polls}
+            uid={uid}
+            name={name}
+            onProblem={setProblem}
+          />
           {people && (
             <RollsPanel
               campaign={table.id}
@@ -328,6 +359,8 @@ export function TablePage({
               present={participants ?? []}
               definition={table.definition}
               rolls={rolls}
+              polls={polls}
+              players={playersInScene}
               onProblem={setProblem}
             />
           )}

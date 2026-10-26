@@ -57,3 +57,18 @@ test("holds add up and read plainly", () => {
     describeHolds({ slots: { "3": 1 }, lines: { s: 1 } }, () => "the scroll"),
   ).toBe("one level-3 spell slot, the scroll");
 });
+
+test("a poll closes when every player has skipped its current round", async () => {
+  const { everyoneSkipped, attack } = await import("./index");
+  expect(everyoneSkipped(2, { a: 2, b: 2 }, ["a", "b"])).toBe(true);
+  // A skip from an earlier round does not carry over after a response.
+  expect(everyoneSkipped(2, { a: 2, b: 1 }, ["a", "b"])).toBe(false);
+  expect(everyoneSkipped(1, {}, [])).toBe(true);
+  expect(
+    attack.describe({
+      name: "Bandit Scout's scimitar",
+      bonus: 4,
+      dice: "1d6+2",
+    }),
+  ).toBe("Attack: Bandit Scout's scimitar");
+});

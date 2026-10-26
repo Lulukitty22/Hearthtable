@@ -7,13 +7,28 @@
 // arrive; the DM can roll for anyone from the Rolls panel, or set a result or total by hand.
 // "Approve and resolve" writes everything at once with the request, then asks anyone who took
 // damage while concentrating for their concentration check.
+//
+// Every action first asks for responses (S9): once its rolls are known the DM opens its poll,
+// players in the scene respond with Instant requests or skip, each response is resolved and a
+// fresh round opens, and only when the poll closes can the action resolve. Hits are rechecked
+// against each target's current Armor Class, so a Shield that came in between counts. A response
+// itself does not poll; resolving it reopens its action's poll.
 
-import type { CastInput, Moment, RollSpec } from "@hearthtable/play";
+import type {
+  AttackInput,
+  CastInput,
+  Moment,
+  RollSpec,
+} from "@hearthtable/play";
 import { criticalDice } from "@hearthtable/play";
 import {
   askRolls,
+  closePoll,
+  openPoll,
+  repoll,
   resolveAction,
   type ActionRequest,
+  type Poll,
   type RollAsk,
   type RollPrompt,
 } from "@hearthtable/storage";
@@ -78,6 +93,9 @@ export function ResolvePanel({
   people,
   present,
   rolls,
+  polls,
+  actions,
+  players,
   now,
   uid,
   clock,
@@ -92,6 +110,12 @@ export function ResolvePanel({
   present: readonly Participant[];
   /** Every roll in the campaign; those of this request fill the panel. */
   rolls: readonly RollPrompt[];
+  /** Response polls (S9). */
+  polls: readonly Poll[];
+  /** Every request, for responses still waiting when a poll is force-skipped. */
+  actions: readonly ActionRequest[];
+  /** Who must answer this action's poll: players controlling a character in the scene. */
+  players: readonly string[];
   now: Moment | undefined;
   uid: string;
   clock: number;
@@ -100,11 +124,43 @@ export function ResolvePanel({
   const input = request.input as unknown as CastInput & {
     targets?: readonly string[];
   };
-  const shape = spellShape(spell as Parameters<typeof spellShape>[0]);
-  const snapshot = spell
-    ? snapshotFrom(caster.resolved, spell, input.castLevel)
+  // An attack described at the table (S9) resolves like an attack spell with its own numbers.
+  const attackInput =
+    request.kind === "attack"
+      ? (request.input as unknown as AttackInput)
+      : undefined;
+  const effectData: Record<string, unknown> | undefined = attackInput
+    ? {
+        name: attackInput.name,
+        effect: {
+          attack: "melee",
+          damage: [
+            {
+              dice: attackInput.dice,
+              ...(attackInput.damageType
+                ? { type: attackInput.damageType }
+                : {}),
+            },
+          ],
+        },
+      }
+    : spell;
+  const shape = spellShape(effectData as Parameters<typeof spellShape>[0]);
+  const snapshot =
+    spell && !attackInput
+      ? snapshotFrom(caster.resolved, spell, input.castLevel)
+      : undefined;
+  const formula = attackInput
+    ? {
+        dice: attackInput.dice,
+        bonuses: [] as { value: number; when?: unknown }[],
+      }
+    : snapshot?.formulas[0];
+  const what = attackInput ? attackInput.name : input.name;
+  const poll = polls.find((p) => p.action === request.id);
+  const parentPoll = request.respondsTo
+    ? polls.find((p) => p.action === request.respondsTo)
     : undefined;
-  const formula = snapshot?.formulas[0];
   const [targets, setTargets] = useState<readonly string[]>(
     input.targets?.length ? input.targets : [caster.path],
   );
@@ -120,9 +176,21 @@ export function ResolvePanel({
   const promptFor = (target: string) =>
     mine.find((r) => r.target === target && r.spec.kind !== "damage");
   const damageRoll = mine.find((r) => r.spec.kind === "damage");
-  const critical = mine.some((r) => r.answer?.outcome === "critical");
+  const critical = mine.some(
+    (r) => r.spec.kind === "attack" && r.answer?.natural === 20,
+  );
   const answered = (target: string): TargetResult | undefined => {
-    const o = promptFor(target)?.answer?.outcome;
+    const prompt = promptFor(target);
+    const a = prompt?.answer;
+    if (!a) return undefined;
+    // An attack is rechecked against the target's Armor Class now (a Shield may have come in).
+    if (prompt.spec.kind === "attack") {
+      if (a.natural === 20) return "hit";
+      if (a.natural === 1) return "miss";
+      const ac = people.get(target)?.ac;
+      return ac !== undefined && a.total >= ac ? "hit" : "miss";
+    }
+    const o = a.outcome;
     if (!o) return undefined;
     return o === "success"
       ? "saved"
@@ -262,37 +330,47 @@ export function ResolvePanel({
               Ask for saves
             </button>
           )}
-        {shape.attack && unasked.length > 0 && snapshot?.casterClass && (
-          <button
-            type="button"
-            className="secondary"
-            onClick={() =>
-              ask(
-                unasked.flatMap((t) => {
-                  const p = people.get(t);
-                  if (!p) return [];
-                  return [
-                    {
-                      character: caster.path,
-                      purpose: `Spell attack with ${input.name} against ${p.name}`,
-                      spec: {
-                        kind: "attack",
-                        key: `spellcasting.classes.${snapshot.casterClass}.attack`,
-                        bonus: snapshot.spellAttackBonus ?? 0,
-                        ...(p.ac !== undefined ? { target: p.ac } : {}),
+        {shape.attack &&
+          unasked.length > 0 &&
+          (snapshot?.casterClass || attackInput) && (
+            <button
+              type="button"
+              className="secondary"
+              onClick={() =>
+                ask(
+                  unasked.flatMap((t) => {
+                    const p = people.get(t);
+                    if (!p) return [];
+                    return [
+                      {
+                        character: caster.path,
+                        purpose: attackInput
+                          ? `${attackInput.name} against ${p.name}`
+                          : `Spell attack with ${input.name} against ${p.name}`,
+                        spec: {
+                          kind: "attack",
+                          ...(snapshot?.casterClass
+                            ? {
+                                key: `spellcasting.classes.${snapshot.casterClass}.attack`,
+                              }
+                            : {}),
+                          bonus: attackInput
+                            ? attackInput.bonus
+                            : (snapshot?.spellAttackBonus ?? 0),
+                          ...(p.ac !== undefined ? { target: p.ac } : {}),
+                        },
+                        action: request.id,
+                        target: t,
                       },
-                      action: request.id,
-                      target: t,
-                    },
-                  ];
-                }),
-                `The DM asked ${caster.name} for a spell attack roll with ${input.name}.`,
-              )
-            }
-          >
-            Ask for the attack roll
-          </button>
-        )}
+                    ];
+                  }),
+                  `The DM asked ${caster.name} for an attack roll: ${what}.`,
+                )
+              }
+            >
+              Ask for the attack roll
+            </button>
+          )}
         {(shape.damages || shape.heals) && damageDice && !damageRoll && (
           <button
             type="button"
@@ -302,12 +380,12 @@ export function ResolvePanel({
                 [
                   {
                     character: caster.path,
-                    purpose: `${input.name} ${shape.heals ? "healing" : "damage"}${critical ? " (Critical Hit)" : ""}`,
+                    purpose: `${what} ${shape.heals ? "healing" : "damage"}${critical ? " (Critical Hit)" : ""}`,
                     spec: { kind: "damage", dice: damageDice },
                     action: request.id,
                   },
                 ],
-                `The DM asked ${caster.name} to roll ${input.name}'s ${shape.heals ? "healing" : "damage"}.`,
+                `The DM asked ${caster.name} to roll ${what}'s ${shape.heals ? "healing" : "damage"}.`,
               )
             }
           >
@@ -344,7 +422,9 @@ export function ResolvePanel({
             void planCast({
               request,
               caster,
-              spell: (spell ?? {}) as Parameters<typeof planCast>[0]["spell"],
+              spell: (effectData ?? {}) as Parameters<
+                typeof planCast
+              >[0]["spell"],
               spellSaveDC: snapshot?.spellSaveDC,
               targets: targets.flatMap((t) => {
                 const person = people.get(t);
@@ -388,13 +468,75 @@ export function ResolvePanel({
                     "The DM asked for concentration checks.",
                   )
                 : undefined;
+              // A resolved response reopens the poll of the action it answered.
+              const again =
+                !err && parentPoll && parentPoll.status === "open"
+                  ? await repoll(
+                      db,
+                      campaign,
+                      parentPoll,
+                      `${parentPoll.event.split(" (after")[0]} (after ${caster.name}: ${request.summary})`,
+                      uid,
+                      clock,
+                    )
+                  : undefined;
               setBusy(false);
-              onDone(err ?? asked);
+              onDone(err ?? asked ?? again);
             });
           }}
+          hidden={!request.respondsTo && poll?.status !== "closed"}
         >
           Approve and resolve
         </button>
+        {!request.respondsTo && !poll && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              const hits = targets.filter((t) => resultOf(t) !== "miss");
+              const event = shape.attack
+                ? `${what} would hit ${hits.map((t) => people.get(t)?.name ?? t).join(", ") || "nobody"}`
+                : `${caster.name}: ${request.summary}`;
+              void openPoll(
+                db,
+                campaign,
+                request.id,
+                event,
+                players,
+                uid,
+                clock,
+              ).then((e) => e && setProblem(e));
+            }}
+          >
+            Ask for responses
+          </button>
+        )}
+        {!request.respondsTo && poll?.status === "open" && (
+          <>
+            <span className="muted" data-testid="poll-state">
+              Waiting for responses (round {poll.round})
+            </span>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() =>
+                void closePoll(
+                  db,
+                  campaign,
+                  poll,
+                  true,
+                  actions.filter(
+                    (a) => a.status === "queued" && a.respondsTo === request.id,
+                  ),
+                  uid,
+                  clock,
+                ).then((e) => e && setProblem(e))
+              }
+            >
+              Force-skip
+            </button>
+          </>
+        )}
         <button type="button" className="link-button" onClick={() => onDone()}>
           Back
         </button>

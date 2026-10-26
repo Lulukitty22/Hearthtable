@@ -162,6 +162,12 @@ export function CastReview({
   const [replaces, setReplaces] = useState<string>(
     (request?.input["replaces"] as string | undefined) ?? "",
   );
+  // A response to an open poll (S9): Instant, continuing that action's chain.
+  const openPoll = play.polls[0];
+  const [responding, setResponding] = useState<boolean>(
+    !!openPoll && castingTime.toLowerCase().startsWith("reaction"),
+  );
+  const respondsTo = responding && openPoll ? openPoll.action : undefined;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
@@ -198,7 +204,8 @@ export function CastReview({
         e.preventDefault();
         setBusy(true);
         const draft = {
-          timing,
+          timing: respondsTo ? ("instant" as const) : timing,
+          ...(respondsTo ? { respondsTo } : {}),
           input: { ...input },
           holds,
           ...(budget ? { budget } : {}),
@@ -251,6 +258,16 @@ export function CastReview({
           </select>
         </label>
       )}{" "}
+      {openPoll && !request && (
+        <label className="chips">
+          <input
+            type="checkbox"
+            checked={responding}
+            onChange={() => setResponding(!responding)}
+          />{" "}
+          As a response to: {openPoll.event}
+        </label>
+      )}
       <span className="chips" role="radiogroup" aria-label="Timing">
         {(play.encounter
           ? (["instant", "next-turn"] as const)

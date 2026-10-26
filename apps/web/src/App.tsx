@@ -34,7 +34,7 @@ import { downloadExport } from "./export/exportFile";
 import { FolderPage } from "./home/FolderPage";
 import { segmentFor } from "./home/names";
 import { parseRoute, webPathFor, type View as RouteView } from "./routes";
-import { heldBy, useActions } from "./play/actions";
+import { heldBy, useActions, usePolls } from "./play/actions";
 import { useGameNow } from "./play/gameTime";
 import { TablePage } from "./table/TablePage";
 import { FeaturesTab } from "./sheet/FeaturesTab";
@@ -430,6 +430,7 @@ function Sheet({
   );
   // Requests (S6): this campaign's, whose holds are not usable on the sheet.
   const requests = useActions(campaign?.id);
+  const polls = usePolls(campaign?.id);
   const held = useMemo(
     () => heldBy(requests, characterId),
     [requests, characterId],
@@ -502,6 +503,7 @@ function Sheet({
             requests: requests.filter(
               (r) => r.character === characterId && r.status === "queued",
             ),
+            polls: polls.filter((p) => p.status === "open"),
           },
         }
       : {}),

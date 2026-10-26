@@ -50,7 +50,8 @@ export type LogKind =
   | "condition"
   | "activity"
   | "request"
-  | "roll";
+  | "roll"
+  | "poll";
 
 export interface LogEntry {
   readonly id: string;

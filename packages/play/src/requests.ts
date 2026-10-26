@@ -167,3 +167,38 @@ export function isEligible(
   if (timing === "instant") return true;
   return !!encounter && encounter.round >= 1 && encounter.current === character;
 }
+
+/**
+ * An attack described at the table (Milestone 5 S9): the DM's way for an NPC (or anyone without
+ * a weapon on their sheet) to attack, with its attack bonus and damage. It holds nothing and
+ * uses an Action. Weapon attacks from a sheet come with S10.
+ */
+export interface AttackInput {
+  /** What attacks with what, e.g. "Bandit Scout's scimitar". */
+  readonly name: string;
+  readonly bonus: number;
+  /** Damage dice, e.g. "1d6+2". */
+  readonly dice: string;
+  readonly damageType?: string;
+  readonly targets?: readonly string[];
+  readonly note?: string;
+}
+
+export const attack: RequestKind<AttackInput> = {
+  id: "attack",
+  holds: () => ({}),
+  budget: () => "action",
+  describe: (i) => `Attack: ${i.name}`,
+  warnings: () => [],
+};
+
+registerRequestKind(attack);
+
+/** Whether every player who must answer has skipped the poll's current round. */
+export function everyoneSkipped(
+  round: number,
+  skips: Readonly<Record<string, number>>,
+  players: readonly string[],
+): boolean {
+  return players.every((uid) => skips[uid] === round);
+}

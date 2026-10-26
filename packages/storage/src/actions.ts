@@ -44,6 +44,8 @@ export interface ActionRequest {
   readonly summary: string;
   readonly revision: number;
   readonly status: ActionStatus;
+  /** A response: the action whose poll it answers (S9). */
+  readonly respondsTo?: string;
   /** When it was first submitted; its place in the queue. */
   readonly at?: Date;
 }
@@ -75,6 +77,9 @@ export function watchActions(
               ? { budget: x["budget"] as BudgetKind }
               : {}),
             summary: String(x["summary"] ?? ""),
+            ...(typeof x["respondsTo"] === "string"
+              ? { respondsTo: x["respondsTo"] }
+              : {}),
             revision: Number(x["revision"] ?? 1),
             status: x["status"] as ActionStatus,
             ...(x["at"]?.toDate ? { at: x["at"].toDate() as Date } : {}),
@@ -121,6 +126,8 @@ export interface ActionDraft {
   readonly holds: Holds;
   readonly budget?: BudgetKind;
   readonly summary: string;
+  /** A response to another action's poll (S9). */
+  readonly respondsTo?: string;
 }
 
 /** Confirming: the request is queued and holds its costs at once. Logged. */

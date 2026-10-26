@@ -6,7 +6,7 @@ import type {
   Value,
 } from "@hearthtable/kernel";
 import type { Moment } from "@hearthtable/play";
-import type { ActionRequest, EncounterState } from "@hearthtable/storage";
+import type { ActionRequest, EncounterState, Poll } from "@hearthtable/storage";
 import type { SheetActions } from "../useSheet";
 
 export interface TabProps {
@@ -32,6 +32,8 @@ export interface SheetPlay {
   readonly scene?: string;
   /** This character's queued requests. */
   readonly requests: readonly ActionRequest[];
+  /** Open response polls this character could answer (S9). */
+  readonly polls: readonly Poll[];
 }
 
 export type Data = Record<string, unknown>;

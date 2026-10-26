@@ -151,7 +151,9 @@ describe("roll prompts", () => {
       0,
       "Saves, please.",
     );
-    const [npc, bram] = await rolls(guest());
+    const all = await rolls(guest());
+    const npc = all.find((r) => r.character === NPC);
+    const bram = all.find((r) => r.character === BRAM);
     if (!npc || !bram) throw new Error("no rolls");
     expect(
       await answerRoll(

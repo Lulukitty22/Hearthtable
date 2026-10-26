@@ -1,10 +1,33 @@
 // Milestone 5, S2: the table pages. The DM's first visit opens Riverbed of Strings' table in a
 // downtime scene; players see the scene, the clock, who is present and the log, live.
 
-import { expect, test, type Browser } from "@playwright/test";
+import {
+  expect,
+  test,
+  type Browser,
+  type Locator,
+  type Page,
+} from "@playwright/test";
 import { signInAs, TEST_PLAYER, VR_LULU } from "./signIn";
 
 const TABLE = "/Campaigns/Riverbed_of_Strings/Table";
+
+/**
+ * Every action asks for responses before it resolves (S9): the DM opens the poll, each given
+ * page's player passes, and the poll closes.
+ */
+async function everyonePasses(requests: Locator, ...pages: readonly Page[]) {
+  await requests.getByRole("button", { name: "Ask for responses" }).click();
+  for (const page of pages) {
+    const pass = page
+      .getByRole("region", { name: "Responses" })
+      .getByRole("button", { name: "Pass" });
+    await pass.click();
+  }
+  await expect(
+    requests.getByRole("button", { name: "Approve and resolve" }),
+  ).toBeVisible();
+}
 
 async function signedIn(browser: Browser, email: string, path: string) {
   const page = await (await browser.newContext()).newPage();
@@ -491,6 +514,7 @@ test("Mage Armor resolves at Carol's turn; Hold Person paralyzes; effects end on
   await dm.getByRole("button", { name: "End Bandit Scout's turn" }).click();
   await expect(requests).toContainText("ready for the DM");
   await requests.getByRole("button", { name: "resolve…" }).click();
+  await everyonePasses(requests, dm);
   await requests.getByRole("button", { name: "Approve and resolve" }).click();
   await expect(
     order.getByRole("listitem", { name: "Carol Elfnein" }),
@@ -518,6 +542,7 @@ test("Mage Armor resolves at Carol's turn; Hold Person paralyzes; effects end on
   await expect(requests.getByLabel("Bandit Scout: result")).toHaveValue(
     "failed",
   );
+  await everyonePasses(requests, dm);
   await requests.getByRole("button", { name: "Approve and resolve" }).click();
   const bandit = order.getByRole("listitem", { name: "Bandit Scout" });
   await expect(bandit.getByLabel("Bandit Scout's conditions")).toContainText(
@@ -662,6 +687,106 @@ test("roll prompts: the player rolls, the DM takes over, and Fireball resolves f
   await damage.getByLabel("Total").fill("30");
   await damage.getByRole("button", { name: "Roll" }).click();
   await expect(requests.getByLabel("Total")).toHaveValue("30");
+  await everyonePasses(requests, dm, player);
   await requests.getByRole("button", { name: "Approve and resolve" }).click();
   await expect(log).toContainText(`${name} failed the save: 30 Fire damage`);
+});
+
+// Milestone 5, S9: the Shield example end to end. An attack would hit; a poll opens; Shield
+// comes in as an Instant response; the hit is rechecked against the new Armor Class; a fresh
+// poll closes when everyone passes, and only then does the attack resolve, with no damage.
+test("Shield as a response turns a hit into a miss before damage", async ({
+  browser,
+}) => {
+  test.setTimeout(120_000);
+  const dm = await signedIn(browser, VR_LULU, `${TABLE}/Dungeon_Master`);
+  dm.on("dialog", (d) => void d.accept());
+  const start = dm.getByRole("form", { name: "Start an encounter" });
+  const characters = start.getByRole("group", { name: "Characters" });
+  await expect(
+    characters.getByRole("checkbox", { name: "Carol Elfnein", exact: true }),
+  ).toBeVisible();
+  const ticked = characters.getByRole("checkbox", { checked: true });
+  while ((await ticked.count()) > 0) await ticked.first().uncheck();
+  await characters
+    .getByRole("checkbox", { name: "Carol Elfnein", exact: true })
+    .check();
+  await start.getByLabel("How many Bandit Scout").fill("1");
+  await start.getByRole("button", { name: "Start the encounter" }).click();
+  await expect(dm.getByRole("region", { name: "Turn order" })).toContainText(
+    "AC 13",
+  );
+
+  // The bandit attacks Carol: 15 against AC 13 would hit.
+  const requests = dm.getByRole("region", { name: "Requests" });
+  const make = requests.getByRole("form", { name: "Make an attack" });
+  await make.getByLabel("Attacker").selectOption({ label: "Bandit Scout" });
+  await make.getByLabel("Weapon").fill("scimitar");
+  await make.getByLabel("Target").selectOption({ label: "Carol Elfnein" });
+  await make.getByRole("button", { name: "Queue the attack" }).click();
+  const attackItem = requests
+    .getByRole("listitem")
+    .filter({ hasText: "Attack: Bandit Scout's scimitar" });
+  await attackItem.getByRole("button", { name: "resolve…" }).click();
+  await requests
+    .getByRole("button", { name: "Ask for the attack roll" })
+    .click();
+  const roll = dm.getByRole("form", {
+    name: "Roll: Bandit Scout, Bandit Scout's scimitar against Carol Elfnein",
+  });
+  await roll.getByLabel("How to roll").selectOption("manual");
+  await roll.getByLabel("Total").fill("15");
+  await roll.getByRole("button", { name: "Roll" }).click();
+  await expect(requests.getByLabel("Carol Elfnein: result")).toHaveValue("hit");
+  await requests.getByRole("button", { name: "Ask for responses" }).click();
+  await expect(dm.getByRole("region", { name: "Responses" })).toContainText(
+    "Bandit Scout's scimitar would hit Carol Elfnein",
+  );
+  await expect(
+    requests.getByRole("button", { name: "Approve and resolve" }),
+  ).toBeHidden();
+
+  // Carol answers with Shield, an Instant response.
+  const sheet = await dm.context().newPage();
+  await sheet.goto(
+    "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
+  );
+  await sheet.getByRole("tab", { name: "Spells & Books" }).click();
+  await sheet
+    .getByRole("button", { name: /^Shield/ })
+    .first()
+    .click();
+  await sheet.getByRole("button", { name: "Cast…" }).click();
+  const review = sheet.getByRole("form", { name: "Cast Shield" });
+  await expect(
+    review.getByRole("checkbox", { name: /As a response to/ }),
+  ).toBeChecked();
+  await review.getByRole("button", { name: "Confirm" }).click();
+  const shieldItem = requests
+    .getByRole("listitem")
+    .filter({ hasText: "Cast Shield" });
+  await expect(shieldItem).toContainText("response to");
+  await shieldItem.getByRole("button", { name: "resolve…" }).click();
+  await requests.getByRole("button", { name: "Approve and resolve" }).click();
+  await expect(dm.getByRole("region", { name: "Turn order" })).toContainText(
+    "AC 18",
+  );
+  await expect(dm.getByRole("region", { name: "Responses" })).toContainText(
+    "round 2",
+  );
+
+  // Back to the attack: 15 against AC 18 now misses; everyone passes; it resolves.
+  await attackItem.getByRole("button", { name: "resolve…" }).click();
+  await expect(requests.getByLabel("Carol Elfnein: result")).toHaveValue(
+    "miss",
+  );
+  await dm
+    .getByRole("region", { name: "Responses" })
+    .getByRole("button", { name: "Pass" })
+    .click();
+  await requests.getByRole("button", { name: "Approve and resolve" }).click();
+  const log = dm.getByRole("region", { name: "Campaign log" });
+  await expect(log).toContainText("Everyone passed; no more responses.");
+  await expect(log).toContainText("Carol Elfnein missed: no damage.");
+  await dm.getByRole("button", { name: "End the encounter" }).click();
 });

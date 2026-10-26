@@ -203,6 +203,8 @@ service cloud.firestore {
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 2000
           && (request.resource.data.kind in ['post', 'turn', 'initiative', 'activity', 'request', 'roll']
+            || (request.resource.data.kind == 'poll'
+              && request.auth.uid in get(campaignDoc(campaign)).data.dms)
             || (request.resource.data.kind in ['scene', 'clock', 'title', 'order', 'effect', 'condition']
               && request.auth.uid in get(campaignDoc(campaign)).data.dms));
       }
@@ -262,7 +264,7 @@ service cloud.firestore {
         allow create: if isApproved()
           && (request.auth.uid in get(campaignDoc(campaign)).data.dms
             || request.auth.uid in get(campaignDoc(campaign)).data.players)
-          && request.resource.data.keys().hasOnly(['kind', 'character', 'timing', 'input', 'holds', 'budget', 'summary', 'by', 'control', 'revision', 'status', 'at'])
+          && request.resource.data.keys().hasOnly(['kind', 'character', 'timing', 'input', 'holds', 'budget', 'summary', 'respondsTo', 'by', 'control', 'revision', 'status', 'at'])
           && request.resource.data.by == request.auth.uid
           && request.resource.data.at == request.time
           && request.resource.data.status == 'queued'
@@ -313,6 +315,24 @@ service cloud.firestore {
                 && request.resource.data.status == 'cancelled')
               || (resource.data.status == 'answered'
                 && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['applied']))));
+      }
+
+      // Milestone 5 S9: response polls, one per action. DMs open, repoll and close them (a
+      // force-skip also rejects waiting responses through the actions rule); a player may only
+      // record their own skip of the current round.
+      match /polls/{action} {
+        allow read: if true;
+        allow create: if isApproved() && isDmOf(campaign)
+          && request.resource.data.keys().hasOnly(['event', 'players', 'round', 'skips', 'status'])
+          && request.resource.data.status == 'open'
+          && request.resource.data.round == 1;
+        allow update: if (isApproved() && isDmOf(campaign))
+          || (isApproved()
+            && resource.data.status == 'open'
+            && request.auth.uid in resource.data.players
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['skips'])
+            && request.resource.data.skips.diff(resource.data.skips).affectedKeys().hasOnly([request.auth.uid])
+            && request.resource.data.skips[request.auth.uid] == resource.data.round);
       }
 
       // Milestone 5 S5: downtime activities. A character's controller (or a DM) submits one,

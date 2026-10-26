@@ -4,7 +4,12 @@
 
 import type { RecordEnvelope, RecordId } from "@hearthtable/kernel";
 import { addHolds, type Holds } from "@hearthtable/play";
-import { watchActions, type ActionRequest } from "@hearthtable/storage";
+import {
+  watchActions,
+  watchPolls,
+  type ActionRequest,
+  type Poll,
+} from "@hearthtable/storage";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
 
@@ -13,6 +18,16 @@ export function useActions(campaign: string | undefined) {
   useEffect(() => {
     if (!campaign) return;
     return watchActions(db, campaign, setList, () => {});
+  }, [campaign]);
+  return list;
+}
+
+/** A campaign's response polls, kept current (S9). */
+export function usePolls(campaign: string | undefined) {
+  const [list, setList] = useState<readonly Poll[]>([]);
+  useEffect(() => {
+    if (!campaign) return;
+    return watchPolls(db, campaign, setList, () => {});
   }, [campaign]);
   return list;
 }
