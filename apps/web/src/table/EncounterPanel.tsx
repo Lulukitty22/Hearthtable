@@ -26,7 +26,9 @@ import {
   enterInitiative,
   passTurn,
   setUse,
+  askRolls,
   takeStep,
+  type RollAsk,
   type ActionRequest,
   type EncounterState,
   type ParticipantState,
@@ -62,6 +64,8 @@ export interface Control {
   readonly isDm: boolean;
   /** Whether the viewer controls this participant (its owner, or the DM for anyone). */
   readonly controls: (path: string) => boolean;
+  /** Whether the viewer owns this character (not counting being the DM). */
+  readonly owns: (path: string) => boolean;
 }
 
 export function EncounterPanel({
@@ -117,7 +121,7 @@ export function EncounterPanel({
       current: encounter.current,
     });
     if (!next) return;
-    // Repeat saves come at the end of the character's turn: remind about them in the log.
+    // Repeat saves come at the end of the character's turn: they are asked for (S8).
     const saves = (people.get(encounter.current)?.conditions ?? []).flatMap(
       (c) => {
         const r = saveReminder(c);
@@ -125,15 +129,51 @@ export function EncounterPanel({
       },
     );
     const text = `${name(encounter.current)}'s turn ended.${saves.length ? ` Repeat save${saves.length > 1 ? "s" : ""} due: ${saves.join("; ")}.` : ""} ${next.round > encounter.round ? `Round ${next.round} began. ` : ""}${name(next.current)}'s turn.`;
-    void passTurn(
-      db,
-      id,
-      encounter,
-      next,
-      uid,
-      encounterClock(encounter.startClock, next.round),
-      text,
-    ).then(report);
+    const ending = encounter.current;
+    const person = people.get(ending);
+    const due: RollAsk[] = (person?.conditions ?? []).flatMap((c) => {
+      if (!c.save || c.origin !== "applied") return [];
+      const key = `saves.${c.save.ability}.total`;
+      const bonus = person?.resolved.get<number>(key);
+      const autoFail = person?.resolved.get<boolean>(
+        `saves.${c.save.ability}.autoFail`,
+      );
+      return [
+        {
+          character: ending,
+          purpose: `${saveReminder(c) ?? c.name}, to end it`,
+          spec: {
+            kind: "save",
+            key,
+            bonus: bonus?.kind === "known" ? bonus.value : 0,
+            target: c.save.dc,
+            ...(autoFail?.kind === "known" && autoFail.value
+              ? { autoFail: true }
+              : {}),
+          },
+          consequence: {
+            kind: "repeat-save",
+            condition: c.id,
+            ...(c.source ? { effect: c.source } : {}),
+          },
+        },
+      ];
+    });
+    const at = encounterClock(encounter.startClock, next.round);
+    void passTurn(db, id, encounter, next, uid, at, text).then(async (err) => {
+      if (err) return report(err);
+      if (due.length)
+        report(
+          await askRolls(
+            db,
+            id,
+            due,
+            uid,
+            at,
+            `Repeat saves due for ${name(ending)}.`,
+          ),
+        );
+    });
   };
 
   return (

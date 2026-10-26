@@ -538,3 +538,130 @@ test("Mage Armor resolves at Carol's turn; Hold Person paralyzes; effects end on
     "AC 13",
   );
 });
+
+// Milestone 5, S8: rolls. A player answers their own save; the DM takes over another; rolling
+// in the app, own dice and a typed total all count and are logged; Fireball resolves from a save
+// prompt and a damage prompt.
+test("roll prompts: the player rolls, the DM takes over, and Fireball resolves from rolls", async ({
+  browser,
+}) => {
+  test.setTimeout(120_000);
+  const name = `Bram ${Date.now().toString(36).slice(-5)}`;
+  const player = await signedIn(browser, TEST_PLAYER, "/");
+  await player.getByRole("link", { name: "My home" }).click();
+  await player.getByRole("button", { name: "New character" }).click();
+  const form = player.getByRole("form", { name: "New character" });
+  await form.getByRole("textbox", { name: "Name" }).fill(name);
+  await form.getByRole("button", { name: "Create" }).click();
+  await player
+    .getByRole("list", { name: "Contents of Test_Player's home" })
+    .getByRole("link", { name })
+    .click();
+  await player.getByRole("button", { name: "Copy into a campaign…" }).click();
+  const copy = player.getByRole("form", { name: "Copy into a campaign" });
+  await copy
+    .getByRole("combobox", { name: "Campaign" })
+    .selectOption({ label: "Riverbed of Strings" });
+  await copy.getByRole("button", { name: "Ask to add" }).click();
+  await expect(copy.getByRole("status")).toContainText("a DM approves it");
+
+  const dm = await signedIn(browser, VR_LULU, "/Campaigns/Riverbed_of_Strings");
+  await dm.getByRole("button", { name: `Add ${name}` }).click();
+  await expect(
+    dm
+      .getByRole("list", { name: "Campaign characters" })
+      .getByRole("link", { name }),
+  ).toBeVisible();
+  await dm.goto(`${TABLE}/Dungeon_Master`);
+  await player.goto(TABLE);
+  const ask = dm.getByRole("form", { name: "Ask for a roll" });
+  const log = dm.getByRole("region", { name: "Campaign log" });
+
+  // The player answers their own Wisdom save, rolled in the app.
+  await ask.getByLabel("Who rolls").selectOption({ label: name });
+  await ask.getByLabel("Which roll").selectOption({ label: "Wisdom save" });
+  await ask.getByLabel("DC").fill("12");
+  await ask.getByRole("button", { name: "Ask" }).click();
+  const prompt = player.getByRole("form", {
+    name: `Roll: ${name}, Wisdom save`,
+  });
+  await prompt.getByRole("button", { name: "Roll" }).click();
+  await expect(log).toContainText(
+    new RegExp(
+      `${name}: Wisdom save: \\d+ \\(1d20\\+0: \\d+\\), (success|failure)\\.`,
+    ),
+  );
+
+  // The DM takes over the next one with a typed total; the player can no longer answer it.
+  await ask.getByRole("button", { name: "Ask" }).click();
+  await expect(
+    player.getByRole("form", { name: `Roll: ${name}, Wisdom save` }),
+  ).toBeVisible();
+  const takeover = dm.getByRole("form", {
+    name: `Roll: ${name}, Wisdom save`,
+  });
+  await takeover.getByLabel("How to roll").selectOption("manual");
+  await takeover.getByLabel("Total").fill("17");
+  await takeover.getByRole("button", { name: "Roll for them" }).click();
+  await expect(log).toContainText(
+    `${name}: Wisdom save: 17 (typed), success (rolled by the DM).`,
+  );
+  await expect(
+    player.getByRole("form", { name: `Roll: ${name}, Wisdom save` }),
+  ).toHaveCount(0);
+
+  // Carol's own dice.
+  await ask.getByLabel("Who rolls").selectOption({ label: "Carol Elfnein" });
+  await ask.getByLabel("Which roll").selectOption({ label: "Wisdom save" });
+  await ask.getByLabel("DC").fill("10");
+  await ask.getByRole("button", { name: "Ask" }).click();
+  const own = dm.getByRole("form", {
+    name: "Roll: Carol Elfnein, Wisdom save",
+  });
+  await own.getByLabel("How to roll").selectOption("custom");
+  await own.getByLabel("Dice").fill("1d4+20");
+  await own.getByRole("button", { name: "Roll", exact: true }).click();
+  await expect(log).toContainText(
+    /Carol Elfnein: Wisdom save: 2[1-4] \(1d4\+20: [1-4]\), success\./,
+  );
+
+  // Fireball on the player's character: a save prompt, then Carol's damage roll.
+  const sheet = await dm.context().newPage();
+  await sheet.goto(
+    "/Campaigns/Riverbed_of_Strings/Characters/VR_Lulu/Carol_Elfnein",
+  );
+  await sheet.getByRole("tab", { name: "Spells & Books" }).click();
+  await sheet
+    .getByRole("button", { name: /^Fireball/ })
+    .first()
+    .click();
+  await sheet.getByRole("button", { name: "Cast…" }).click();
+  const review = sheet.getByRole("form", { name: "Cast Fireball" });
+  await review.getByRole("checkbox", { name }).check();
+  await review.getByRole("button", { name: "Confirm" }).click();
+  const requests = dm.getByRole("region", { name: "Requests" });
+  await requests.getByRole("button", { name: "resolve…" }).click();
+  await requests.getByRole("button", { name: "Ask for saves" }).click();
+  const save = player.getByRole("form", {
+    name: `Roll: ${name}, Dexterity save against Fireball`,
+  });
+  // At 0 hit points the character is down, so Dexterity saves fail automatically.
+  await expect(save).toContainText("Fails automatically.");
+  await save.getByRole("button", { name: "Roll" }).click();
+  await expect(requests.getByTestId(`roll-${name}`)).toContainText(
+    "rolled an automatic failure",
+  );
+  await expect(requests.getByLabel(`${name}: result`)).toHaveValue("failed");
+  await requests
+    .getByRole("button", { name: "Ask for the damage roll" })
+    .click();
+  const damage = dm.getByRole("form", {
+    name: "Roll: Carol Elfnein, Fireball damage",
+  });
+  await damage.getByLabel("How to roll").selectOption("manual");
+  await damage.getByLabel("Total").fill("30");
+  await damage.getByRole("button", { name: "Roll" }).click();
+  await expect(requests.getByLabel("Total")).toHaveValue("30");
+  await requests.getByRole("button", { name: "Approve and resolve" }).click();
+  await expect(log).toContainText(`${name} failed the save: 30 Fire damage`);
+});

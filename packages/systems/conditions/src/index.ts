@@ -73,6 +73,8 @@ export interface ConditionRow {
   readonly endsAt?: z.infer<typeof Moment>;
   readonly save?: { readonly ability: string; readonly dc: number };
   readonly note?: string;
+  /** The active effect that applied it, when one did. */
+  readonly source?: string;
   readonly breaksConcentration: boolean;
   /** The SRD rules text, shown for everything applied by hand. */
   readonly text: readonly string[];
@@ -158,6 +160,7 @@ function list(ctx: ResolveContext): readonly ConditionRow[] {
       ...(e.endsAt ? { endsAt: e.endsAt } : {}),
       ...(e.save ? { save: e.save } : {}),
       ...(e.note ? { note: e.note } : {}),
+      ...(e.source ? { source: e.source } : {}),
     });
   }
 

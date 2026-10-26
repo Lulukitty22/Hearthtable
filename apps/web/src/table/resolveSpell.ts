@@ -84,6 +84,8 @@ export interface Plan {
   readonly records: RecordEnvelope[];
   readonly result: string;
   readonly logs: string[];
+  /** Who took damage, and how much, for concentration checks (S8). */
+  readonly damaged: { readonly path: string; readonly amount: number }[];
 }
 
 /** Every change an approved cast makes. */
@@ -120,6 +122,7 @@ export async function planCast(options: {
     records.set(path, { ...r, data: f(r.data as Data) });
   };
   const logs: string[] = [];
+  const damaged: { path: string; amount: number }[] = [];
   const casterName = o.caster.name;
   const method = engine.settings.method("conditions.goingDown");
   const goingDown = method.kind === "known" ? method.value : undefined;
@@ -289,13 +292,7 @@ export async function planCast(options: {
           parts.push(
             `${taken.amount} ${shape.damageType ?? ""} damage${[...taken.steps, ...out.steps].length ? ` (${[...taken.steps, ...out.steps].join("; ")})` : ""}, HP ${out.current}`,
           );
-          const maintained = p.resolved.get<readonly unknown[]>(
-            "concentration.maintained",
-          );
-          if (maintained.kind === "known" && maintained.value.length > 0)
-            parts.push(
-              `Concentration check: Constitution save DC ${Math.min(30, Math.max(10, Math.floor(taken.amount / 2)))}`,
-            );
+          damaged.push({ path: p.path, amount: taken.amount });
         } else parts.push("no damage");
       }
       if (shape.heals && affected) {
@@ -344,6 +341,7 @@ export async function planCast(options: {
       records: [...records.values()],
       result: summary,
       logs: [`The DM approved it. ${summary}.`, ...logs],
+      damaged,
     };
   } catch (error) {
     return error instanceof Error ? error.message : String(error);

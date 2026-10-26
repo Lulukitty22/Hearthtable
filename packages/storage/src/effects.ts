@@ -31,7 +31,7 @@ export async function endEffects(
   characterPath: string,
   characterName: string,
   effects: readonly EndedEffect[],
-  why: "expired" | "early" | "concentration",
+  why: "expired" | "early" | "concentration" | "save",
   by: string,
   clock: number,
 ): Promise<string | undefined> {
@@ -64,7 +64,9 @@ export async function endEffects(
             ? `${e.name} on ${characterName} ended.`
             : why === "concentration"
               ? `${characterName} lost concentration on ${e.name}.`
-              : `The DM ended ${e.name} on ${characterName} early.`,
+              : why === "save"
+                ? `${characterName} made the save and ended ${e.name} on themself.`
+                : `The DM ended ${e.name} on ${characterName} early.`,
         at: serverTimestamp(),
       });
     } catch {

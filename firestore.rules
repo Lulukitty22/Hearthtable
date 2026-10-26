@@ -202,7 +202,7 @@ service cloud.firestore {
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 2000
-          && (request.resource.data.kind in ['post', 'turn', 'initiative', 'activity', 'request']
+          && (request.resource.data.kind in ['post', 'turn', 'initiative', 'activity', 'request', 'roll']
             || (request.resource.data.kind in ['scene', 'clock', 'title', 'order', 'effect', 'condition']
               && request.auth.uid in get(campaignDoc(campaign)).data.dms));
       }
@@ -286,6 +286,33 @@ service cloud.firestore {
                     .hasOnly(['timing', 'input', 'holds', 'budget', 'summary', 'revision'])
                   && request.resource.data.revision == resource.data.revision + 1
                   && request.resource.data.timing in ['instant', 'next-turn']))));
+      }
+
+      // Milestone 5 S8: roll prompts. Any member may ask for a roll (the DM in resolution, or
+      // whoever passes a turn when a repeat save is due). It is answered once, by whoever controls
+      // the character or by a DM taking over; DMs may cancel it or mark its consequence applied.
+      match /rolls/{roll} {
+        allow read: if true;
+        allow create: if isApproved()
+          && (request.auth.uid in get(campaignDoc(campaign)).data.dms
+            || request.auth.uid in get(campaignDoc(campaign)).data.players)
+          && request.resource.data.keys().hasOnly(['character', 'purpose', 'spec', 'action', 'target', 'consequence', 'status', 'requestedBy', 'control', 'at'])
+          && request.resource.data.requestedBy == request.auth.uid
+          && request.resource.data.at == request.time
+          && request.resource.data.status == 'open'
+          && request.resource.data.character.split('/')[1].lower() == campaign;
+        allow update: if (resource.data.status == 'open'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'answer'])
+            && request.resource.data.status == 'answered'
+            && request.resource.data.answer.by == request.auth.uid
+            && ((isApproved() && isDmOf(campaign))
+              || controls(resource.data.character, resource.data.get('control', null))))
+          || (isApproved() && isDmOf(campaign)
+            && ((resource.data.status == 'open'
+                && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+                && request.resource.data.status == 'cancelled')
+              || (resource.data.status == 'answered'
+                && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['applied']))));
       }
 
       // Milestone 5 S5: downtime activities. A character's controller (or a DM) submits one,

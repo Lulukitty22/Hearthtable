@@ -396,6 +396,10 @@
           "type": "bonus",
           "target": "abilities.{ability}.score",
           "amount": 1
+        },
+        {
+          "type": "capability",
+          "id": "advantage:concentration"
         }
       ]
     }

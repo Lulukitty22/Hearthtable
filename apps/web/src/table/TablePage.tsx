@@ -39,6 +39,7 @@ import {
 import { DowntimePanel, useActivities, useApplyRolls } from "./Downtime";
 import { EffectChips, useClearEndedEffects } from "./Effects";
 import { RequestsPanel } from "./Requests";
+import { RollsPanel, useApplyRollConsequences, useRolls } from "./Rolls";
 import { runActivities } from "./runDowntime";
 import { EncounterPanel, type Control } from "./EncounterPanel";
 import { NewNpcTemplate, StartEncounter } from "./StartEncounter";
@@ -70,6 +71,16 @@ export function TablePage({
   );
   const [problem, setProblem] = useState<string | undefined>();
   const activities = useActivities(table.id);
+  const rolls = useRolls(table.id);
+  useApplyRollConsequences(
+    role === "dm" && isDm,
+    table.id,
+    rolls,
+    table.people?.map,
+    uid,
+    table.now?.clock,
+    setProblem,
+  );
   useApplyRolls(
     role === "dm" && isDm,
     table.id,
@@ -180,19 +191,21 @@ export function TablePage({
           ),
         }
       : undefined;
+  // The owner of a campaign character is the Alias folder it sits in.
+  const owns = (path: string) => {
+    const parts = path.split("/");
+    return (
+      approved &&
+      parts[2] === "Characters" &&
+      normalizeAlias(parts[3] ?? "") === alias
+    );
+  };
   const control: Control = {
     uid,
     isDm,
-    // Its owner (the Alias folder it sits in) or a DM; delegates are honoured by the Rules.
-    controls: (path) => {
-      const parts = path.split("/");
-      return (
-        isDm ||
-        (approved &&
-          parts[2] === "Characters" &&
-          normalizeAlias(parts[3] ?? "") === alias)
-      );
-    },
+    // Its owner or a DM; delegates are honoured by the Rules.
+    controls: (path) => isDm || owns(path),
+    owns,
   };
 
   return (
@@ -293,6 +306,17 @@ export function TablePage({
             </section>
           )}
           {people && (
+            <RollsPanel
+              campaign={table.id}
+              rolls={rolls}
+              people={people.map}
+              present={participants ?? []}
+              control={control}
+              clock={clock}
+              onProblem={setProblem}
+            />
+          )}
+          {people && (
             <RequestsPanel
               campaign={table.id}
               actions={table.actions}
@@ -303,6 +327,7 @@ export function TablePage({
               now={table.now}
               present={participants ?? []}
               definition={table.definition}
+              rolls={rolls}
               onProblem={setProblem}
             />
           )}

@@ -16,6 +16,7 @@ import {
   endAction,
   type ActionRequest,
   type EncounterState,
+  type RollPrompt,
 } from "@hearthtable/storage";
 import { db } from "../firebase";
 import type { Control } from "./EncounterPanel";
@@ -32,6 +33,7 @@ export function RequestsPanel({
   now,
   present,
   definition,
+  rolls,
   onProblem,
 }: {
   campaign: string;
@@ -44,6 +46,8 @@ export function RequestsPanel({
   /** Everyone in the scene, who can be targets. */
   present: readonly Participant[];
   definition: (id: string) => RecordEnvelope | undefined;
+  /** Every roll; a request's own fill its resolve panel (S8). */
+  rolls: readonly RollPrompt[];
   onProblem: (message: string) => void;
 }) {
   const [resolving, setResolving] = useState<string | undefined>();
@@ -123,6 +127,7 @@ export function RequestsPanel({
                   }
                   people={people}
                   present={present}
+                  rolls={rolls}
                   now={now}
                   uid={uid}
                   clock={clock}

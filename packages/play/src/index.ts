@@ -4,5 +4,6 @@ export * from "./clock";
 export * from "./damage";
 export * from "./moments";
 export * from "./requests";
+export * from "./rolls";
 export * from "./scenes";
 export * from "./turns";
